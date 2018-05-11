@@ -35,6 +35,7 @@
 		<syntaxHighlighter factoryClass="com.liferay.ide.idea.bndtools.BndFileTypeHighlighterProvider"/>
 		<codeInsight.lineMarkerProvider language="XML" implementationClass="com.liferay.ide.idea.language.LiferayServiceXMLLineMarkerProvider"/>
 		<codeInsight.lineMarkerProvider language="JAVA" implementationClass="com.liferay.ide.idea.language.LiferayServiceJavaImplLineMarkerProvider"/>
+		<standardResourceProvider implementation="com.liferay.ide.idea.language.LiferayDefinitionsResourceProvider"/>
 	</extensions>
 
 </idea-plugin>
