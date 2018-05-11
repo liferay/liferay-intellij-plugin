@@ -14,8 +14,6 @@
 
 package com.liferay.ide.idea.bndtools;
 
-import static com.intellij.openapi.fileTypes.impl.AbstractFileType.ELEMENT_HIGHLIGHTING;
-
 import com.intellij.ide.highlighter.custom.SyntaxTable;
 import com.intellij.openapi.fileTypes.impl.AbstractFileType;
 import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
@@ -53,7 +51,7 @@ public class BndFileType implements CustomSyntaxTableFileType {
 
 				Element root = document.getRootElement();
 
-				Element highlighting = root.getChild(ELEMENT_HIGHLIGHTING);
+				Element highlighting = root.getChild(AbstractFileType.ELEMENT_HIGHLIGHTING);
 
 				if (highlighting != null) {
 					_syntaxTable = AbstractFileType.readSyntaxTable(highlighting);

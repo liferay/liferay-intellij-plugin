@@ -60,6 +60,46 @@ task downloadBlade(type: Download) {
 	onlyIfModified true
 }
 
+task downloadLiferayDefinitions(type: Download){
+	def target = new File("src/main/resources/definitions");
+	target.mkdirs();
+
+	src([
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-display_7_0_0.dtd',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-display_7_1_0.dtd',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-friendly-url-routes_7_0_0.dtd',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-friendly-url-routes_7_1_0.dtd',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-hook_7_0_0.dtd',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-hook_7_1_0.dtd',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-layout-templates_7_0_0.dtd',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-layout-templates_7_1_0.dtd',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-look-and-feel_7_0_0.dtd',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-look-and-feel_7_1_0.dtd',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-plugin-package_7_0_0.dtd',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-plugin-package_7_1_0.dtd',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-plugin-repository_7_0_0.dtd',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-plugin-repository_7_1_0.dtd',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-portlet-app_7_0_0.dtd',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-portlet-app_7_1_0.dtd',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-resource-action-mapping_7_0_0.dtd',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-resource-action-mapping_7_1_0.dtd',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-service-builder_7_0_0.dtd',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-service-builder_7_1_0.dtd',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-social_7_0_0.dtd',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-social_7_1_0.dtd',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-theme-loader_7_0_0.dtd',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-theme-loader_7_1_0.dtd',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-user-notification-definitions_7_0_0.dtd',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-user-notification-definitions_7_1_0.dtd',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-workflow-definition_7_0_0.xsd',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-workflow-definition_7_1_0.xsd',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/portlet-app_2_0.xsd'
+		])
+	dest target
+	onlyIfModified true
+
+}
+
 task verifyBlade(type: Verify, dependsOn: downloadBlade) {
 	src 'src/main/resources/libs/blade.jar'
 	algorithm 'MD5'
@@ -67,7 +107,7 @@ task verifyBlade(type: Verify, dependsOn: downloadBlade) {
 }
 
 compileJava {
-	dependsOn verifyBlade
+	dependsOn verifyBlade, downloadLiferayDefinitions
 }
 
 version = '0.1.1'
