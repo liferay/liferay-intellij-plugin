@@ -1,5 +1,7 @@
 .classpath
 .gradle/
+gradle/
+gradle/wrapper
 .idea/
 .project
 .settings/
@@ -7,3 +9,4 @@ build/
 *.iml
 out/
 src/main/resources/libs/blade.jar
+src/main/resources/definitions/

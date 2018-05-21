@@ -1,11 +1,4 @@
-# Liferay Idea Plugin
-
-## Quick Start
-You can download the plugin zip file from:
-
-```
-https://dl.bintray.com/gamerson/liferay-idea-plugin-releases/liferay-idea-plugin-0.1.0.zip
-```
+# Liferay IntelliJ Plugin
 
 ## Building from source
 If you would like to build from source, use this following command:
