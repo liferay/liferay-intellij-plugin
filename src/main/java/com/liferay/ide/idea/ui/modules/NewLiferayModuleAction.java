@@ -21,7 +21,9 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
@@ -94,11 +96,15 @@ public class NewLiferayModuleAction extends AnAction implements DumbAware {
 
 		Module module = null;
 
+		ModuleManager moduleManager = ModuleManager.getInstance(project);
+
+		ModifiableModuleModel model = moduleManager.getModifiableModel();
+
 		if (builder instanceof ModuleBuilder) {
-			module = ((ModuleBuilder)builder).commitModule(project, null);
+			module = ((ModuleBuilder)builder).commitModule(project, model);
 		}
 		else {
-			List<Module> modules = builder.commit(project, null, new DefaultModulesProvider(project));
+			List<Module> modules = builder.commit(project, model, new DefaultModulesProvider(project));
 
 			if (builder.isOpenProjectSettingsAfter()) {
 				ModulesConfigurator.showDialog(project, null, null);

@@ -9,6 +9,7 @@
 
 	<depends>org.jetbrains.plugins.gradle</depends>
 	<depends>org.jetbrains.idea.maven</depends>
+	<depends optional="true" config-file="javaee.xml">com.intellij.javaee</depends>
 
 	<actions>
 		<action id="NewLiferayModule" class="com.liferay.ide.idea.ui.modules.NewLiferayModuleAction"
@@ -37,5 +38,4 @@
 		<codeInsight.lineMarkerProvider language="JAVA" implementationClass="com.liferay.ide.idea.language.LiferayServiceJavaImplLineMarkerProvider"/>
 		<standardResourceProvider implementation="com.liferay.ide.idea.language.LiferayDefinitionsResourceProvider"/>
 	</extensions>
-
 </idea-plugin>

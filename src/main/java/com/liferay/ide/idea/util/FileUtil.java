@@ -14,6 +14,8 @@
 
 package com.liferay.ide.idea.util;
 
+import com.intellij.openapi.vfs.VirtualFile;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -24,9 +26,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Terry Jia
@@ -58,6 +57,14 @@ public class FileUtil {
 
 	public static void copyFileToDir(File src, String newName, File dir) {
 		copyFile(src, new File(dir, newName));
+	}
+
+	public static boolean exist(VirtualFile file) {
+		if ((file != null) && file.exists()) {
+			return true;
+		}
+
+		return false;
 	}
 
 	public static String readContents(File file, boolean includeNewlines) {
@@ -100,54 +107,6 @@ public class FileUtil {
 		}
 
 		return contents.toString();
-	}
-
-	public static String[] readLinesFromFile(File file) {
-		return readLinesFromFile(file, false);
-	}
-
-	public static String[] readLinesFromFile(File file, boolean includeNewlines) {
-		if (file == null) {
-			return null;
-		}
-
-		if (!file.exists()) {
-			return null;
-		}
-
-		List<String> lines = new ArrayList<>();
-		BufferedReader bufferedReader = null;
-
-		try {
-			FileReader fileReader = new FileReader(file);
-
-			bufferedReader = new BufferedReader(fileReader);
-
-			String line;
-
-			while ((line = bufferedReader.readLine()) != null) {
-				StringBuffer contents = new StringBuffer(line);
-
-				if (includeNewlines) {
-					contents.append(System.getProperty("line.separator")); //$NON-NLS-1$
-				}
-
-				lines.add(contents.toString());
-			}
-		}
-		catch (Exception e) {
-		}
-		finally {
-			if (bufferedReader != null) {
-				try {
-					bufferedReader.close();
-				}
-				catch (Exception e) {
-				}
-			}
-		}
-
-		return lines.toArray(new String[lines.size()]);
 	}
 
 	public static void writeFile(File f, byte[] contents, String expectedProjectName) {
