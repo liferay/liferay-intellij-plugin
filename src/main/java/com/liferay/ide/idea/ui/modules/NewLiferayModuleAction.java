@@ -52,7 +52,7 @@ public class NewLiferayModuleAction extends AnAction implements DumbAware {
 	public void actionPerformed(AnActionEvent event) {
 		Project project = getEventProject(event);
 
-		if (!_isValidWorkspaceLocation(project)) {
+		if (!LiferayWorkspaceUtil.isValidWorkspaceLocation(project)) {
 			Messages.showErrorDialog("Unable to detect current project as a Liferay workspace", "No Liferay workspace");
 
 			return;
@@ -124,18 +124,7 @@ public class NewLiferayModuleAction extends AnAction implements DumbAware {
 
 		Presentation eventPresentation = event.getPresentation();
 
-		eventPresentation.setEnabled(_isValidWorkspaceLocation(getEventProject(event)));
-	}
-
-	private boolean _isValidWorkspaceLocation(Project project) {
-		if ((project != null) &&
-			(LiferayWorkspaceUtil.isValidGradleWorkspaceLocation(project.getBasePath()) ||
-			 LiferayWorkspaceUtil.isValidMavenWorkspaceLocation(project))) {
-
-			return true;
-		}
-
-		return false;
+		eventPresentation.setEnabled(LiferayWorkspaceUtil.isValidWorkspaceLocation(getEventProject(event)));
 	}
 
 }

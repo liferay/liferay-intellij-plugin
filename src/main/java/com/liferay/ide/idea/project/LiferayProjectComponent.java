@@ -32,6 +32,7 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 
 import com.liferay.ide.idea.util.FileUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -64,7 +65,9 @@ public class LiferayProjectComponent extends AbstractProjectComponent {
 
 			@Override
 			public void moduleAdded(@NotNull Project project, @NotNull Module module) {
-				_addWebRoot(module);
+				if (LiferayWorkspaceUtil.isValidWorkspaceLocation(project)) {
+					_addWebRoot(module);
+				}
 			}
 
 		};
