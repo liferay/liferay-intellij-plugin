@@ -30,8 +30,6 @@ checkSourceFormatting {
 dependencies {
 	compile group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.4.0"
 	compile group: "org.apache.ant", name: "ant", version: "1.10.1"
-	compile group: "org.codehaus.jackson", name: "jackson-core-asl", version: "1.9.13"
-	compile group: "org.codehaus.jackson", name: "jackson-mapper-asl", version: "1.9.13"
 }
 
 formatSource {
@@ -39,8 +37,8 @@ formatSource {
 }
 
 intellij {
-	version "2018.1.2"
-	plugins 'gradle', 'maven'
+	version "IU-2018.1.4"
+	plugins 'gradle', 'maven', 'JavaEE'
 }
 
 patchPluginXml {
@@ -96,8 +94,7 @@ task downloadLiferayDefinitions(type: Download){
 			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/portlet-app_2_0.xsd'
 		])
 	dest target
-	onlyIfModified true
-
+	overwrite false
 }
 
 task verifyBlade(type: Verify, dependsOn: downloadBlade) {
@@ -110,4 +107,4 @@ compileJava {
 	dependsOn verifyBlade, downloadLiferayDefinitions
 }
 
-version = '0.1.1'
+version = '0.1.2'

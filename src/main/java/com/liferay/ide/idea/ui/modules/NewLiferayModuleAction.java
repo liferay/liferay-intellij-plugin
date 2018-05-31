@@ -21,7 +21,9 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
@@ -50,7 +52,7 @@ public class NewLiferayModuleAction extends AnAction implements DumbAware {
 	public void actionPerformed(AnActionEvent event) {
 		Project project = getEventProject(event);
 
-		if (!_isValidWorkspaceLocation(project)) {
+		if (!LiferayWorkspaceUtil.isValidWorkspaceLocation(project)) {
 			Messages.showErrorDialog("Unable to detect current project as a Liferay workspace", "No Liferay workspace");
 
 			return;
@@ -94,11 +96,15 @@ public class NewLiferayModuleAction extends AnAction implements DumbAware {
 
 		Module module = null;
 
+		ModuleManager moduleManager = ModuleManager.getInstance(project);
+
+		ModifiableModuleModel model = moduleManager.getModifiableModel();
+
 		if (builder instanceof ModuleBuilder) {
-			module = ((ModuleBuilder)builder).commitModule(project, null);
+			module = ((ModuleBuilder)builder).commitModule(project, model);
 		}
 		else {
-			List<Module> modules = builder.commit(project, null, new DefaultModulesProvider(project));
+			List<Module> modules = builder.commit(project, model, new DefaultModulesProvider(project));
 
 			if (builder.isOpenProjectSettingsAfter()) {
 				ModulesConfigurator.showDialog(project, null, null);
@@ -118,18 +124,7 @@ public class NewLiferayModuleAction extends AnAction implements DumbAware {
 
 		Presentation eventPresentation = event.getPresentation();
 
-		eventPresentation.setEnabled(_isValidWorkspaceLocation(getEventProject(event)));
-	}
-
-	private boolean _isValidWorkspaceLocation(Project project) {
-		if ((project != null) &&
-			(LiferayWorkspaceUtil.isValidGradleWorkspaceLocation(project.getBasePath()) ||
-			 LiferayWorkspaceUtil.isValidMavenWorkspaceLocation(project))) {
-
-			return true;
-		}
-
-		return false;
+		eventPresentation.setEnabled(LiferayWorkspaceUtil.isValidWorkspaceLocation(getEventProject(event)));
 	}
 
 }

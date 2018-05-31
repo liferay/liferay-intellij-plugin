@@ -105,6 +105,16 @@ public class LiferayWorkspaceUtil {
 		return false;
 	}
 
+	public static boolean isValidWorkspaceLocation(Project project) {
+		if ((project != null) &&
+			(isValidGradleWorkspaceLocation(project.getBasePath()) || isValidMavenWorkspaceLocation(project))) {
+
+			return true;
+		}
+
+		return false;
+	}
+
 	private static String _getGradleProperty(String projectLocation, String key, String defaultValue) {
 		File gradleProperties = new File(projectLocation, "gradle.properties");
 

@@ -25,13 +25,7 @@ import com.intellij.ui.treeStructure.Tree;
 
 import com.liferay.ide.idea.util.BladeCLI;
 import com.liferay.ide.idea.util.CoreUtil;
-import com.liferay.ide.idea.util.ServiceContainer;
-import com.liferay.ide.idea.util.TargetPlatformUtil;
 
-import java.util.List;
-import java.util.stream.Stream;
-
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -77,7 +71,6 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 					_className.setEnabled(false);
 					_servcieName.setEnabled(false);
 					_servcieName.setEditable(false);
-					_servcieName.removeAllItems();
 				}
 				else if ("service-builder".equals(type)) {
 					_packageName.setEditable(true);
@@ -86,7 +79,6 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 					_className.setEditable(false);
 					_servcieName.setEnabled(false);
 					_servcieName.setEditable(false);
-					_servcieName.removeAllItems();
 				}
 				else if ("service".equals(type)) {
 					_packageName.setEditable(true);
@@ -94,20 +86,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 					_className.setEditable(true);
 					_className.setEnabled(true);
 					_servcieName.setEnabled(true);
-					_servcieName.removeAllItems();
-
-					try {
-						ServiceContainer serviceContainer = TargetPlatformUtil.getServicesList();
-
-						List<String> services = serviceContainer.getServiceList();
-
-						Stream<String> stream = services.stream();
-
-						stream.forEach(b -> _servcieName.addItem(b));
-					}
-					catch (Exception e) {
-						_servcieName.addItem("Unable to get services");
-					}
+					_servcieName.setEditable(true);
 				}
 				else if ("service-wrapper".equals(type)) {
 					_packageName.setEditable(true);
@@ -115,20 +94,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 					_className.setEditable(true);
 					_className.setEnabled(true);
 					_servcieName.setEnabled(true);
-					_servcieName.removeAllItems();
-
-					try {
-						ServiceContainer serviceContainer = TargetPlatformUtil.getServiceWrapperList();
-
-						List<String> services = serviceContainer.getServiceList();
-
-						Stream<String> stream = services.stream();
-
-						stream.forEach(b -> _servcieName.addItem(b));
-					}
-					catch (Exception e) {
-						_servcieName.addItem("Unable to get services");
-					}
+					_servcieName.setEditable(true);
 				}
 				else {
 					_packageName.setEditable(true);
@@ -137,7 +103,6 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 					_className.setEnabled(true);
 					_servcieName.setEnabled(false);
 					_servcieName.setEditable(false);
-					_servcieName.removeAllItems();
 				}
 			});
 
@@ -197,9 +162,11 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 	}
 
 	public String getServiceName() {
-		Object selectedServiceName = _servcieName.getSelectedItem();
+		if (_servcieName.isEditable()) {
+			return _servcieName.getText();
+		}
 
-		return selectedServiceName.toString();
+		return null;
 	}
 
 	@Override
@@ -245,7 +212,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 	private JTextField _className;
 	private JPanel _mainPanel;
 	private JTextField _packageName;
-	private JComboBox<String> _servcieName;
+	private JTextField _servcieName;
 	private JPanel _typesPanel;
 	private Tree _typesTree;
 
