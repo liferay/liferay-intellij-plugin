@@ -39,7 +39,7 @@ public class LiferayXmlSchemaProvider extends XmlSchemaProvider {
 	@Nullable
 	@Override
 	public XmlFile getSchema(@NotNull String url, @Nullable Module module, @NotNull PsiFile baseFile) {
-		URL targetFileUrl = null;
+		URL schemaFileUrl = null;
 
 		PsiFile psiFile = baseFile;
 
@@ -50,24 +50,22 @@ public class LiferayXmlSchemaProvider extends XmlSchemaProvider {
 		String fileName = psiFile.getName();
 
 		if ("portlet-model-hints.xml".equals(fileName)) {
-			targetFileUrl = LiferayXmlSchemaProvider.class.getResource("/xsd/liferay-portlet-model-hints_7_0_0.xsd");
+			schemaFileUrl = LiferayXmlSchemaProvider.class.getResource("/xsd/liferay-portlet-model-hints_7_0_0.xsd");
 		}
-		else {
-			if ("default.xml".equals(fileName)) {
-				PsiDirectory parentDirectory = psiFile.getParent();
+		else if ("default.xml".equals(fileName)) {
+			PsiDirectory psiDirectory = psiFile.getParent();
 
-				if (parentDirectory != null) {
-					String parentDirectoryName = parentDirectory.getName();
+			if (psiDirectory != null) {
+				String psiDirectoryName = psiDirectory.getName();
 
-					if ("custom-sql".equals(parentDirectoryName)) {
-						targetFileUrl = LiferayXmlSchemaProvider.class.getResource("/xsd/liferay-custom-sql_7_0_0.xsd");
-					}
+				if ("custom-sql".equals(psiDirectoryName)) {
+					schemaFileUrl = LiferayXmlSchemaProvider.class.getResource("/xsd/liferay-custom-sql_7_0_0.xsd");
 				}
 			}
 		}
 
-		if (targetFileUrl != null) {
-			VirtualFile virtualFile = VfsUtil.findFileByURL(targetFileUrl);
+		if (schemaFileUrl != null) {
+			VirtualFile virtualFile = VfsUtil.findFileByURL(schemaFileUrl);
 
 			if (virtualFile != null) {
 				PsiManager psiManager = PsiManager.getInstance(baseFile.getProject());
@@ -84,11 +82,11 @@ public class LiferayXmlSchemaProvider extends XmlSchemaProvider {
 	}
 
 	@Override
-	public boolean isAvailable(@NotNull XmlFile file) {
-		PsiFile psiFile = file;
+	public boolean isAvailable(@NotNull XmlFile xmlFile) {
+		PsiFile psiFile = xmlFile;
 
-		if (file.getOriginalFile() != null) {
-			psiFile = file.getOriginalFile();
+		if (xmlFile.getOriginalFile() != null) {
+			psiFile = xmlFile.getOriginalFile();
 		}
 
 		if (psiFile.getFileType() != XmlFileType.INSTANCE) {
@@ -102,12 +100,12 @@ public class LiferayXmlSchemaProvider extends XmlSchemaProvider {
 		}
 
 		if ("default.xml".equals(fileName)) {
-			PsiDirectory parentDirectory = psiFile.getParent();
+			PsiDirectory psiDirectory = psiFile.getParent();
 
-			if (parentDirectory != null) {
-				String parentDirectoryName = parentDirectory.getName();
+			if (psiDirectory != null) {
+				String psiDirectoryName = psiDirectory.getName();
 
-				if ("custom-sql".equals(parentDirectoryName)) {
+				if ("custom-sql".equals(psiDirectoryName)) {
 					return true;
 				}
 			}
