@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:element name="model-hints">
+        <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                <xs:element minOccurs="0" ref="hint-collection"/>
+                <xs:element minOccurs="0" ref="model"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="hint-collection">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="hint"/>
+            </xs:sequence>
+            <xs:attribute name="name" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="hint">
+        <xs:complexType mixed="true">
+            <xs:attribute name="name" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="auto-escape"/>
+                        <xs:enumeration value="auto-size"/>
+                        <xs:enumeration value="day-nullable"/>
+                        <xs:enumeration value="default-month-delta"/>
+                        <xs:enumeration value="default-value"/>
+                        <xs:enumeration value="display-height"/>
+                        <xs:enumeration value="display-width"/>
+                        <xs:enumeration value="editor"/>
+                        <xs:enumeration value="max-length"/>
+                        <xs:enumeration value="month-nullable"/>
+                        <xs:enumeration value="secret"/>
+                        <xs:enumeration value="show-time"/>
+                        <xs:enumeration value="type"/>
+                        <xs:enumeration value="upper-case"/>
+                        <xs:enumeration value="year-nullable"/>
+                        <xs:enumeration value="year-range-delta"/>
+                        <xs:enumeration value="year-range-future"/>
+                        <xs:enumeration value="year-range-past"/>
+                        <xs:enumeration value="custom"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="model">
+        <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                <xs:element minOccurs="0" ref="default-hints"/>
+                <xs:element minOccurs="0" ref="field"/>
+            </xs:sequence>
+            <xs:attribute name="name" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="default-hints">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="hint"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="field">
+        <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                <xs:element minOccurs="0" ref="hint-collection"/>
+                <xs:element minOccurs="0" ref="hint"/>
+                <xs:element minOccurs="0" ref="sanitize"/>
+                <xs:element minOccurs="0" ref="validator"/>
+            </xs:sequence>
+            <xs:attribute name="name" use="required"/>
+            <xs:attribute name="type" use="required"/>
+            <xs:attribute name="localized"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="sanitize">
+        <xs:complexType>
+            <xs:attribute name="content-type" use="required"/>
+            <xs:attribute name="modes" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="validator">
+        <xs:complexType mixed="true">
+            <xs:attribute name="name" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="acceptFiles"/>
+                        <xs:enumeration value="alpha"/>
+                        <xs:enumeration value="alphanum"/>
+                        <xs:enumeration value="date"/>
+                        <xs:enumeration value="digits"/>
+                        <xs:enumeration value="email"/>
+                        <xs:enumeration value="equalTo"/>
+                        <xs:enumeration value="iri"/>
+                        <xs:enumeration value="max"/>
+                        <xs:enumeration value="maxLength"/>
+                        <xs:enumeration value="min"/>
+                        <xs:enumeration value="minLength"/>
+                        <xs:enumeration value="number"/>
+                        <xs:enumeration value="range"/>
+                        <xs:enumeration value="rangeLength"/>
+                        <xs:enumeration value="required"/>
+                        <xs:enumeration value="url"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="error-message"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

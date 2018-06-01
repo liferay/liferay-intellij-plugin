@@ -37,5 +37,6 @@
 		<codeInsight.lineMarkerProvider language="XML" implementationClass="com.liferay.ide.idea.language.LiferayServiceXMLLineMarkerProvider"/>
 		<codeInsight.lineMarkerProvider language="JAVA" implementationClass="com.liferay.ide.idea.language.LiferayServiceJavaImplLineMarkerProvider"/>
 		<standardResourceProvider implementation="com.liferay.ide.idea.language.LiferayDefinitionsResourceProvider"/>
+		<xml.schemaProvider implementation="com.liferay.ide.idea.language.LiferayXmlSchemaProvider" />
 	</extensions>
 </idea-plugin>
