@@ -10,3 +10,4 @@ build/
 out/
 src/main/resources/libs/blade.jar
 src/main/resources/definitions/
+/bin/

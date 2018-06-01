@@ -22,7 +22,6 @@ import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.DefaultProjectTypeEP;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectType;
-
 import com.liferay.ide.idea.ui.modules.LiferayProjectType;
 import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
 
@@ -31,6 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Simon Jiang
+ * @author Gregory Amerson
  */
 @State(name = "ProjectType", storages = @Storage(file = StoragePathMacros.PROJECT_FILE))
 public class LiferayProjectTypeService implements PersistentStateComponent<ProjectType> {
@@ -51,15 +51,16 @@ public class LiferayProjectTypeService implements PersistentStateComponent<Proje
 			}
 		}
 
-		boolean liferayGradleProject = LiferayWorkspaceUtil.isValidGradleWorkspaceLocation(project.getBasePath());
+		boolean validGradleWorkspaceLocation = LiferayWorkspaceUtil.isValidGradleWorkspaceLocation(
+			project.getBasePath());
 
-		if (liferayGradleProject) {
+		if (validGradleWorkspaceLocation) {
 			return new ProjectType(LiferayProjectType.LIFERAY_GRADLE_WORKSPACE);
 		}
 
-		boolean liferayMavenProject = LiferayWorkspaceUtil.isValidMavenWorkspaceLocation(project);
+		boolean validMavenWorkspaceLocation = LiferayWorkspaceUtil.isValidMavenWorkspaceLocation(project);
 
-		if (liferayMavenProject) {
+		if (validMavenWorkspaceLocation) {
 			return new ProjectType(LiferayProjectType.LIFERAY_MAVEN_WORKSPACE);
 		}
 
