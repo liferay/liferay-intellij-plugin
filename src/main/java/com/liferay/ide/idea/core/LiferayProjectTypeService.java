@@ -22,6 +22,7 @@ import com.intellij.openapi.components.StoragePathMacros;
 import com.intellij.openapi.project.DefaultProjectTypeEP;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectType;
+
 import com.liferay.ide.idea.ui.modules.LiferayProjectType;
 import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
 
