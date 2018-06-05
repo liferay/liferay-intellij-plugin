@@ -23,6 +23,7 @@ import com.intellij.execution.util.JavaParametersUtil;
 import com.intellij.util.PathsList;
 
 import java.io.File;
+import java.io.FileFilter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -47,7 +48,21 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 
 		params.setJdk(JavaParametersUtil.createProjectJdk(configuration.getProject(), jreHome));
 
-		String tomcat = configuration.getLiferayBundle() + "/tomcat-8.0.32";
+		File bundleDir = new File(configuration.getLiferayBundle());
+
+		File[] files = bundleDir.listFiles(
+			new FileFilter() {
+
+				@Override
+				public boolean accept(File file) {
+					String fileName = file.getName();
+
+					return fileName.startsWith("tomcat");
+				}
+
+			});
+
+		String tomcat = configuration.getLiferayBundle() + "/" + files[0].getName();
 
 		PathsList classPath = params.getClassPath();
 
