@@ -41,8 +41,8 @@ public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfi
 		modulesComboBox.fillModules(project);
 
 		_liferayServer.setEnabled(true);
-		_liferayServer.addBrowseFolderListener("Tomcat folder",
-				"Choose the folder containing the tomcat application server",
+		_liferayServer.addBrowseFolderListener("Liferay installation folder",
+				"Choose the folder where Liferay is installed (e.g. bundles)",
 				project, FileChooserDescriptorFactory.createSingleFolderDescriptor());
 
 		_jrePath.setDefaultJreSelector(DefaultJreSelector.fromModuleDependencies(modulesComboBox, true));
