@@ -26,15 +26,15 @@ import java.util.List;
  */
 public class GradleUtil {
 
-	public static boolean isWatchable(File file) {
-		if (FileUtil.notExists(file)) {
+	public static boolean isWatchableProject(File buildFile) {
+		if (FileUtil.notExists(buildFile)) {
 			return false;
 		}
 
 		boolean watchable = false;
 
 		try {
-			GradleDependencyUpdater updater = new GradleDependencyUpdater(file);
+			GradleDependencyUpdater updater = new GradleDependencyUpdater(buildFile);
 
 			List<GradleDependency> dependencies = updater.getAllBuildDependencies();
 

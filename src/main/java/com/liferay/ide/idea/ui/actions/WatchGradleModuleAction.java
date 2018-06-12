@@ -55,7 +55,7 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
 		if ((file != null) && (gradleFile != null) && ProjectRootsUtil.isModuleContentRoot(file, project)) {
 			File settingsFile = new File(gradleFile.getPath());
 
-			if (GradleUtil.isWatchable(settingsFile)) {
+			if (GradleUtil.isWatchableProject(settingsFile)) {
 				return true;
 			}
 		}
