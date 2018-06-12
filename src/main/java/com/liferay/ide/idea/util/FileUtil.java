@@ -67,6 +67,14 @@ public class FileUtil {
 		return false;
 	}
 
+	public static boolean notExists(File file) {
+		if ((file == null) || !file.exists()) {
+			return true;
+		}
+
+		return false;
+	}
+
 	public static String readContents(File file, boolean includeNewlines) {
 		if (file == null) {
 			return null;

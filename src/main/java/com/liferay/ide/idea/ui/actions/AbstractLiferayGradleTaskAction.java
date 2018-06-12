@@ -103,6 +103,10 @@ public abstract class AbstractLiferayGradleTaskAction extends AnAction {
 		}
 	}
 
+	public boolean continuous() {
+		return false;
+	}
+
 	public boolean isEnabledAndVisible(AnActionEvent event) {
 		return true;
 	}
@@ -161,6 +165,10 @@ public abstract class AbstractLiferayGradleTaskAction extends AnAction {
 					}
 				},
 				" ");
+
+			if (continuous()) {
+				scriptParameters = scriptParameters + " --continuous";
+			}
 
 			ExternalSystemTaskExecutionSettings settings = new ExternalSystemTaskExecutionSettings();
 
