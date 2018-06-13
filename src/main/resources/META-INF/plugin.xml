@@ -3,10 +3,57 @@
 	<name>Liferay IntelliJ Plugin</name>
 	<idea-version since-build="172.0"/>
 	<vendor url="https://www.liferay.com">Liferay Inc.</vendor>
-	<description>Liferay Plugin for IntelliJ IDEA</description>
-	<version>0.1.1</version>
-	<change-notes/>
-
+	<description><![CDATA[<p>
+		Liferay Plugin for IntelliJ IDEA
+	</p>
+	<p>
+		Features:
+		<ul>
+			<li>Liferay Portal CE 7.x or DXP start and debug</li>
+			<li>Liferay Workspace</li>
+			<li>Liferay Module</li>
+			<li>Deployment</li>
+			<li>Better editors support for bnd.bnd, service.xml jsp and so on</li>
+			<li>Better Liferay framework support like Liferay Taglib</li>
+		</ul>
+	</p>
+	<p>
+		If you find any issues, please report them (<a href="https://github.com/gamerson/liferay-intellij-plugin/issues">GitHub issue tracker</a> or <a href="https://issues.liferay.com/projects/IDE/issues">Liferay issue tracker</a>).
+	</p>
+	<p>
+		Special Thanks to community contribution:
+		<ul>
+			<li><a href="https://github.com/dmarks2">Dominik Marks</a></li>
+		</ul>
+	</p>]]></description>
+	<version>0.1.2</version>
+	<change-notes>
+	<![CDATA[<p>
+		See for all changes: https://github.com/gamerson/liferay-intellij-plugin/commits/
+	</p>
+	<p>
+		<ul>
+			<li>0.1.2</li>
+			<ul>
+				<li>add new watch way for module deployment</li>
+				<li>add support for starting or debugging Liferay Portal CE 7.1</li>
+				<li>bug fixes</li>
+			</ul>
+			<li>0.1.1</li>
+			<ul>
+				<li>add support for starting or debugging Liferay Portal CE 7.0</li>
+				<li>add support for starting or debugging Liferay Portal DXP</li>
+				<li>add support for creating Liferay Workspace - Gradle</li>
+				<li>add support for creating Liferay Workspace - Maven</li>
+				<li>add support for creating Liferay Module</li>
+				<li>deployment</li>
+				<li>highlighting and code completions for bnd.bnd</li>
+				<li>better editor for service.xml</li>
+				<li>add support for Liferay Taglib(Ultimate Only)</li>
+			</ul>
+		</ul>
+	</p>]]>
+	</change-notes>
 	<depends>org.jetbrains.plugins.gradle</depends>
 	<depends>org.jetbrains.idea.maven</depends>
 	<depends optional="true" config-file="javaee.xml">com.intellij.javaee</depends>
