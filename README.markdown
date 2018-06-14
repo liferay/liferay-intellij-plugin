@@ -71,7 +71,6 @@ After you get the Liferay Modules you can *watch* them on running or debugging L
 4. Liferay Taglib Support for Jsp files(Ultimate Only)
 5. etc.
 
-
 ## License
 
 This library, *Liferay IDE*, is free software ("Licensed
