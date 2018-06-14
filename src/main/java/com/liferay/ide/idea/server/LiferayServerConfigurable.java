@@ -17,18 +17,17 @@ package com.liferay.ide.idea.server;
 import com.intellij.application.options.ModulesComboBox;
 import com.intellij.execution.ui.DefaultJreSelector;
 import com.intellij.execution.ui.JrePathEditor;
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.LabeledComponent;
+import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.PanelWithAnchor;
-
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 /**
  * @author Terry Jia
@@ -41,8 +40,11 @@ public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfi
 		modulesComboBox.allowEmptySelection("<whole project>");
 		modulesComboBox.fillModules(project);
 
-		_liferayServer.setEditable(false);
-		_liferayServer.setEnabled(false);
+		_liferayServer.setEnabled(true);
+		_liferayServer.addBrowseFolderListener("Liferay installation folder",
+				"Choose the folder where Liferay is installed (e.g. bundles)",
+				project, FileChooserDescriptorFactory.createSingleFolderDescriptor());
+
 		_jrePath.setDefaultJreSelector(DefaultJreSelector.fromModuleDependencies(modulesComboBox, true));
 	}
 
@@ -86,7 +88,7 @@ public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfi
 
 	private JComponent _anchor;
 	private JrePathEditor _jrePath;
-	private JTextField _liferayServer;
+	private TextFieldWithBrowseButton _liferayServer;
 	private JPanel _mainPanel;
 	private LabeledComponent<ModulesComboBox> _modules;
 	private JTextField _vmParams;
