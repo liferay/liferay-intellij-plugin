@@ -59,10 +59,18 @@ After you get the Liferay Modules you can deploy them to running or debugging Li
 ### Watch
 After you get the Liferay Modules you can *watch* them on running or debugging Liferay Server:
 1. Right Click on your *Liferay Module* or the folders like modules or the root of Liferay Workspace.
-2. Choose Liferay > watch
+2. Choose Liferay > Watch
 3. When you see the gradle console output and the deplog log showing in the console view, you get your module successful deploying.
 4. You could keep the watch task running and it will listen on the changes of your coding.
 5. You could click red button to cancel the running watch task in Gradle Task view.
+
+### Better Editors for Liferay Files
+1. service.xml
+2. custom-sql/default.xml
+3. portlet-model-hints.xml
+4. Liferay Taglib Support for Jsp files(Ultimate Only)
+5. etc.
+
 
 ## License
 
