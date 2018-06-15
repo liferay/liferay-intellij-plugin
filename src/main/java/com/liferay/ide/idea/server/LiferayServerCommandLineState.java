@@ -21,10 +21,11 @@ import com.intellij.execution.configurations.ParametersList;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.util.JavaParametersUtil;
 import com.intellij.util.PathsList;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileFilter;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Terry Jia

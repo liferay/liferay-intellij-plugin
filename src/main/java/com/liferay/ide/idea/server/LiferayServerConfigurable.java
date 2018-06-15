@@ -24,10 +24,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.PanelWithAnchor;
+
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 /**
  * @author Terry Jia
@@ -41,13 +44,15 @@ public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfi
 		modulesComboBox.fillModules(project);
 
 		_liferayServer.setEnabled(true);
-		_liferayServer.addBrowseFolderListener("Liferay installation folder",
-				"Choose the folder where Liferay is installed (e.g. bundles)",
-				project, FileChooserDescriptorFactory.createSingleFolderDescriptor());
+
+		_liferayServer.addBrowseFolderListener(
+			"Liferay installation folder", "Choose the folder where Liferay is installed (e.g. bundles)", project,
+			FileChooserDescriptorFactory.createSingleFolderDescriptor());
 
 		_jrePath.setDefaultJreSelector(DefaultJreSelector.fromModuleDependencies(modulesComboBox, true));
 	}
 
+	@Override
 	public void applyEditorTo(@NotNull LiferayServerConfiguration configuration) throws ConfigurationException {
 		configuration.setAlternativeJrePath(_jrePath.getJrePathOrName());
 		configuration.setAlternativeJrePathEnabled(_jrePath.isAlternativeJreSelected());
@@ -61,6 +66,7 @@ public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfi
 	}
 
 	@NotNull
+	@Override
 	public JComponent createEditor() {
 		return _mainPanel;
 	}
@@ -70,6 +76,7 @@ public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfi
 		return _anchor;
 	}
 
+	@Override
 	public void resetEditorFrom(@NotNull LiferayServerConfiguration configuration) {
 		_vmParams.setText(configuration.getVMParameters());
 		_liferayServer.setText(configuration.getLiferayBundle());
