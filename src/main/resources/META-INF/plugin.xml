@@ -73,6 +73,7 @@
 			<action class="com.liferay.ide.idea.ui.actions.DeployMavenModuleAction" id="DeployLiferayMavenModule"/>
 			<action class="com.liferay.ide.idea.ui.actions.InitBundleGradleAction" id="GradleInitBundle"/>
 			<action class="com.liferay.ide.idea.ui.actions.InitBundleMavenAction" id="MavenInitBundle"/>
+			<action class="com.liferay.ide.idea.ui.actions.UninstallModuleAction" id="uninstallModule"/>
 		</group>
 	</actions>
 
