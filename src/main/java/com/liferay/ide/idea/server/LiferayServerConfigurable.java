@@ -17,10 +17,12 @@ package com.liferay.ide.idea.server;
 import com.intellij.application.options.ModulesComboBox;
 import com.intellij.execution.ui.DefaultJreSelector;
 import com.intellij.execution.ui.JrePathEditor;
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.LabeledComponent;
+import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.PanelWithAnchor;
 
 import javax.swing.JComponent;
@@ -41,11 +43,16 @@ public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfi
 		modulesComboBox.allowEmptySelection("<whole project>");
 		modulesComboBox.fillModules(project);
 
-		_liferayServer.setEditable(false);
-		_liferayServer.setEnabled(false);
+		_liferayServer.setEnabled(true);
+
+		_liferayServer.addBrowseFolderListener(
+			"Liferay installation folder", "Choose the folder where Liferay is installed (e.g. bundles)", project,
+			FileChooserDescriptorFactory.createSingleFolderDescriptor());
+
 		_jrePath.setDefaultJreSelector(DefaultJreSelector.fromModuleDependencies(modulesComboBox, true));
 	}
 
+	@Override
 	public void applyEditorTo(@NotNull LiferayServerConfiguration configuration) throws ConfigurationException {
 		configuration.setAlternativeJrePath(_jrePath.getJrePathOrName());
 		configuration.setAlternativeJrePathEnabled(_jrePath.isAlternativeJreSelected());
@@ -59,6 +66,7 @@ public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfi
 	}
 
 	@NotNull
+	@Override
 	public JComponent createEditor() {
 		return _mainPanel;
 	}
@@ -68,6 +76,7 @@ public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfi
 		return _anchor;
 	}
 
+	@Override
 	public void resetEditorFrom(@NotNull LiferayServerConfiguration configuration) {
 		_vmParams.setText(configuration.getVMParameters());
 		_liferayServer.setText(configuration.getLiferayBundle());
@@ -86,7 +95,7 @@ public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfi
 
 	private JComponent _anchor;
 	private JrePathEditor _jrePath;
-	private JTextField _liferayServer;
+	private TextFieldWithBrowseButton _liferayServer;
 	private JPanel _mainPanel;
 	private LabeledComponent<ModulesComboBox> _modules;
 	private JTextField _vmParams;
