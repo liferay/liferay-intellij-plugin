@@ -25,6 +25,9 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import com.liferay.ide.idea.util.LiferayIcons;
+import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
+
+import java.io.File;
 
 /**
  * @author Andy Wu
@@ -45,7 +48,7 @@ public class DeployGradleModuleAction extends AbstractLiferayGradleTaskAction {
 		VirtualFile gradleFile = baseDir.findChild("build.gradle");
 
 		if ((file != null) && (gradleFile != null) && ProjectRootsUtil.isModuleContentRoot(file, project) &&
-			!baseDir.equals(file)) {
+			!baseDir.equals(file) && new File(LiferayWorkspaceUtil.getHomeDir(project.getBasePath())).exists()) {
 
 			return true;
 		}
