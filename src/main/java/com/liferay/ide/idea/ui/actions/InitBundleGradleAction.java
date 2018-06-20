@@ -19,7 +19,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 
-import com.liferay.ide.idea.util.LiferayIcons;
+import icons.LiferayIcons;
 
 /**
  * @author Andy Wu

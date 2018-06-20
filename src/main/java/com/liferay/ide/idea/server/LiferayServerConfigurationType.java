@@ -22,7 +22,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 
-import com.liferay.ide.idea.util.LiferayIcons;
+import icons.LiferayIcons;
 
 import org.jetbrains.annotations.NotNull;
 

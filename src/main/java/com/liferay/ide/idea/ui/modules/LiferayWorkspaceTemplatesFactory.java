@@ -18,7 +18,7 @@ import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.platform.ProjectTemplate;
 import com.intellij.platform.ProjectTemplatesFactory;
 
-import com.liferay.ide.idea.util.LiferayIcons;
+import icons.LiferayIcons;
 
 import javax.swing.Icon;
 
