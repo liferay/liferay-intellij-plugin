@@ -25,7 +25,8 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import com.liferay.ide.idea.util.GradleUtil;
-import com.liferay.ide.idea.util.LiferayIcons;
+
+import icons.LiferayIcons;
 
 import java.io.File;
 
