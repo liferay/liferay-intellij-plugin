@@ -94,5 +94,6 @@
 		<codeInsight.lineMarkerProvider language="JAVA" implementationClass="com.liferay.ide.idea.language.LiferayServiceJavaImplLineMarkerProvider"/>
 		<standardResourceProvider implementation="com.liferay.ide.idea.language.LiferayDefinitionsResourceProvider"/>
 		<xml.schemaProvider implementation="com.liferay.ide.idea.language.LiferayXmlSchemaProvider" />
+		<completion.contributor order="first" language="JAVA" implementationClass="com.liferay.ide.idea.language.osgi.ComponentPropertiesCompletionContributor"/>
 	</extensions>
 </idea-plugin>
