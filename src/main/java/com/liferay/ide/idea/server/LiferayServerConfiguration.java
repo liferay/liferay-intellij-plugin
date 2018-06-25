@@ -48,7 +48,6 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
 
 import java.io.File;
-import java.io.FileFilter;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -93,17 +92,7 @@ public class LiferayServerConfiguration
 					"', you need to run gradle task 'initBundle' first.");
 		}
 
-		File[] files = liferayHome.listFiles(
-			new FileFilter() {
-
-				@Override
-				public boolean accept(File file) {
-					String fileName = file.getName();
-
-					return fileName.startsWith("tomcat");
-				}
-
-			});
+		File[] files = liferayHome.listFiles(file -> file.getName().startsWith("tomcat"));
 
 		if (files.length == 0) {
 			throw new RuntimeConfigurationError("Unable to detect Tomcat folder from '" + liferayHome.toPath() + "'");
