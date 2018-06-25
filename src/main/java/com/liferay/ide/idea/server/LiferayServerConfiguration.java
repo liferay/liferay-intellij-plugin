@@ -26,6 +26,7 @@ import com.intellij.execution.configurations.JavaRunConfigurationModule;
 import com.intellij.execution.configurations.LocatableConfigurationBase;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.RunProfileState;
+import com.intellij.execution.configurations.RuntimeConfigurationError;
 import com.intellij.execution.configurations.RuntimeConfigurationException;
 import com.intellij.execution.configurations.RuntimeConfigurationWarning;
 import com.intellij.execution.configurations.SearchScopeProvider;
@@ -86,9 +87,20 @@ public class LiferayServerConfiguration
 		File liferayHome = new File(getLiferayBundle());
 
 		if (!liferayHome.exists()) {
-			throw new RuntimeConfigurationWarning(
+			throw new RuntimeConfigurationError(
 				"Unable to detect liferay bundle from '" + liferayHome.toPath() +
 					"', you need to run gradle task 'initBundle' first.");
+		}
+
+		File[] files = liferayHome.listFiles(file -> file.getName().startsWith("tomcat"));
+
+		if (files.length == 0) {
+			throw new RuntimeConfigurationError("Unable to detect Tomcat folder from '" + liferayHome.toPath() + "'");
+		}
+
+		if (!getLiferayBundle().startsWith(getProject().getBasePath())) {
+			throw new RuntimeConfigurationWarning(
+				"Liferay bundle is not contained inside a Liferay workspace. Use watch task to deploy modules.");
 		}
 
 		JavaRunConfigurationExtensionManager.checkConfigurationIsValid(this);
