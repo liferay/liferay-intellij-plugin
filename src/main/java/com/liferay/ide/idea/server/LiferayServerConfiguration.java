@@ -100,7 +100,7 @@ public class LiferayServerConfiguration
 
 		if (!getLiferayBundle().startsWith(getProject().getBasePath())) {
 			throw new RuntimeConfigurationWarning(
-				"The liferay bundle doesn't under Liferay workspace. Use watch task to deploy modules.");
+				"Liferay bundle is not contained inside a Liferay workspace. Use watch task to deploy modules.");
 		}
 
 		JavaRunConfigurationExtensionManager.checkConfigurationIsValid(this);
