@@ -25,6 +25,9 @@ import com.intellij.psi.PsiNameValuePair;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ProcessingContext;
 
+import java.util.Objects;
+import java.util.stream.Stream;
+
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -45,29 +48,28 @@ public class ComponentPropertiesPsiElementPatternCapture {
 					PsiArrayInitializerMemberValue psiArrayInitializerMemberValue = PsiTreeUtil.getParentOfType(
 						psiElement, PsiArrayInitializerMemberValue.class);
 
-					if (psiArrayInitializerMemberValue != null) {
-						PsiNameValuePair psiNameValuePair = PsiTreeUtil.getParentOfType(
-							psiArrayInitializerMemberValue, PsiNameValuePair.class);
-
-						if (psiNameValuePair != null) {
-							String name = psiNameValuePair.getName();
-
-							if ("property".equals(name)) {
-								PsiAnnotation psiAnnotation = PsiTreeUtil.getParentOfType(
-									psiNameValuePair, PsiAnnotation.class);
-
-								if (psiAnnotation != null) {
-									String qualifiedName = psiAnnotation.getQualifiedName();
-
-									if ("org.osgi.service.component.annotations.Component".equals(qualifiedName)) {
-										return true;
-									}
-								}
-							}
-						}
+					if (psiArrayInitializerMemberValue == null) {
+						return false;
 					}
 
-					return false;
+					return Stream.of(
+						psiArrayInitializerMemberValue
+					).map(
+						array -> PsiTreeUtil.getParentOfType(array, PsiNameValuePair.class)
+					).filter(
+						Objects::nonNull
+					).filter(
+						pair -> pair.getName().equals("property")
+					).map(
+						pair -> PsiTreeUtil.getParentOfType(pair, PsiAnnotation.class)
+					).filter(
+						Objects::nonNull
+					).map(
+						PsiAnnotation::getQualifiedName
+					).filter(
+						qualifiedName -> "org.osgi.service.component.annotations.Component".equals(qualifiedName)
+					).findFirst(
+					).isPresent();
 				}
 
 			});
