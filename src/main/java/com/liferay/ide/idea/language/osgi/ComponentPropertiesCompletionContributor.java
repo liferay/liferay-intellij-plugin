@@ -20,13 +20,11 @@ import com.intellij.codeInsight.completion.CompletionProvider;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.psi.PsiAnnotationMemberValue;
 import com.intellij.psi.PsiAnnotationParameterList;
 import com.intellij.psi.PsiClassObjectAccessExpression;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiJavaCodeReferenceElement;
 import com.intellij.psi.PsiNameValuePair;
-import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ProcessingContext;
 
@@ -36,6 +34,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -91,36 +91,34 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 		PsiAnnotationParameterList annotationParameterList = PsiTreeUtil.getParentOfType(
 			psiElement, PsiAnnotationParameterList.class);
 
-		if (annotationParameterList != null) {
-			PsiNameValuePair[] psiNameValuePairs = PsiTreeUtil.getChildrenOfType(
-				annotationParameterList, PsiNameValuePair.class);
-
-			if (psiNameValuePairs != null) {
-				for (PsiNameValuePair psiNameValuePair : psiNameValuePairs) {
-					String name = psiNameValuePair.getName();
-
-					if ("service".equals(name)) {
-						PsiAnnotationMemberValue value = psiNameValuePair.getValue();
-
-						if (value instanceof PsiClassObjectAccessExpression) {
-							PsiClassObjectAccessExpression psiClassObjectAccessExpression =
-								(PsiClassObjectAccessExpression)value;
-
-							PsiTypeElement operand = psiClassObjectAccessExpression.getOperand();
-
-							PsiJavaCodeReferenceElement innermostComponentReferenceElement =
-								operand.getInnermostComponentReferenceElement();
-
-							if (innermostComponentReferenceElement != null) {
-								return innermostComponentReferenceElement.getQualifiedName();
-							}
-						}
-					}
-				}
-			}
+		if (annotationParameterList == null) {
+			return null;
 		}
 
-		return null;
+		return Stream.of(
+			annotationParameterList
+		).map(
+			list -> PsiTreeUtil.getChildrenOfType(list, PsiNameValuePair.class)
+		).filter(
+			Objects::nonNull
+		).flatMap(
+			Stream::of
+		).filter(
+			pair -> pair.getName().equals("service")
+		).map(
+			PsiNameValuePair::getValue
+		).filter(
+			value -> value instanceof PsiClassObjectAccessExpression
+		).map(
+			value -> ((PsiClassObjectAccessExpression)value).getOperand().getInnermostComponentReferenceElement()
+		).filter(
+			Objects::nonNull
+		).map(
+			PsiJavaCodeReferenceElement::getQualifiedName
+		).findFirst(
+		).orElse(
+			null
+		);
 	}
 
 	//see https://dev.liferay.com/develop/reference/-/knowledge_base/7-0/portlet-descriptor-to-osgi-service-property-map
