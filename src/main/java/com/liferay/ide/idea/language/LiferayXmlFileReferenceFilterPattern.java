@@ -23,12 +23,11 @@ import com.intellij.psi.xml.XmlElement;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.psi.xml.XmlText;
 
+import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
-import javafx.util.Pair;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -110,7 +109,7 @@ public class LiferayXmlFileReferenceFilterPattern extends FilterPattern {
 		};
 	}
 
-	private static final Map<String, Collection<Pair<String, String>>> _attributesMap = new HashMap<>();
+	private static final Map<String, Collection<SimpleImmutableEntry<String, String>>> _attributesMap = new HashMap<>();
 	private static final Map<String, Collection<String>> _tagsMap = new HashMap<>();
 
 	static {
@@ -149,14 +148,14 @@ public class LiferayXmlFileReferenceFilterPattern extends FilterPattern {
 
 		_attributesMap.put(
 			LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_RESOURCE_ACTION_MAPPING_7_0_0,
-			Arrays.asList(new Pair<String, String>("resource", "file")));
+			Arrays.asList(new SimpleImmutableEntry<>("resource", "file")));
 		_attributesMap.put(
 			LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_RESOURCE_ACTION_MAPPING_7_1_0,
 			_attributesMap.get(LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_RESOURCE_ACTION_MAPPING_7_0_0));
 
 		_attributesMap.put(
 			LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_SERVICE_BUILDER_7_0_0,
-			Arrays.asList(new Pair<String, String>("service-builder-import", "file")));
+			Arrays.asList(new SimpleImmutableEntry<>("service-builder-import", "file")));
 		_attributesMap.put(
 			LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_SERVICE_BUILDER_7_1_0,
 			_attributesMap.get(LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_SERVICE_BUILDER_7_0_0));
