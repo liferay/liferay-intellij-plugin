@@ -23,10 +23,12 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
 import com.intellij.openapi.externalSystem.model.execution.ExternalTaskExecutionInfo;
+import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode;
 import com.intellij.openapi.externalSystem.service.notification.ExternalSystemNotificationManager;
 import com.intellij.openapi.externalSystem.service.notification.NotificationCategory;
 import com.intellij.openapi.externalSystem.service.notification.NotificationData;
 import com.intellij.openapi.externalSystem.service.notification.NotificationSource;
+import com.intellij.openapi.externalSystem.task.TaskCallback;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
@@ -64,7 +66,7 @@ public abstract class AbstractLiferayGradleTaskAction extends AnAction {
 	}
 
 	@Override
-	public void actionPerformed(AnActionEvent event) {
+	public void actionPerformed(final AnActionEvent event) {
 		Project project = event.getRequiredData(CommonDataKeys.PROJECT);
 
 		String workingDirectory = getWorkingDirectory(event);
@@ -80,7 +82,20 @@ public abstract class AbstractLiferayGradleTaskAction extends AnAction {
 		}
 
 		ExternalSystemUtil.runTask(
-			taskExecutionInfo.getSettings(), taskExecutionInfo.getExecutorId(), project, GradleConstants.SYSTEM_ID);
+			taskExecutionInfo.getSettings(), taskExecutionInfo.getExecutorId(), project, GradleConstants.SYSTEM_ID,
+			new TaskCallback() {
+
+				@Override
+				public void onFailure() {
+				}
+
+				@Override
+				public void onSuccess() {
+					afterTask(event);
+				}
+
+			},
+			ProgressExecutionMode.IN_BACKGROUND_ASYNC);
 
 		RunnerAndConfigurationSettings configuration =
 			ExternalSystemUtil.createExternalSystemRunnerAndConfigurationSettings(
@@ -101,6 +116,9 @@ public abstract class AbstractLiferayGradleTaskAction extends AnAction {
 		else {
 			runManager.setSelectedConfiguration(existingConfiguration);
 		}
+	}
+
+	public void afterTask(AnActionEvent event) {
 	}
 
 	public boolean continuous() {
