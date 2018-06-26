@@ -47,6 +47,8 @@ import org.jetbrains.annotations.NotNull;
 public class ComponentPropertiesCompletionContributor extends CompletionContributor {
 
 	public ComponentPropertiesCompletionContributor() {
+		Map<String, List<LookupElementBuilder>> keywordLookups = new HashMap<>();
+
 		for (Map.Entry<String, String[][]> entry : _componentProperties.entrySet()) {
 			List<LookupElementBuilder> lookups = new ArrayList<>();
 
@@ -59,7 +61,7 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 				lookups.add(lookupElementBuilder);
 			}
 
-			_keywordLookups.put(entry.getKey(), lookups);
+			keywordLookups.put(entry.getKey(), lookups);
 		}
 
 		extend(
@@ -74,7 +76,7 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 					String serviceClassName = _getServiceClassName(parameters.getOriginalPosition());
 
 					if (serviceClassName != null) {
-						List<LookupElementBuilder> lookups = _keywordLookups.get(serviceClassName);
+						List<LookupElementBuilder> lookups = keywordLookups.get(serviceClassName);
 
 						if (lookups != null) {
 							result.addAllElements(lookups);
@@ -509,7 +511,5 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 			"java.lang.Object",
 			new String[][] {{"osgi.command.scope", "String"}, {"osgi.command.function", "String"}, });
 	}
-
-	private Map<String, List<LookupElementBuilder>> _keywordLookups = new HashMap<>();
 
 }
