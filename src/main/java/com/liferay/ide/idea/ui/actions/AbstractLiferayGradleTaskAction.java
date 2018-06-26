@@ -66,10 +66,10 @@ public abstract class AbstractLiferayGradleTaskAction extends AnAction {
 	}
 
 	@Override
-	public void actionPerformed(AnActionEvent event) {
+	public void actionPerformed(final AnActionEvent event) {
 		Project project = event.getRequiredData(CommonDataKeys.PROJECT);
 
-		workingDirectory = getWorkingDirectory(event);
+		String workingDirectory = getWorkingDirectory(event);
 
 		if (CoreUtil.isNullOrEmpty(workingDirectory)) {
 			return;
@@ -85,11 +85,13 @@ public abstract class AbstractLiferayGradleTaskAction extends AnAction {
 			taskExecutionInfo.getSettings(), taskExecutionInfo.getExecutorId(), project, GradleConstants.SYSTEM_ID,
 			new TaskCallback() {
 
+				@Override
 				public void onFailure() {
 				}
 
+				@Override
 				public void onSuccess() {
-					afterTask();
+					afterTask(event);
 				}
 
 			},
@@ -116,7 +118,7 @@ public abstract class AbstractLiferayGradleTaskAction extends AnAction {
 		}
 	}
 
-	public void afterTask() {
+	public void afterTask(AnActionEvent event) {
 	}
 
 	public boolean continuous() {
@@ -147,8 +149,6 @@ public abstract class AbstractLiferayGradleTaskAction extends AnAction {
 	}
 
 	protected abstract String getWorkingDirectory(AnActionEvent event);
-
-	protected String workingDirectory;
 
 	private ExternalTaskExecutionInfo _buildTaskExecutionInfo(
 		Project project, @NotNull String projectPath, @NotNull String fullCommandLine) {

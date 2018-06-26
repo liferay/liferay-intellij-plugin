@@ -52,8 +52,9 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
 		super("Watch", "Run watch task", LiferayIcons.LIFERAY_ICON, "watch");
 	}
 
-	public void afterTask() {
-		List<Path> bndPaths = _getBndPaths();
+	@Override
+	public void afterTask(AnActionEvent event) {
+		List<Path> bndPaths = _getBndPaths(event);
 
 		if (bndPaths.isEmpty()) {
 			return;
@@ -126,8 +127,8 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
 		return roots[0].getCanonicalPath();
 	}
 
-	private List<Path> _getBndPaths() {
-		File file = new File(workingDirectory);
+	private List<Path> _getBndPaths(AnActionEvent event) {
+		File file = new File(getWorkingDirectory(event));
 
 		File bndFile = new File(file, "bnd.bnd");
 
