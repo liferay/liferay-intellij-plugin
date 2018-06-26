@@ -47,46 +47,7 @@ import org.jetbrains.annotations.NotNull;
 public class ComponentPropertiesCompletionContributor extends CompletionContributor {
 
 	public ComponentPropertiesCompletionContributor() {
-		Map<String, List<LookupElementBuilder>> keywordLookups = new HashMap<>();
-
-		for (Map.Entry<String, String[][]> entry : _componentProperties.entrySet()) {
-			List<LookupElementBuilder> lookups = new ArrayList<>();
-
-			for (String[] keyword : entry.getValue()) {
-				LookupElementBuilder lookupElementBuilder = LookupElementBuilder.create(keyword[0]);
-
-				lookupElementBuilder = lookupElementBuilder.withTypeText(keyword[1]);
-				lookupElementBuilder = lookupElementBuilder.withIcon(LiferayIcons.LIFERAY_ICON);
-
-				lookups.add(lookupElementBuilder);
-			}
-
-			keywordLookups.put(entry.getKey(), lookups);
-		}
-
-		extend(
-			CompletionType.BASIC, ComponentPropertiesPsiElementPatternCapture.instance,
-			new CompletionProvider<CompletionParameters>() {
-
-				@Override
-				protected void addCompletions(
-					@NotNull CompletionParameters parameters, ProcessingContext context,
-					@NotNull CompletionResultSet result) {
-
-					String serviceClassName = _getServiceClassName(parameters.getOriginalPosition());
-
-					if (serviceClassName != null) {
-						List<LookupElementBuilder> lookups = keywordLookups.get(serviceClassName);
-
-						if (lookups != null) {
-							result.addAllElements(lookups);
-
-							result.stopHere();
-						}
-					}
-				}
-
-			});
+		_addCompletions(_createKeywordLookups());
 	}
 
 	private static String _getServiceClassName(PsiElement psiElement) {
@@ -121,6 +82,53 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 		).orElse(
 			null
 		);
+	}
+
+	private void _addCompletions(Map<String, List<LookupElementBuilder>> keywordLookups) {
+		extend(
+			CompletionType.BASIC, ComponentPropertiesPsiElementPatternCapture.instance,
+			new CompletionProvider<CompletionParameters>() {
+
+				@Override
+				protected void addCompletions(
+					@NotNull CompletionParameters parameters, ProcessingContext context,
+					@NotNull CompletionResultSet result) {
+
+					String serviceClassName = _getServiceClassName(parameters.getOriginalPosition());
+
+					if (serviceClassName != null) {
+						List<LookupElementBuilder> lookups = keywordLookups.get(serviceClassName);
+
+						if (lookups != null) {
+							result.addAllElements(lookups);
+
+							result.stopHere();
+						}
+					}
+				}
+
+			});
+	}
+
+	private Map<String, List<LookupElementBuilder>> _createKeywordLookups() {
+		Map<String, List<LookupElementBuilder>> keywordLookups = new HashMap<>();
+
+		for (Map.Entry<String, String[][]> entry : _componentProperties.entrySet()) {
+			List<LookupElementBuilder> lookups = new ArrayList<>();
+
+			for (String[] keyword : entry.getValue()) {
+				LookupElementBuilder lookupElementBuilder = LookupElementBuilder.create(keyword[0]);
+
+				lookupElementBuilder = lookupElementBuilder.withTypeText(keyword[1]);
+				lookupElementBuilder = lookupElementBuilder.withIcon(LiferayIcons.LIFERAY_ICON);
+
+				lookups.add(lookupElementBuilder);
+			}
+
+			keywordLookups.put(entry.getKey(), lookups);
+		}
+
+		return keywordLookups;
 	}
 
 	//see https://dev.liferay.com/develop/reference/-/knowledge_base/7-0/portlet-descriptor-to-osgi-service-property-map
