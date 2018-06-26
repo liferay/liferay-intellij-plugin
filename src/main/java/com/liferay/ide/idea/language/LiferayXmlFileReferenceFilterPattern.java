@@ -38,70 +38,76 @@ import org.jetbrains.annotations.Nullable;
 public class LiferayXmlFileReferenceFilterPattern extends FilterPattern {
 
 	public LiferayXmlFileReferenceFilterPattern() {
-		super(
-			new ElementFilter() {
+		super(_createElementFilter());
+	}
 
-				@Override
-				public boolean isAcceptable(Object element, @Nullable PsiElement context) {
-					if (element instanceof XmlElement) {
-						XmlElement xmlElement = (XmlElement)element;
+	private static ElementFilter _createElementFilter() {
+		return new ElementFilter() {
 
-						PsiElement psiElement = xmlElement.getParent();
+			@Override
+			public boolean isAcceptable(Object element, @Nullable PsiElement context) {
+				if (element instanceof XmlElement) {
+					XmlElement xmlElement = (XmlElement)element;
 
-						if (psiElement instanceof XmlText) {
-							XmlText xmlText = (XmlText)psiElement;
+					PsiElement psiElement = xmlElement.getParent();
 
-							XmlTag xmlTag = xmlText.getParentTag();
+					if (psiElement instanceof XmlText) {
+						XmlText xmlText = (XmlText)psiElement;
+
+						XmlTag xmlTag = xmlText.getParentTag();
+
+						if (xmlTag != null) {
+							String namespace = xmlTag.getNamespace();
+							String localName = xmlTag.getLocalName();
+
+							if (_tagsMap.containsKey(namespace)) {
+								Collection<String> tags = _tagsMap.get(namespace);
+
+								if (tags.contains(localName)) {
+									return true;
+								}
+							}
+						}
+					}
+					else if (xmlElement instanceof XmlAttributeValue) {
+						XmlAttributeValue xmlAttributeValue = (XmlAttributeValue)element;
+
+						if (psiElement instanceof XmlAttribute) {
+							XmlAttribute xmlAttribute = (XmlAttribute)xmlAttributeValue.getParent();
+
+							XmlTag xmlTag = xmlAttribute.getParent();
 
 							if (xmlTag != null) {
 								String namespace = xmlTag.getNamespace();
 								String localName = xmlTag.getLocalName();
+								String attributeLocalName = xmlAttribute.getLocalName();
 
-								if (_tagsMap.containsKey(namespace)) {
-									Collection<String> tags = _tagsMap.get(namespace);
+								SimpleImmutableEntry<String, String> pair = new SimpleImmutableEntry<>(
+									localName, attributeLocalName);
 
-									if (tags.contains(localName)) {
+								if (_attributesMap.containsKey(namespace)) {
+									Collection<SimpleImmutableEntry<String, String>> pairs = _attributesMap.get(
+										namespace);
+
+									if (pairs.contains(pair)) {
 										return true;
 									}
 								}
 							}
 						}
-						else if (xmlElement instanceof XmlAttributeValue) {
-							XmlAttributeValue xmlAttributeValue = (XmlAttributeValue)element;
-
-							if (psiElement instanceof XmlAttribute) {
-								XmlAttribute xmlAttribute = (XmlAttribute)xmlAttributeValue.getParent();
-
-								XmlTag xmlTag = xmlAttribute.getParent();
-
-								if (xmlTag != null) {
-									String namespace = xmlTag.getNamespace();
-									String localName = xmlTag.getLocalName();
-									String attributeLocalName = xmlAttribute.getLocalName();
-
-									Pair<String, String> pair = new Pair<>(localName, attributeLocalName);
-
-									if (_attributesMap.containsKey(namespace)) {
-										Collection<Pair<String, String>> pairs = _attributesMap.get(namespace);
-
-										if (pairs.contains(pair)) {
-											return true;
-										}
-									}
-								}
-							}
-						}
 					}
-
-					return false;
 				}
 
-				@Override
-				public boolean isClassAcceptable(Class hintClass) {
-					return true;
-				}
+				return false;
+			}
 
-			});
+			@Override
+			@SuppressWarnings("rawtypes")
+			public boolean isClassAcceptable(Class hintClass) {
+				return true;
+			}
+
+		};
 	}
 
 	private static final Map<String, Collection<Pair<String, String>>> _attributesMap = new HashMap<>();
