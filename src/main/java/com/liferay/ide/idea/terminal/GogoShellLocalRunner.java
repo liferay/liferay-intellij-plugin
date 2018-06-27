@@ -39,9 +39,9 @@ import org.jetbrains.plugins.terminal.TerminalProjectOptionsProvider;
 /**
  * @author Terry Jia
  */
-public class GogoShellDirectRunner extends LocalTerminalDirectRunner {
+public class GogoShellLocalRunner extends LocalTerminalDirectRunner {
 
-	public GogoShellDirectRunner(Project project) {
+	public GogoShellLocalRunner(Project project) {
 		super(project);
 	}
 

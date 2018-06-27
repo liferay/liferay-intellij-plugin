@@ -67,12 +67,12 @@ public class GogoShellView {
 		_project = project;
 	}
 
-	public void initTerminal(final ToolWindow toolWindow) {
-		GogoShellDirectRunner terminalRunner = new GogoShellDirectRunner(_project);
+	public void init(final ToolWindow toolWindow) {
+		GogoShellLocalRunner gogoShellLocalRunner = new GogoShellLocalRunner(_project);
 
 		toolWindow.setToHideOnEmptyContent(true);
 
-		Content content = _createTerminalInContentPanel(terminalRunner, toolWindow);
+		Content content = _createGogoShellContent(gogoShellLocalRunner, toolWindow);
 
 		ContentManager manager = toolWindow.getContentManager();
 
@@ -96,7 +96,7 @@ public class GogoShellView {
 							ContentManager contentManager = toolWindow.getContentManager();
 
 							if (contentManager.getContentCount() == 0) {
-								initTerminal(window);
+								init(window);
 							}
 						}
 					}
@@ -135,9 +135,9 @@ public class GogoShellView {
 	}
 
 	public void openLocalSession(Project project, ToolWindow terminal) {
-		GogoShellDirectRunner terminalRunner = new GogoShellDirectRunner(project);
+		GogoShellLocalRunner gogoShellLocalRunner = new GogoShellLocalRunner(project);
 
-		_openSession(terminal, terminalRunner);
+		_openSession(terminal, gogoShellLocalRunner);
 	}
 
 	public class TerminalDockContainer implements DockContainer {
@@ -283,8 +283,8 @@ public class GogoShellView {
 		};
 	}
 
-	private Content _createTerminalInContentPanel(
-		@NotNull AbstractTerminalRunner terminalRunner, @NotNull ToolWindow toolWindow) {
+	private Content _createGogoShellContent(
+		@NotNull GogoShellLocalRunner gogoShellLocalRunner, @NotNull ToolWindow toolWindow) {
 
 		GogoShellToolWindowPanel panel = new GogoShellToolWindowPanel(
 			PropertiesComponent.getInstance(_project), toolWindow);
@@ -295,7 +295,7 @@ public class GogoShellView {
 
 		content.setCloseable(true);
 
-		_terminalWidget = terminalRunner.createTerminalWidget(content);
+		_terminalWidget = gogoShellLocalRunner.createTerminalWidget(content);
 
 		_terminalWidget.addTabListener(
 			new TabbedTerminalWidget.TabListener() {
@@ -316,7 +316,7 @@ public class GogoShellView {
 
 		panel.addFocusListener(_createFocusListener());
 
-		ActionToolbar toolbar = _createToolbar(terminalRunner, _terminalWidget, toolWindow);
+		ActionToolbar toolbar = _createToolbar(gogoShellLocalRunner, _terminalWidget, toolWindow);
 
 		JComponent component = toolbar.getComponent();
 
@@ -341,13 +341,13 @@ public class GogoShellView {
 		return null;
 	}
 
-	private void _openSession(@NotNull ToolWindow toolWindow, @NotNull AbstractTerminalRunner terminalRunner) {
+	private void _openSession(@NotNull ToolWindow toolWindow, @NotNull GogoShellLocalRunner terminalRunner) {
 		if (_terminalWidget == null) {
 			ContentManager contentManager = toolWindow.getContentManager();
 
 			contentManager.removeAllContents(true);
 
-			contentManager.addContent(_createTerminalInContentPanel(terminalRunner, toolWindow));
+			contentManager.addContent(_createGogoShellContent(terminalRunner, toolWindow));
 		}
 		else {
 			terminalRunner.openSession(_terminalWidget);

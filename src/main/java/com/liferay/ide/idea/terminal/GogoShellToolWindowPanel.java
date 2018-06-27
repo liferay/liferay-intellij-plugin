@@ -32,26 +32,26 @@ import com.intellij.openapi.wm.impl.InternalDecorator;
  */
 public class GogoShellToolWindowPanel extends SimpleToolWindowPanel implements UISettingsListener {
 
-	public GogoShellToolWindowPanel(PropertiesComponent propertiesComponent, ToolWindow window) {
+	public GogoShellToolWindowPanel(PropertiesComponent propertiesComponent, ToolWindow toolWindow) {
 		super(false, true);
 
 		_propertiesComponent = propertiesComponent;
-		_window = window;
+		_toolWindow = toolWindow;
 	}
 
 	@Override
 	public void addNotify() {
 		super.addNotify();
 
-		_updateDFState();
+		_updateUIState();
 	}
 
 	@Override
 	public void uiSettingsChanged(UISettings uiSettings) {
-		_updateDFState();
+		_updateUIState();
 	}
 
-	private static boolean _isDfmSupportEnabled() {
+	private static boolean _isDistractionFreeSupportEnabled() {
 		RegistryValue value = Registry.get("terminal.distraction.free");
 
 		return value.asBoolean();
@@ -65,17 +65,17 @@ public class GogoShellToolWindowPanel extends SimpleToolWindowPanel implements U
 	}
 
 	private void _setToolbarVisible(boolean visible) {
-		ToggleToolbarAction.setToolbarVisible(_window, _propertiesComponent, visible);
+		ToggleToolbarAction.setToolbarVisible(_toolWindow, _propertiesComponent, visible);
 	}
 
 	private void _setToolWindowHeaderVisible(boolean visible) {
-		InternalDecorator decorator = ((ToolWindowEx)_window).getDecorator();
+		InternalDecorator decorator = ((ToolWindowEx)_toolWindow).getDecorator();
 
 		decorator.setHeaderVisible(visible);
 	}
 
 	private boolean _shouldMakeDistractionFree() {
-		ToolWindowAnchor anchor = _window.getAnchor();
+		ToolWindowAnchor anchor = _toolWindow.getAnchor();
 
 		if (!anchor.isHorizontal() && ToggleDistractionFreeModeAction.isDistractionFreeModeEnabled()) {
 			return true;
@@ -84,13 +84,13 @@ public class GogoShellToolWindowPanel extends SimpleToolWindowPanel implements U
 		return false;
 	}
 
-	private void _updateDFState() {
-		if (_isDfmSupportEnabled()) {
+	private void _updateUIState() {
+		if (_isDistractionFreeSupportEnabled()) {
 			_setDistractionFree(_shouldMakeDistractionFree());
 		}
 	}
 
 	private final PropertiesComponent _propertiesComponent;
-	private final ToolWindow _window;
+	private final ToolWindow _toolWindow;
 
 }

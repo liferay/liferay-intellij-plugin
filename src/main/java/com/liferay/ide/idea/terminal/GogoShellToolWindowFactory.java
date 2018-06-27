@@ -30,9 +30,9 @@ public class GogoShellToolWindowFactory implements ToolWindowFactory, DumbAware 
 
 	@Override
 	public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-		GogoShellView gogoShellTerminalView = GogoShellView.getInstance(project);
+		GogoShellView gogoShellView = GogoShellView.getInstance(project);
 
-		gogoShellTerminalView.initTerminal(toolWindow);
+		gogoShellView.init(toolWindow);
 	}
 
 }
