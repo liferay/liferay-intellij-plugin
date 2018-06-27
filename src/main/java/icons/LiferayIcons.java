@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.ide.idea.util;
+package icons;
 
 import com.intellij.openapi.util.IconLoader;
 
@@ -26,5 +26,7 @@ public class LiferayIcons {
 	public static final Icon BND_ICON = IconLoader.getIcon("/icons/bnd.png");
 
 	public static final Icon LIFERAY_ICON = IconLoader.getIcon("/icons/liferay.png");
+
+	public static final Icon OSGI_ICON = IconLoader.getIcon("/icons/osgi.png");
 
 }

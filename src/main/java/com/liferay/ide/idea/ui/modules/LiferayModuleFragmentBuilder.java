@@ -32,9 +32,10 @@ import com.liferay.ide.idea.core.LiferayProjectTypeService;
 import com.liferay.ide.idea.ui.LiferayIdeaUI;
 import com.liferay.ide.idea.util.BladeCLI;
 import com.liferay.ide.idea.util.FileUtil;
-import com.liferay.ide.idea.util.LiferayIcons;
 import com.liferay.ide.idea.util.SwitchConsumer;
 import com.liferay.ide.idea.util.SwitchConsumer.SwitchConsumerBuilder;
+
+import icons.LiferayIcons;
 
 import java.io.File;
 
