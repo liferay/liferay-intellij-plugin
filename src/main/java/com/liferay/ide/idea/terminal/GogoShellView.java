@@ -68,7 +68,7 @@ public class GogoShellView {
 	}
 
 	public void initTerminal(final ToolWindow toolWindow) {
-		GogoShellDirectRunner terminalRunner = GogoShellDirectRunner.createTerminalRunner(_project);
+		GogoShellDirectRunner terminalRunner = new GogoShellDirectRunner(_project);
 
 		toolWindow.setToHideOnEmptyContent(true);
 
@@ -135,7 +135,7 @@ public class GogoShellView {
 	}
 
 	public void openLocalSession(Project project, ToolWindow terminal) {
-		GogoShellDirectRunner terminalRunner = GogoShellDirectRunner.createTerminalRunner(project);
+		GogoShellDirectRunner terminalRunner = new GogoShellDirectRunner(project);
 
 		_openSession(terminal, terminalRunner);
 	}

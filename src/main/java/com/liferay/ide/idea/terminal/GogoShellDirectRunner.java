@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.terminal.LocalTerminalDirectRunner;
 import org.jetbrains.plugins.terminal.TerminalProjectOptionsProvider;
@@ -41,11 +40,6 @@ import org.jetbrains.plugins.terminal.TerminalProjectOptionsProvider;
  * @author Terry Jia
  */
 public class GogoShellDirectRunner extends LocalTerminalDirectRunner {
-
-	@NotNull
-	public static GogoShellDirectRunner createTerminalRunner(Project project) {
-		return new GogoShellDirectRunner(project);
-	}
 
 	public GogoShellDirectRunner(Project project) {
 		super(project);
