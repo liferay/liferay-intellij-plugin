@@ -50,14 +50,14 @@ public class OpenGogoShellAction extends DumbAwareAction {
 			return;
 		}
 
-		ToolWindowManager manager = ToolWindowManager.getInstance(project);
+		ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
 
-		ToolWindow window = manager.getToolWindow(GogoShellToolWindowFactory.TOOL_WINDOW_ID);
+		ToolWindow toolWindow = toolWindowManager.getToolWindow(GogoShellToolWindowFactory.TOOL_WINDOW_ID);
 
-		if ((window != null) && window.isAvailable()) {
-			GogoShellView view = GogoShellView.getInstance(project);
+		if ((toolWindow != null) && toolWindow.isAvailable()) {
+			GogoShellView googleShellView = GogoShellView.getInstance(project);
 
-			view.openLocalSession(project, window);
+			googleShellView.openLocalSession(project, toolWindow);
 		}
 	}
 
