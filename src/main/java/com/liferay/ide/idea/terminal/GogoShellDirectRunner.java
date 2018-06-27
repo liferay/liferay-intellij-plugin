@@ -46,39 +46,63 @@ public class GogoShellDirectRunner extends LocalTerminalDirectRunner {
 	}
 
 	@Override
-	protected PtyProcess createProcess(@Nullable String directory) throws ExecutionException {
-		Map<String, String> envs = new HashMap<>(System.getenv());
+	protected PtyProcess createProcess(@Nullable String workingDirectory) throws ExecutionException {
+		if (workingDirectory == null) {
+			TerminalProjectOptionsProvider terminalProjectOptionsProvider =
+				TerminalProjectOptionsProvider.Companion.getInstance(getProject());
+
+			workingDirectory = terminalProjectOptionsProvider.getStartingDirectory();
+		}
+
+		try {
+			String[] command = {"telnet", "localhost", _findPort("11311")};
+
+			return PtyProcess.exec(command, _createEnv(), workingDirectory);
+		}
+		catch (IOException ioe) {
+			throw new ExecutionException(ioe);
+		}
+	}
+
+	private Map<String, String> _createEnv() {
+		Map<String, String> env = new HashMap<>(System.getenv());
 
 		if (!SystemInfo.isWindows) {
-			envs.put("TERM", "xterm-256color");
+			env.put("TERM", "xterm-256color");
 		}
 
 		if (SystemInfo.isMac) {
-			EnvironmentUtil.setLocaleEnv(envs, CharsetToolkit.UTF8_CHARSET);
+			EnvironmentUtil.setLocaleEnv(env, CharsetToolkit.UTF8_CHARSET);
 		}
 
-		VirtualFile root = myProject.getBaseDir();
+		return env;
+	}
 
-		String port = "11311";
+	private String _findPort(String defaultValue) {
+		String port = defaultValue;
 
-		VirtualFile bundles = root.findChild(LiferayWorkspaceUtil.getHomeDir(myProject.getBasePath()));
+		final Project project = getProject();
 
-		if ((bundles != null) && bundles.exists()) {
-			VirtualFile portalext = bundles.findChild("portal-ext.properties");
+		VirtualFile projectBaseDir = project.getBaseDir();
 
-			if ((portalext != null) && portalext.exists()) {
+		VirtualFile bundlesDir = projectBaseDir.findChild(LiferayWorkspaceUtil.getHomeDir(project.getBasePath()));
+
+		if ((bundlesDir != null) && bundlesDir.exists()) {
+			VirtualFile portalExtProperties = bundlesDir.findChild("portal-ext.properties");
+
+			if ((portalExtProperties != null) && portalExtProperties.exists()) {
 				Properties properties = new Properties();
 
-				try (InputStream in = portalext.getInputStream()) {
+				try (InputStream in = portalExtProperties.getInputStream()) {
 					properties.load(in);
 
-					String s = properties.getProperty("module.framework.properties.osgi.console");
+					String value = properties.getProperty("module.framework.properties.osgi.console");
 
-					if (s != null) {
-						String[] r = s.split(":");
+					if (value != null) {
+						String[] split = value.split(":");
 
-						if (r.length == 2) {
-							port = r[1];
+						if (split.length == 2) {
+							port = split[1].trim();
 						}
 					}
 				}
@@ -87,20 +111,7 @@ public class GogoShellDirectRunner extends LocalTerminalDirectRunner {
 			}
 		}
 
-		String[] command = {"telnet", "localhost", port};
-
-		if (directory == null) {
-			TerminalProjectOptionsProvider provider = TerminalProjectOptionsProvider.Companion.getInstance(myProject);
-
-			directory = provider.getStartingDirectory();
-		}
-
-		try {
-			return PtyProcess.exec(command, envs, directory);
-		}
-		catch (IOException ioe) {
-			throw new ExecutionException(ioe);
-		}
+		return port;
 	}
 
 }
