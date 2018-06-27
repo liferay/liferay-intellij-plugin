@@ -50,7 +50,6 @@ import javax.swing.JComponent;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.plugins.terminal.AbstractTerminalRunner;
 import org.jetbrains.plugins.terminal.JBTabbedTerminalWidget;
 import org.jetbrains.plugins.terminal.vfs.TerminalSessionVirtualFileImpl;
 
@@ -74,29 +73,30 @@ public class GogoShellView {
 
 		Content content = _createGogoShellContent(gogoShellLocalRunner, toolWindow);
 
-		ContentManager manager = toolWindow.getContentManager();
+		ContentManager contentManager = toolWindow.getContentManager();
 
-		manager.addContent(content);
+		contentManager.addContent(content);
 
-		ToolWindowManagerEx managerEx = (ToolWindowManagerEx)ToolWindowManager.getInstance(_project);
+		ToolWindowManagerEx toolWindowManagerEx = (ToolWindowManagerEx)ToolWindowManager.getInstance(_project);
 
-		managerEx.addToolWindowManagerListener(
+		toolWindowManagerEx.addToolWindowManagerListener(
 			new ToolWindowManagerListener() {
 
 				@Override
 				public void stateChanged() {
 					ToolWindowManager windowManager = ToolWindowManager.getInstance(_project);
 
-					ToolWindow window = windowManager.getToolWindow(GogoShellToolWindowFactory.TOOL_WINDOW_ID);
+					ToolWindow gogoShellToolWindow = windowManager.getToolWindow(
+						GogoShellToolWindowFactory.TOOL_WINDOW_ID);
 
-					if (window != null) {
-						boolean visible = window.isVisible();
+					if (gogoShellToolWindow != null) {
+						boolean visible = gogoShellToolWindow.isVisible();
 
 						if (visible) {
 							ContentManager contentManager = toolWindow.getContentManager();
 
 							if (contentManager.getContentCount() == 0) {
-								init(window);
+								init(gogoShellToolWindow);
 							}
 						}
 					}
@@ -107,55 +107,32 @@ public class GogoShellView {
 				}
 
 			});
-
-		Disposer.register(
-			_project,
-			new Disposable() {
-
-				@Override
-				public void dispose() {
-					if (_terminalWidget != null) {
-						_terminalWidget.dispose();
-
-						_terminalWidget = null;
-					}
-				}
-
-			});
-
-		if (_dockContainer == null) {
-			_dockContainer = new TerminalDockContainer(toolWindow);
-
-			Disposer.register(_project, _dockContainer);
-
-			DockManager dockManager = DockManager.getInstance(_project);
-
-			dockManager.register(_dockContainer);
-		}
 	}
 
-	public void openLocalSession(Project project, ToolWindow terminal) {
+	public void openLocalSession(Project project, ToolWindow toolWindow) {
 		GogoShellLocalRunner gogoShellLocalRunner = new GogoShellLocalRunner(project);
 
-		_openSession(terminal, gogoShellLocalRunner);
+		_openSession(toolWindow, gogoShellLocalRunner);
 	}
 
 	public class TerminalDockContainer implements DockContainer {
 
-		public TerminalDockContainer(ToolWindow toolWindow) {
+		public TerminalDockContainer(ToolWindow toolWindow, JBTabbedTerminalWidget terminalWidget) {
 			_terminalToolWindow = toolWindow;
+			_terminalWidget = terminalWidget;
 		}
 
 		@Override
+		@SuppressWarnings("rawtypes")
 		public void add(@NotNull DockableContent content, RelativePoint dropTarget) {
 			if (_isTerminalSessionContent(content)) {
 				TerminalSessionVirtualFileImpl terminalFile = (TerminalSessionVirtualFileImpl)content.getKey();
 
 				_terminalWidget.addTab(terminalFile.getName(), terminalFile.getTerminal());
 
-				JediTermWidget widget = terminalFile.getTerminal();
+				JediTermWidget jediTermWidget = terminalFile.getTerminal();
 
-				widget.setNextProvider(_terminalWidget);
+				jediTermWidget.setNextProvider(_terminalWidget);
 			}
 		}
 
@@ -188,6 +165,7 @@ public class GogoShellView {
 
 		@NotNull
 		@Override
+		@SuppressWarnings("rawtypes")
 		public ContentResponse getContentResponse(@NotNull DockableContent content, RelativePoint point) {
 			if (_isTerminalSessionContent(content)) {
 				return ContentResponse.ACCEPT_MOVE;
@@ -212,11 +190,13 @@ public class GogoShellView {
 
 		@Nullable
 		@Override
+		@SuppressWarnings("rawtypes")
 		public Image processDropOver(@NotNull DockableContent content, RelativePoint point) {
 			return null;
 		}
 
 		@Override
+		@SuppressWarnings("rawtypes")
 		public void resetDropOver(@NotNull DockableContent content) {
 		}
 
@@ -226,27 +206,30 @@ public class GogoShellView {
 
 		@Nullable
 		@Override
+		@SuppressWarnings("rawtypes")
 		public Image startDropOver(@NotNull DockableContent content, RelativePoint point) {
 			return null;
 		}
 
-		private boolean _isTerminalSessionContent(DockableContent content) {
-			return content.getKey() instanceof TerminalSessionVirtualFileImpl;
+		@SuppressWarnings("rawtypes")
+		private boolean _isTerminalSessionContent(DockableContent dockableContent) {
+			return dockableContent.getKey() instanceof TerminalSessionVirtualFileImpl;
 		}
 
 		private final ToolWindow _terminalToolWindow;
+		private JBTabbedTerminalWidget _terminalWidget;
 
 	}
 
 	private static ActionToolbar _createToolbar(
-		@Nullable final AbstractTerminalRunner terminalRunner, @NotNull final JBTabbedTerminalWidget terminal,
+		@Nullable final GogoShellLocalRunner gogoShellLocalRunner, @NotNull final JBTabbedTerminalWidget terminalWidget,
 		@NotNull ToolWindow toolWindow) {
 
 		DefaultActionGroup group = new DefaultActionGroup();
 
-		if (terminalRunner != null) {
-			group.add(new NewSession(terminalRunner, terminal));
-			group.add(new CloseSession(terminal, toolWindow));
+		if (gogoShellLocalRunner != null) {
+			group.add(new NewSession(gogoShellLocalRunner, terminalWidget));
+			group.add(new CloseSession(terminalWidget, toolWindow));
 		}
 
 		ActionManager manager = ActionManager.getInstance();
@@ -255,23 +238,66 @@ public class GogoShellView {
 	}
 
 	private static void _hideIfNoActiveSessions(
-		@NotNull final ToolWindow toolWindow, @NotNull JBTabbedTerminalWidget terminal) {
+		@NotNull final ToolWindow toolWindow, @NotNull JBTabbedTerminalWidget terminalWidget) {
 
-		if (terminal.isNoActiveSessions()) {
-			ContentManager manager = toolWindow.getContentManager();
+		if (terminalWidget.isNoActiveSessions()) {
+			ContentManager contentManager = toolWindow.getContentManager();
 
-			manager.removeAllContents(true);
+			contentManager.removeAllContents(true);
 		}
 	}
 
-	private FocusListener _createFocusListener() {
-		return new FocusListener() {
+	private Content _createGogoShellContent(
+		@NotNull GogoShellLocalRunner gogoShellLocalRunner, @NotNull ToolWindow toolWindow) {
+
+		GogoShellToolWindowPanel gogoShellToolWindowPanel = new GogoShellToolWindowPanel(
+			PropertiesComponent.getInstance(_project), toolWindow);
+
+		ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
+
+		Content content = contentFactory.createContent(gogoShellToolWindowPanel, "", false);
+
+		content.setCloseable(true);
+
+		JBTabbedTerminalWidget terminalWidget = gogoShellLocalRunner.createTerminalWidget(content);
+
+		terminalWidget.addTabListener(
+			new TabbedTerminalWidget.TabListener() {
+
+				@Override
+				public void tabClosed(JediTermWidget terminal) {
+					UIUtil.invokeLaterIfNeeded(
+						() -> {
+							if (terminalWidget != null) {
+								_hideIfNoActiveSessions(toolWindow, terminalWidget);
+							}
+						});
+				}
+
+			});
+
+		Disposer.register(
+			_project,
+			new Disposable() {
+
+				@Override
+				public void dispose() {
+					if (terminalWidget != null) {
+						terminalWidget.dispose();
+					}
+				}
+
+			});
+
+		gogoShellToolWindowPanel.setContent(terminalWidget.getComponent());
+
+		FocusListener focusListener = new FocusListener() {
 
 			@Override
 			public void focusGained(FocusEvent e) {
-				JComponent component = _getComponentToFocus();
+				if (terminalWidget != null) {
+					JComponent component = terminalWidget.getComponent();
 
-				if (component != null) {
 					component.requestFocusInWindow();
 				}
 			}
@@ -281,68 +307,38 @@ public class GogoShellView {
 			}
 
 		};
-	}
 
-	private Content _createGogoShellContent(
-		@NotNull GogoShellLocalRunner gogoShellLocalRunner, @NotNull ToolWindow toolWindow) {
+		gogoShellToolWindowPanel.addFocusListener(focusListener);
 
-		GogoShellToolWindowPanel panel = new GogoShellToolWindowPanel(
-			PropertiesComponent.getInstance(_project), toolWindow);
+		ActionToolbar actionToolbar = _createToolbar(gogoShellLocalRunner, terminalWidget, toolWindow);
 
-		ContentFactory factory = ContentFactory.SERVICE.getInstance();
+		JComponent component = actionToolbar.getComponent();
 
-		Content content = factory.createContent(panel, "", false);
+		component.addFocusListener(focusListener);
 
-		content.setCloseable(true);
+		actionToolbar.setTargetComponent(gogoShellToolWindowPanel);
 
-		_terminalWidget = gogoShellLocalRunner.createTerminalWidget(content);
+		gogoShellToolWindowPanel.setToolbar(component);
 
-		_terminalWidget.addTabListener(
-			new TabbedTerminalWidget.TabListener() {
+		gogoShellToolWindowPanel.uiSettingsChanged(null);
 
-				@Override
-				public void tabClosed(JediTermWidget terminal) {
-					UIUtil.invokeLaterIfNeeded(
-						() -> {
-							if (_terminalWidget != null) {
-								_hideIfNoActiveSessions(toolWindow, _terminalWidget);
-							}
-						});
-				}
+		content.setPreferredFocusableComponent(terminalWidget.getComponent());
 
-			});
+		TerminalDockContainer terminalDockContainer = new TerminalDockContainer(toolWindow, terminalWidget);
 
-		panel.setContent(_terminalWidget.getComponent());
+		Disposer.register(_project, terminalDockContainer);
 
-		panel.addFocusListener(_createFocusListener());
+		DockManager dockManager = DockManager.getInstance(_project);
 
-		ActionToolbar toolbar = _createToolbar(gogoShellLocalRunner, _terminalWidget, toolWindow);
-
-		JComponent component = toolbar.getComponent();
-
-		component.addFocusListener(_createFocusListener());
-
-		toolbar.setTargetComponent(panel);
-
-		panel.setToolbar(component);
-
-		panel.uiSettingsChanged(null);
-
-		content.setPreferredFocusableComponent(_terminalWidget.getComponent());
+		dockManager.register(terminalDockContainer);
 
 		return content;
 	}
 
-	private JComponent _getComponentToFocus() {
-		if (_terminalWidget != null) {
-			return _terminalWidget.getComponent();
-		}
-
-		return null;
-	}
-
 	private void _openSession(@NotNull ToolWindow toolWindow, @NotNull GogoShellLocalRunner terminalRunner) {
-		if (_terminalWidget == null) {
+		JBTabbedTerminalWidget terminalWidget = terminalRunner.getTerminalWidget();
+
+		if (terminalWidget == null) {
 			ContentManager contentManager = toolWindow.getContentManager();
 
 			contentManager.removeAllContents(true);
@@ -350,18 +346,13 @@ public class GogoShellView {
 			contentManager.addContent(_createGogoShellContent(terminalRunner, toolWindow));
 		}
 		else {
-			terminalRunner.openSession(_terminalWidget);
+			terminalRunner.openSession(terminalWidget);
 		}
 
-		toolWindow.activate(
-			() -> {
-			},
-			true);
+		toolWindow.activate(null, true);
 	}
 
-	private TerminalDockContainer _dockContainer;
 	private final Project _project;
-	private JBTabbedTerminalWidget _terminalWidget;
 
 	private static class CloseSession extends DumbAwareAction {
 
@@ -386,7 +377,7 @@ public class GogoShellView {
 
 	private static class NewSession extends DumbAwareAction {
 
-		public NewSession(@NotNull AbstractTerminalRunner terminalRunner, @NotNull TerminalWidget terminal) {
+		public NewSession(@NotNull GogoShellLocalRunner terminalRunner, @NotNull TerminalWidget terminal) {
 			super("New Session", "Create New Terminal Session", AllIcons.General.Add);
 
 			_terminalRunner = terminalRunner;
@@ -399,7 +390,7 @@ public class GogoShellView {
 		}
 
 		private final TerminalWidget _terminal;
-		private final AbstractTerminalRunner _terminalRunner;
+		private final GogoShellLocalRunner _terminalRunner;
 
 	}
 

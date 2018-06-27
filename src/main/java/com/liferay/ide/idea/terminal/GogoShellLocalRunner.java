@@ -14,6 +14,7 @@
 
 package com.liferay.ide.idea.terminal;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.CharsetToolkit;
@@ -33,6 +34,7 @@ import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.plugins.terminal.JBTabbedTerminalWidget;
 import org.jetbrains.plugins.terminal.LocalTerminalDirectRunner;
 import org.jetbrains.plugins.terminal.TerminalProjectOptionsProvider;
 
@@ -43,6 +45,17 @@ public class GogoShellLocalRunner extends LocalTerminalDirectRunner {
 
 	public GogoShellLocalRunner(Project project) {
 		super(project);
+	}
+
+	@Override
+	public JBTabbedTerminalWidget createTerminalWidget(Disposable parent) {
+		_terminalWidget = super.createTerminalWidget(parent);
+
+		return _terminalWidget;
+	}
+
+	public JBTabbedTerminalWidget getTerminalWidget() {
+		return _terminalWidget;
 	}
 
 	@Override
@@ -113,5 +126,7 @@ public class GogoShellLocalRunner extends LocalTerminalDirectRunner {
 
 		return port;
 	}
+
+	private JBTabbedTerminalWidget _terminalWidget;
 
 }
