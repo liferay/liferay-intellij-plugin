@@ -28,7 +28,7 @@ import com.intellij.psi.PsiNameValuePair;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ProcessingContext;
 
-import com.liferay.ide.idea.util.LiferayIcons;
+import icons.LiferayIcons;
 
 import java.util.ArrayList;
 import java.util.HashMap;

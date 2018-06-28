@@ -38,7 +38,7 @@ formatSource {
 
 intellij {
 	version "IU-2018.1.4"
-	plugins 'gradle', 'maven', 'JavaEE', 'terminal'
+	plugins 'gradle', 'maven', 'terminal', 'JavaEE'
 }
 
 patchPluginXml {
