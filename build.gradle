@@ -31,6 +31,7 @@ dependencies {
 	compile group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.4.0"
 	compile group: "commons-configuration", name: "commons-configuration", version: "1.10"
 	compile group: "org.apache.ant", name: "ant", version: "1.10.1"
+	compile group: "org.dom4j", name: "dom4j", version: "2.1.0"
 }
 
 formatSource {
@@ -98,6 +99,18 @@ task downloadLiferayDefinitions(type: Download){
 	overwrite false
 }
 
+task downloadLiferayTaglibDefinitions(type: Download){
+	def target = new File("src/main/resources/tld");
+	target.mkdirs();
+
+	src([
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/util-taglib/src/META-INF/liferay-aui.tld',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/util-taglib/src/META-INF/liferay-ui.tld'
+		])
+	dest target
+	overwrite false
+}
+
 task verifyBlade(type: Verify, dependsOn: downloadBlade) {
 	src 'src/main/resources/libs/blade.jar'
 	algorithm 'MD5'
@@ -105,7 +118,7 @@ task verifyBlade(type: Verify, dependsOn: downloadBlade) {
 }
 
 compileJava {
-	dependsOn verifyBlade, downloadLiferayDefinitions
+	dependsOn verifyBlade, downloadLiferayDefinitions, downloadLiferayTaglibDefinitions
 }
 
 version = '1.0.0'
