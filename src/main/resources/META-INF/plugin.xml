@@ -37,6 +37,9 @@
 			<ul>
 				<li>support to use custom portal path</li>
 				<li>uninstall bundles after watch task done</li>
+				<li>new view for Gogo Shell(depaneds on <b>telnet</b> installed on system)</li>
+				<li>code completion for OSGi Component properties block(community contribution)</li>
+				<li>file References for some Liferay XML files(community contribution)</li>
 				<li>bug fixes</li>
 			</ul>
 			<li>0.1.2</li>
