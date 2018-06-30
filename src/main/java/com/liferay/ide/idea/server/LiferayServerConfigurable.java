@@ -25,6 +25,7 @@ import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.PanelWithAnchor;
 
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -63,6 +64,7 @@ public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfi
 
 		configuration.setLiferayBundle(_liferayServer.getText());
 		configuration.setVMParameters(_vmParams.getText());
+		configuration.setDeveloperMode(_developerMode.isSelected());
 	}
 
 	@NotNull
@@ -81,6 +83,7 @@ public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfi
 		_vmParams.setText(configuration.getVMParameters());
 		_liferayServer.setText(configuration.getLiferayBundle());
 		_jrePath.setPathOrName(configuration.getAlternativeJrePath(), configuration.isAlternativeJrePathEnabled());
+		_developerMode.setSelected(configuration.getDeveloperMode());
 
 		ModulesComboBox modulesComboBox = _modules.getComponent();
 
@@ -94,6 +97,7 @@ public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfi
 	}
 
 	private JComponent _anchor;
+	private JCheckBox _developerMode;
 	private JrePathEditor _jrePath;
 	private TextFieldWithBrowseButton _liferayServer;
 	private JPanel _mainPanel;

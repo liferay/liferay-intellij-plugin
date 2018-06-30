@@ -98,7 +98,9 @@ public class LiferayServerConfiguration
 			throw new RuntimeConfigurationError("Unable to detect Tomcat folder from '" + liferayHome.toPath() + "'");
 		}
 
-		if (!getLiferayBundle().startsWith(getProject().getBasePath())) {
+		String path = getLiferayBundle().replaceAll("\\\\", "/");
+
+		if (!path.startsWith(getProject().getBasePath())) {
 			throw new RuntimeConfigurationWarning(
 				"Liferay bundle is not contained inside a Liferay workspace. Use watch task to deploy modules.");
 		}
@@ -146,6 +148,10 @@ public class LiferayServerConfiguration
 		group.addEditor(ExecutionBundle.message("logs.tab.title"), new LogConfigurationPanel<>());
 
 		return group;
+	}
+
+	public boolean getDeveloperMode() {
+		return _config.developerMode;
 	}
 
 	@NotNull
@@ -259,6 +265,10 @@ public class LiferayServerConfiguration
 		_configurationModule = configurationModule;
 	}
 
+	public void setDeveloperMode(boolean developerMode) {
+		_config.developerMode = developerMode;
+	}
+
 	@Override
 	public void setEnvs(@NotNull Map<String, String> envs) {
 		_envs.clear();
@@ -316,6 +326,7 @@ public class LiferayServerConfiguration
 
 		public String alternativeJrePath = "";
 		public boolean alternativeJrePathEnabled;
+		public boolean developerMode = true;
 		public String liferayBundle = "";
 		public boolean passParentEnvs = true;
 		public String vmParameters = "";
