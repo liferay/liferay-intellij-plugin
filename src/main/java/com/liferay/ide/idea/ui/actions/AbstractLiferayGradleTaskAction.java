@@ -30,7 +30,12 @@ import com.intellij.openapi.externalSystem.service.notification.NotificationData
 import com.intellij.openapi.externalSystem.service.notification.NotificationSource;
 import com.intellij.openapi.externalSystem.task.TaskCallback;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.ProjectFileIndex;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.execution.ParametersListUtil;
@@ -69,7 +74,7 @@ public abstract class AbstractLiferayGradleTaskAction extends AnAction {
 	public void actionPerformed(final AnActionEvent event) {
 		Project project = event.getRequiredData(CommonDataKeys.PROJECT);
 
-		String workingDirectory = getWorkingDirectory(event);
+		workingDirectory = getWorkingDirectory(event);
 
 		if (CoreUtil.isNullOrEmpty(workingDirectory)) {
 			return;
@@ -91,7 +96,7 @@ public abstract class AbstractLiferayGradleTaskAction extends AnAction {
 
 				@Override
 				public void onSuccess() {
-					afterTask(event);
+					afterTask();
 				}
 
 			},
@@ -118,7 +123,7 @@ public abstract class AbstractLiferayGradleTaskAction extends AnAction {
 		}
 	}
 
-	public void afterTask(AnActionEvent event) {
+	public void afterTask() {
 	}
 
 	public boolean continuous() {
@@ -148,7 +153,27 @@ public abstract class AbstractLiferayGradleTaskAction extends AnAction {
 		return null;
 	}
 
-	protected abstract String getWorkingDirectory(AnActionEvent event);
+	protected String getWorkingDirectory(AnActionEvent event) {
+		VirtualFile virtualFile = getVirtualFile(event);
+
+		ProjectRootManager projectRootManager = ProjectRootManager.getInstance(event.getProject());
+
+		ProjectFileIndex projectFileIndex = projectRootManager.getFileIndex();
+
+		Module module = projectFileIndex.getModuleForFile(virtualFile);
+
+		ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+
+		ModifiableRootModel modifiableRootModel = moduleRootManager.getModifiableModel();
+
+		VirtualFile[] roots = modifiableRootModel.getContentRoots();
+
+		assert roots != null && roots[0] != null;
+
+		return roots[0].getCanonicalPath();
+	}
+
+	protected String workingDirectory;
 
 	private ExternalTaskExecutionInfo _buildTaskExecutionInfo(
 		Project project, @NotNull String projectPath, @NotNull String fullCommandLine) {
