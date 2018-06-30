@@ -16,12 +16,7 @@ package com.liferay.ide.idea.ui.actions;
 
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import com.liferay.ide.idea.server.gogo.GogoTelnetClient;
@@ -54,8 +49,8 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
 	}
 
 	@Override
-	public void afterTask(AnActionEvent event) {
-		List<Path> bndPaths = _getBndPaths(event);
+	public void afterTask() {
+		List<Path> bndPaths = _getBndPaths();
 
 		if (bndPaths.isEmpty()) {
 			return;
@@ -107,29 +102,8 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
 		return false;
 	}
 
-	@Override
-	protected String getWorkingDirectory(AnActionEvent event) {
-		VirtualFile virtualFile = getVirtualFile(event);
-
-		ProjectRootManager projectRootManager = ProjectRootManager.getInstance(event.getProject());
-
-		ProjectFileIndex projectFileIndex = projectRootManager.getFileIndex();
-
-		Module module = projectFileIndex.getModuleForFile(virtualFile);
-
-		ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
-
-		ModifiableRootModel modifiableRootModel = moduleRootManager.getModifiableModel();
-
-		VirtualFile[] roots = modifiableRootModel.getContentRoots();
-
-		assert roots != null && roots[0] != null;
-
-		return roots[0].getCanonicalPath();
-	}
-
-	private List<Path> _getBndPaths(AnActionEvent event) {
-		File file = new File(getWorkingDirectory(event));
+	private List<Path> _getBndPaths() {
+		File file = new File(workingDirectory);
 
 		File bndFile = new File(file, "bnd.bnd");
 
