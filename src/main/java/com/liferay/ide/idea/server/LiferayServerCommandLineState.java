@@ -22,8 +22,17 @@ import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.util.JavaParametersUtil;
 import com.intellij.util.PathsList;
 
+import com.liferay.ide.idea.util.FileUtil;
+import com.liferay.ide.idea.util.PortalPropertiesConfiguration;
+
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
+import java.io.InputStream;
+
+import java.nio.file.Files;
+
+import org.apache.commons.io.FileUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -42,13 +51,17 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 	protected JavaParameters createJavaParameters() throws ExecutionException {
 		JavaParameters params = new JavaParameters();
 
-		LiferayServerConfiguration configuration = getConfiguration();
+		LiferayServerConfiguration liferayServerConfiguration = getConfiguration();
 
-		String jreHome = configuration.isAlternativeJrePathEnabled() ? configuration.getAlternativeJrePath() : null;
+		String jreHome = null;
 
-		params.setJdk(JavaParametersUtil.createProjectJdk(configuration.getProject(), jreHome));
+		if (liferayServerConfiguration.isAlternativeJrePathEnabled()) {
+			jreHome = liferayServerConfiguration.getAlternativeJrePath();
+		}
 
-		File bundleDir = new File(configuration.getLiferayBundle());
+		params.setJdk(JavaParametersUtil.createProjectJdk(liferayServerConfiguration.getProject(), jreHome));
+
+		File bundleDir = new File(liferayServerConfiguration.getLiferayBundle());
 
 		File[] files = bundleDir.listFiles(
 			new FileFilter() {
@@ -62,7 +75,7 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 
 			});
 
-		String tomcat = configuration.getLiferayBundle() + "/" + files[0].getName();
+		String tomcat = liferayServerConfiguration.getLiferayBundle() + "/" + files[0].getName();
 
 		PathsList classPath = params.getClassPath();
 
@@ -74,7 +87,7 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 
 		ParametersList vmParametersList = params.getVMParametersList();
 
-		vmParametersList.addParametersString(configuration.getVMParameters());
+		vmParametersList.addParametersString(liferayServerConfiguration.getVMParameters());
 
 		vmParametersList.add("-Dcatalina.base=" + tomcat);
 		vmParametersList.add("-Dcatalina.home=" + tomcat);
@@ -92,7 +105,60 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 
 		setupJavaParameters(params);
 
+		_configureDeveloperMode(liferayServerConfiguration);
+
 		return params;
+	}
+
+	private void _configureDeveloperMode(LiferayServerConfiguration configuration) {
+		File bundleDir = new File(configuration.getLiferayBundle());
+
+		File portalExt = new File(bundleDir, "portal-ext.properties");
+
+		if (configuration.getDeveloperMode()) {
+			try {
+				if (!portalExt.exists()) {
+					portalExt.createNewFile();
+				}
+
+				PortalPropertiesConfiguration config = new PortalPropertiesConfiguration();
+
+				try (InputStream in = Files.newInputStream(portalExt.toPath())) {
+					config.load(in);
+				}
+
+				String[] p = config.getStringArray("include-and-override");
+
+				boolean existing = false;
+
+				for (String prop : p) {
+					if (prop.equals("portal-developer.properties")) {
+						existing = true;
+
+						break;
+					}
+				}
+
+				if (!existing) {
+					config.addProperty("include-and-override", "portal-developer.properties");
+				}
+
+				config.save(portalExt);
+			}
+			catch (Exception e) {
+			}
+		}
+		else if (portalExt.exists()) {
+			String contents = FileUtil.readContents(portalExt, true);
+
+			contents = contents.replace("include-and-override=portal-developer.properties", "");
+
+			try {
+				FileUtils.write(portalExt, contents);
+			}
+			catch (IOException ioe) {
+			}
+		}
 	}
 
 }
