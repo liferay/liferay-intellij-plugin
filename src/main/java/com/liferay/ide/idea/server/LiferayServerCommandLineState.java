@@ -51,13 +51,17 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 	protected JavaParameters createJavaParameters() throws ExecutionException {
 		JavaParameters params = new JavaParameters();
 
-		LiferayServerConfiguration configuration = getConfiguration();
+		LiferayServerConfiguration liferayServerConfiguration = getConfiguration();
 
-		String jreHome = configuration.isAlternativeJrePathEnabled() ? configuration.getAlternativeJrePath() : null;
+		String jreHome = null;
 
-		params.setJdk(JavaParametersUtil.createProjectJdk(configuration.getProject(), jreHome));
+		if (liferayServerConfiguration.isAlternativeJrePathEnabled()) {
+			jreHome = liferayServerConfiguration.getAlternativeJrePath();
+		}
 
-		File bundleDir = new File(configuration.getLiferayBundle());
+		params.setJdk(JavaParametersUtil.createProjectJdk(liferayServerConfiguration.getProject(), jreHome));
+
+		File bundleDir = new File(liferayServerConfiguration.getLiferayBundle());
 
 		File[] files = bundleDir.listFiles(
 			new FileFilter() {
@@ -71,7 +75,7 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 
 			});
 
-		String tomcat = configuration.getLiferayBundle() + "/" + files[0].getName();
+		String tomcat = liferayServerConfiguration.getLiferayBundle() + "/" + files[0].getName();
 
 		PathsList classPath = params.getClassPath();
 
@@ -83,7 +87,7 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 
 		ParametersList vmParametersList = params.getVMParametersList();
 
-		vmParametersList.addParametersString(configuration.getVMParameters());
+		vmParametersList.addParametersString(liferayServerConfiguration.getVMParameters());
 
 		vmParametersList.add("-Dcatalina.base=" + tomcat);
 		vmParametersList.add("-Dcatalina.home=" + tomcat);
@@ -101,12 +105,12 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 
 		setupJavaParameters(params);
 
-		_configDeveloperMode(configuration);
+		_configureDeveloperMode(liferayServerConfiguration);
 
 		return params;
 	}
 
-	private void _configDeveloperMode(LiferayServerConfiguration configuration) {
+	private void _configureDeveloperMode(LiferayServerConfiguration configuration) {
 		File bundleDir = new File(configuration.getLiferayBundle());
 
 		File portalExt = new File(bundleDir, "portal-ext.properties");
