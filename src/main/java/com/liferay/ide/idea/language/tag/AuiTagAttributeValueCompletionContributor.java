@@ -40,8 +40,7 @@ public class AuiTagAttributeValueCompletionContributor extends CompletionContrib
 			PsiElementPattern.Capture<PsiElement> capture = PlatformPatterns.psiElement();
 
 			extend(
-				CompletionType.BASIC,
-				capture.with(new TagPatternCondition(attribute[0], attribute[1], attribute[2])),
+				CompletionType.BASIC, capture.with(new TagPatternCondition(attribute[0], attribute[1], attribute[2])),
 				new BooleanCompletionProvider());
 		}
 
@@ -49,8 +48,7 @@ public class AuiTagAttributeValueCompletionContributor extends CompletionContrib
 			PsiElementPattern.Capture<PsiElement> capture = PlatformPatterns.psiElement();
 
 			extend(
-				CompletionType.BASIC,
-				capture.with(new TagPatternCondition(attribute[0], attribute[1], attribute[2])),
+				CompletionType.BASIC, capture.with(new TagPatternCondition(attribute[0], attribute[1], attribute[2])),
 				new StringCompletionProvider(new String[] {"lexicon"}));
 		}
 
@@ -58,8 +56,7 @@ public class AuiTagAttributeValueCompletionContributor extends CompletionContrib
 			PsiElementPattern.Capture<PsiElement> capture = PlatformPatterns.psiElement();
 
 			extend(
-				CompletionType.BASIC,
-				capture.with(new TagPatternCondition(attribute[0], attribute[1], attribute[2])),
+				CompletionType.BASIC, capture.with(new TagPatternCondition(attribute[0], attribute[1], attribute[2])),
 				new StringCompletionProvider(new String[] {"left", "right"}));
 		}
 
@@ -67,8 +64,7 @@ public class AuiTagAttributeValueCompletionContributor extends CompletionContrib
 			PsiElementPattern.Capture<PsiElement> capture = PlatformPatterns.psiElement();
 
 			extend(
-				CompletionType.BASIC,
-				capture.with(new TagPatternCondition(attribute[0], attribute[1], attribute[2])),
+				CompletionType.BASIC, capture.with(new TagPatternCondition(attribute[0], attribute[1], attribute[2])),
 				new StringCompletionProvider(new String[] {"blank", "self", "parent", "top", "_blank", "_new"}));
 		}
 
@@ -98,8 +94,7 @@ public class AuiTagAttributeValueCompletionContributor extends CompletionContrib
 		PsiElementPattern.Capture<PsiElement> validatorCapture = PlatformPatterns.psiElement();
 
 		extend(
-			CompletionType.BASIC,
-			validatorCapture.with(new TagPatternCondition("aui", "validator", "name")),
+			CompletionType.BASIC, validatorCapture.with(new TagPatternCondition("aui", "validator", "name")),
 			new StringCompletionProvider(
 				new String[] {
 					"custom", "acceptFiles", "alpha", "alphanum", "date", "digits", "email", "equalTo", "iri", "max",
