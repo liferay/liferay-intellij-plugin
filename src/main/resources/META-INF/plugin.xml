@@ -26,13 +26,17 @@
 			<li><a href="https://github.com/dmarks2">Dominik Marks</a></li>
 		</ul>
 	</p>]]></description>
-	<version>1.0.0</version>
+	<version>1.1.0</version>
 	<change-notes>
 	<![CDATA[<p>
 		See for all changes: https://github.com/gamerson/liferay-intellij-plugin/commits/
 	</p>
 	<p>
 		<ul>
+			<li>1.1.0</li>
+			<ul>
+				<li>code completion for AUI taglib</li>
+			</ul>
 			<li>1.0.0</li>
 			<ul>
 				<li>support to use custom portal path</li>
