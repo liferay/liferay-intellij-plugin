@@ -44,24 +44,28 @@ public class GradleUtil {
 				Version version = new Version(0, 0, 0);
 				String dependencyVersion = dependency.getVersion();
 
-				if ((dependencyVersion != null) && !dependencyVersion.equals("")) {
-					version = Version.parseVersion(dependencyVersion);
+				try {
+					if ((dependencyVersion != null) && !dependencyVersion.equals("")) {
+						version = Version.parseVersion(dependencyVersion);
+					}
+
+					if ("com.liferay".equals(group) && "com.liferay.gradle.plugins".equals(name) &&
+						version.isOrGreaterThan(3, 11)) {
+
+						watchable = true;
+
+						break;
+					}
+
+					if ("com.liferay".equals(group) && "com.liferay.gradle.plugins.workspace".equals(name) &&
+						version.isOrGreaterThan(1, 9, 2)) {
+
+						watchable = true;
+
+						break;
+					}
 				}
-
-				if ("com.liferay".equals(group) && "com.liferay.gradle.plugins".equals(name) &&
-					version.isOrGreaterThan(3, 11)) {
-
-					watchable = true;
-
-					break;
-				}
-
-				if ("com.liferay".equals(group) && "com.liferay.gradle.plugins.workspace".equals(name) &&
-					version.isOrGreaterThan(1, 9, 2)) {
-
-					watchable = true;
-
-					break;
+				catch (IllegalArgumentException iae) {
 				}
 			}
 		}
