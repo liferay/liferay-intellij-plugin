@@ -21,7 +21,7 @@ import icons.LiferayIcons;
 /**
  * @author Terry Jia
  */
-public class LiferayLookupElementBuilder {
+public class LiferayLookupElementBuilderFactory {
 
 	public static LookupElementBuilder create(String value, String type) {
 		LookupElementBuilder builder = LookupElementBuilder.create(value);
