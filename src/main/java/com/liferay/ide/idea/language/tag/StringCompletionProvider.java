@@ -35,7 +35,7 @@ public class StringCompletionProvider extends CompletionProvider<CompletionParam
 		@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
 
 		for (String s : _strings) {
-			result.addElement(LiferayLookupElementBuilder.create(s, "String"));
+			result.addElement(LiferayLookupElementBuilderFactory.create(s, "String"));
 		}
 
 		result.stopHere();

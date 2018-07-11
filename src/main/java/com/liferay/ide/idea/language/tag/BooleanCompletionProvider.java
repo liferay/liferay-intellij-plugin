@@ -30,8 +30,8 @@ public class BooleanCompletionProvider extends CompletionProvider<CompletionPara
 	protected void addCompletions(
 		@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
 
-		result.addElement(LiferayLookupElementBuilder.create("true", "boolean"));
-		result.addElement(LiferayLookupElementBuilder.create("false", "boolean"));
+		result.addElement(LiferayLookupElementBuilderFactory.create("true", "boolean"));
+		result.addElement(LiferayLookupElementBuilderFactory.create("false", "boolean"));
 
 		result.stopHere();
 	}
