@@ -56,12 +56,12 @@ repositories {
 
 task downloadBlade(type: Download) {
 	src bladeLatestDownloadURL
-	dest 'src/main/resources/libs/blade.jar'
+	dest 'build/resources/main/libs/blade.jar'
 	onlyIfModified true
 }
 
 task downloadLiferayDefinitions(type: Download){
-	def target = new File("src/main/resources/definitions");
+	def target = new File("build/resources/main/definitions");
 	target.mkdirs();
 
 	src([
@@ -100,7 +100,7 @@ task downloadLiferayDefinitions(type: Download){
 }
 
 task downloadLiferayTaglibDefinitions(type: Download){
-	def target = new File("src/main/resources/tld");
+	def target = new File("build/resources/main/tld");
 	target.mkdirs();
 
 	src([
@@ -112,12 +112,12 @@ task downloadLiferayTaglibDefinitions(type: Download){
 }
 
 task verifyBlade(type: Verify, dependsOn: downloadBlade) {
-	src 'src/main/resources/libs/blade.jar'
+	src 'build/resources/main/libs/blade.jar'
 	algorithm 'MD5'
 	checksum bladeLatestMD5
 }
 
-compileJava {
+processResources {
 	dependsOn verifyBlade, downloadLiferayDefinitions, downloadLiferayTaglibDefinitions
 }
 
