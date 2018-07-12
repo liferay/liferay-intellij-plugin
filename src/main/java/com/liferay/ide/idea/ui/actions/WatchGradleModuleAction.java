@@ -16,6 +16,7 @@ package com.liferay.ide.idea.ui.actions;
 
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 
@@ -41,11 +42,17 @@ import java.util.Properties;
 
 /**
  * @author Terry Jia
+ * @author Simon Jiang
  */
 public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
 
 	public WatchGradleModuleAction() {
 		super("Watch", "Run watch task", LiferayIcons.LIFERAY_ICON, "watch");
+	}
+
+	@Override
+	public void actionPerformed(final AnActionEvent event) {
+		super.actionPerformed(event);
 	}
 
 	@Override
@@ -100,6 +107,11 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
 		}
 
 		return false;
+	}
+
+	@Override
+	protected ProgressExecutionMode getProgressMode() {
+		return ProgressExecutionMode.NO_PROGRESS_ASYNC;
 	}
 
 	private List<Path> _getBndPaths() {

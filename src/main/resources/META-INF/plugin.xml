@@ -117,5 +117,6 @@
 		<psi.referenceContributor implementation="com.liferay.ide.idea.language.LiferayXmlFileReferenceContributor"/>
 		<completion.contributor order="first" language="JAVA" implementationClass="com.liferay.ide.idea.language.osgi.ComponentPropertiesCompletionContributor"/>
 		<completion.contributor order="first" language="XML" implementationClass="com.liferay.ide.idea.language.tag.AuiTagAttributeValueCompletionContributor"/>
+		<projectViewNodeDecorator implementation="com.liferay.ide.idea.ui.decorator.ProjectViewWatchDecorator"/>
 	</extensions>
 </idea-plugin>
