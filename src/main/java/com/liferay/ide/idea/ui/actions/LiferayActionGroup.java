@@ -18,6 +18,8 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.project.DumbService;
+import com.intellij.openapi.project.Project;
 
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -56,7 +58,18 @@ public class LiferayActionGroup extends DefaultActionGroup {
 			).count();
 		}
 
-		presentation.setEnabledAndVisible(count > 0);
+		Project project = event.getProject();
+
+		DumbService dumbService = DumbService.getInstance(project);
+
+		if (dumbService.isDumb()) {
+			presentation.setEnabled(false);
+		}
+		else {
+			presentation.setEnabled(count > 0);
+		}
+
+		presentation.setVisible(count > 0);
 	}
 
 }
