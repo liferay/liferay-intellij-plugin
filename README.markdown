@@ -13,7 +13,7 @@ $ ./gradlew clean build
 Once it finishes the locally built the IntelliJ Idea Plugin will be located here:
 
 ```
-build/distributions/liferay-idea-plugin-<version>.zip
+build/distributions/liferay-intellij-plugin-<version>.zip
 ```
 
 You can install this using _Preferences > Plugins > Install plugin from disk... > Point to newly built zip file_
