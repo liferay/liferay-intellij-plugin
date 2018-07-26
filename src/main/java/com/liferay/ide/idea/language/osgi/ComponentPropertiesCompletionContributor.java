@@ -516,6 +516,90 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 		//see https://dev.liferay.com/de/develop/tutorials/-/knowledge_base/7-0/liferay-websocket-whiteboard
 		_componentProperties.put(
 			"javax.websocket.Endpoint", new String[][] {{"org.osgi.http.websocket.endpoint.path", "String"}, });
+
+		_componentProperties.put(
+			"com.liferay.dynamic.data.mapping.util.DDMStructurePermissionSupport",
+			new String[][] {
+				{"model.class.name", "String"}, {"add.structure.action.id", "String"},
+				{"default.model.resource.name", "boolean"}
+			});
+
+		_componentProperties.put(
+			"com.liferay.dynamic.data.mapping.util.DDMTemplatePermissionSupport",
+			new String[][] {
+				{"model.class.name", "String"}, {"add.structure.action.id", "String"},
+				{"default.model.resource.name", "boolean"}
+			});
+
+		_componentProperties.put(
+			"com.liferay.adaptive.media.image.optimizer.AMImageOptimizer",
+			new String[][] {{"adaptive.media.key", "String"}});
+
+		_componentProperties.put(
+			"com.liferay.adaptive.media.image.counter.AMImageCounter",
+			new String[][] {{"adaptive.media.key", "String"}});
+
+		_componentProperties.put(
+			"com.liferay.adaptive.media.handler.AMRequestHandler",
+			new String[][] {{"adaptive.media.handler.pattern", "String"}});
+
+		_componentProperties.put(
+			"com.liferay.mentions.matcher.MentionsMatcher", new String[][] {{"model.class.name", "String"}});
+
+		_componentProperties.put(
+			"com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldValueAccessor",
+			new String[][] {{"ddm.form.field.type.name", "String"}});
+
+		_componentProperties.put(
+			"com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldValueRenderer",
+			new String[][] {{"ddm.form.field.type.name", "String"}});
+
+		_componentProperties.put(
+			"com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldValueRequestParameterRetriever",
+			new String[][] {{"ddm.form.field.type.name", "String"}});
+
+		_componentProperties.put(
+			"com.liferay.portal.kernel.captcha.Captcha", new String[][] {{"captcha.engine.impl", "String"}});
+
+		_componentProperties.put(
+			"com.liferay.portal.kernel.util.ResourceBundleLoader", new String[][] {{"bundle.symbolic.name", "String"}});
+
+		_componentProperties.put(
+			"com.liferay.portal.output.stream.container.OutputStreamContainerFactory",
+			new String[][] {{"name", "String"}});
+
+		_componentProperties.put(
+			"com.liferay.knowledge.base.web.internal.selector.KBArticleSelector",
+			new String[][] {{"model.class.name", "String"}});
+
+		_componentProperties.put(
+			"com.liferay.push.notifications.sender.PushNotificationsSender", new String[][] {{"platform", "String"}});
+
+		_componentProperties.put(
+			"com.liferay.portal.configuration.persistence.listener.ConfigurationModelListener",
+			new String[][] {{"model.class.name", "String"}});
+
+		_componentProperties.put(
+			"org.eclipse.osgi.service.urlconversion.URLConverter", new String[][] {{"protocol", "String"}});
+
+		_componentProperties.put(
+			"com.liferay.portal.kernel.security.auth.AuthFailure", new String[][] {{"key", "String"}});
+
+		_componentProperties.put(
+			"com.liferay.asset.kernel.validator.AssetEntryValidatorExclusionRule",
+			new String[][] {{"model.class.name", "String"}});
+
+		_componentProperties.put(
+			"com.liferay.portlet.documentlibrary.store.Store", new String[][] {{"store.type", "String"}});
+
+		_componentProperties.put(
+			"com.liferay.portlet.documentlibrary.store.StoreWrapper", new String[][] {{"store.type", "String"}});
+
+		_componentProperties.put(
+			"com.liferay.portal.kernel.portlet.PortletLayoutFinder", new String[][] {{"model.class.name", "String"}});
+
+		_componentProperties.put(
+			"com.liferay.portal.kernel.template.TemplateContextContributor", new String[][] {{"type", "String"}});
 	}
 
 }
