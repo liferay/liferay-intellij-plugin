@@ -19,6 +19,8 @@ import com.intellij.codeInsight.completion.CompletionProvider;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.util.ProcessingContext;
 
+import java.util.stream.Stream;
+
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -34,9 +36,13 @@ public class StringCompletionProvider extends CompletionProvider<CompletionParam
 	protected void addCompletions(
 		@NotNull CompletionParameters parameters, ProcessingContext context, @NotNull CompletionResultSet result) {
 
-		for (String s : _strings) {
-			result.addElement(LiferayLookupElementBuilderFactory.create(s, "String"));
-		}
+		Stream.of(
+			_strings
+		).map(
+			s -> LiferayLookupElementBuilderFactory.create(s, "String")
+		).forEach(
+			result::addElement
+		);
 
 		result.stopHere();
 	}

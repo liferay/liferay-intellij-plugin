@@ -24,12 +24,13 @@ import icons.LiferayIcons;
 public class LiferayLookupElementBuilderFactory {
 
 	public static LookupElementBuilder create(String value, String type) {
-		LookupElementBuilder builder = LookupElementBuilder.create(value);
-
-		builder = builder.withTypeText(type);
-		builder = builder.withIcon(LiferayIcons.LIFERAY_ICON);
-
-		return builder;
+		return LookupElementBuilder.create(
+			value
+		).withTypeText(
+			type
+		).withIcon(
+			LiferayIcons.LIFERAY_ICON
+		);
 	}
 
 }
