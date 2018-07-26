@@ -31,6 +31,7 @@ dependencies {
 	compile group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.4.0"
 	compile group: "commons-configuration", name: "commons-configuration", version: "1.10"
 	compile group: "org.apache.ant", name: "ant", version: "1.10.1"
+	compile group: "org.dom4j", name: "dom4j", version: "2.1.0"
 }
 
 formatSource {
@@ -55,12 +56,12 @@ repositories {
 
 task downloadBlade(type: Download) {
 	src bladeLatestDownloadURL
-	dest 'src/main/resources/libs/blade.jar'
+	dest 'build/resources/main/libs/blade.jar'
 	onlyIfModified true
 }
 
 task downloadLiferayDefinitions(type: Download){
-	def target = new File("src/main/resources/definitions");
+	def target = new File("build/resources/main/definitions");
 	target.mkdirs();
 
 	src([
@@ -98,14 +99,26 @@ task downloadLiferayDefinitions(type: Download){
 	overwrite false
 }
 
+task downloadLiferayTaglibDefinitions(type: Download){
+	def target = new File("build/resources/main/tld");
+	target.mkdirs();
+
+	src([
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/util-taglib/src/META-INF/liferay-aui.tld',
+			'https://raw.githubusercontent.com/liferay/liferay-portal/master/util-taglib/src/META-INF/liferay-ui.tld'
+		])
+	dest target
+	overwrite false
+}
+
 task verifyBlade(type: Verify, dependsOn: downloadBlade) {
-	src 'src/main/resources/libs/blade.jar'
+	src 'build/resources/main/libs/blade.jar'
 	algorithm 'MD5'
 	checksum bladeLatestMD5
 }
 
-compileJava {
-	dependsOn verifyBlade, downloadLiferayDefinitions
+processResources {
+	dependsOn verifyBlade, downloadLiferayDefinitions, downloadLiferayTaglibDefinitions
 }
 
-version = '1.0.0'
+version = '1.1.0'

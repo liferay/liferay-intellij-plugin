@@ -8,6 +8,4 @@ gradle/wrapper
 build/
 *.iml
 out/
-src/main/resources/libs/blade.jar
-src/main/resources/definitions/
 /bin/
