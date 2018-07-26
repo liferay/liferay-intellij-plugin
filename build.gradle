@@ -14,12 +14,16 @@ buildscript {
 }
 
 plugins {
-	id "org.jetbrains.intellij" version "0.3.1"
 	id "de.undercouch.download" version "3.4.2"
+	id "org.jetbrains.intellij" version "0.3.1"
 }
 
 apply plugin: 'com.liferay.source.formatter'
 apply plugin: 'java'
+
+task downloadBlade(type: Download)
+task downloadLiferayDefinitions(type: Download)
+task verifyBlade(type: Verify)
 
 check.dependsOn checkSourceFormatting
 
@@ -34,35 +38,16 @@ dependencies {
 	compile group: "org.dom4j", name: "dom4j", version: "2.1.0"
 }
 
-formatSource {
-	maxLineLength = 120
-}
-
-intellij {
-	version "IU-2018.1.4"
-	plugins 'gradle', 'maven', 'terminal', 'JavaEE'
-}
-
-patchPluginXml {
-	sinceBuild '172'
-	untilBuild ''
-}
-
-repositories {
-	maven {
-		url "https://repository-cdn.liferay.com/nexus/content/groups/public"
-	}
-}
-
-task downloadBlade(type: Download) {
+downloadBlade {
 	src bladeLatestDownloadURL
 	dest 'build/resources/main/libs/blade.jar'
 	onlyIfModified true
 }
 
-task downloadLiferayDefinitions(type: Download){
-	def target = new File("build/resources/main/definitions");
-	target.mkdirs();
+downloadLiferayDefinitions {
+	def target = file("build/resources/main/definitions")
+
+	target.mkdirs()
 
 	src([
 			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-display_7_0_0.dtd',
@@ -95,30 +80,54 @@ task downloadLiferayDefinitions(type: Download){
 			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-workflow-definition_7_1_0.xsd',
 			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/portlet-app_2_0.xsd'
 		])
+
 	dest target
 	overwrite false
 }
 
 task downloadLiferayTaglibDefinitions(type: Download){
-	def target = new File("build/resources/main/tld");
-	target.mkdirs();
+	def target = file("build/resources/main/tld")
+
+	target.mkdirs()
 
 	src([
 			'https://raw.githubusercontent.com/liferay/liferay-portal/master/util-taglib/src/META-INF/liferay-aui.tld',
 			'https://raw.githubusercontent.com/liferay/liferay-portal/master/util-taglib/src/META-INF/liferay-ui.tld'
 		])
+
 	dest target
 	overwrite false
 }
 
-task verifyBlade(type: Verify, dependsOn: downloadBlade) {
-	src 'build/resources/main/libs/blade.jar'
-	algorithm 'MD5'
-	checksum bladeLatestMD5
+formatSource {
+	maxLineLength = 120
+}
+
+intellij {
+	plugins 'gradle', 'maven', 'terminal', 'JavaEE'
+	version "IU-2018.1.4"
+}
+
+patchPluginXml {
+	sinceBuild '172'
+	untilBuild ''
 }
 
 processResources {
 	dependsOn verifyBlade, downloadLiferayDefinitions, downloadLiferayTaglibDefinitions
+}
+
+repositories {
+	maven {
+		url "https://repository-cdn.liferay.com/nexus/content/groups/public"
+	}
+}
+
+verifyBlade {
+	dependsOn downloadBlade
+	src 'build/resources/main/libs/blade.jar'
+	algorithm 'MD5'
+	checksum bladeLatestMD5
 }
 
 version = '1.1.0'
