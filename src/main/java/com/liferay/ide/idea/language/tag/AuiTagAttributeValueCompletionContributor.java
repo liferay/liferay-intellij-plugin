@@ -127,19 +127,19 @@ public class AuiTagAttributeValueCompletionContributor extends CompletionContrib
 	}
 
 	private static List<String[]> _getTargetAttributes() {
-		List<String[]> lexiconAttributes = new ArrayList<>();
+		List<String[]> targetAttributes = new ArrayList<>();
 
-		lexiconAttributes.add(new String[] {"aui", "a", "target"});
-		lexiconAttributes.add(new String[] {"aui", "icon", "target"});
-		lexiconAttributes.add(new String[] {"aui", "nav-item", "target"});
+		targetAttributes.add(new String[] {"aui", "a", "target"});
+		targetAttributes.add(new String[] {"aui", "icon", "target"});
+		targetAttributes.add(new String[] {"aui", "nav-item", "target"});
 
-		return lexiconAttributes;
+		return targetAttributes;
 	}
 
 	private static List<String[]> _parseBooleanAttributes() {
 		List<String[]> booleanAttributes = new ArrayList<>();
 
-		SAXReader reader = new SAXReader();
+		SAXReader saxReader = new SAXReader();
 
 		ClassLoader classLoader = AuiTagAttributeValueCompletionContributor.class.getClassLoader();
 
@@ -147,7 +147,7 @@ public class AuiTagAttributeValueCompletionContributor extends CompletionContrib
 
 		for (URL url : urls) {
 			try {
-				Document document = reader.read(url);
+				Document document = saxReader.read(url);
 
 				Node shortNameNode = document.selectSingleNode("/*[name()='taglib']/*[name()='short-name']");
 
@@ -169,7 +169,6 @@ public class AuiTagAttributeValueCompletionContributor extends CompletionContrib
 				}
 			}
 			catch (DocumentException de) {
-				de.printStackTrace();
 			}
 		}
 
