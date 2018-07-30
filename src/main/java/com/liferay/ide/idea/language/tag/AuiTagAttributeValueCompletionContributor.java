@@ -71,19 +71,22 @@ public class AuiTagAttributeValueCompletionContributor extends CompletionContrib
 		PsiElementPattern.Capture<PsiElement> buttonCapture = PlatformPatterns.psiElement();
 
 		extend(
-			CompletionType.BASIC, buttonCapture.with(new TagPatternCondition("aui", "button", "type")),
+			CompletionType.BASIC,
+			buttonCapture.with(new TagPatternCondition(LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI, "button", "type")),
 			new StringCompletionProvider(new String[] {"button", "submit", "cancel", "reset"}));
 
 		PsiElementPattern.Capture<PsiElement> formCapture = PlatformPatterns.psiElement();
 
 		extend(
-			CompletionType.BASIC, formCapture.with(new TagPatternCondition("aui", "form", "method")),
+			CompletionType.BASIC,
+			formCapture.with(new TagPatternCondition(LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI, "form", "method")),
 			new StringCompletionProvider(new String[] {"get", "post"}));
 
 		PsiElementPattern.Capture<PsiElement> inputCapture = PlatformPatterns.psiElement();
 
 		extend(
-			CompletionType.BASIC, inputCapture.with(new TagPatternCondition("aui", "input", "type")),
+			CompletionType.BASIC,
+			inputCapture.with(new TagPatternCondition(LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI, "input", "type")),
 			new StringCompletionProvider(
 				new String[] {
 					"text", "hidden", "assetCategories", "assetTags", "textarea", "timeZone", "password", "checkbox",
@@ -94,7 +97,8 @@ public class AuiTagAttributeValueCompletionContributor extends CompletionContrib
 		PsiElementPattern.Capture<PsiElement> validatorCapture = PlatformPatterns.psiElement();
 
 		extend(
-			CompletionType.BASIC, validatorCapture.with(new TagPatternCondition("aui", "validator", "name")),
+			CompletionType.BASIC,
+			validatorCapture.with(new TagPatternCondition(LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI, "validator", "name")),
 			new StringCompletionProvider(
 				new String[] {
 					"custom", "acceptFiles", "alpha", "alphanum", "date", "digits", "email", "equalTo", "iri", "max",
@@ -105,11 +109,11 @@ public class AuiTagAttributeValueCompletionContributor extends CompletionContrib
 	private static List<String[]> _getLeftRightAttributes() {
 		List<String[]> leftRightAttributes = new ArrayList<>();
 
-		leftRightAttributes.add(new String[] {"aui", "field-wrapper", "inlineLabel"});
-		leftRightAttributes.add(new String[] {"aui", "form", "inlineLabel"});
-		leftRightAttributes.add(new String[] {"aui", "input", "inlineLabel"});
-		leftRightAttributes.add(new String[] {"aui", "select", "inlineLabel"});
-		leftRightAttributes.add(new String[] {"aui", "button", "iconAlign"});
+		leftRightAttributes.add(new String[] {LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI, "field-wrapper", "inlineLabel"});
+		leftRightAttributes.add(new String[] {LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI, "form", "inlineLabel"});
+		leftRightAttributes.add(new String[] {LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI, "input", "inlineLabel"});
+		leftRightAttributes.add(new String[] {LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI, "select", "inlineLabel"});
+		leftRightAttributes.add(new String[] {LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI, "button", "iconAlign"});
 
 		return leftRightAttributes;
 	}
@@ -117,11 +121,11 @@ public class AuiTagAttributeValueCompletionContributor extends CompletionContrib
 	private static List<String[]> _getLexiconAttributes() {
 		List<String[]> lexiconAttributes = new ArrayList<>();
 
-		lexiconAttributes.add(new String[] {"aui", "fieldset", "markupView"});
-		lexiconAttributes.add(new String[] {"aui", "fieldset-group", "markupView"});
-		lexiconAttributes.add(new String[] {"aui", "icon", "markupView"});
-		lexiconAttributes.add(new String[] {"aui", "nav-bar", "markupView"});
-		lexiconAttributes.add(new String[] {"aui", "workflow-status", "markupView"});
+		lexiconAttributes.add(new String[] {LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI, "fieldset", "markupView"});
+		lexiconAttributes.add(new String[] {LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI, "fieldset-group", "markupView"});
+		lexiconAttributes.add(new String[] {LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI, "icon", "markupView"});
+		lexiconAttributes.add(new String[] {LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI, "nav-bar", "markupView"});
+		lexiconAttributes.add(new String[] {LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI, "workflow-status", "markupView"});
 
 		return lexiconAttributes;
 	}
@@ -129,9 +133,9 @@ public class AuiTagAttributeValueCompletionContributor extends CompletionContrib
 	private static List<String[]> _getTargetAttributes() {
 		List<String[]> targetAttributes = new ArrayList<>();
 
-		targetAttributes.add(new String[] {"aui", "a", "target"});
-		targetAttributes.add(new String[] {"aui", "icon", "target"});
-		targetAttributes.add(new String[] {"aui", "nav-item", "target"});
+		targetAttributes.add(new String[] {LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI, "a", "target"});
+		targetAttributes.add(new String[] {LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI, "icon", "target"});
+		targetAttributes.add(new String[] {LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI, "nav-item", "target"});
 
 		return targetAttributes;
 	}
@@ -149,9 +153,9 @@ public class AuiTagAttributeValueCompletionContributor extends CompletionContrib
 			try {
 				Document document = saxReader.read(url);
 
-				Node shortNameNode = document.selectSingleNode("/*[name()='taglib']/*[name()='short-name']");
+				Node uriNode = document.selectSingleNode("/*[name()='taglib']/*[name()='uri']");
 
-				String shortName = shortNameNode.getText();
+				String uri = uriNode.getText();
 
 				List<Node> typeNodes = document.selectNodes(
 					"/*[name()='taglib']/*[name()='tag']/*[name()='attribute']/*[name()='type']");
@@ -164,7 +168,7 @@ public class AuiTagAttributeValueCompletionContributor extends CompletionContrib
 
 						Node tagName = attributeName.selectSingleNode("../../*[name()='name']");
 
-						booleanAttributes.add(new String[] {shortName, tagName.getText(), attributeName.getText()});
+						booleanAttributes.add(new String[] {uri, tagName.getText(), attributeName.getText()});
 					}
 				}
 			}
