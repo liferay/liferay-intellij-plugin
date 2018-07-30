@@ -22,15 +22,21 @@ import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.util.JavaParametersUtil;
 import com.intellij.util.PathsList;
 
+import com.liferay.ide.idea.server.portal.PortalBundle;
+import com.liferay.ide.idea.server.portal.PortalBundleFactory;
 import com.liferay.ide.idea.util.FileUtil;
 import com.liferay.ide.idea.util.PortalPropertiesConfiguration;
+import com.liferay.ide.idea.util.ServerUtil;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.io.InputStream;
 
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import java.util.stream.Stream;
 
 import org.apache.commons.io.FileUtils;
 
@@ -38,6 +44,7 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Terry Jia
+ * @author Simon Jiang
  */
 public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLineState<LiferayServerConfiguration> {
 
@@ -61,47 +68,50 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 
 		params.setJdk(JavaParametersUtil.createProjectJdk(liferayServerConfiguration.getProject(), jreHome));
 
-		File bundleDir = new File(liferayServerConfiguration.getLiferayBundle());
+		String bundleLocation = liferayServerConfiguration.getBundleLocation();
 
-		File[] files = bundleDir.listFiles(
-			new FileFilter() {
+		String bundleType = liferayServerConfiguration.getBundleType();
 
-				@Override
-				public boolean accept(File file) {
-					String fileName = file.getName();
+		PortalBundleFactory bundleFactory = ServerUtil.getPortalBundleFactory(bundleType);
 
-					return fileName.startsWith("tomcat");
-				}
+		Path bundlePath = bundleFactory.canCreateFromPath(Paths.get(bundleLocation));
 
-			});
+		if (bundlePath == null) {
+			throw new ExecutionException("Liferay portal bundle can't be set null");
+		}
 
-		String tomcat = liferayServerConfiguration.getLiferayBundle() + "/" + files[0].getName();
+		final PortalBundle bundle = bundleFactory.create(bundlePath);
+
+		ParametersList programParametersList = params.getProgramParametersList();
+
+		String[] runtimeStartProgArgs = bundle.getRuntimeStartProgArgs();
+
+		Stream.of(
+			runtimeStartProgArgs
+		).forEach(
+			startProg -> programParametersList.add(startProg)
+		);
 
 		PathsList classPath = params.getClassPath();
+		Path[] runtimeClasspath = bundle.getRuntimeClasspath();
 
-		classPath.add(new File(tomcat + "/bin/tomcat-juli.jar"));
-		classPath.add(new File(tomcat + "/bin/bootstrap.jar"));
-		classPath.add(new File(tomcat + "/bin/commons-daemon.jar"));
+		Stream.of(
+			runtimeClasspath
+		).forEach(
+			path -> classPath.add(path.toFile())
+		);
 
-		params.setMainClass("org.apache.catalina.startup.Bootstrap");
+		params.setMainClass(bundle.getMainClass());
 
 		ParametersList vmParametersList = params.getVMParametersList();
 
-		vmParametersList.addParametersString(liferayServerConfiguration.getVMParameters());
+		String[] runtimeStartVMArgs = bundle.getRuntimeStartVMArgs();
 
-		vmParametersList.add("-Dcatalina.base=" + tomcat);
-		vmParametersList.add("-Dcatalina.home=" + tomcat);
-		vmParametersList.add("-Dcom.sun.management.jmxremote");
-		vmParametersList.add("-Dcom.sun.management.jmxremote.authenticate=false");
-		vmParametersList.add("-Dcom.sun.management.jmxremote.port=8099");
-		vmParametersList.add("-Dcom.sun.management.jmxremote.ssl=false");
-		vmParametersList.add("-Dfile.encoding=UTF8");
-		vmParametersList.add("-Djava.endorsed.dirs=" + tomcat + "/endorsed");
-		vmParametersList.add("-Djava.io.tmpdir=" + tomcat + "/temp");
-		vmParametersList.add("-Djava.net.preferIPv4Stack=true");
-		vmParametersList.add("-Djava.util.logging.config.file=" + tomcat + "/conf/logging.properties");
-		vmParametersList.add("-Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager");
-		vmParametersList.add("-Dorg.apache.catalina.loader.WebappClassLoader.ENABLE_CLEAR_REFERENCES=false");
+		Stream.of(
+			runtimeStartVMArgs
+		).forEach(
+			vmArg -> vmParametersList.add(vmArg)
+		);
 
 		setupJavaParameters(params);
 
@@ -111,9 +121,9 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 	}
 
 	private void _configureDeveloperMode(LiferayServerConfiguration configuration) {
-		File bundleDir = new File(configuration.getLiferayBundle());
+		String bundleLocation = configuration.getBundleLocation();
 
-		File portalExt = new File(bundleDir, "portal-ext.properties");
+		File portalExt = new File(bundleLocation, "portal-ext.properties");
 
 		if (configuration.getDeveloperMode()) {
 			try {

@@ -27,6 +27,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
+import java.nio.file.Path;
+
 /**
  * @author Terry Jia
  */
@@ -59,6 +61,22 @@ public class FileUtil {
 		copyFile(src, new File(dir, newName));
 	}
 
+	public static boolean exist(File file) {
+		if ((file != null) && file.exists()) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public static boolean exist(Path file) {
+		if (exist(file.toFile())) {
+			return true;
+		}
+
+		return false;
+	}
+
 	public static boolean exist(VirtualFile file) {
 		if ((file != null) && file.exists()) {
 			return true;
@@ -67,8 +85,20 @@ public class FileUtil {
 		return false;
 	}
 
+	public static File[] getDirectories(File directory) {
+		return directory.listFiles(file -> file.isDirectory());
+	}
+
 	public static boolean notExists(File file) {
 		if ((file == null) || !file.exists()) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public static boolean notExists(Path file) {
+		if (notExists(file.toFile())) {
 			return true;
 		}
 

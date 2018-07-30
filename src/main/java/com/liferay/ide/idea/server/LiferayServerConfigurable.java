@@ -17,6 +17,8 @@ package com.liferay.ide.idea.server;
 import com.intellij.application.options.ModulesComboBox;
 import com.intellij.execution.ui.DefaultJreSelector;
 import com.intellij.execution.ui.JrePathEditor;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
@@ -24,6 +26,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.PanelWithAnchor;
+import com.intellij.ui.UserActivityWatcher;
+
+import com.liferay.ide.idea.server.portal.PortalBundle;
+import com.liferay.ide.idea.util.PathsUtil;
+import com.liferay.ide.idea.util.ServerUtil;
+
+import java.nio.file.Path;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
@@ -35,6 +44,7 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Terry Jia
+ * @author Simon Jiang
  */
 public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfiguration> implements PanelWithAnchor {
 
@@ -44,6 +54,7 @@ public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfi
 		modulesComboBox.allowEmptySelection("<whole project>");
 		modulesComboBox.fillModules(project);
 
+		_bundleType.setEnabled(false);
 		_liferayServer.setEnabled(true);
 
 		_liferayServer.addBrowseFolderListener(
@@ -51,6 +62,27 @@ public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfi
 			FileChooserDescriptorFactory.createSingleFolderDescriptor());
 
 		_jrePath.setDefaultJreSelector(DefaultJreSelector.fromModuleDependencies(modulesComboBox, true));
+
+		_myWatcher = new UserActivityWatcher();
+
+		_myWatcher.register(_liferayServer);
+		_myWatcher.addUserActivityListener(
+			() -> {
+				Application application = ApplicationManager.getApplication();
+
+				application.runWriteAction(
+					() -> {
+						PortalBundle portalBundle = ServerUtil.getPortalBundle(
+							PathsUtil.getPath(_liferayServer.getText()));
+
+						if (portalBundle != null) {
+							_bundleType.setText(portalBundle.getType());
+						}
+						else {
+							_bundleType.setText("");
+						}
+					});
+			});
 	}
 
 	@Override
@@ -62,9 +94,11 @@ public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfi
 
 		configuration.setModule(modulesComboBox.getSelectedModule());
 
-		configuration.setLiferayBundle(_liferayServer.getText());
 		configuration.setVMParameters(_vmParams.getText());
 		configuration.setDeveloperMode(_developerMode.isSelected());
+		configuration.setBundleType(_bundleType.getText());
+		configuration.setBundleLocation(_liferayServer.getText());
+		configuration.checkConfiguration();
 	}
 
 	@NotNull
@@ -80,8 +114,18 @@ public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfi
 
 	@Override
 	public void resetEditorFrom(@NotNull LiferayServerConfiguration configuration) {
+		_bundleType.setEnabled(false);
 		_vmParams.setText(configuration.getVMParameters());
-		_liferayServer.setText(configuration.getLiferayBundle());
+		PortalBundle portalBundle = ServerUtil.getPortalBundle(PathsUtil.getPath(configuration.getBundleLocation()));
+
+		if (portalBundle != null) {
+			Path appServerDir = portalBundle.getAppServerDir();
+
+			_liferayServer.setText(appServerDir.toString());
+
+			_bundleType.setText(portalBundle.getType());
+		}
+
 		_jrePath.setPathOrName(configuration.getAlternativeJrePath(), configuration.isAlternativeJrePathEnabled());
 		_developerMode.setSelected(configuration.getDeveloperMode());
 
@@ -96,12 +140,19 @@ public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfi
 		_jrePath.setAnchor(anchor);
 	}
 
+	@Override
+	protected void disposeEditor() {
+		_myWatcher = null;
+	}
+
 	private JComponent _anchor;
+	private JTextField _bundleType;
 	private JCheckBox _developerMode;
 	private JrePathEditor _jrePath;
 	private TextFieldWithBrowseButton _liferayServer;
 	private JPanel _mainPanel;
 	private LabeledComponent<ModulesComboBox> _modules;
+	private UserActivityWatcher _myWatcher;
 	private JTextField _vmParams;
 
 }
