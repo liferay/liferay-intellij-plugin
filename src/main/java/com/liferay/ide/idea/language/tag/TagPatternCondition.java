@@ -29,10 +29,10 @@ import org.jetbrains.annotations.NotNull;
  */
 public class TagPatternCondition extends PatternCondition<PsiElement> {
 
-	public TagPatternCondition(String prefix, String name, String attribute) {
+	public TagPatternCondition(String uri, String name, String attribute) {
 		super("pattern");
 
-		_prefix = prefix;
+		_uri = uri;
 		_name = name;
 		_attribute = attribute;
 	}
@@ -57,9 +57,10 @@ public class TagPatternCondition extends PatternCondition<PsiElement> {
 			XmlTag tag = PsiTreeUtil.getParentOfType(attributeValue, XmlTag.class);
 
 			if (tag != null) {
-				String tagName = tag.getName();
+				String tagName = tag.getLocalName();
+				String namespace = tag.getNamespace();
 
-				if (tagName.equals(_prefix + ":" + _name)) {
+				if (tagName.equals(_name) && _uri.equals(namespace)) {
 					return true;
 				}
 			}
@@ -70,6 +71,6 @@ public class TagPatternCondition extends PatternCondition<PsiElement> {
 
 	private String _attribute;
 	private String _name;
-	private String _prefix;
+	private String _uri;
 
 }
