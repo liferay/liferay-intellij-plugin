@@ -17,7 +17,6 @@ package com.liferay.ide.idea.server.portal;
 import com.intellij.execution.Platform;
 
 import com.liferay.ide.idea.util.FileUtil;
-import com.liferay.ide.idea.util.PathsUtil;
 
 import java.nio.file.Path;
 
@@ -44,18 +43,18 @@ public class PortalTomcatBundle extends AbstractPortalBundle {
 	public Path[] getRuntimeClasspath() {
 		List<Path> paths = new ArrayList<>();
 
-		Path binPath = PathsUtil.append(bundlePath, "bin");
+		Path binPath = FileUtil.pathAppend(bundlePath, "bin");
 
 		if (FileUtil.exist(binPath)) {
-			paths.add(PathsUtil.append(binPath, "bootstrap.jar"));
+			paths.add(FileUtil.pathAppend(binPath, "bootstrap.jar"));
 
-			Path juli = PathsUtil.append(binPath, "tomcat-juli.jar");
+			Path juli = FileUtil.pathAppend(binPath, "tomcat-juli.jar");
 
 			if (FileUtil.exist(juli)) {
 				paths.add(juli);
 			}
 
-			Path dameonPath = PathsUtil.append(binPath, "commons-daemon.jar");
+			Path dameonPath = FileUtil.pathAppend(binPath, "commons-daemon.jar");
 
 			if (FileUtil.exist(dameonPath)) {
 				paths.add(dameonPath);
@@ -84,53 +83,18 @@ public class PortalTomcatBundle extends AbstractPortalBundle {
 		return "tomcat";
 	}
 
-	@Override
-	protected int getDefaultJMXRemotePort() {
-		int retval = 8099;
-
-		Path setenv = PathsUtil.append(bundlePath, "bin/setenv." + _getShellExtension());
-
-		String contents = FileUtil.readContents(setenv.toFile(), true);
-
-		String port = null;
-
-		if (contents != null) {
-			_pattern = Pattern.compile(".*-Dcom.sun.management.jmxremote.port(\\s*)=(\\s*)([0-9]+).*");
-
-			_matcher = _pattern.matcher(contents);
-
-			if (_matcher.matches()) {
-				port = _matcher.group(3);
-			}
-		}
-
-		if (port != null) {
-			try {
-				retval = Integer.parseInt(port);
-			}
-			catch (NumberFormatException nfe) {
-			}
-		}
-
-		return retval;
-	}
-
 	private String[] _getRuntimeVMArgs() {
 		List<String> args = new ArrayList<>();
-		Path tempPath = PathsUtil.append(bundlePath, "temp");
-		Path endorsedPath = PathsUtil.append(bundlePath, "endorsed");
+		Path tempPath = FileUtil.pathAppend(bundlePath, "temp");
+		Path endorsedPath = FileUtil.pathAppend(bundlePath, "endorsed");
 
 		args.add("-Dcatalina.base=" + bundlePath);
 		args.add("-Dcatalina.home=" + bundlePath);
-		args.add("-Dcom.sun.management.jmxremote");
-		args.add("-Dcom.sun.management.jmxremote.authenticate=false");
-		args.add("-Dcom.sun.management.jmxremote.port=" + getJmxRemotePort());
-		args.add("-Dcom.sun.management.jmxremote.ssl=false");
 		args.add("-Dfile.encoding=UTF8");
 		args.add("-Djava.endorsed.dirs=" + endorsedPath);
 		args.add("-Djava.io.tmpdir=" + tempPath);
 		args.add("-Djava.net.preferIPv4Stack=true");
-		args.add("-Djava.util.logging.config.file=" + PathsUtil.append(bundlePath, "conf/logging.properties"));
+		args.add("-Djava.util.logging.config.file=" + FileUtil.pathAppend(bundlePath, "conf/logging.properties"));
 		args.add("-Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager");
 		args.add("-Dorg.apache.catalina.loader.WebappClassLoader.ENABLE_CLEAR_REFERENCES=false");
 		args.add("-Duser.timezone=GMT");

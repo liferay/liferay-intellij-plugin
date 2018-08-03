@@ -16,7 +16,6 @@ package com.liferay.ide.idea.server.portal;
 
 import com.liferay.ide.idea.util.FileUtil;
 import com.liferay.ide.idea.util.ListUtil;
-import com.liferay.ide.idea.util.PathsUtil;
 
 import java.io.File;
 
@@ -42,11 +41,6 @@ public class PortalWildFlyBundle extends AbstractPortalBundle {
 	}
 
 	@Override
-	public int getJmxRemotePort() {
-		return getDefaultJMXRemotePort();
-	}
-
-	@Override
 	public String getMainClass() {
 		return "org.jboss.modules.Main";
 	}
@@ -56,7 +50,7 @@ public class PortalWildFlyBundle extends AbstractPortalBundle {
 		List<Path> paths = new ArrayList<>();
 
 		if (FileUtil.exist(bundlePath)) {
-			paths.add(PathsUtil.append(bundlePath, "jboss-modules.jar"));
+			paths.add(FileUtil.pathAppend(bundlePath, "jboss-modules.jar"));
 
 			File[] libs = _getJarsFromModules(bundlePath.toString(), "org.jboss.logmanager");
 
@@ -76,7 +70,7 @@ public class PortalWildFlyBundle extends AbstractPortalBundle {
 
 		args.add("-mp");
 
-		Path modulesPath = PathsUtil.append(bundlePath, "modules");
+		Path modulesPath = FileUtil.pathAppend(bundlePath, "modules");
 
 		args.add(modulesPath.toString());
 
@@ -86,7 +80,7 @@ public class PortalWildFlyBundle extends AbstractPortalBundle {
 		args.add("-b");
 		args.add("localhost");
 		args.add("--server-config=standalone.xml");
-		args.add("-Djboss.server.base.dir=" + PathsUtil.append(bundlePath, "standalone"));
+		args.add("-Djboss.server.base.dir=" + FileUtil.pathAppend(bundlePath, "standalone"));
 
 		return args.toArray(new String[0]);
 	}
@@ -109,10 +103,10 @@ public class PortalWildFlyBundle extends AbstractPortalBundle {
 		addBootClasspath(bundlePath.toString(), "org.jboss.logmanager", args, "-Xbootclasspath/p:");
 		addBootClasspath(bundlePath.toString(), "org.jboss.log4j.logmanager", args, "-Xbootclasspath/p:");
 
-		args.add("-Dorg.jboss.boot.log.file=" + PathsUtil.append(bundlePath, "standalone/log/boot.log"));
+		args.add("-Dorg.jboss.boot.log.file=" + FileUtil.pathAppend(bundlePath, "standalone/log/boot.log"));
 		args.add(
 			"-Dlogging.configuration=file:" +
-				PathsUtil.append(bundlePath, "standalone/configuration/logging.properties"));
+				FileUtil.pathAppend(bundlePath, "standalone/configuration/logging.properties"));
 		args.add("-Djboss.home.dir=" + bundlePath);
 		args.add("-Djboss.bind.address.management=localhost");
 		args.add("-Duser.timezone=GMT");
@@ -138,11 +132,6 @@ public class PortalWildFlyBundle extends AbstractPortalBundle {
 		).forEach(
 			jar -> args.add(prefix + jar.getAbsolutePath())
 		);
-	}
-
-	@Override
-	protected int getDefaultJMXRemotePort() {
-		return DEFAULT_JMX_PORT;
 	}
 
 	private File[] _getJarsFromModules(String bundleLocation, String moduleId) {

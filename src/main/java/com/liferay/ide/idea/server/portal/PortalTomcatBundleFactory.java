@@ -15,7 +15,6 @@
 package com.liferay.ide.idea.server.portal;
 
 import com.liferay.ide.idea.util.FileUtil;
-import com.liferay.ide.idea.util.PathsUtil;
 
 import java.nio.file.Path;
 
@@ -40,10 +39,10 @@ public class PortalTomcatBundleFactory extends AbstractPortalBundleFactory {
 			return false;
 		}
 
-		Path binPath = PathsUtil.append(path, "bin");
-		Path confPath = PathsUtil.append(path, "conf");
-		Path libPath = PathsUtil.append(path, "lib");
-		Path webappPath = PathsUtil.append(path, "webapps");
+		Path binPath = FileUtil.pathAppend(path, "bin");
+		Path confPath = FileUtil.pathAppend(path, "conf");
+		Path libPath = FileUtil.pathAppend(path, "lib");
+		Path webappPath = FileUtil.pathAppend(path, "webapps");
 
 		if (FileUtil.exist(binPath) && FileUtil.exist(confPath) && FileUtil.exist(libPath) &&
 			FileUtil.exist(webappPath)) {

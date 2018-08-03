@@ -15,7 +15,6 @@
 package com.liferay.ide.idea.server.portal;
 
 import com.liferay.ide.idea.util.FileUtil;
-import com.liferay.ide.idea.util.PathsUtil;
 
 import java.io.Closeable;
 import java.io.File;
@@ -237,9 +236,9 @@ public class LayeredModulePathFactory {
 		File[] layeredPaths = resolveLayeredModulePath(modulesFolder);
 
 		for (File layeredFile : layeredPaths) {
-			Path lay = PathsUtil.getPath(layeredFile.getAbsolutePath());
+			Path lay = FileUtil.getPath(layeredFile.getAbsolutePath());
 
-			Path relativeLayPath = PathsUtil.append(lay, moduleRelativePath.toString());
+			Path relativeLayPath = FileUtil.pathAppend(lay, moduleRelativePath.toString());
 
 			File layeredPath = new File(relativeLayPath.toUri());
 

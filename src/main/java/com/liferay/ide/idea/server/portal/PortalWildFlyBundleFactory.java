@@ -17,7 +17,6 @@ package com.liferay.ide.idea.server.portal;
 import com.liferay.ide.idea.util.FileUtil;
 import com.liferay.ide.idea.util.JavaUtil;
 import com.liferay.ide.idea.util.ListUtil;
-import com.liferay.ide.idea.util.PathsUtil;
 
 import java.io.File;
 
@@ -44,9 +43,9 @@ public class PortalWildFlyBundleFactory extends AbstractPortalBundleFactory {
 			return false;
 		}
 
-		Path modulesPath = PathsUtil.append(path, "modules");
-		Path standalonePath = PathsUtil.append(path, "standalone");
-		Path binPath = PathsUtil.append(path, "bin");
+		Path modulesPath = FileUtil.pathAppend(path, "modules");
+		Path standalonePath = FileUtil.pathAppend(path, "standalone");
+		Path binPath = FileUtil.pathAppend(path, "bin");
 
 		if (FileUtil.exist(modulesPath) && FileUtil.exist(standalonePath) && FileUtil.exist(binPath)) {
 			String versions = getManifestPropFromJBossModulesFolder(

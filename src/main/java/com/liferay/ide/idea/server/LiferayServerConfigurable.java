@@ -29,7 +29,7 @@ import com.intellij.ui.PanelWithAnchor;
 import com.intellij.ui.UserActivityWatcher;
 
 import com.liferay.ide.idea.server.portal.PortalBundle;
-import com.liferay.ide.idea.util.PathsUtil;
+import com.liferay.ide.idea.util.FileUtil;
 import com.liferay.ide.idea.util.ServerUtil;
 
 import java.nio.file.Path;
@@ -63,17 +63,17 @@ public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfi
 
 		_jrePath.setDefaultJreSelector(DefaultJreSelector.fromModuleDependencies(modulesComboBox, true));
 
-		_myWatcher = new UserActivityWatcher();
+		_watcher = new UserActivityWatcher();
 
-		_myWatcher.register(_liferayServer);
-		_myWatcher.addUserActivityListener(
+		_watcher.register(_liferayServer);
+		_watcher.addUserActivityListener(
 			() -> {
 				Application application = ApplicationManager.getApplication();
 
 				application.runWriteAction(
 					() -> {
 						PortalBundle portalBundle = ServerUtil.getPortalBundle(
-							PathsUtil.getPath(_liferayServer.getText()));
+							FileUtil.getPath(_liferayServer.getText()));
 
 						if (portalBundle != null) {
 							_bundleType.setText(portalBundle.getType());
@@ -116,7 +116,7 @@ public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfi
 	public void resetEditorFrom(@NotNull LiferayServerConfiguration configuration) {
 		_bundleType.setEnabled(false);
 		_vmParams.setText(configuration.getVMParameters());
-		PortalBundle portalBundle = ServerUtil.getPortalBundle(PathsUtil.getPath(configuration.getBundleLocation()));
+		PortalBundle portalBundle = ServerUtil.getPortalBundle(FileUtil.getPath(configuration.getBundleLocation()));
 
 		if (portalBundle != null) {
 			Path appServerDir = portalBundle.getAppServerDir();
@@ -142,7 +142,7 @@ public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfi
 
 	@Override
 	protected void disposeEditor() {
-		_myWatcher = null;
+		_watcher = null;
 	}
 
 	private JComponent _anchor;
@@ -152,7 +152,7 @@ public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfi
 	private TextFieldWithBrowseButton _liferayServer;
 	private JPanel _mainPanel;
 	private LabeledComponent<ModulesComboBox> _modules;
-	private UserActivityWatcher _myWatcher;
 	private JTextField _vmParams;
+	private UserActivityWatcher _watcher;
 
 }

@@ -15,7 +15,6 @@
 package com.liferay.ide.idea.server.portal;
 
 import com.liferay.ide.idea.util.FileUtil;
-import com.liferay.ide.idea.util.PathsUtil;
 
 import java.io.File;
 
@@ -31,7 +30,7 @@ public abstract class AbstractPortalBundleFactory implements PortalBundleFactory
 	public Path canCreateFromPath(Path location) {
 		Path retval = null;
 
-		if (detectBundleDir(location) && _detectLiferayHome(PathsUtil.append(location, ".."))) {
+		if (detectBundleDir(location) && _detectLiferayHome(FileUtil.pathAppend(location, ".."))) {
 			retval = location;
 		}
 		else if (_detectLiferayHome(location)) {

@@ -14,7 +14,7 @@
 
 package com.liferay.ide.idea.server.portal;
 
-import com.liferay.ide.idea.util.PathsUtil;
+import com.liferay.ide.idea.util.FileUtil;
 
 import java.nio.file.Path;
 
@@ -30,24 +30,17 @@ public abstract class AbstractPortalBundle implements PortalBundle {
 
 		bundlePath = path;
 
-		liferayHome = PathsUtil.append(bundlePath, "..");
+		liferayHome = FileUtil.pathAppend(bundlePath, "..");
 
-		autoDeployPath = PathsUtil.append(liferayHome, "deploy");
+		autoDeployPath = FileUtil.pathAppend(liferayHome, "deploy");
 
-		modulesPath = PathsUtil.append(liferayHome, "osgi");
+		modulesPath = FileUtil.pathAppend(liferayHome, "osgi");
 	}
 
 	@Override
 	public Path getAppServerDir() {
 		return bundlePath;
 	}
-
-	@Override
-	public int getJmxRemotePort() {
-		return getDefaultJMXRemotePort();
-	}
-
-	protected abstract int getDefaultJMXRemotePort();
 
 	protected Path autoDeployPath;
 	protected Path bundlePath;

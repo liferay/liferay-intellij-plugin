@@ -23,8 +23,6 @@ public interface PortalBundle {
 
 	public Path getAppServerDir();
 
-	public int getJmxRemotePort();
-
 	public String getMainClass();
 
 	public Path[] getRuntimeClasspath();
