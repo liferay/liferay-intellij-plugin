@@ -192,7 +192,7 @@ public class ServerUtil {
 			return false;
 		}
 
-		Path verifyLocation = PathsUtil.getPath(verifyPath);
+		Path verifyLocation = FileUtil.getPath(verifyPath);
 
 		File verifyFile = verifyLocation.toFile();
 

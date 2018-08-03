@@ -94,20 +94,4 @@ public class JavaUtil {
 		return null;
 	}
 
-	public static boolean scanFolderJarsForManifestProp(
-		File location, String mainFolder, String property, String propPrefix) {
-
-		String value = getManifestPropFromFolderJars(location, mainFolder, property);
-
-		if (value != null) {
-			String trimedValue = value.trim();
-
-			if (trimedValue.startsWith(propPrefix)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 }
