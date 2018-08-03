@@ -36,6 +36,7 @@
 			<li>1.1.0</li>
 			<ul>
 				<li>code completion for AUI taglib</li>
+				<li>add support for Liferay WildFly bundle DXP and CE 7.0 or 7.1</li>
 			</ul>
 			<li>1.0.0</li>
 			<ul>
