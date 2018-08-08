@@ -28,8 +28,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.packageDependencies.ui.PackageDependenciesNode;
 import com.intellij.ui.ColoredTreeCellRenderer;
 
-import com.liferay.ide.idea.util.CoreUtil;
-
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -45,17 +43,26 @@ public class ProjectViewWatchDecorator implements ProjectViewNodeDecorator {
 	}
 
 	@Override
+	@SuppressWarnings("rawtypes")
 	public void decorate(ProjectViewNode node, PresentationData data) {
-		final VirtualFile virtualFile = node.getVirtualFile();
 		Project project = node.getProject();
+		final VirtualFile virtualFile = node.getVirtualFile();
 
 		if (project == null) {
 			return;
 		}
 
-		if ((virtualFile != null) && ProjectRootsUtil.isModuleContentRoot(virtualFile, project)) {
-			String canonicalPath = virtualFile.getCanonicalPath();
+		if (virtualFile == null) {
+			return;
+		}
 
+		String canonicalPath = virtualFile.getCanonicalPath();
+
+		if (canonicalPath == null) {
+			return;
+		}
+
+		if (ProjectRootsUtil.isModuleContentRoot(virtualFile, project)) {
 			ExternalSystemProcessingManager processingManager = ServiceManager.getService(
 				ExternalSystemProcessingManager.class);
 
@@ -65,28 +72,28 @@ public class ProjectViewWatchDecorator implements ProjectViewNodeDecorator {
 			Stream<ExternalSystemTask> taskStream = taskList.stream();
 
 			taskStream.filter(
-				task -> task != null
-			).filter(
 				task -> task instanceof ExternalSystemExecuteTaskTask
-			).forEach(
+			).map(
+				task -> (ExternalSystemExecuteTaskTask) task
+			).filter(
 				task -> {
-					ExternalSystemExecuteTaskTask executeTask = (ExternalSystemExecuteTaskTask)task;
+					List<String> tasksToExecute = task.getTasksToExecute();
 
-					List<String> tasksToExecute = executeTask.getTasksToExecute();
+					return tasksToExecute.contains("watch");
+				}
+			).map(
+				ExternalSystemExecuteTaskTask::getExternalProjectPath
+			).filter(
+				externalProjectPath -> canonicalPath.equals(externalProjectPath)
+			).forEach(
+				externalProjectPath -> {
+					String existedLocationString = data.getLocationString();
 
-					if (tasksToExecute.contains("watch")) {
-						String externalProjectPath = executeTask.getExternalProjectPath();
-
-						if (!CoreUtil.isNullOrEmpty(canonicalPath) && canonicalPath.equals(externalProjectPath)) {
-							String existedLocationString = data.getLocationString();
-
-							if (existedLocationString != null) {
-								data.setLocationString(existedLocationString + " [watching]");
-							}
-							else {
-								data.setLocationString("[watching]");
-							}
-						}
+					if (existedLocationString != null) {
+						data.setLocationString(existedLocationString + " [watching]");
+					}
+					else {
+						data.setLocationString("[watching]");
 					}
 				}
 			);
