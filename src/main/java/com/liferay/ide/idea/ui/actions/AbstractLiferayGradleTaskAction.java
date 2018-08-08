@@ -195,7 +195,8 @@ public abstract class AbstractLiferayGradleTaskAction extends AnAction {
 		ExternalTaskExecutionInfo taskExecutionInfo, @NotNull final String executorIdLocal,
 		@NotNull final ExecutionEnvironment environmentLocal) {
 
-		RunnerAndConfigurationSettings runAndConfigurationSettings = environmentLocal.getRunnerAndConfigurationSettings();
+		RunnerAndConfigurationSettings runAndConfigurationSettings =
+			environmentLocal.getRunnerAndConfigurationSettings();
 
 		RunConfiguration runConfiguration = runAndConfigurationSettings.getConfiguration();
 

@@ -74,7 +74,7 @@ public class ProjectViewWatchDecorator implements ProjectViewNodeDecorator {
 			taskStream.filter(
 				task -> task instanceof ExternalSystemExecuteTaskTask
 			).map(
-				task -> (ExternalSystemExecuteTaskTask) task
+				task -> (ExternalSystemExecuteTaskTask)task
 			).filter(
 				task -> {
 					List<String> tasksToExecute = task.getTasksToExecute();
