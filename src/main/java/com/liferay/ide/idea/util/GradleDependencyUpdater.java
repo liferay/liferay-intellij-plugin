@@ -58,7 +58,6 @@ public class GradleDependencyUpdater {
 	}
 
 	private File _file;
-	private List<String> _gradleFileContents;
 	private List<ASTNode> _nodes;
 
 }
