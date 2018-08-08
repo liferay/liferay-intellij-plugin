@@ -140,6 +140,7 @@ public class LiferayProjectTypeStep extends ModuleWizardStep implements Settings
 		_wizard = wizard;
 
 		_templatesMap = new ConcurrentMultiMap<>();
+
 		List<TemplatesGroup> groups = _fillTemplatesMap();
 
 		if (_log.isDebugEnabled()) {
@@ -376,6 +377,7 @@ public class LiferayProjectTypeStep extends ModuleWizardStep implements Settings
 		return null;
 	}
 
+	@Override
 	public void onWizardFinished() throws CommitStepException {
 		if (_isFrameworksMode()) {
 			boolean ok = _frameworksPanel.downloadLibraries(_wizard.getContentComponent());
