@@ -140,9 +140,9 @@ public abstract class AbstractLiferayGradleTaskAction extends AnAction {
 
 		Disposable disposable = Disposer.newDisposable();
 
-		MessageBusConnection connect = messageBus.connect(disposable);
+		MessageBusConnection messageBusConnection = messageBus.connect(disposable);
 
-		connect.subscribe(
+		messageBusConnection.subscribe(
 			ExecutionManager.EXECUTION_TOPIC,
 			new ExecutionListener() {
 
@@ -195,13 +195,13 @@ public abstract class AbstractLiferayGradleTaskAction extends AnAction {
 		ExternalTaskExecutionInfo taskExecutionInfo, @NotNull final String executorIdLocal,
 		@NotNull final ExecutionEnvironment environmentLocal) {
 
-		RunnerAndConfigurationSettings runnerSettings = environmentLocal.getRunnerAndConfigurationSettings();
+		RunnerAndConfigurationSettings runAndConfigurationSettings = environmentLocal.getRunnerAndConfigurationSettings();
 
-		RunConfiguration configuration = runnerSettings.getConfiguration();
+		RunConfiguration runConfiguration = runAndConfigurationSettings.getConfiguration();
 
-		if (configuration instanceof ExternalSystemRunConfiguration) {
+		if (runConfiguration instanceof ExternalSystemRunConfiguration) {
 			ExternalSystemRunConfiguration runnerExternalSystemRunConfiguration =
-				(ExternalSystemRunConfiguration)runnerSettings.getConfiguration();
+				(ExternalSystemRunConfiguration)runAndConfigurationSettings.getConfiguration();
 
 			ExternalSystemTaskExecutionSettings runningTaskSettings =
 				runnerExternalSystemRunConfiguration.getSettings();

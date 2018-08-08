@@ -59,13 +59,13 @@ public class LiferayServerDebugger extends GenericDebuggerRunner {
 	protected RunContentDescriptor doExecute(@NotNull RunProfileState state, @NotNull ExecutionEnvironment environment)
 		throws ExecutionException {
 
-		RunContentDescriptor descriptor = super.doExecute(state, environment);
+		RunContentDescriptor runContentDescriptor = super.doExecute(state, environment);
 
-		if (descriptor != null) {
-			ProcessHandler processHandler = descriptor.getProcessHandler();
+		if (runContentDescriptor != null) {
+			ProcessHandler processHandler = runContentDescriptor.getProcessHandler();
 
 			if (processHandler == null) {
-				return descriptor;
+				return runContentDescriptor;
 			}
 
 			processHandler.addProcessListener(
@@ -101,7 +101,7 @@ public class LiferayServerDebugger extends GenericDebuggerRunner {
 				});
 		}
 
-		return descriptor;
+		return runContentDescriptor;
 	}
 
 }
