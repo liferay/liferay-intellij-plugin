@@ -26,6 +26,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.ui.PanelWithAnchor;
+import com.intellij.ui.UserActivityListener;
 import com.intellij.ui.UserActivityWatcher;
 
 import com.liferay.ide.idea.server.portal.PortalBundle;
@@ -63,41 +64,40 @@ public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfi
 
 		_jrePath.setDefaultJreSelector(DefaultJreSelector.fromModuleDependencies(modulesComboBox, true));
 
-		_watcher = new UserActivityWatcher();
+		_userActivityListener = () -> {
+			Application application = ApplicationManager.getApplication();
 
-		_watcher.register(_liferayServer);
-		_watcher.addUserActivityListener(
-			() -> {
-				Application application = ApplicationManager.getApplication();
+			application.runWriteAction(
+				() -> {
+					PortalBundle portalBundle = ServerUtil.getPortalBundle(FileUtil.getPath(_liferayServer.getText()));
 
-				application.runWriteAction(
-					() -> {
-						PortalBundle portalBundle = ServerUtil.getPortalBundle(
-							FileUtil.getPath(_liferayServer.getText()));
+					if (portalBundle != null) {
+						_bundleType.setText(portalBundle.getType());
+					}
+					else {
+						_bundleType.setText("");
+					}
+				});
+		};
 
-						if (portalBundle != null) {
-							_bundleType.setText(portalBundle.getType());
-						}
-						else {
-							_bundleType.setText("");
-						}
-					});
-			});
+		_userActivityWatcher = new UserActivityWatcher();
+
+		_userActivityWatcher.addUserActivityListener(_userActivityListener);
+		_userActivityWatcher.register(_liferayServer);
 	}
 
 	@Override
 	public void applyEditorTo(@NotNull LiferayServerConfiguration configuration) throws ConfigurationException {
-		configuration.setAlternativeJrePath(_jrePath.getJrePathOrName());
-		configuration.setAlternativeJrePathEnabled(_jrePath.isAlternativeJreSelected());
-
 		ModulesComboBox modulesComboBox = _modules.getComponent();
 
-		configuration.setModule(modulesComboBox.getSelectedModule());
-
-		configuration.setVMParameters(_vmParams.getText());
-		configuration.setDeveloperMode(_developerMode.isSelected());
-		configuration.setBundleType(_bundleType.getText());
+		configuration.setAlternativeJrePath(_jrePath.getJrePathOrName());
+		configuration.setAlternativeJrePathEnabled(_jrePath.isAlternativeJreSelected());
 		configuration.setBundleLocation(_liferayServer.getText());
+		configuration.setBundleType(_bundleType.getText());
+		configuration.setDeveloperMode(_developerMode.isSelected());
+		configuration.setModule(modulesComboBox.getSelectedModule());
+		configuration.setVMParameters(_vmParams.getText());
+
 		configuration.checkConfiguration();
 	}
 
@@ -142,7 +142,9 @@ public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfi
 
 	@Override
 	protected void disposeEditor() {
-		_watcher = null;
+		_userActivityWatcher.removeUserActivityListener(_userActivityListener);
+
+		_userActivityWatcher = null;
 	}
 
 	private JComponent _anchor;
@@ -152,7 +154,8 @@ public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfi
 	private TextFieldWithBrowseButton _liferayServer;
 	private JPanel _mainPanel;
 	private LabeledComponent<ModulesComboBox> _modules;
+	private UserActivityListener _userActivityListener;
+	private UserActivityWatcher _userActivityWatcher;
 	private JTextField _vmParams;
-	private UserActivityWatcher _watcher;
 
 }
