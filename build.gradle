@@ -104,7 +104,7 @@ formatSource {
 }
 
 intellij {
-	plugins 'gradle', 'maven', 'terminal', 'JavaEE'
+	plugins 'gradle', 'maven', 'terminal', 'JavaEE', 'java-i18n', 'properties'
 	version "IU-2018.1.4"
 }
 
