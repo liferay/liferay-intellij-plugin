@@ -29,7 +29,6 @@ import com.liferay.ide.idea.util.PortalPropertiesConfiguration;
 import com.liferay.ide.idea.util.ServerUtil;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 
 import java.nio.file.Files;
@@ -117,59 +116,56 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 
 		setupJavaParameters(javaParameters);
 
-		_configureDeveloperMode(liferayServerConfiguration);
+		try {
+			_configureDeveloperMode(liferayServerConfiguration);
+		}
+		catch (Exception e) {
+			throw new ExecutionException(e);
+		}
 
 		return javaParameters;
 	}
 
-	private void _configureDeveloperMode(LiferayServerConfiguration configuration) {
+	private void _configureDeveloperMode(LiferayServerConfiguration configuration) throws Exception {
 		String bundleLocation = configuration.getBundleLocation();
 
 		File portalExtPropertiesFile = new File(bundleLocation, "portal-ext.properties");
 
 		if (configuration.getDeveloperMode()) {
-			try {
-				if (!portalExtPropertiesFile.exists()) {
-					portalExtPropertiesFile.createNewFile();
-				}
-
-				PortalPropertiesConfiguration portalPropertiesConfiguration = new PortalPropertiesConfiguration();
-
-				try (InputStream in = Files.newInputStream(portalExtPropertiesFile.toPath())) {
-					portalPropertiesConfiguration.load(in);
-				}
-
-				String[] p = portalPropertiesConfiguration.getStringArray("include-and-override");
-
-				boolean existing = false;
-
-				for (String prop : p) {
-					if (prop.equals("portal-developer.properties")) {
-						existing = true;
-
-						break;
-					}
-				}
-
-				if (!existing) {
-					portalPropertiesConfiguration.addProperty("include-and-override", "portal-developer.properties");
-				}
-
-				portalPropertiesConfiguration.save(portalExtPropertiesFile);
+			if (!portalExtPropertiesFile.exists()) {
+				portalExtPropertiesFile.createNewFile();
 			}
-			catch (Exception e) {
+
+			PortalPropertiesConfiguration portalPropertiesConfiguration = new PortalPropertiesConfiguration();
+
+			try (InputStream in = Files.newInputStream(portalExtPropertiesFile.toPath())) {
+				portalPropertiesConfiguration.load(in);
 			}
+
+			String[] p = portalPropertiesConfiguration.getStringArray("include-and-override");
+
+			boolean existing = false;
+
+			for (String prop : p) {
+				if (prop.equals("portal-developer.properties")) {
+					existing = true;
+
+					break;
+				}
+			}
+
+			if (!existing) {
+				portalPropertiesConfiguration.addProperty("include-and-override", "portal-developer.properties");
+			}
+
+			portalPropertiesConfiguration.save(portalExtPropertiesFile);
 		}
 		else if (portalExtPropertiesFile.exists()) {
 			String contents = FileUtil.readContents(portalExtPropertiesFile, true);
 
 			contents = contents.replace("include-and-override=portal-developer.properties", "");
 
-			try {
-				FileUtils.write(portalExtPropertiesFile, contents);
-			}
-			catch (IOException ioe) {
-			}
+			FileUtils.write(portalExtPropertiesFile, contents);
 		}
 	}
 
