@@ -14,16 +14,12 @@
 
 package com.liferay.ide.idea.server.portal;
 
-import com.intellij.execution.Platform;
-
 import com.liferay.ide.idea.util.FileUtil;
 
 import java.nio.file.Path;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author Simon Jiang
@@ -101,16 +97,5 @@ public class PortalTomcatBundle extends AbstractPortalBundle {
 
 		return args.toArray(new String[0]);
 	}
-
-	private String _getShellExtension() {
-		if (Platform.WINDOWS.equals(Platform.current())) {
-			return "bat";
-		}
-
-		return "sh";
-	}
-
-	private Matcher _matcher;
-	private Pattern _pattern;
 
 }
