@@ -59,6 +59,7 @@ public class LiferayTaglibResourceBundlePropertyReference extends PropertyRefere
 						PropertiesFile propertiesFile = property.getPropertiesFile();
 
 						//only resolve properties from Language files
+
 						return _isLanguageFile(propertiesFile);
 					}
 				}
