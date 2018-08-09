@@ -62,9 +62,9 @@ public class LiferayServerConfiguration
 	public LiferayServerConfiguration(Project project, ConfigurationFactory factory, String name) {
 		super(project, factory, name);
 
-		_configurationModule = new JavaRunConfigurationModule(project, true);
+		_javaRunConfigurationModule = new JavaRunConfigurationModule(project, true);
 
-		_config.vmParameters = "-Xmx1024m";
+		_liferayServerConfig.vmParameters = "-Xmx1024m";
 	}
 
 	@Override
@@ -73,11 +73,11 @@ public class LiferayServerConfiguration
 
 		ProgramParametersUtil.checkWorkingDirectoryExist(this, getProject(), null);
 
-		if (CoreUtil.isNullOrEmpty(_config.bundleLocation)) {
+		if (CoreUtil.isNullOrEmpty(_liferayServerConfig.bundleLocation)) {
 			throw new RuntimeConfigurationException("Please set correct bundle location", "Invalid bundle location");
 		}
 
-		if (CoreUtil.isNullOrEmpty(_config.buildType)) {
+		if (CoreUtil.isNullOrEmpty(_liferayServerConfig.buildType)) {
 			throw new RuntimeConfigurationException("Please check bundle location", "Invalid bundle type");
 		}
 
@@ -88,11 +88,11 @@ public class LiferayServerConfiguration
 	public RunConfiguration clone() {
 		LiferayServerConfiguration clone = (LiferayServerConfiguration)super.clone();
 
-		clone.setConfig(XmlSerializerUtil.createCopy(_config));
+		clone.setConfig(XmlSerializerUtil.createCopy(_liferayServerConfig));
 
 		JavaRunConfigurationModule configurationModule = new JavaRunConfigurationModule(getProject(), true);
 
-		configurationModule.setModule(_configurationModule.getModule());
+		configurationModule.setModule(_javaRunConfigurationModule.getModule());
 
 		clone.setConfigurationModule(configurationModule);
 
@@ -104,15 +104,15 @@ public class LiferayServerConfiguration
 	@Nullable
 	@Override
 	public String getAlternativeJrePath() {
-		return _config.alternativeJrePath;
+		return _liferayServerConfig.alternativeJrePath;
 	}
 
 	public String getBundleLocation() {
-		return _config.bundleLocation;
+		return _liferayServerConfig.bundleLocation;
 	}
 
 	public String getBundleType() {
-		return _config.buildType;
+		return _liferayServerConfig.buildType;
 	}
 
 	@NotNull
@@ -135,22 +135,22 @@ public class LiferayServerConfiguration
 	}
 
 	public boolean getDeveloperMode() {
-		return _config.developerMode;
+		return _liferayServerConfig.developerMode;
 	}
 
 	@NotNull
 	@Override
 	public Map<String, String> getEnvs() {
-		return _envirouments;
+		return _envs;
 	}
 
 	public Module getModule() {
-		return _configurationModule.getModule();
+		return _javaRunConfigurationModule.getModule();
 	}
 
 	@NotNull
 	public Module[] getModules() {
-		Module module = _configurationModule.getModule();
+		Module module = _javaRunConfigurationModule.getModule();
 
 		if (module != null) {
 			return new Module[] {module};
@@ -191,7 +191,7 @@ public class LiferayServerConfiguration
 
 	@Override
 	public String getVMParameters() {
-		return _config.vmParameters;
+		return _liferayServerConfig.vmParameters;
 	}
 
 	@Nullable
@@ -202,12 +202,12 @@ public class LiferayServerConfiguration
 
 	@Override
 	public boolean isAlternativeJrePathEnabled() {
-		return _config.alternativeJrePathEnabled;
+		return _liferayServerConfig.alternativeJrePathEnabled;
 	}
 
 	@Override
 	public boolean isPassParentEnvs() {
-		return _config.passParentEnvironments;
+		return _liferayServerConfig.passParentEnvironments;
 	}
 
 	@Override
@@ -219,55 +219,55 @@ public class LiferayServerConfiguration
 
 		javaRunConfigurationExtensionManager.readExternal(this, element);
 
-		XmlSerializer.deserializeInto(_config, element);
+		XmlSerializer.deserializeInto(_liferayServerConfig, element);
 		EnvironmentVariablesComponent.readExternal(element, getEnvs());
 
-		_configurationModule.readExternal(element);
+		_javaRunConfigurationModule.readExternal(element);
 	}
 
 	@Override
 	public void setAlternativeJrePath(String path) {
-		_config.alternativeJrePath = path;
+		_liferayServerConfig.alternativeJrePath = path;
 	}
 
 	@Override
 	public void setAlternativeJrePathEnabled(boolean enabled) {
-		_config.alternativeJrePathEnabled = enabled;
+		_liferayServerConfig.alternativeJrePathEnabled = enabled;
 	}
 
 	public void setBundleLocation(String bundleLocation) {
-		_config.bundleLocation = bundleLocation;
+		_liferayServerConfig.bundleLocation = bundleLocation;
 	}
 
 	public void setBundleType(String bundleType) {
-		_config.buildType = bundleType;
+		_liferayServerConfig.buildType = bundleType;
 	}
 
 	public void setConfig(LiferayServerConfig config) {
-		_config = config;
+		_liferayServerConfig = config;
 	}
 
 	public void setConfigurationModule(JavaRunConfigurationModule configurationModule) {
-		_configurationModule = configurationModule;
+		_javaRunConfigurationModule = configurationModule;
 	}
 
 	public void setDeveloperMode(boolean developerMode) {
-		_config.developerMode = developerMode;
+		_liferayServerConfig.developerMode = developerMode;
 	}
 
 	@Override
 	public void setEnvs(@NotNull Map<String, String> envs) {
-		_envirouments.clear();
-		_envirouments.putAll(envs);
+		_envs.clear();
+		_envs.putAll(envs);
 	}
 
 	public void setModule(Module module) {
-		_configurationModule.setModule(module);
+		_javaRunConfigurationModule.setModule(module);
 	}
 
 	@Override
 	public void setPassParentEnvs(boolean passParentEnvs) {
-		_config.passParentEnvironments = passParentEnvs;
+		_liferayServerConfig.passParentEnvironments = passParentEnvs;
 	}
 
 	@Override
@@ -276,7 +276,7 @@ public class LiferayServerConfiguration
 
 	@Override
 	public void setVMParameters(String value) {
-		_config.vmParameters = value;
+		_liferayServerConfig.vmParameters = value;
 	}
 
 	@Override
@@ -292,17 +292,17 @@ public class LiferayServerConfiguration
 
 		javaRunConfigurationExtensionManager.writeExternal(this, element);
 
-		XmlSerializer.serializeInto(_config, element, new SkipDefaultValuesSerializationFilters());
+		XmlSerializer.serializeInto(_liferayServerConfig, element, new SkipDefaultValuesSerializationFilters());
 		EnvironmentVariablesComponent.writeExternal(element, getEnvs());
 
-		if (_configurationModule.getModule() != null) {
-			_configurationModule.writeExternal(element);
+		if (_javaRunConfigurationModule.getModule() != null) {
+			_javaRunConfigurationModule.writeExternal(element);
 		}
 	}
 
-	private LiferayServerConfig _config = new LiferayServerConfig();
-	private JavaRunConfigurationModule _configurationModule;
-	private Map<String, String> _envirouments = new LinkedHashMap<>();
+	private Map<String, String> _envs = new LinkedHashMap<>();
+	private JavaRunConfigurationModule _javaRunConfigurationModule;
+	private LiferayServerConfig _liferayServerConfig = new LiferayServerConfig();
 
 	private static class LiferayServerConfig {
 
