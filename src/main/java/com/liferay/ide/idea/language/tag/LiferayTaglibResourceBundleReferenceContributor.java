@@ -14,7 +14,6 @@
 
 package com.liferay.ide.idea.language.tag;
 
-import com.intellij.lang.properties.PropertiesReferenceProvider;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReferenceContributor;
 import com.intellij.psi.PsiReferenceRegistrar;
@@ -54,7 +53,7 @@ public class LiferayTaglibResourceBundleReferenceContributor extends PsiReferenc
 
 		XmlUtil.registerXmlAttributeValueReferenceProvider(
 			registrar, attributeNames.toArray(new String[attributeNames.size()]), new LiferayTaglibFilter(), true,
-			new PropertiesReferenceProvider(true));
+			new LiferayTaglibResourceBundleReferenceProvider(true));
 	}
 
 	private static Map<String, Collection<SimpleImmutableEntry<String, String>>> _taglibAttributes = new HashMap<>();
