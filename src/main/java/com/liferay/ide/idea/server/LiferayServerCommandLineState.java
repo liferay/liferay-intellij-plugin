@@ -49,24 +49,24 @@ import org.jetbrains.annotations.NotNull;
 public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLineState<LiferayServerConfiguration> {
 
 	public LiferayServerCommandLineState(
-		@NotNull LiferayServerConfiguration configuration, ExecutionEnvironment environment) {
+		ExecutionEnvironment executionEnvironment, @NotNull LiferayServerConfiguration liferayServerConfiguration) {
 
-		super(environment, configuration);
+		super(executionEnvironment, liferayServerConfiguration);
 	}
 
 	@Override
 	protected JavaParameters createJavaParameters() throws ExecutionException {
-		JavaParameters params = new JavaParameters();
+		JavaParameters javaParameters = new JavaParameters();
 
 		LiferayServerConfiguration liferayServerConfiguration = getConfiguration();
 
-		String jreHome = null;
+		String jrePath = null;
 
 		if (liferayServerConfiguration.isAlternativeJrePathEnabled()) {
-			jreHome = liferayServerConfiguration.getAlternativeJrePath();
+			jrePath = liferayServerConfiguration.getAlternativeJrePath();
 		}
 
-		params.setJdk(JavaParametersUtil.createProjectJdk(liferayServerConfiguration.getProject(), jreHome));
+		javaParameters.setJdk(JavaParametersUtil.createProjectJdk(liferayServerConfiguration.getProject(), jrePath));
 
 		String bundleLocation = liferayServerConfiguration.getBundleLocation();
 
@@ -77,67 +77,69 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 		Path bundlePath = bundleFactory.canCreateFromPath(Paths.get(bundleLocation));
 
 		if (bundlePath == null) {
-			throw new ExecutionException("Liferay portal bundle can't be set null");
+			throw new ExecutionException("Liferay bundle location is invalid.  " + bundleLocation);
 		}
 
-		final PortalBundle bundle = bundleFactory.create(bundlePath);
+		final PortalBundle portalBundle = bundleFactory.create(bundlePath);
 
-		ParametersList programParametersList = params.getProgramParametersList();
+		ParametersList programParametersList = javaParameters.getProgramParametersList();
 
-		String[] runtimeStartProgArgs = bundle.getRuntimeStartProgArgs();
+		String[] runtimeStartProgArgs = portalBundle.getRuntimeStartProgArgs();
 
 		Stream.of(
 			runtimeStartProgArgs
 		).forEach(
-			startProg -> programParametersList.add(startProg)
+			programParametersList::add
 		);
 
-		PathsList classPath = params.getClassPath();
-		Path[] runtimeClasspath = bundle.getRuntimeClasspath();
+		PathsList classPath = javaParameters.getClassPath();
+		Path[] runtimeClasspath = portalBundle.getRuntimeClasspath();
 
 		Stream.of(
 			runtimeClasspath
+		).map(
+			Path::toFile
 		).forEach(
-			path -> classPath.add(path.toFile())
+			classPath::add
 		);
 
-		params.setMainClass(bundle.getMainClass());
+		javaParameters.setMainClass(portalBundle.getMainClass());
 
-		ParametersList vmParametersList = params.getVMParametersList();
+		ParametersList vmParametersList = javaParameters.getVMParametersList();
 
-		String[] runtimeStartVMArgs = bundle.getRuntimeStartVMArgs();
+		String[] runtimeStartVMArgs = portalBundle.getRuntimeStartVMArgs();
 
 		Stream.of(
 			runtimeStartVMArgs
 		).forEach(
-			vmArg -> vmParametersList.add(vmArg)
+			vmParametersList::add
 		);
 
-		setupJavaParameters(params);
+		setupJavaParameters(javaParameters);
 
 		_configureDeveloperMode(liferayServerConfiguration);
 
-		return params;
+		return javaParameters;
 	}
 
 	private void _configureDeveloperMode(LiferayServerConfiguration configuration) {
 		String bundleLocation = configuration.getBundleLocation();
 
-		File portalExt = new File(bundleLocation, "portal-ext.properties");
+		File portalExtPropertiesFile = new File(bundleLocation, "portal-ext.properties");
 
 		if (configuration.getDeveloperMode()) {
 			try {
-				if (!portalExt.exists()) {
-					portalExt.createNewFile();
+				if (!portalExtPropertiesFile.exists()) {
+					portalExtPropertiesFile.createNewFile();
 				}
 
-				PortalPropertiesConfiguration config = new PortalPropertiesConfiguration();
+				PortalPropertiesConfiguration portalPropertiesConfiguration = new PortalPropertiesConfiguration();
 
-				try (InputStream in = Files.newInputStream(portalExt.toPath())) {
-					config.load(in);
+				try (InputStream in = Files.newInputStream(portalExtPropertiesFile.toPath())) {
+					portalPropertiesConfiguration.load(in);
 				}
 
-				String[] p = config.getStringArray("include-and-override");
+				String[] p = portalPropertiesConfiguration.getStringArray("include-and-override");
 
 				boolean existing = false;
 
@@ -150,21 +152,21 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 				}
 
 				if (!existing) {
-					config.addProperty("include-and-override", "portal-developer.properties");
+					portalPropertiesConfiguration.addProperty("include-and-override", "portal-developer.properties");
 				}
 
-				config.save(portalExt);
+				portalPropertiesConfiguration.save(portalExtPropertiesFile);
 			}
 			catch (Exception e) {
 			}
 		}
-		else if (portalExt.exists()) {
-			String contents = FileUtil.readContents(portalExt, true);
+		else if (portalExtPropertiesFile.exists()) {
+			String contents = FileUtil.readContents(portalExtPropertiesFile, true);
 
 			contents = contents.replace("include-and-override=portal-developer.properties", "");
 
 			try {
-				FileUtils.write(portalExt, contents);
+				FileUtils.write(portalExtPropertiesFile, contents);
 			}
 			catch (IOException ioe) {
 			}

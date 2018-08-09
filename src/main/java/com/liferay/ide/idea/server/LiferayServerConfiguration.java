@@ -186,7 +186,7 @@ public class LiferayServerConfiguration
 	@Nullable
 	@Override
 	public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment environment) {
-		return new LiferayServerCommandLineState(this, environment);
+		return new LiferayServerCommandLineState(environment, this);
 	}
 
 	@Override
