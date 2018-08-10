@@ -14,10 +14,17 @@
 
 package com.liferay.ide.idea.util;
 
+import com.liferay.ide.idea.server.portal.PortalBundle;
+import com.liferay.ide.idea.server.portal.PortalBundleFactory;
+import com.liferay.ide.idea.server.portal.PortalTomcatBundleFactory;
+import com.liferay.ide.idea.server.portal.PortalWildFlyBundleFactory;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+
+import java.nio.file.Path;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -27,21 +34,14 @@ import java.util.jar.JarFile;
 
 /**
  * @author Terry Jia
+ * @author Simon Jiang
  */
 public class ServerUtil {
 
 	public static File[] getMarketplaceLpkgFiles(File runtime) {
 		File marketplace = new File(new File(runtime, "osgi"), "marketplace");
 
-		File[] files = marketplace.listFiles(
-			new FilenameFilter() {
-
-				@Override
-				public boolean accept(File dir, String name) {
-					return name.matches(".*\\.lpkg");
-				}
-
-			});
+		File[] files = marketplace.listFiles((dir, name) -> name.matches(".*\\.lpkg"));
 
 		return files;
 	}
@@ -165,6 +165,46 @@ public class ServerUtil {
 		return bundles;
 	}
 
+	public static PortalBundle getPortalBundle(Path bundleLocation) {
+		for (PortalBundleFactory factory : _bundleFactories) {
+			Path canCreateFromPath = factory.canCreateFromPath(bundleLocation);
+
+			if (canCreateFromPath != null) {
+				return factory.create(canCreateFromPath);
+			}
+		}
+
+		return null;
+	}
+
+	public static PortalBundleFactory getPortalBundleFactory(String bundleType) {
+		for (PortalBundleFactory factory : _bundleFactories) {
+			if (bundleType.equals(factory.getType())) {
+				return factory;
+			}
+		}
+
+		return null;
+	}
+
+	public static boolean verifyPath(String verifyPath) {
+		if (verifyPath == null) {
+			return false;
+		}
+
+		Path verifyLocation = FileUtil.getPath(verifyPath);
+
+		File verifyFile = verifyLocation.toFile();
+
+		if (FileUtil.exist(verifyFile) && verifyFile.isDirectory()) {
+			return true;
+		}
+
+		return false;
+	}
+
+	private static PortalBundleFactory[] _bundleFactories =
+		{new PortalTomcatBundleFactory(), new PortalWildFlyBundleFactory()};
 	private static String[] _osgiBundleDirs = {"core", "modules", "portal", "static"};
 
 }

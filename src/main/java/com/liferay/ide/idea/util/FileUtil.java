@@ -27,6 +27,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 /**
  * @author Terry Jia
  */
@@ -59,6 +62,22 @@ public class FileUtil {
 		copyFile(src, new File(dir, newName));
 	}
 
+	public static boolean exist(File file) {
+		if ((file != null) && file.exists()) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public static boolean exist(Path path) {
+		if ((path != null) && exist(path.toFile())) {
+			return true;
+		}
+
+		return false;
+	}
+
 	public static boolean exist(VirtualFile file) {
 		if ((file != null) && file.exists()) {
 			return true;
@@ -67,12 +86,46 @@ public class FileUtil {
 		return false;
 	}
 
+	public static File[] getDirectories(File directory) {
+		return directory.listFiles(file -> file.isDirectory());
+	}
+
+	public static Path getPath(String location) {
+		Path newPath = Paths.get(location);
+
+		return newPath.toAbsolutePath();
+	}
+
 	public static boolean notExists(File file) {
 		if ((file == null) || !file.exists()) {
 			return true;
 		}
 
 		return false;
+	}
+
+	public static boolean notExists(Path path) {
+		if (path == null) {
+			return true;
+		}
+
+		if (notExists(path.toFile())) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public static Path pathAppend(Path path, String child) {
+		Path newPath = Paths.get(path.toString(), child);
+
+		return newPath.toAbsolutePath();
+	}
+
+	public static Path pathAppend(String path, String child) {
+		Path newPath = Paths.get(path, child);
+
+		return newPath.toAbsolutePath();
 	}
 
 	public static String readContents(File file, boolean includeNewlines) {
