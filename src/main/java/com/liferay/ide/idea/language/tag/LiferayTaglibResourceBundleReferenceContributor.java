@@ -48,7 +48,11 @@ public class LiferayTaglibResourceBundleReferenceContributor extends PsiReferenc
 			(key, value) -> {
 				Stream<SimpleImmutableEntry<String, String>> stream = value.stream();
 
-				stream.map(SimpleImmutableEntry::getValue).forEach(attributeNames::add);
+				stream.map(
+					SimpleImmutableEntry::getValue
+				).forEach(
+					attributeNames::add
+				);
 			});
 
 		XmlUtil.registerXmlAttributeValueReferenceProvider(
@@ -152,6 +156,7 @@ public class LiferayTaglibResourceBundleReferenceContributor extends PsiReferenc
 
 	private class LiferayTaglibFilter implements ElementFilter {
 
+		@Override
 		public boolean isAcceptable(Object element, PsiElement context) {
 			PsiElement psiElement = (PsiElement)element;
 
@@ -186,6 +191,8 @@ public class LiferayTaglibResourceBundleReferenceContributor extends PsiReferenc
 			return false;
 		}
 
+		@Override
+		@SuppressWarnings("rawtypes")
 		public boolean isClassAcceptable(Class hintClass) {
 			return true;
 		}

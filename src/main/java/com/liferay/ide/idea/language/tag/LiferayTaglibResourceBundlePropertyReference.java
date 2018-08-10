@@ -42,30 +42,21 @@ public class LiferayTaglibResourceBundlePropertyReference extends PropertyRefere
 	@NotNull
 	@Override
 	public ResolveResult[] multiResolve(boolean incompleteCode) {
-		ResolveResult[] resolveResults = super.multiResolve(incompleteCode);
-
-		Stream<ResolveResult> stream = Arrays.stream(resolveResults);
+		Stream<ResolveResult> stream = Arrays.stream(super.multiResolve(incompleteCode));
 
 		return stream.filter(
-			element -> {
-				if (element instanceof PsiElementResolveResult) {
-					PsiElementResolveResult psiElementResolveResult = (PsiElementResolveResult)element;
-
-					PsiElement psiElement = psiElementResolveResult.getElement();
-
-					if (psiElement instanceof IProperty) {
-						IProperty property = (IProperty)psiElement;
-
-						PropertiesFile propertiesFile = property.getPropertiesFile();
-
-						//only resolve properties from Language files
-
-						return _isLanguageFile(propertiesFile);
-					}
-				}
-
-				return false;
-			}).toArray(ResolveResult[]::new);
+			resolveResult -> resolveResult instanceof PsiElementResolveResult
+		).map(
+			resolveResult -> ((PsiElementResolveResult)resolveResult).getElement()
+		).filter(
+			psiElement -> psiElement instanceof IProperty
+		).map(
+			psiElement -> ((IProperty)psiElement).getPropertiesFile()
+		).filter(
+			LiferayTaglibResourceBundlePropertyReference::_isLanguageFile
+		).toArray(
+			ResolveResult[]::new
+		);
 	}
 
 	@Override
