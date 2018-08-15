@@ -31,9 +31,11 @@ import com.intellij.ui.UserActivityWatcher;
 
 import com.liferay.ide.idea.server.portal.PortalBundle;
 import com.liferay.ide.idea.util.FileUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
 import com.liferay.ide.idea.util.ServerUtil;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
@@ -124,6 +126,19 @@ public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfi
 			_liferayServer.setText(appServerDir.toString());
 
 			_bundleType.setText(portalBundle.getType());
+		}
+		else {
+			Project project = configuration.getProject();
+
+			String basePath = project.getBasePath();
+
+			Path path = Paths.get(LiferayWorkspaceUtil.getHomeDir(basePath));
+
+			if (!path.isAbsolute()) {
+				path = Paths.get(basePath, LiferayWorkspaceUtil.getHomeDir(basePath));
+			}
+
+			_liferayServer.setText(path.toString());
 		}
 
 		_jrePath.setPathOrName(configuration.getAlternativeJrePath(), configuration.isAlternativeJrePathEnabled());
