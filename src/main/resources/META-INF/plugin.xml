@@ -39,6 +39,7 @@
 				<li>add support for Liferay WildFly bundle DXP and CE 7.0 or 7.1</li>
 				<li>watch task decorator</li>
 				<li>code completion for resource bundle keys for Liferay Taglib(community contribution)</li>
+				<li>add support for target platform</li>
 			</ul>
 			<li>1.0.0</li>
 			<ul>
