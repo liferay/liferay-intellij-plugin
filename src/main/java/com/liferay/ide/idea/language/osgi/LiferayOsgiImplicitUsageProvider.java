@@ -21,7 +21,6 @@ import com.intellij.psi.PsiModifierListOwner;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.stream.Stream;
 
 /**
  * Avoid showing "never assigned" warning for fields annotated by Reference or Inject
@@ -31,27 +30,29 @@ import java.util.stream.Stream;
 public class LiferayOsgiImplicitUsageProvider implements ImplicitUsageProvider {
 
 	@Override
-	public boolean isImplicitRead(PsiElement element) {
+	public boolean isImplicitRead(PsiElement psiElement) {
 		return false;
 	}
 
 	@Override
-	public boolean isImplicitUsage(PsiElement element) {
-		return isImplicitWrite(element);
+	public boolean isImplicitUsage(PsiElement psiElement) {
+		return isImplicitWrite(psiElement);
 	}
 
 	@Override
-	public boolean isImplicitWrite(PsiElement element) {
-		return Stream.of(
-			element
-		).filter(
-			modifierListOwner -> modifierListOwner instanceof PsiModifierListOwner
-		).map(
-			modifierListOwner -> (PsiModifierListOwner)modifierListOwner
-		).anyMatch(
-			modifierListOwner -> AnnotationUtil.isAnnotated(
-				modifierListOwner, _writeAnnotations, AnnotationUtil.CHECK_TYPE)
-		);
+	public boolean isImplicitWrite(PsiElement psiElement) {
+		if (psiElement instanceof PsiModifierListOwner) {
+			PsiModifierListOwner psiModifierListOwner = (PsiModifierListOwner)psiElement;
+
+			boolean annotated = AnnotationUtil.isAnnotated(
+				psiModifierListOwner, _writeAnnotations, AnnotationUtil.CHECK_TYPE);
+
+			if (annotated) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private static final Collection<String> _writeAnnotations = Arrays.asList(
