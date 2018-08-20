@@ -41,12 +41,12 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LiferayTaglibCSSClassAttributeReferenceContributor extends PsiReferenceContributor {
 
-	public void registerReferenceProviders(@NotNull PsiReferenceRegistrar registrar) {
+	public void registerReferenceProviders(@NotNull PsiReferenceRegistrar psiReferenceRegistrar) {
 		LiferayTaglibCssInHtmlClassOrIdReferenceProvider liferayTaglibCssInHtmlClassOrIdReferenceProvider =
 			new LiferayTaglibCssInHtmlClassOrIdReferenceProvider();
 
 		XmlUtil.registerXmlAttributeValueReferenceProvider(
-			registrar, _attributeNames.toArray(new String[0]),
+			psiReferenceRegistrar, _attributeNames.toArray(new String[0]),
 			liferayTaglibCssInHtmlClassOrIdReferenceProvider.getFilter(), false,
 			liferayTaglibCssInHtmlClassOrIdReferenceProvider);
 	}
@@ -196,7 +196,7 @@ public class LiferayTaglibCSSClassAttributeReferenceContributor extends PsiRefer
 		private class LiferayTaglibFilter implements ElementFilter {
 
 			@Override
-			public boolean isAcceptable(Object element, PsiElement context) {
+			public boolean isAcceptable(Object element, PsiElement psiElementContext) {
 				PsiElement psiElement = (PsiElement)element;
 
 				return Stream.of(
