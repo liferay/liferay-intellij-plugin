@@ -14,14 +14,15 @@
 
 package com.liferay.ide.idea.ui.modules;
 
-import com.intellij.ide.actions.ImportModuleAction;
-import com.intellij.ide.util.newProjectWizard.AddModuleWizard;
-import com.intellij.ide.util.projectWizard.ModuleBuilderListener;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.externalSystem.service.project.ProjectDataManager;
+import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.externalSystem.ExternalSystemModulePropertyManager;
+import com.intellij.openapi.externalSystem.importing.ImportSpecBuilder;
+import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode;
+import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemSettings;
+import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
+import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
 
@@ -29,7 +30,8 @@ import icons.GradleIcons;
 
 import javax.swing.Icon;
 
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.plugins.gradle.settings.GradleProjectSettings;
+import org.jetbrains.plugins.gradle.util.GradleConstants;
 
 /**
  * @author Joye Luo
@@ -38,8 +40,6 @@ public class LiferayGradleWorkspaceBuilder extends LiferayWorkspaceBuilder {
 
 	public LiferayGradleWorkspaceBuilder() {
 		super(LiferayProjectType.LIFERAY_GRADLE_WORKSPACE);
-
-		addListener(new LiferayGradleWorkpaceBuilderListener());
 	}
 
 	@Override
@@ -54,37 +54,36 @@ public class LiferayGradleWorkspaceBuilder extends LiferayWorkspaceBuilder {
 		initWorkspace(project);
 	}
 
-	private static class LiferayGradleWorkpaceBuilderListener implements ModuleBuilderListener {
+	@Override
+	protected void setupModule(Module module) throws ConfigurationException {
+		super.setupModule(module);
 
-		@Override
-		public void moduleCreated(@NotNull Module module) {
-			Project project = module.getProject();
+		Project project = module.getProject();
 
-			ProjectDataManager projectDataManager = ServiceManager.getService(ProjectDataManager.class);
+		ExternalSystemModulePropertyManager propertyManager = ExternalSystemModulePropertyManager.getInstance(module);
 
-			LiferayGradleProjectImportBuilder gradleProjectImportBuilder = new LiferayGradleProjectImportBuilder(
-				projectDataManager);
+		propertyManager.setExternalId(GradleConstants.SYSTEM_ID);
 
-			LiferayGradleProjectImportProvider gradleProjectImportProvider = new LiferayGradleProjectImportProvider(
-				gradleProjectImportBuilder);
+		Runnable runnable = () -> {
+			GradleProjectSettings gradleProjectSettings = new GradleProjectSettings();
 
-			AddModuleWizard wizard = new AddModuleWizard(project, project.getBasePath(), gradleProjectImportProvider);
+			gradleProjectSettings.setExternalProjectPath(project.getBasePath());
 
-			Application application = ApplicationManager.getApplication();
+			AbstractExternalSystemSettings settings = ExternalSystemApiUtil.getSettings(
+				project, GradleConstants.SYSTEM_ID);
 
-			application.invokeLater(
-				new Runnable() {
+			//noinspection unchecked
+			settings.linkProject(gradleProjectSettings);
 
-					@Override
-					public void run() {
-						if (wizard.showAndGet()) {
-							ImportModuleAction.createFromWizard(project, wizard);
-						}
-					}
+			ImportSpecBuilder importSpecBuilder = new ImportSpecBuilder(project, GradleConstants.SYSTEM_ID);
 
-				});
-		}
+			importSpecBuilder.use(ProgressExecutionMode.IN_BACKGROUND_ASYNC);
+			importSpecBuilder.useDefaultCallback();
 
+			ExternalSystemUtil.refreshProject(project.getBasePath(), importSpecBuilder.build());
+		};
+
+		ExternalSystemUtil.invokeLater(project, ModalityState.NON_MODAL, runnable);
 	}
 
 }
