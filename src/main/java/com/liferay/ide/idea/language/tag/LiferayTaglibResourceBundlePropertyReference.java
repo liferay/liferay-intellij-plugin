@@ -45,7 +45,9 @@ public class LiferayTaglibResourceBundlePropertyReference extends PropertyRefere
 		Stream<ResolveResult> stream = Arrays.stream(super.multiResolve(incompleteCode));
 
 		return stream.filter(
-			resolveResult -> Stream.of(resolveResult).filter(
+			resolveResult -> Stream.of(
+				resolveResult
+			).filter(
 				result -> result instanceof PsiElementResolveResult
 			).map(
 				result -> ((PsiElementResolveResult)result).getElement()
