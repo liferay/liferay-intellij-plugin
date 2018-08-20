@@ -45,15 +45,17 @@ public class LiferayTaglibResourceBundlePropertyReference extends PropertyRefere
 		Stream<ResolveResult> stream = Arrays.stream(super.multiResolve(incompleteCode));
 
 		return stream.filter(
-			resolveResult -> resolveResult instanceof PsiElementResolveResult
-		).map(
-			resolveResult -> ((PsiElementResolveResult)resolveResult).getElement()
-		).filter(
-			psiElement -> psiElement instanceof IProperty
-		).map(
-			psiElement -> ((IProperty)psiElement).getPropertiesFile()
-		).filter(
-			LiferayTaglibResourceBundlePropertyReference::_isLanguageFile
+			resolveResult -> Stream.of(resolveResult).filter(
+				result -> result instanceof PsiElementResolveResult
+			).map(
+				result -> ((PsiElementResolveResult)result).getElement()
+			).filter(
+				psiElement -> psiElement instanceof IProperty
+			).map(
+				psiElement -> ((IProperty)psiElement).getPropertiesFile()
+			).anyMatch(
+				LiferayTaglibResourceBundlePropertyReference::_isLanguageFile
+			)
 		).toArray(
 			ResolveResult[]::new
 		);
