@@ -1,0 +1,7 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Injects JavaScript language into Liferay specific taglibs (like <aui:script> or <aui:a onClick="">) -->
+        <multiHostInjector implementation="com.liferay.ide.idea.language.tag.LiferayTaglibJavascriptLanguageInjector"/>
+    </extensions>
+
+</idea-plugin>
