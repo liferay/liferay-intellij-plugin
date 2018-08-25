@@ -15,7 +15,7 @@ buildscript {
 
 plugins {
 	id "de.undercouch.download" version "3.4.2"
-	id "org.jetbrains.intellij" version "0.3.1"
+	id "org.jetbrains.intellij" version "0.3.7"
 }
 
 apply plugin: 'com.liferay.source.formatter'
@@ -105,7 +105,7 @@ formatSource {
 
 intellij {
 	plugins 'gradle', 'maven', 'terminal', 'JavaEE', 'java-i18n', 'properties', 'CSS'
-	version "IU-2018.1.4"
+	version "IU-2018.2.2"
 }
 
 patchPluginXml {
