@@ -143,7 +143,8 @@ public class LiferayTaglibJavascriptLanguageInjector implements MultiHostInjecto
 			).filter(
 				XmlText.class::isInstance
 			).forEach(
-				child -> registrar.addPlace(null, null, (PsiLanguageInjectionHost)child, new TextRange(0, child.getTextLength()))
+				child -> registrar.addPlace(
+					null, null, (PsiLanguageInjectionHost)child, new TextRange(0, child.getTextLength()))
 			);
 
 			registrar.doneInjecting();
@@ -156,11 +157,11 @@ public class LiferayTaglibJavascriptLanguageInjector implements MultiHostInjecto
 		_taglibAttributes.put(
 			LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI,
 			Arrays.asList(
-				new SimpleImmutableEntry<>("script", ""), new SimpleImmutableEntry<>("validator", ""),
 				new SimpleImmutableEntry<>("a", "onClick"), new SimpleImmutableEntry<>("button", "onClick"),
 				new SimpleImmutableEntry<>("form", "onSubmit"), new SimpleImmutableEntry<>("input", "onChange"),
-				new SimpleImmutableEntry<>("input", "onClick"), new SimpleImmutableEntry<>("select", "onChange"),
-				new SimpleImmutableEntry<>("select", "onClick")));
+				new SimpleImmutableEntry<>("input", "onClick"), new SimpleImmutableEntry<>("script", ""),
+				new SimpleImmutableEntry<>("select", "onChange"), new SimpleImmutableEntry<>("select", "onClick"),
+				new SimpleImmutableEntry<>("validator", "")));
 
 		_taglibAttributes.put(
 			LiferayTaglibs.TAGLIB_URI_LIFERAY_FRONTEND,
