@@ -29,20 +29,22 @@
 	<version>1.1.0</version>
 	<change-notes>
 	<![CDATA[<p>
-		See for all changes: https://github.com/gamerson/liferay-intellij-plugin/commits/
+		See for all changes: https://github.com/liferay/liferay-intellij-plugin/commits/
 	</p>
 	<p>
 		<ul>
 			<li>1.1.0</li>
 			<ul>
 				<li>code completion for AUI taglib</li>
-				<li>add support for Liferay WildFly bundle DXP and CE 7.0 or 7.1</li>
 				<li>watch task decorator</li>
-				<li>code completion for resource bundle keys for Liferay Taglib(community contribution)</li>
-				<li>code completion for css class names for Liferay Taglib(community contribution)</li>
-				<li>add support for target platform</li>
-				<li>better java editor with osgi annotations(community contribution)</li>
+				<li>add support for Liferay Portal CE and DXP 7.1 GA1</li>
+				<li>add support for Liferay WildFly bundle DXP and CE 7.0 or 7.1</li>
+				<li>add support for Liferay Target Platform</li>
 				<li>better integration for Liferay workspace</li>
+				<li>code completion for resource bundle keys for Liferay Taglib(community contribution)</li>
+				<li>code completion, syntax highlighting etc. for Javascript in Liferay Taglibs(community contribution)</li>
+				<li>better java editor with osgi annotations(community contribution)</li>
+				<li>bug fixes</li>
 			</ul>
 			<li>1.0.0</li>
 			<ul>
