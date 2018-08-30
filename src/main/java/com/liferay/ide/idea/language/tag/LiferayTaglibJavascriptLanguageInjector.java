@@ -34,6 +34,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
@@ -52,103 +53,118 @@ public class LiferayTaglibJavascriptLanguageInjector implements MultiHostInjecto
 	}
 
 	@Override
-	public void getLanguagesToInject(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context) {
-		if (!context.isValid()) {
+	public void getLanguagesToInject(@NotNull MultiHostRegistrar multiHostRegistrar, @NotNull PsiElement psiElement) {
+		if (!psiElement.isValid()) {
 			return;
 		}
 
 		XmlTag xmlTag;
 
-		if (context instanceof XmlTag) {
-			xmlTag = (XmlTag)context;
+		if (psiElement instanceof XmlTag) {
+			xmlTag = (XmlTag)psiElement;
 		}
 		else {
-			xmlTag = ((XmlAttribute)context).getParent();
+			xmlTag = ((XmlAttribute)psiElement).getParent();
 		}
 
-		String namespace = xmlTag.getNamespace();
 		String localName = xmlTag.getLocalName();
+		String namespace = xmlTag.getNamespace();
 
 		if (_taglibAttributes.containsKey(namespace)) {
 			Collection<SimpleImmutableEntry<String, String>> attributes = _taglibAttributes.get(namespace);
 
-			Stream<SimpleImmutableEntry<String, String>> attributesStream = attributes.stream();
+			Stream<SimpleImmutableEntry<String, String>> stream = attributes.stream();
 
-			if (context instanceof XmlTag) {
-				attributesStream.filter(
-					attribute -> attribute.getKey().equals(localName)
+			if (psiElement instanceof XmlTag) {
+				stream.filter(
+					attribute -> {
+						String key = attribute.getKey();
+
+						return key.equals(localName);
+					}
 				).filter(
 					attribute -> "".equals(attribute.getValue())
 				).forEach(
-					attribute -> _injectIntoBody(registrar, (XmlTag)context)
+					attribute -> _injectIntoBody(multiHostRegistrar, (XmlTag)psiElement)
 				);
 			}
 			else {
-				XmlAttribute xmlAttribute = (XmlAttribute)context;
+				XmlAttribute xmlAttribute = (XmlAttribute)psiElement;
 
 				String attributeName = xmlAttribute.getLocalName();
 
-				attributesStream.filter(
-					attribute -> attribute.getKey().equals(localName)
+				stream.filter(
+					attribute -> {
+						String key = attribute.getKey();
+
+						return key.equals(localName);
+					}
 				).filter(
-					attribute -> attribute.getValue().equals(attributeName)
+					attribute -> {
+						String value = attribute.getValue();
+
+						return value.equals(attributeName);
+					}
 				).forEach(
-					attribute -> _injectIntoAttribute(registrar, xmlAttribute)
+					attribute -> _injectIntoAttribute(multiHostRegistrar, xmlAttribute)
 				);
 			}
 		}
 	}
 
-	private void _injectIntoAttribute(MultiHostRegistrar registrar, XmlAttribute xmlAttribute) {
-		XmlAttributeValue xmlAttributeValue = xmlAttribute.getValueElement();
-
-		if (xmlAttributeValue != null) {
-			PsiElement[] children = xmlAttributeValue.getChildren();
-
-			boolean needToInject = Stream.of(
-				children
-			).filter(
-				XmlToken.class::isInstance
-			).map(
-				xmlToken -> (XmlToken)xmlToken
-			).map(
-				XmlToken::getTokenType
-			).anyMatch(
-				XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN::equals
-			);
-
-			if (needToInject) {
-				registrar.startInjecting(JavascriptLanguage.INSTANCE);
-				registrar.addPlace(
-					null, null, (PsiLanguageInjectionHost)xmlAttributeValue, xmlAttribute.getValueTextRange());
-				registrar.doneInjecting();
+	private void _injectIntoAttribute(MultiHostRegistrar multiHostRegistrar, XmlAttribute xmlAttribute) {
+		Stream.of(
+			xmlAttribute
+		).map(
+			XmlAttribute::getValueElement
+		).filter(
+			Objects::nonNull
+		).map(
+			XmlAttributeValue::getChildren
+		).flatMap(
+			psiElements -> Stream.of(psiElements)
+		).filter(
+			XmlToken.class::isInstance
+		).map(
+			xmlToken -> (XmlToken)xmlToken
+		).map(
+			XmlToken::getTokenType
+		).filter(
+			XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN::equals
+		).findAny(
+		).ifPresent(
+			token -> {
+				multiHostRegistrar.startInjecting(JavascriptLanguage.INSTANCE);
+				multiHostRegistrar.addPlace(
+					null, null, (PsiLanguageInjectionHost)xmlAttribute.getValueElement(),
+					xmlAttribute.getValueTextRange());
+				multiHostRegistrar.doneInjecting();
 			}
-		}
+		);
 	}
 
-	private void _injectIntoBody(MultiHostRegistrar registrar, XmlTag xmlTag) {
-		PsiElement[] children = xmlTag.getChildren();
-
-		boolean needToInject = Stream.of(
-			children
-		).anyMatch(
+	private void _injectIntoBody(MultiHostRegistrar multiHostRegistrar, XmlTag xmlTag) {
+		Stream.of(
+			xmlTag.getChildren()
+		).filter(
 			XmlText.class::isInstance
+		).findAny(
+		).ifPresent(
+			t -> {
+				multiHostRegistrar.startInjecting(JavascriptLanguage.INSTANCE);
+
+				Stream.of(
+					xmlTag.getChildren()
+				).filter(
+					XmlText.class::isInstance
+				).forEach(
+					psiElement -> multiHostRegistrar.addPlace(
+						null, null, (PsiLanguageInjectionHost)psiElement, new TextRange(0, psiElement.getTextLength()))
+				);
+
+				multiHostRegistrar.doneInjecting();
+			}
 		);
-
-		if (needToInject) {
-			registrar.startInjecting(JavascriptLanguage.INSTANCE);
-
-			Stream.of(
-				children
-			).filter(
-				XmlText.class::isInstance
-			).forEach(
-				child -> registrar.addPlace(
-					null, null, (PsiLanguageInjectionHost)child, new TextRange(0, child.getTextLength()))
-			);
-
-			registrar.doneInjecting();
-		}
 	}
 
 	private static Map<String, Collection<SimpleImmutableEntry<String, String>>> _taglibAttributes = new HashMap<>();
