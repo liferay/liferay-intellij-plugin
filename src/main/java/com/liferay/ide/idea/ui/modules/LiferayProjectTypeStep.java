@@ -15,6 +15,7 @@
 package com.liferay.ide.idea.ui.modules;
 
 import com.intellij.framework.addSupport.FrameworkSupportInModuleProvider;
+import com.intellij.framework.addSupport.FrameworkSupportInModuleProvider.FrameworkDependency;
 import com.intellij.ide.projectWizard.ProjectCategory;
 import com.intellij.ide.projectWizard.ProjectCategoryUsagesCollector;
 import com.intellij.ide.util.PropertiesComponent;
@@ -282,7 +283,11 @@ public class LiferayProjectTypeStep extends ModuleWizardStep implements Settings
 		).filter(
 			builder -> builder instanceof LiferayModuleBuilder
 		).forEach(
-			builder -> _wizard.getSequence().addStepsForBuilder(builder, context, modulesProvider)
+			builder -> {
+				StepSequence stepSequence = _wizard.getSequence();
+
+				stepSequence.addStepsForBuilder(builder, context, modulesProvider);
+			}
 		);
 
 		PropertiesComponent propertiesComponent = PropertiesComponent.getInstance();
@@ -434,7 +439,11 @@ public class LiferayProjectTypeStep extends ModuleWizardStep implements Settings
 				Stream<FrameworkSupportInModuleProvider> stream = filtered.stream();
 
 				Set<FrameworkSupportInModuleProvider> set = stream.flatMap(
-					provider -> provider.getDependenciesFrameworkIds().stream()
+					provider -> {
+						List<FrameworkDependency> frameworkDependencies = provider.getDependenciesFrameworkIds();
+
+						return frameworkDependencies.stream();
+					}
 				).map(
 					depId -> map.get(depId.getFrameworkId())
 				).filter(

@@ -14,8 +14,7 @@
 
 package com.liferay.ide.idea.ui.modules;
 
-import static java.util.Collections.list;
-
+import aQute.bnd.header.Attrs;
 import aQute.bnd.osgi.Domain;
 
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
@@ -39,6 +38,7 @@ import java.io.IOException;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Stream;
@@ -116,7 +116,7 @@ public class LiferayModuleFragmentWizardStep extends ModuleWizardStep {
 
 					if (currentOsgiBundle.exists()) {
 						try (JarFile jar = new JarFile(currentOsgiBundle)) {
-							List jarEntries = Collections.list(jar.entries());
+							List<JarEntry> jarEntries = Collections.list(jar.entries());
 
 							Stream<JarEntry> stream = jarEntries.stream();
 
@@ -140,6 +140,7 @@ public class LiferayModuleFragmentWizardStep extends ModuleWizardStep {
 			});
 	}
 
+	@Override
 	public JComponent getComponent() {
 		return _mainPanel;
 	}
@@ -172,7 +173,10 @@ public class LiferayModuleFragmentWizardStep extends ModuleWizardStep {
 	public void updateDataModel() {
 		Domain domain = _getBsnAndVersion(getFragmentHost());
 
-		_builder.setBsnName(domain.getBundleSymbolicName().getKey());
+		Entry<String, Attrs> bundleSymbolicNameEntry = domain.getBundleSymbolicName();
+
+		_builder.setBsnName(bundleSymbolicNameEntry.getKey());
+
 		_builder.setVersion(domain.getBundleVersion());
 
 		_builder.setFragmentHost(getFragmentHost());

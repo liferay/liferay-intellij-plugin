@@ -41,6 +41,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LiferayTaglibCSSClassAttributeReferenceContributor extends PsiReferenceContributor {
 
+	@Override
 	public void registerReferenceProviders(@NotNull PsiReferenceRegistrar psiReferenceRegistrar) {
 		LiferayTaglibCssInHtmlClassOrIdReferenceProvider liferayTaglibCssInHtmlClassOrIdReferenceProvider =
 			new LiferayTaglibCssInHtmlClassOrIdReferenceProvider();
@@ -180,9 +181,19 @@ public class LiferayTaglibCSSClassAttributeReferenceContributor extends PsiRefer
 
 					Stream<SimpleImmutableEntry<String, String>> attributesStream = attributes.stream();
 
-					if (attributesStream.anyMatch(attribute -> attribute.getKey().equals(xmlTagLocalName) &&
-						 attribute.getValue().equals(xmlAttributeLocalName))) {
+					boolean anyMatch = attributesStream.anyMatch(
+						attribute -> {
+							String key = attribute.getKey();
+							String value = attribute.getValue();
 
+							if (key.equals(xmlTagLocalName) && value.equals(xmlAttributeLocalName)) {
+								return true;
+							}
+
+							return false;
+						});
+
+					if (anyMatch) {
 						return true;
 					}
 

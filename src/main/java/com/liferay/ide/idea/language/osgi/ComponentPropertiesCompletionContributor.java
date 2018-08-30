@@ -25,6 +25,7 @@ import com.intellij.psi.PsiClassObjectAccessExpression;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiJavaCodeReferenceElement;
 import com.intellij.psi.PsiNameValuePair;
+import com.intellij.psi.PsiTypeElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ProcessingContext;
 
@@ -67,13 +68,21 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 		).flatMap(
 			Stream::of
 		).filter(
-			pair -> pair.getName().equals("service")
+			pair -> {
+				String name = pair.getName();
+
+				return name.equals("service");
+			}
 		).map(
 			PsiNameValuePair::getValue
 		).filter(
 			value -> value instanceof PsiClassObjectAccessExpression
 		).map(
-			value -> ((PsiClassObjectAccessExpression)value).getOperand().getInnermostComponentReferenceElement()
+			value -> {
+				PsiTypeElement psiTypeElement = ((PsiClassObjectAccessExpression)value).getOperand();
+
+				return psiTypeElement.getInnermostComponentReferenceElement();
+			}
 		).filter(
 			Objects::nonNull
 		).map(

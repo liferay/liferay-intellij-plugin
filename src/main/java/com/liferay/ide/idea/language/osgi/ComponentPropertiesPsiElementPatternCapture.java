@@ -59,7 +59,11 @@ public class ComponentPropertiesPsiElementPatternCapture {
 					).filter(
 						Objects::nonNull
 					).filter(
-						pair -> pair.getName().equals("property")
+						pair -> {
+							String name = pair.getName();
+
+							return name.equals("property");
+						}
 					).map(
 						pair -> PsiTreeUtil.getParentOfType(pair, PsiAnnotation.class)
 					).filter(
