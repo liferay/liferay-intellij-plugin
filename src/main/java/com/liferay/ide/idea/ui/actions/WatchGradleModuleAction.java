@@ -14,9 +14,10 @@
 
 package com.liferay.ide.idea.ui.actions;
 
-import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 
@@ -63,18 +64,18 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
 			return;
 		}
 
-		try (GogoTelnetClient client = new GogoTelnetClient("localhost", 11311)) {
+		try (GogoTelnetClient gogoTelnetClient = new GogoTelnetClient("localhost", 11311)) {
 			for (Path bndPath : bndPaths) {
 				Properties properties = new Properties();
 
-				try (InputStream in = Files.newInputStream(bndPath)) {
-					properties.load(in);
+				try (InputStream inputStream = Files.newInputStream(bndPath)) {
+					properties.load(inputStream);
 
 					String bsn = properties.getProperty("Bundle-SymbolicName");
 
 					String cmd = "uninstall " + bsn;
 
-					client.send(cmd);
+					gogoTelnetClient.send(cmd);
 				}
 				catch (IOException ioe) {
 				}
@@ -92,21 +93,16 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
 	@Override
 	public boolean isEnabledAndVisible(AnActionEvent event) {
 		Project project = event.getProject();
-		VirtualFile file = getVirtualFile(event);
 
-		VirtualFile baseDir = project.getBaseDir();
+		VirtualFile virtualFile = getVirtualFile(event);
 
-		VirtualFile gradleFile = baseDir.findChild("settings.gradle");
+		Module module = ModuleUtil.findModuleForFile(virtualFile, project);
 
-		if ((file != null) && (gradleFile != null) && ProjectRootsUtil.isModuleContentRoot(file, project)) {
-			File settingsFile = new File(gradleFile.getPath());
-
-			if (GradleUtil.isWatchableProject(settingsFile)) {
-				return true;
-			}
+		if (module == null) {
+			return false;
 		}
 
-		return false;
+		return GradleUtil.isWatchableProject(module);
 	}
 
 	@Override

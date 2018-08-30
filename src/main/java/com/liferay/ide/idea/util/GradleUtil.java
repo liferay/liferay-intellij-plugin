@@ -14,65 +14,37 @@
 
 package com.liferay.ide.idea.util;
 
-import com.intellij.openapi.util.Version;
-
-import java.io.File;
-import java.io.IOException;
+import com.intellij.openapi.module.Module;
 
 import java.util.List;
+
+import org.jetbrains.plugins.gradle.settings.GradleExtensionsSettings;
 
 /**
  * @author Terry Jia
  */
 public class GradleUtil {
 
-	public static boolean isWatchableProject(File buildFile) {
-		if (FileUtil.notExists(buildFile)) {
+	public static boolean isWatchableProject(Module module) {
+		GradleExtensionsSettings.Settings settings = GradleExtensionsSettings.getInstance(module.getProject());
+
+		GradleExtensionsSettings.GradleExtensionsData gradleExtensionsData = settings.getExtensionsFor(module);
+
+		if (gradleExtensionsData == null) {
 			return false;
 		}
 
-		boolean watchable = false;
+		List<GradleExtensionsSettings.GradleTask> gradleTasks = gradleExtensionsData.tasks;
 
-		try {
-			GradleDependencyUpdater updater = new GradleDependencyUpdater(buildFile);
+		for (GradleExtensionsSettings.GradleTask gradleTask : gradleTasks) {
+			if ("watch".equals(gradleTask.name) &&
+				"com.liferay.gradle.plugins.tasks.WatchTask".equals(gradleTask.typeFqn)) {
 
-			List<GradleDependency> dependencies = updater.getAllBuildDependencies();
-
-			for (GradleDependency dependency : dependencies) {
-				String group = dependency.getGroup();
-				String name = dependency.getName();
-				Version version = new Version(0, 0, 0);
-				String dependencyVersion = dependency.getVersion();
-
-				try {
-					if ((dependencyVersion != null) && !dependencyVersion.equals("")) {
-						version = Version.parseVersion(dependencyVersion);
-					}
-
-					if ("com.liferay".equals(group) && "com.liferay.gradle.plugins".equals(name) &&
-						version.isOrGreaterThan(3, 11)) {
-
-						watchable = true;
-
-						break;
-					}
-
-					if ("com.liferay".equals(group) && "com.liferay.gradle.plugins.workspace".equals(name) &&
-						version.isOrGreaterThan(1, 9, 2)) {
-
-						watchable = true;
-
-						break;
-					}
-				}
-				catch (IllegalArgumentException iae) {
-				}
+				return true;
 			}
 		}
-		catch (IOException ioe) {
-		}
 
-		return watchable;
+		return false;
 	}
 
 }
