@@ -18,6 +18,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.externalSystem.ExternalSystemModulePropertyManager;
 import com.intellij.openapi.externalSystem.importing.ImportSpecBuilder;
 import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode;
+import com.intellij.openapi.externalSystem.service.project.manage.ExternalProjectsManager;
 import com.intellij.openapi.externalSystem.service.project.manage.ExternalProjectsManagerImpl;
 import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemSettings;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
@@ -71,11 +72,11 @@ public class LiferayGradleWorkspaceBuilder extends LiferayWorkspaceBuilder {
 
 			gradleProjectSettings.setExternalProjectPath(project.getBasePath());
 
-			AbstractExternalSystemSettings settings = ExternalSystemApiUtil.getSettings(
+			AbstractExternalSystemSettings externalSystemSettings = ExternalSystemApiUtil.getSettings(
 				project, GradleConstants.SYSTEM_ID);
 
 			//noinspection unchecked
-			settings.linkProject(gradleProjectSettings);
+			externalSystemSettings.linkProject(gradleProjectSettings);
 
 			ImportSpecBuilder importSpecBuilder = new ImportSpecBuilder(project, GradleConstants.SYSTEM_ID);
 
@@ -85,9 +86,9 @@ public class LiferayGradleWorkspaceBuilder extends LiferayWorkspaceBuilder {
 			ExternalSystemUtil.refreshProject(project.getBasePath(), importSpecBuilder.build());
 		};
 
-		ExternalProjectsManagerImpl manager = ExternalProjectsManagerImpl.getInstance(project);
+		ExternalProjectsManager externalProjectsManager = ExternalProjectsManagerImpl.getInstance(project);
 
-		manager.runWhenInitialized(
+		externalProjectsManager.runWhenInitialized(
 			() -> {
 				DumbService dumbService = DumbService.getInstance(project);
 

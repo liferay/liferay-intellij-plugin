@@ -26,18 +26,20 @@ import org.jetbrains.plugins.gradle.settings.GradleExtensionsSettings;
 public class GradleUtil {
 
 	public static boolean isWatchableProject(Module module) {
-		GradleExtensionsSettings.Settings instance = GradleExtensionsSettings.getInstance(module.getProject());
+		GradleExtensionsSettings.Settings settings = GradleExtensionsSettings.getInstance(module.getProject());
 
-		GradleExtensionsSettings.GradleExtensionsData extensions = instance.getExtensionsFor(module);
+		GradleExtensionsSettings.GradleExtensionsData gradleExtensionsData = settings.getExtensionsFor(module);
 
-		if (extensions == null) {
+		if (gradleExtensionsData == null) {
 			return false;
 		}
 
-		List<GradleExtensionsSettings.GradleTask> tasks = extensions.tasks;
+		List<GradleExtensionsSettings.GradleTask> gradleTasks = gradleExtensionsData.tasks;
 
-		for (GradleExtensionsSettings.GradleTask task : tasks) {
-			if ("watch".equals(task.name) && "com.liferay.gradle.plugins.tasks.WatchTask".equals(task.typeFqn)) {
+		for (GradleExtensionsSettings.GradleTask gradleTask : gradleTasks) {
+			if ("watch".equals(gradleTask.name) &&
+				"com.liferay.gradle.plugins.tasks.WatchTask".equals(gradleTask.typeFqn)) {
+
 				return true;
 			}
 		}

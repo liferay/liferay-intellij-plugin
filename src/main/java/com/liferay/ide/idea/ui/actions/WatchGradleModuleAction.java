@@ -64,18 +64,18 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
 			return;
 		}
 
-		try (GogoTelnetClient client = new GogoTelnetClient("localhost", 11311)) {
+		try (GogoTelnetClient gogoTelnetClient = new GogoTelnetClient("localhost", 11311)) {
 			for (Path bndPath : bndPaths) {
 				Properties properties = new Properties();
 
-				try (InputStream in = Files.newInputStream(bndPath)) {
-					properties.load(in);
+				try (InputStream inputStream = Files.newInputStream(bndPath)) {
+					properties.load(inputStream);
 
 					String bsn = properties.getProperty("Bundle-SymbolicName");
 
 					String cmd = "uninstall " + bsn;
 
-					client.send(cmd);
+					gogoTelnetClient.send(cmd);
 				}
 				catch (IOException ioe) {
 				}
@@ -94,9 +94,9 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
 	public boolean isEnabledAndVisible(AnActionEvent event) {
 		Project project = event.getProject();
 
-		VirtualFile file = getVirtualFile(event);
+		VirtualFile virtualFile = getVirtualFile(event);
 
-		Module module = ModuleUtil.findModuleForFile(file, project);
+		Module module = ModuleUtil.findModuleForFile(virtualFile, project);
 
 		if (module == null) {
 			return false;
