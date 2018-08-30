@@ -49,7 +49,11 @@ public class SwitchConsumer<T> implements Consumer<T> {
 		Stream<Entry<Predicate<T>, Consumer<T>>> stream = set.stream();
 
 		Optional<Entry<Predicate<T>, Consumer<T>>> matchingCase = stream.filter(
-			e -> e.getKey().test(t)
+			e -> {
+				Predicate<T> predicate = e.getKey();
+
+				return predicate.test(t);
+			}
 		).findFirst();
 
 		if (matchingCase.isPresent()) {

@@ -60,6 +60,7 @@ public class LiferayModuleFragmentBuilder extends ModuleBuilder {
 		return clazz.getName();
 	}
 
+	@Override
 	public ModuleWizardStep getCustomOptionsStep(WizardContext context, Disposable parentDisposable) {
 		return new LiferayModuleFragmentWizardStep(context, this);
 	}
@@ -69,6 +70,7 @@ public class LiferayModuleFragmentBuilder extends ModuleBuilder {
 		return _LIFERAY_FRAGMENT_MODULES;
 	}
 
+	@Override
 	@SuppressWarnings("rawtypes")
 	public ModuleType getModuleType() {
 		return StdModuleTypes.JAVA;
@@ -109,12 +111,22 @@ public class LiferayModuleFragmentBuilder extends ModuleBuilder {
 		File hostBundle = new File(
 			LiferayIdeaUI.USER_BUNDLES_DIR, _fragmentHost.substring(0, _fragmentHost.lastIndexOf(".jar")));
 
-		SwitchConsumerBuilder<File> switch_ = SwitchConsumer.newBuilder();
+		SwitchConsumerBuilder<File> switchBuilder = SwitchConsumer.newBuilder();
 
-		SwitchConsumer<File> switchConsumer = switch_.addCase(
-			f -> f.getName().equals("portlet.properties"), f -> _copyPortletExtProperties(projectRoot, f)
+		SwitchConsumer<File> switchConsumer = switchBuilder.addCase(
+			f -> {
+				String name = f.getName();
+
+				return name.equals("portlet.properties");
+			},
+			f -> _copyPortletExtProperties(projectRoot, f)
 		).addCase(
-			f -> f.getName().contains("default.xml"), f -> _createDefaultExtXmlFile(projectRoot, f)
+			f -> {
+				String name = f.getName();
+
+				return name.contains("default.xml");
+			},
+			f -> _createDefaultExtXmlFile(projectRoot, f)
 		).setDefault(
 			f -> _copyOtherResource(projectRoot, f)
 		).build();
