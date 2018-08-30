@@ -18,11 +18,13 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.externalSystem.ExternalSystemModulePropertyManager;
 import com.intellij.openapi.externalSystem.importing.ImportSpecBuilder;
 import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode;
+import com.intellij.openapi.externalSystem.service.project.manage.ExternalProjectsManagerImpl;
 import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemSettings;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
 
@@ -82,6 +84,16 @@ public class LiferayGradleWorkspaceBuilder extends LiferayWorkspaceBuilder {
 
 			ExternalSystemUtil.refreshProject(project.getBasePath(), importSpecBuilder.build());
 		};
+
+		ExternalProjectsManagerImpl manager = ExternalProjectsManagerImpl.getInstance(project);
+
+		manager.runWhenInitialized(
+			() -> {
+				DumbService dumbService = DumbService.getInstance(project);
+
+				dumbService.runWhenSmart(
+					() -> ExternalSystemUtil.ensureToolWindowInitialized(project, GradleConstants.SYSTEM_ID));
+			});
 
 		ExternalSystemUtil.invokeLater(project, ModalityState.NON_MODAL, runnable);
 	}
