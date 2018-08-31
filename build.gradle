@@ -117,6 +117,14 @@ processResources {
 	dependsOn verifyBlade, downloadLiferayDefinitions, downloadLiferayTaglibDefinitions
 }
 
+def intellijPortalUsername = project.properties['intellijPortalUsername'] ?: ""
+def intellijPortalPassword = project.properties['intellijPortalPassword'] ?: ""
+
+publishPlugin {
+	username intellijPortalUsername
+	password intellijPortalPassword
+}
+
 repositories {
 	maven {
 		url "https://repository-cdn.liferay.com/nexus/content/groups/public"
