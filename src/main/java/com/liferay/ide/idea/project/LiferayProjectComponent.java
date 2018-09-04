@@ -18,9 +18,13 @@ import com.intellij.ProjectTopics;
 import com.intellij.facet.Facet;
 import com.intellij.facet.FacetManager;
 import com.intellij.facet.FacetType;
-import com.intellij.facet.impl.FacetUtil;
+import com.intellij.facet.ModifiableFacetModel;
+import com.intellij.facet.ProjectFacetManager;
 import com.intellij.javaee.web.facet.WebFacet;
+import com.intellij.javaee.web.facet.WebFacetConfiguration;
 import com.intellij.javaee.web.facet.WebFacetType;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.AbstractProjectComponent;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.ModuleListener;
@@ -38,7 +42,8 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Dominik Marks
- * @autor Joye Luo
+ * @author Joye Luo
+ * @author Charles Wu
  */
 public class LiferayProjectComponent extends AbstractProjectComponent {
 
@@ -113,11 +118,26 @@ public class LiferayProjectComponent extends AbstractProjectComponent {
 						}
 
 						if (!hasWebFacet) {
-							WebFacet webFacet = FacetUtil.addFacet(module, WebFacetType.getInstance());
+							ProjectFacetManager projectFacetManager = ProjectFacetManager.getInstance(
+								module.getProject());
+
+							WebFacetConfiguration config = projectFacetManager.createDefaultConfiguration(
+								WebFacetType.getInstance());
+
+							ModifiableFacetModel modifiableFacetModel = facetManager.createModifiableModel();
+
+							WebFacetType facet = WebFacetType.getInstance();
+
+							WebFacet webFacet = facetManager.createFacet(
+								facet, facet.getPresentableName(), config, null);
 
 							webFacet.addWebRoot(resources, "/");
 
-							myProject.save();
+							modifiableFacetModel.addFacet(webFacet);
+
+							Application application = ApplicationManager.getApplication();
+
+							application.invokeLater(() -> application.runWriteAction(modifiableFacetModel::commit));
 						}
 					}
 				}
