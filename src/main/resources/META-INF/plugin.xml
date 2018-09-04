@@ -33,6 +33,10 @@
 	</p>
 	<p>
 		<ul>
+			<li>1.1.1</li>
+			<ul>
+				<li>fix issue with release of 1.1.0 to plugin portla</li>
+			</ul>
 			<li>1.1.0</li>
 			<ul>
 				<li>code completion for AUI taglib</li>
