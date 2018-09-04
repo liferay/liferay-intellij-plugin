@@ -32,6 +32,16 @@ public class LiferayActionGroup extends DefaultActionGroup {
 	public void update(AnActionEvent event) {
 		Presentation presentation = event.getPresentation();
 
+		Project project = event.getProject();
+
+		DumbService dumbService = DumbService.getInstance(project);
+
+		if (dumbService.isDumb()) {
+			presentation.setEnabled(false);
+
+			return;
+		}
+
 		AnAction[] actions = getChildren(event);
 
 		Supplier<Stream<AnAction>> streamSupplier = () -> Stream.of(actions);
@@ -58,18 +68,7 @@ public class LiferayActionGroup extends DefaultActionGroup {
 			).count();
 		}
 
-		Project project = event.getProject();
-
-		DumbService dumbService = DumbService.getInstance(project);
-
-		if (dumbService.isDumb()) {
-			presentation.setEnabled(false);
-		}
-		else {
-			presentation.setEnabled(count > 0);
-		}
-
-		presentation.setVisible(count > 0);
+		presentation.setEnabledAndVisible(count > 0);
 	}
 
 }
