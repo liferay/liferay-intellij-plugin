@@ -152,6 +152,7 @@ public class LiferayTaglibJavascriptLanguageInjector implements MultiHostInjecto
 		).ifPresent(
 			t -> {
 				String prefixWrapper = null;
+				String suffixWrapper = null;
 
 				String namespace = xmlTag.getNamespace();
 				String localName = xmlTag.getLocalName();
@@ -161,7 +162,8 @@ public class LiferayTaglibJavascriptLanguageInjector implements MultiHostInjecto
 						String attributeValue = xmlTag.getAttributeValue("name");
 
 						if ("custom".equals(attributeValue)) {
-							prefixWrapper = "var a = ";
+							prefixWrapper = "(";
+							suffixWrapper = ")();";
 						}
 						else {
 							return;
@@ -170,6 +172,7 @@ public class LiferayTaglibJavascriptLanguageInjector implements MultiHostInjecto
 				}
 
 				final String prefix = prefixWrapper;
+				final String suffix = suffixWrapper;
 
 				multiHostRegistrar.startInjecting(JavascriptLanguage.INSTANCE);
 
@@ -179,7 +182,7 @@ public class LiferayTaglibJavascriptLanguageInjector implements MultiHostInjecto
 					XmlText.class::isInstance
 				).forEach(
 					psiElement -> multiHostRegistrar.addPlace(
-						prefix, null, (PsiLanguageInjectionHost)psiElement,
+						prefix, suffix, (PsiLanguageInjectionHost)psiElement,
 						new TextRange(0, psiElement.getTextLength()))
 				);
 
