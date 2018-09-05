@@ -101,12 +101,12 @@ public class LiferayProjectComponent extends AbstractProjectComponent {
 
 						FacetManager facetManager = FacetManager.getInstance(module);
 
-						Facet[] facets = facetManager.getAllFacets();
+						Facet<?>[] facets = facetManager.getAllFacets();
 
-						for (Facet facet : facets) {
+						for (Facet<?> facet : facets) {
 							WebFacetType webFacetType = WebFacetType.getInstance();
 
-							FacetType facetType = facet.getType();
+							FacetType<?, ?> facetType = facet.getType();
 
 							String facetTypePresentableName = facetType.getPresentableName();
 
@@ -121,15 +121,15 @@ public class LiferayProjectComponent extends AbstractProjectComponent {
 							ProjectFacetManager projectFacetManager = ProjectFacetManager.getInstance(
 								module.getProject());
 
-							WebFacetConfiguration config = projectFacetManager.createDefaultConfiguration(
-								WebFacetType.getInstance());
+							WebFacetConfiguration webFacetConfiguration =
+								projectFacetManager.createDefaultConfiguration(WebFacetType.getInstance());
 
 							ModifiableFacetModel modifiableFacetModel = facetManager.createModifiableModel();
 
-							WebFacetType facet = WebFacetType.getInstance();
+							WebFacetType webFacetType = WebFacetType.getInstance();
 
 							WebFacet webFacet = facetManager.createFacet(
-								facet, facet.getPresentableName(), config, null);
+								webFacetType, webFacetType.getPresentableName(), webFacetConfiguration, null);
 
 							webFacet.addWebRoot(resources, "/");
 
