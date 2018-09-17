@@ -24,11 +24,11 @@ public class LiferayIdeaUI {
 	public static final File USER_BUNDLES_DIR = new File(
 		new File(System.getProperty("user.home"), ".liferay-ide"), "bundles");
 
-	public static final File USER_TEMP_DIR = new File(System.getProperty("user.home"), ".liferay-ide");
-
-	static {
-		USER_TEMP_DIR.mkdirs();
-		USER_BUNDLES_DIR.mkdirs();
-	}
+	public static final File USER_TEMP_DIR = new File(System.getProperty("user.home"), ".liferay-ide") {
+		{
+			USER_TEMP_DIR.mkdirs();
+			USER_BUNDLES_DIR.mkdirs();
+		}
+	};
 
 }
