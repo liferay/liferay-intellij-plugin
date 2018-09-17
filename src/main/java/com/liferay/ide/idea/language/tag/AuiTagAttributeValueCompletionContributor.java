@@ -101,7 +101,7 @@ public class AuiTagAttributeValueCompletionContributor extends CompletionContrib
 			validatorCapture.with(new TagPatternCondition(LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI, "validator", "name")),
 			new StringCompletionProvider(
 				new String[] {
-					"custom", "acceptFiles", "alpha", "alphanum", "date", "digits", "email", "equalTo", "iri", "max",
+					"acceptFiles", "alpha", "alphanum", "custom", "date", "digits", "email", "equalTo", "iri", "max",
 					"maxLength", "min", "minLength", "number", "range", "rangeLength", "required", "url"
 				}));
 	}
