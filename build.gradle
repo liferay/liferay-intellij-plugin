@@ -131,6 +131,10 @@ repositories {
 	}
 }
 
+runIde {
+	jvmArgs "-Xmx2048m"
+}
+
 verifyBlade {
 	dependsOn downloadBlade
 	src 'build/resources/main/libs/blade.jar'
