@@ -18,8 +18,8 @@ plugins {
 	id "org.jetbrains.intellij" version "0.3.7"
 }
 
-apply plugin: 'com.liferay.source.formatter'
-apply plugin: 'java'
+apply plugin: "com.liferay.source.formatter"
+apply plugin: "java"
 
 task downloadBlade(type: Download)
 task downloadLiferayDefinitions(type: Download)
@@ -40,7 +40,7 @@ dependencies {
 
 downloadBlade {
 	src bladeLatestDownloadURL
-	dest 'build/resources/main/libs/blade.jar'
+	dest "build/resources/main/libs/blade.jar"
 	onlyIfModified true
 }
 
@@ -50,35 +50,35 @@ downloadLiferayDefinitions {
 	target.mkdirs()
 
 	src([
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-display_7_0_0.dtd',
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-display_7_1_0.dtd',
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-friendly-url-routes_7_0_0.dtd',
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-friendly-url-routes_7_1_0.dtd',
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-hook_7_0_0.dtd',
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-hook_7_1_0.dtd',
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-layout-templates_7_0_0.dtd',
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-layout-templates_7_1_0.dtd',
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-look-and-feel_7_0_0.dtd',
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-look-and-feel_7_1_0.dtd',
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-plugin-package_7_0_0.dtd',
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-plugin-package_7_1_0.dtd',
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-plugin-repository_7_0_0.dtd',
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-plugin-repository_7_1_0.dtd',
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-portlet-app_7_0_0.dtd',
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-portlet-app_7_1_0.dtd',
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-resource-action-mapping_7_0_0.dtd',
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-resource-action-mapping_7_1_0.dtd',
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-service-builder_7_0_0.dtd',
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-service-builder_7_1_0.dtd',
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-social_7_0_0.dtd',
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-social_7_1_0.dtd',
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-theme-loader_7_0_0.dtd',
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-theme-loader_7_1_0.dtd',
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-user-notification-definitions_7_0_0.dtd',
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-user-notification-definitions_7_1_0.dtd',
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-workflow-definition_7_0_0.xsd',
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-workflow-definition_7_1_0.xsd',
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/portlet-app_2_0.xsd'
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-display_7_0_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-display_7_1_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-friendly-url-routes_7_0_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-friendly-url-routes_7_1_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-hook_7_0_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-hook_7_1_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-layout-templates_7_0_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-layout-templates_7_1_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-look-and-feel_7_0_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-look-and-feel_7_1_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-plugin-package_7_0_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-plugin-package_7_1_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-plugin-repository_7_0_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-plugin-repository_7_1_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-portlet-app_7_0_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-portlet-app_7_1_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-resource-action-mapping_7_0_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-resource-action-mapping_7_1_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-service-builder_7_0_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-service-builder_7_1_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-social_7_0_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-social_7_1_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-theme-loader_7_0_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-theme-loader_7_1_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-user-notification-definitions_7_0_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-user-notification-definitions_7_1_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-workflow-definition_7_0_0.xsd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-workflow-definition_7_1_0.xsd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/portlet-app_2_0.xsd"
 		])
 
 	dest target
@@ -91,8 +91,8 @@ task downloadLiferayTaglibDefinitions(type: Download){
 	target.mkdirs()
 
 	src([
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/util-taglib/src/META-INF/liferay-aui.tld',
-			'https://raw.githubusercontent.com/liferay/liferay-portal/master/util-taglib/src/META-INF/liferay-ui.tld'
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/util-taglib/src/META-INF/liferay-aui.tld",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/util-taglib/src/META-INF/liferay-ui.tld"
 		])
 
 	dest target
@@ -104,21 +104,21 @@ formatSource {
 }
 
 intellij {
-	plugins 'gradle', 'maven', 'terminal', 'JavaEE', 'java-i18n', 'properties', 'CSS', 'JavaScriptLanguage'
+	plugins "gradle", "maven", "terminal", "JavaEE", "java-i18n", "properties", "CSS", "JavaScriptLanguage"
 	version "IU-2018.2.2"
 }
 
 patchPluginXml {
-	sinceBuild '172'
-	untilBuild ''
+	sinceBuild "172"
+	untilBuild ""
 }
 
 processResources {
 	dependsOn verifyBlade, downloadLiferayDefinitions, downloadLiferayTaglibDefinitions
 }
 
-def intellijPortalUsername = project.properties['intellijPortalUsername'] ?: ""
-def intellijPortalPassword = project.properties['intellijPortalPassword'] ?: ""
+def intellijPortalUsername = project.properties["intellijPortalUsername"] ?: ""
+def intellijPortalPassword = project.properties["intellijPortalPassword"] ?: ""
 
 publishPlugin {
 	username intellijPortalUsername
@@ -131,11 +131,15 @@ repositories {
 	}
 }
 
+runIde {
+	jvmArgs "-Xmx2048m"
+}
+
 verifyBlade {
 	dependsOn downloadBlade
-	src 'build/resources/main/libs/blade.jar'
-	algorithm 'MD5'
+	src "build/resources/main/libs/blade.jar"
+	algorithm "MD5"
 	checksum bladeLatestMD5
 }
 
-version = '1.1.1'
+version = "1.1.1"
