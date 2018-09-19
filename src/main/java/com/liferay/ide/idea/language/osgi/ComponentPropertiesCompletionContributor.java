@@ -176,7 +176,7 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 			// https://dev.liferay.com/de/develop/tutorials/-/knowledge_base/7-0/creating-form-field-types
 
 			put(
-				"com.liferay.dynamic.data.mapping.model.DDMFormFieldType",
+				"com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldType",
 				new String[][] {
 					{"ddm.form.field.type.display.order", "Integer"}, {"ddm.form.field.type.icon", "String"},
 					{"ddm.form.field.type.js.class", "String"}, {"ddm.form.field.type.js.module", "String"},
