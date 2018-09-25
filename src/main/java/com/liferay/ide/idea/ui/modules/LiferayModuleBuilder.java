@@ -34,6 +34,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.liferay.ide.idea.core.LiferayProjectTypeService;
 import com.liferay.ide.idea.util.BladeCLI;
 import com.liferay.ide.idea.util.CoreUtil;
+import com.liferay.ide.idea.util.WorkspaceConstants;
 
 import icons.LiferayIcons;
 
@@ -137,7 +138,7 @@ public class LiferayModuleBuilder extends ModuleBuilder {
 		String liferayVersion = component.getValue(selectedLiferayVersionProperty);
 
 		if (liferayVersion == null) {
-			liferayVersion = "7.0";
+			liferayVersion = WorkspaceConstants.LIFERAY_VERSIONS[0];
 		}
 
 		sb.append("-v ");
