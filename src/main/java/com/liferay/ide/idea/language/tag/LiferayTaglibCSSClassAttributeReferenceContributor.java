@@ -87,7 +87,28 @@ public class LiferayTaglibCSSClassAttributeReferenceContributor extends PsiRefer
 
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI_OLD,
-					_taglibAttributes.get(LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI));
+					Arrays.asList(
+						new SimpleImmutableEntry<>("a", "cssClass"), new SimpleImmutableEntry<>("a", "iconCssClass"),
+						new SimpleImmutableEntry<>("alert", "cssClass"),
+						new SimpleImmutableEntry<>("button", "cssClass"),
+						new SimpleImmutableEntry<>("button-row", "cssClass"),
+						new SimpleImmutableEntry<>("col", "cssClass"),
+						new SimpleImmutableEntry<>("container", "cssClass"),
+						new SimpleImmutableEntry<>("field-wrapper", "cssClass"),
+						new SimpleImmutableEntry<>("fieldset", "cssClass"),
+						new SimpleImmutableEntry<>("form", "cssClass"), new SimpleImmutableEntry<>("icon", "cssClass"),
+						new SimpleImmutableEntry<>("input", "cssClass"),
+						new SimpleImmutableEntry<>("input", "helpTextCssClass"),
+						new SimpleImmutableEntry<>("input", "wrapperCssClass"),
+						new SimpleImmutableEntry<>("nav", "cssClass"),
+						new SimpleImmutableEntry<>("nav-bar", "cssClass"),
+						new SimpleImmutableEntry<>("nav-bar-search", "cssClass"),
+						new SimpleImmutableEntry<>("nav-item", "anchorCssClass"),
+						new SimpleImmutableEntry<>("nav-item", "cssClass"),
+						new SimpleImmutableEntry<>("nav-item", "iconCssClass"),
+						new SimpleImmutableEntry<>("option", "cssClass"), new SimpleImmutableEntry<>("row", "cssClass"),
+						new SimpleImmutableEntry<>("select", "cssClass"),
+						new SimpleImmutableEntry<>("select", "wrapperCssClass")));
 
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_UI,

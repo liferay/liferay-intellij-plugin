@@ -128,11 +128,30 @@ public class LiferayTaglibResourceBundleReferenceContributor extends PsiReferenc
 						new SimpleImmutableEntry<>("validator", "errorMessage"),
 						new SimpleImmutableEntry<>("workflow-status", "helpMessage"),
 						new SimpleImmutableEntry<>("workflow-status", "statusMessage")));
-
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI_OLD,
-					_taglibAttributes.get(LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI));
-
+					Arrays.asList(
+						new SimpleImmutableEntry<>("a", "title"), new SimpleImmutableEntry<>("a", "label"),
+						new SimpleImmutableEntry<>("button", "value"),
+						new SimpleImmutableEntry<>("field-wrapper", "helpMessage"),
+						new SimpleImmutableEntry<>("field-wrapper", "label"),
+						new SimpleImmutableEntry<>("fieldset", "helpMessage"),
+						new SimpleImmutableEntry<>("fieldset", "label"), new SimpleImmutableEntry<>("icon", "label"),
+						new SimpleImmutableEntry<>("input", "helpMessage"),
+						new SimpleImmutableEntry<>("input", "label"), new SimpleImmutableEntry<>("input", "labelOff"),
+						new SimpleImmutableEntry<>("input", "labelOn"), new SimpleImmutableEntry<>("input", "title"),
+						new SimpleImmutableEntry<>("input", "placeholder"),
+						new SimpleImmutableEntry<>("input", "prefix"), new SimpleImmutableEntry<>("input", "suffix"),
+						new SimpleImmutableEntry<>("nav-bar", "selectedItemName"),
+						new SimpleImmutableEntry<>("nav-item", "label"),
+						new SimpleImmutableEntry<>("nav-item", "title"), new SimpleImmutableEntry<>("option", "label"),
+						new SimpleImmutableEntry<>("panel", "label"), new SimpleImmutableEntry<>("select", "label"),
+						new SimpleImmutableEntry<>("select", "helpMessage"),
+						new SimpleImmutableEntry<>("select", "prefix"), new SimpleImmutableEntry<>("select", "suffix"),
+						new SimpleImmutableEntry<>("select", "title"),
+						new SimpleImmutableEntry<>("validator", "errorMessage"),
+						new SimpleImmutableEntry<>("workflow-status", "helpMessage"),
+						new SimpleImmutableEntry<>("workflow-status", "statusMessage")));
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_ASSET,
 					Arrays.asList(

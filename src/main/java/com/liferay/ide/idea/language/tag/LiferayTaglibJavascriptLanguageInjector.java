@@ -203,6 +203,14 @@ public class LiferayTaglibJavascriptLanguageInjector implements MultiHostInjecto
 						new SimpleImmutableEntry<>("select", "onChange"),
 						new SimpleImmutableEntry<>("select", "onClick"), new SimpleImmutableEntry<>("validator", "")));
 				put(
+					LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI_OLD,
+					Arrays.asList(
+						new SimpleImmutableEntry<>("a", "onClick"), new SimpleImmutableEntry<>("button", "onClick"),
+						new SimpleImmutableEntry<>("form", "onSubmit"), new SimpleImmutableEntry<>("input", "onChange"),
+						new SimpleImmutableEntry<>("input", "onClick"), new SimpleImmutableEntry<>("script", ""),
+						new SimpleImmutableEntry<>("select", "onChange"),
+						new SimpleImmutableEntry<>("select", "onClick"), new SimpleImmutableEntry<>("validator", "")));
+				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_FRONTEND,
 					Arrays.asList(
 						new SimpleImmutableEntry<>("edit-form", "onSubmit"),
@@ -218,9 +226,6 @@ public class LiferayTaglibJavascriptLanguageInjector implements MultiHostInjecto
 						new SimpleImmutableEntry<>("page-iterator", "jsCall"),
 						new SimpleImmutableEntry<>("quick-access-entry", "onClick"),
 						new SimpleImmutableEntry<>("tabs", "onClick")));
-				put(
-					LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI_OLD,
-					_taglibAttributes.get(LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI));
 			}
 		};
 
