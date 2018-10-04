@@ -50,7 +50,8 @@ public class LiferayXmlSchemaProvider extends XmlSchemaProvider {
 		String fileName = psiFile.getName();
 
 		if ("portlet-model-hints.xml".equals(fileName)) {
-			schemaFileUrl = LiferayXmlSchemaProvider.class.getResource("/xsd/liferay-portlet-model-hints_7_0_0.xsd");
+			schemaFileUrl = LiferayXmlSchemaProvider.class.getResource(
+				"/definitions/xsd/liferay-portlet-model-hints_7_0_0.xsd");
 		}
 		else if ("default.xml".equals(fileName)) {
 			PsiDirectory psiDirectory = psiFile.getParent();
@@ -59,7 +60,8 @@ public class LiferayXmlSchemaProvider extends XmlSchemaProvider {
 				String psiDirectoryName = psiDirectory.getName();
 
 				if ("custom-sql".equals(psiDirectoryName)) {
-					schemaFileUrl = LiferayXmlSchemaProvider.class.getResource("/xsd/liferay-custom-sql_7_0_0.xsd");
+					schemaFileUrl = LiferayXmlSchemaProvider.class.getResource(
+						"/definitions/xsd/liferay-custom-sql_7_0_0.xsd");
 				}
 			}
 		}
