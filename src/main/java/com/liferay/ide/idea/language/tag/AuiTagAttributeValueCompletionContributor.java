@@ -147,7 +147,10 @@ public class AuiTagAttributeValueCompletionContributor extends CompletionContrib
 
 		ClassLoader classLoader = AuiTagAttributeValueCompletionContributor.class.getClassLoader();
 
-		URL[] urls = {classLoader.getResource("/tld/liferay-aui.tld"), classLoader.getResource("/tld/liferay-ui.tld")};
+		URL[] urls = {
+			classLoader.getResource("/definitions/tld/liferay-aui.tld"),
+			classLoader.getResource("/definitions/tld/liferay-ui.tld")
+		};
 
 		for (URL url : urls) {
 			try {

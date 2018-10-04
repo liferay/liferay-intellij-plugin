@@ -21,31 +21,8 @@ plugins {
 apply plugin: "com.liferay.source.formatter"
 apply plugin: "java"
 
-task downloadBlade(type: Download)
-task downloadLiferayDefinitions(type: Download)
-task verifyBlade(type: Verify)
-
-check.dependsOn checkSourceFormatting
-
-checkSourceFormatting {
-	maxLineLength = 120
-}
-
-dependencies {
-	compile group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.4.0"
-	compile group: "commons-configuration", name: "commons-configuration", version: "1.10"
-	compile group: "org.apache.ant", name: "ant", version: "1.10.1"
-	compile group: "org.dom4j", name: "dom4j", version: "2.1.0"
-}
-
-downloadBlade {
-	src bladeLatestDownloadURL
-	dest "build/resources/main/libs/blade.jar"
-	onlyIfModified true
-}
-
-downloadLiferayDefinitions {
-	def target = file("build/resources/main/definitions")
+task downloadDtds(type: Download) {
+	def target = file("src/main/resources/definitions/dtd")
 
 	target.mkdirs()
 
@@ -75,7 +52,19 @@ downloadLiferayDefinitions {
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-theme-loader_7_0_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-theme-loader_7_1_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-user-notification-definitions_7_0_0.dtd",
-			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-user-notification-definitions_7_1_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-user-notification-definitions_7_1_0.dtd"
+		])
+
+	dest target
+	overwrite false
+}
+
+task downloadXsds(type: Download) {
+	def target = file("src/main/resources/definitions/xsd")
+
+	target.mkdirs()
+
+	src([
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-workflow-definition_7_0_0.xsd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-workflow-definition_7_1_0.xsd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/portlet-app_2_0.xsd"
@@ -85,8 +74,8 @@ downloadLiferayDefinitions {
 	overwrite false
 }
 
-task downloadLiferayTaglibDefinitions(type: Download){
-	def target = file("build/resources/main/tld")
+task downloadTlds(type: Download){
+	def target = file("src/main/resources/definitions/tld")
 
 	target.mkdirs()
 
@@ -97,6 +86,28 @@ task downloadLiferayTaglibDefinitions(type: Download){
 
 	dest target
 	overwrite false
+}
+
+task downloadBlade(type: Download)
+task verifyBlade(type: Verify)
+
+check.dependsOn checkSourceFormatting
+
+checkSourceFormatting {
+	maxLineLength = 120
+}
+
+dependencies {
+	compile group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.4.0"
+	compile group: "commons-configuration", name: "commons-configuration", version: "1.10"
+	compile group: "org.apache.ant", name: "ant", version: "1.10.1"
+	compile group: "org.dom4j", name: "dom4j", version: "2.1.0"
+}
+
+downloadBlade {
+	src bladeLatestDownloadURL
+	dest "build/resources/main/libs/blade.jar"
+	onlyIfModified true
 }
 
 formatSource {
@@ -114,7 +125,7 @@ patchPluginXml {
 }
 
 processResources {
-	dependsOn verifyBlade, downloadLiferayDefinitions, downloadLiferayTaglibDefinitions
+	dependsOn verifyBlade
 }
 
 def intellijPortalUsername = project.properties["intellijPortalUsername"] ?: ""
