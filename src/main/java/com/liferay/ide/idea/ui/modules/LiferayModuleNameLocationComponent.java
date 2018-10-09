@@ -339,6 +339,7 @@ public class LiferayModuleNameLocationComponent {
 
 	private boolean _validateModulePaths() throws ConfigurationException {
 		String moduleName = _getModuleName();
+
 		String moduleFileDirectory = _moduleFileLocation.getText();
 
 		if (moduleFileDirectory.length() == 0) {
@@ -354,6 +355,7 @@ public class LiferayModuleNameLocationComponent {
 		if (moduleFile.exists()) {
 			String identification = IdeBundle.message("project.new.wizard.module.identification");
 			String existsTitle = IdeBundle.message("title.file.already.exists");
+
 			String filePrompt = IdeBundle.message(
 				"prompt.overwrite.project.file", moduleFile.getAbsolutePath(), identification);
 

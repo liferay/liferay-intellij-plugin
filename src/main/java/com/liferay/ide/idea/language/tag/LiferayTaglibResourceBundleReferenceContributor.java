@@ -199,6 +199,7 @@ public class LiferayTaglibResourceBundleReferenceContributor extends PsiReferenc
 					if (_taglibAttributes.containsKey(namespace)) {
 						String attributeLocalName = xmlAttribute.getLocalName();
 						String tagLocalName = xmlTag.getLocalName();
+
 						Collection<SimpleImmutableEntry<String, String>> entries = _taglibAttributes.get(namespace);
 
 						Stream<SimpleImmutableEntry<String, String>> stream = entries.stream();

@@ -79,6 +79,7 @@ public class LiferayXmlFileReferenceFilterPattern extends FilterPattern {
 							if (xmlTag != null) {
 								String namespace = xmlTag.getNamespace();
 								String localName = xmlTag.getLocalName();
+
 								String attributeLocalName = xmlAttribute.getLocalName();
 
 								SimpleImmutableEntry<String, String> pair = new SimpleImmutableEntry<>(
