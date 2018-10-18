@@ -21,7 +21,34 @@ plugins {
 apply plugin: "com.liferay.source.formatter"
 apply plugin: "java"
 
-task downloadDtds(type: Download) {
+task downloadBlade(type: Download)
+task downloadDtds(type: Download)
+task downloadTlds(type: Download)
+task downloadXsds(type: Download)
+task verifyBlade(type: Verify)
+
+check.dependsOn checkSourceFormatting
+
+checkSourceFormatting {
+	maxLineLength = 120
+}
+
+dependencies {
+	compile group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.4.0"
+	compile group: "commons-configuration", name: "commons-configuration", version: "1.10"
+	compile group: "org.apache.ant", name: "ant", version: "1.10.1"
+	compile group: "org.dom4j", name: "dom4j", version: "2.1.0"
+
+	testCompile group: "junit", name: "junit", version: "4.12"
+}
+
+downloadBlade {
+	src bladeLatestDownloadURL
+	dest "build/resources/main/libs/blade.jar"
+	onlyIfModified true
+}
+
+downloadDtds {
 	def target = file("src/main/resources/definitions/dtd")
 
 	target.mkdirs()
@@ -59,7 +86,21 @@ task downloadDtds(type: Download) {
 	overwrite false
 }
 
-task downloadXsds(type: Download) {
+downloadTlds {
+	def target = file("src/main/resources/definitions/tld")
+
+	target.mkdirs()
+
+	src([
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/util-taglib/src/META-INF/liferay-aui.tld",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/util-taglib/src/META-INF/liferay-ui.tld"
+		])
+
+	dest target
+	overwrite false
+}
+
+downloadXsds {
 	def target = file("src/main/resources/definitions/xsd")
 
 	target.mkdirs()
@@ -74,48 +115,12 @@ task downloadXsds(type: Download) {
 	overwrite false
 }
 
-task downloadTlds(type: Download){
-	def target = file("src/main/resources/definitions/tld")
-
-	target.mkdirs()
-
-	src([
-			"https://raw.githubusercontent.com/liferay/liferay-portal/master/util-taglib/src/META-INF/liferay-aui.tld",
-			"https://raw.githubusercontent.com/liferay/liferay-portal/master/util-taglib/src/META-INF/liferay-ui.tld"
-		])
-
-	dest target
-	overwrite false
-}
-
-task downloadBlade(type: Download)
-task verifyBlade(type: Verify)
-
-check.dependsOn checkSourceFormatting
-
-checkSourceFormatting {
-	maxLineLength = 120
-}
-
-dependencies {
-	compile group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.4.0"
-	compile group: "commons-configuration", name: "commons-configuration", version: "1.10"
-	compile group: "org.apache.ant", name: "ant", version: "1.10.1"
-	compile group: "org.dom4j", name: "dom4j", version: "2.1.0"
-}
-
-downloadBlade {
-	src bladeLatestDownloadURL
-	dest "build/resources/main/libs/blade.jar"
-	onlyIfModified true
-}
-
 formatSource {
 	maxLineLength = 120
 }
 
 intellij {
-	plugins "gradle", "maven", "terminal", "JavaEE", "java-i18n", "properties", "CSS", "JavaScriptLanguage"
+	plugins "CSS", "DatabaseTools", "gradle", "Groovy", "java-i18n", "JavaEE", "JavaScriptLanguage", "jsp", "junit", "maven", "PersistenceSupport", "properties", "sass", "terminal"
 	version "IU-2018.2.2"
 }
 
@@ -144,6 +149,12 @@ repositories {
 
 runIde {
 	jvmArgs "-Xmx2048m"
+}
+
+test {
+	testLogging {
+		exceptionFormat = "full"
+	}
 }
 
 verifyBlade {

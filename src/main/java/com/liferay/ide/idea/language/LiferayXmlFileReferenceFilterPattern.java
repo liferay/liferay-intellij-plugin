@@ -79,6 +79,7 @@ public class LiferayXmlFileReferenceFilterPattern extends FilterPattern {
 							if (xmlTag != null) {
 								String namespace = xmlTag.getNamespace();
 								String localName = xmlTag.getLocalName();
+
 								String attributeLocalName = xmlAttribute.getLocalName();
 
 								SimpleImmutableEntry<String, String> pair = new SimpleImmutableEntry<>(
@@ -118,15 +119,13 @@ public class LiferayXmlFileReferenceFilterPattern extends FilterPattern {
 				Arrays.asList("portal-properties", "language-properties", "custom-jsp-dir"));
 			put(
 				LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_HOOK_7_1_0,
-				_tagsMap.get(LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_HOOK_7_0_0));
-
+				Arrays.asList("portal-properties", "language-properties", "custom-jsp-dir"));
 			put(
 				LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_LAYOUT_TEMPLATES_7_0_0,
 				Arrays.asList("template-path", "wap-template-path", "thumbnail-path", "screenshot-path"));
 			put(
 				LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_LAYOUT_TEMPLATES_7_1_0,
-				_tagsMap.get(LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_LAYOUT_TEMPLATES_7_0_0));
-
+				Arrays.asList("template-path", "wap-template-path", "thumbnail-path", "screenshot-path"));
 			put(
 				LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_LOOK_AND_FEEL_7_0_0,
 				Arrays.asList(
@@ -135,8 +134,10 @@ public class LiferayXmlFileReferenceFilterPattern extends FilterPattern {
 					"portlet-decorator-thumbnail-path"));
 			put(
 				LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_LOOK_AND_FEEL_7_1_0,
-				_tagsMap.get(LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_LOOK_AND_FEEL_7_0_0));
-
+				Arrays.asList(
+					"root-path", "templates-path", "css-path", "images-path", "javascript-path",
+					"color-scheme-images-path", "template-path", "wap-template-path", "thumbnail-path",
+					"portlet-decorator-thumbnail-path"));
 			put(
 				LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_PORTLET_APP_7_0_0,
 				Arrays.asList(
@@ -145,8 +146,10 @@ public class LiferayXmlFileReferenceFilterPattern extends FilterPattern {
 					"footer-portlet-javascript", "icon", "user-notification-definitions"));
 			put(
 				LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_PORTLET_APP_7_1_0,
-				_tagsMap.get(LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_PORTLET_APP_7_0_0));
-
+				Arrays.asList(
+					"friendly-url-routes", "header-portal-css", "header-portlet-css", "header-portal-javascript",
+					"header-portlet-javascript", "footer-portal-css", "footer-portlet-css", "footer-portal-javascript",
+					"footer-portlet-javascript", "icon", "user-notification-definitions"));
 			_attributesMap.put(
 				LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_RESOURCE_ACTION_MAPPING_7_0_0,
 				Arrays.asList(new SimpleImmutableEntry<>("resource", "file")));
@@ -167,7 +170,7 @@ public class LiferayXmlFileReferenceFilterPattern extends FilterPattern {
 				Arrays.asList("themes-path"));
 			put(
 				LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_THEME_LOADER_7_1_0,
-				_tagsMap.get(LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_THEME_LOADER_7_0_0));
+				Arrays.asList("themes-path"));
 		}
 	};
 

@@ -63,6 +63,7 @@ public class ZipUtil {
 
 				if (!foundStartEntry) {
 					foundStartEntry = entryToStart.equals(entry.getName());
+
 					continue;
 				}
 

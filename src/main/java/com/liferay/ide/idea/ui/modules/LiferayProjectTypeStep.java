@@ -166,6 +166,12 @@ public class LiferayProjectTypeStep extends ModuleWizardStep implements Settings
 
 					@Nullable
 					@Override
+					public Icon getIconFor(TemplatesGroup value) {
+						return value.getIcon();
+					}
+
+					@Nullable
+					@Override
 					public String getTextFor(TemplatesGroup value) {
 						return value.getName();
 					}
@@ -174,12 +180,6 @@ public class LiferayProjectTypeStep extends ModuleWizardStep implements Settings
 					@Override
 					public String getTooltipFor(TemplatesGroup value) {
 						return value.getDescription();
-					}
-
-					@Nullable
-					@Override
-					public Icon getIconFor(TemplatesGroup value) {
-						return value.getIcon();
 					}
 
 					@Override

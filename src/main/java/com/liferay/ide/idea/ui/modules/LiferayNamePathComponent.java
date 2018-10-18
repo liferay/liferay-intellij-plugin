@@ -70,6 +70,7 @@ public class LiferayNamePathComponent extends JPanel {
 
 		String baseDir = context.getProjectFileDirectory();
 		String projectName = context.getProjectName();
+
 		String initialProjectName = ProjectWizardUtil.findNonExistingFileName(baseDir, "untitled", "");
 
 		if (projectName != null) {
@@ -293,6 +294,7 @@ public class LiferayNamePathComponent extends JPanel {
 		}
 
 		boolean shouldContinue = true;
+
 		String fileName = defaultFormat ? name + ProjectFileType.DOT_DEFAULT_EXTENSION : Project.DIRECTORY_STORE_FOLDER;
 
 		File projectFile = new File(file, fileName);
@@ -384,6 +386,7 @@ public class LiferayNamePathComponent extends JPanel {
 					_setPathNameSyncEnabled(false);
 
 					String name = getText(0, getLength());
+
 					String path = _path.getText();
 
 					path = path.trim();
