@@ -29,11 +29,16 @@ import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.util.Condition;
 
 import com.liferay.ide.idea.util.BladeCLI;
+import com.liferay.ide.idea.util.WorkspaceConstants;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.io.File;
+
+import java.util.Objects;
 
 import javax.swing.JComboBox;
+
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -64,22 +69,42 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 	public ModuleWizardStep modifySettingsStep(@NotNull SettingsStep settingsStep) {
 		JComboBox liferayVersionComboBox = new ComboBox();
 
-		liferayVersionComboBox.addItem("7.0");
-		liferayVersionComboBox.addItem("7.1");
-
-		liferayVersionComboBox.addActionListener(
-			new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					Object selectedVersion = liferayVersionComboBox.getSelectedItem();
-
-					_liferayVersion = selectedVersion.toString();
-				}
-
-			});
+		for (String liferayVersion : WorkspaceConstants.LIFERAY_VERSIONS) {
+			liferayVersionComboBox.addItem(liferayVersion);
+		}
 
 		settingsStep.addSettingsField("Liferay version:", liferayVersionComboBox);
+
+		JComboBox targetPlatformComboBox = new ComboBox();
+
+		for (String targetPlatformVersion : WorkspaceConstants.TARGET_PLATFORM_VERSIONS_7_1) {
+			targetPlatformComboBox.addItem(targetPlatformVersion);
+		}
+
+		for (String targetPlatformVersion : WorkspaceConstants.TARGET_PLATFORM_VERSIONS_7_0) {
+			targetPlatformComboBox.addItem(targetPlatformVersion);
+		}
+
+		targetPlatformComboBox.addActionListener(
+			e -> _targetPlatform = Objects.toString(targetPlatformComboBox.getSelectedItem(), ""));
+
+		if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_GRADLE_WORKSPACE)) {
+			settingsStep.addSettingsField("Target platform:", targetPlatformComboBox);
+		}
+
+		liferayVersionComboBox.addActionListener(
+			e -> {
+				String selected = Objects.toString(liferayVersionComboBox.getSelectedItem(), "");
+
+				_liferayVersion = selected;
+
+				if (selected.startsWith("7.0")) {
+					targetPlatformComboBox.setSelectedItem(WorkspaceConstants.TARGET_PLATFORM_VERSIONS_7_0[0]);
+				}
+				else if (selected.startsWith("7.1")) {
+					targetPlatformComboBox.setSelectedItem(WorkspaceConstants.TARGET_PLATFORM_VERSIONS_7_1[0]);
+				}
+			});
 
 		return new SdkSettingsStep(
 			settingsStep, this,
@@ -117,9 +142,23 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 		component.setValue(selectedLiferayVersionProperty, _liferayVersion);
 
 		BladeCLI.execute(sb.toString());
+
+		if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_GRADLE_WORKSPACE)) {
+			try {
+				PropertiesConfiguration config = new PropertiesConfiguration(
+					new File(project.getBasePath(), "gradle.properties"));
+
+				config.setProperty(WorkspaceConstants.DEFAULT_TARGET_PLATFORM_VERSION_PROPERTY, _targetPlatform);
+
+				config.save();
+			}
+			catch (ConfigurationException ce) {
+			}
+		}
 	}
 
 	private String _liferayProjectType;
-	private String _liferayVersion = "7.0";
+	private String _liferayVersion = WorkspaceConstants.LIFERAY_VERSIONS[0];
+	private String _targetPlatform = WorkspaceConstants.TARGET_PLATFORM_VERSIONS_7_1[0];
 
 }

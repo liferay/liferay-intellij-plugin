@@ -19,7 +19,7 @@ package com.liferay.ide.idea.ui.modules;
  */
 public class LiferayProjectType {
 
-	public static final String LIFERAY_GRADLE_WORKSPACE = "LiferayGradleWorkspce";
+	public static final String LIFERAY_GRADLE_WORKSPACE = "LiferayGradleWorkspace";
 
 	public static final String LIFERAY_MAVEN_WORKSPACE = "LiferayMavenWorkspace";
 
