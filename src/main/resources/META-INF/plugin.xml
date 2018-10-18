@@ -26,13 +26,17 @@
 			<li><a href="https://github.com/dmarks2">Dominik Marks</a></li>
 		</ul>
 	</p>]]></description>
-	<version>1.1.0</version>
+	<version>1.2.0</version>
 	<change-notes>
 	<![CDATA[<p>
 		See for all changes: https://github.com/liferay/liferay-intellij-plugin/commits/
 	</p>
 	<p>
 		<ul>
+			<li>1.2.0</li>
+			<ul>
+				<li>add support for Liferay Target Platform in new Liferay Workspace wizard</li>
+			</ul>
 			<li>1.1.1</li>
 			<ul>
 				<li>fix issue with release of 1.1.0 to plugin portal</li>
