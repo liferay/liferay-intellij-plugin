@@ -14,12 +14,15 @@
 
 package com.liferay.ide.idea.ui.modules;
 
+import com.intellij.ide.BrowserUtil;
 import com.intellij.ide.util.newProjectWizard.AbstractProjectWizard;
 import com.intellij.ide.util.newProjectWizard.StepSequence;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.util.Disposer;
+
+import com.liferay.ide.idea.ui.modules.ext.LiferayModuleExtBuilder;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,6 +49,13 @@ public class NewLiferayModuleWizard extends AbstractProjectWizard {
 	@Override
 	protected String getDimensionServiceKey() {
 		return "new project wizard";
+	}
+
+	@Override
+	protected void helpAction() {
+		if (getProjectBuilder() instanceof LiferayModuleExtBuilder) {
+			BrowserUtil.browse("https://dev.liferay.com/de/develop/reference/-/knowledge_base/7-1/ext");
+		}
 	}
 
 	protected void init(@NotNull ModulesProvider modulesProvider) {

@@ -113,7 +113,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode("root", true);
 
 		for (String type : BladeCLI.getProjectTemplates()) {
-			if (type.equals("fragment")) {
+			if ("fragment".equals(type) || "modules-ext".equals(type)) {
 				continue;
 			}
 

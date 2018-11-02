@@ -64,7 +64,9 @@ import com.intellij.util.containers.FactoryMap;
 import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.UIUtil;
 
+import com.liferay.ide.idea.ui.modules.ext.LiferayModuleExtBuilder;
 import com.liferay.ide.idea.util.CoreUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
 
 import gnu.trove.THashMap;
 
@@ -141,7 +143,7 @@ public class LiferayProjectTypeStep extends ModuleWizardStep implements Settings
 
 		_templatesMap = new ConcurrentMultiMap<>();
 
-		List<TemplatesGroup> groups = _fillTemplatesMap();
+		List<TemplatesGroup> groups = _fillTemplatesMap(context.getProject());
 
 		if (_log.isDebugEnabled()) {
 			_log.debug("groups=" + groups);
@@ -545,11 +547,12 @@ public class LiferayProjectTypeStep extends ModuleWizardStep implements Settings
 			Arrays.asList(roles), Arrays.asList(projectCategory.getAcceptableFrameworkRoles()));
 	}
 
-	private List<TemplatesGroup> _fillTemplatesMap() {
+	private List<TemplatesGroup> _fillTemplatesMap(Project project) {
 		_templatesMap.put(new TemplatesGroup(new LiferayModuleBuilder()), new ArrayList<>());
 
-		// disable the fragment wizard for right now and we will add the Module Ext wizard back smailiar as it back
-		// _templatesMap.put(new TemplatesGroup(new LiferayModuleFragmentBuilder()), new ArrayList<>());
+		if (LiferayWorkspaceUtil.isValidGradleWorkspaceLocation(project.getBasePath())) {
+			_templatesMap.put(new TemplatesGroup(new LiferayModuleExtBuilder()), new ArrayList<>());
+		}
 
 		List<TemplatesGroup> groups = new ArrayList<>(_templatesMap.keySet());
 
