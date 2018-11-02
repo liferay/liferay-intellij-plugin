@@ -114,6 +114,7 @@
 	</actions>
 
 	<extensions defaultExtensionNs="com.intellij">
+		<postStartupActivity implementation="com.liferay.ide.idea.core.LiferayPostStartupActivity"/>
 		<projectTemplatesFactory implementation="com.liferay.ide.idea.ui.modules.LiferayWorkspaceTemplatesFactory"/>
 		<configurationType implementation="com.liferay.ide.idea.server.LiferayServerConfigurationType"/>
 		<programRunner id="Run" implementation="com.liferay.ide.idea.server.LiferayServerRunner"/>

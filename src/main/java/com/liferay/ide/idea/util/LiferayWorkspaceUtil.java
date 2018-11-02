@@ -15,8 +15,6 @@
 package com.liferay.ide.idea.util;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
 
 import java.io.File;
 
@@ -27,7 +25,6 @@ import java.util.regex.Pattern;
 import org.jetbrains.idea.maven.model.MavenPlugin;
 import org.jetbrains.idea.maven.project.MavenProject;
 import org.jetbrains.idea.maven.project.MavenProjectsManager;
-import org.jetbrains.idea.maven.utils.MavenUtil;
 
 /**
  * @author Terry Jia
@@ -43,6 +40,20 @@ public class LiferayWorkspaceUtil {
 		}
 
 		return result;
+	}
+
+	public static String getMavenProperty(Project project, String key, String defaultValue) {
+		if (!isValidMavenWorkspaceLocation(project)) {
+			return null;
+		}
+
+		MavenProjectsManager mavenProjectsManager = MavenProjectsManager.getInstance(project);
+
+		MavenProject mavenWorkspaceProject = mavenProjectsManager.findContainingProject(project.getBaseDir());
+
+		Properties properties = mavenWorkspaceProject.getProperties();
+
+		return properties.getProperty(key, defaultValue);
 	}
 
 	public static boolean isValidGradleWorkspaceLocation(String location) {
@@ -68,28 +79,18 @@ public class LiferayWorkspaceUtil {
 	}
 
 	public static boolean isValidMavenWorkspaceLocation(Project project) {
-		File pomFile = new File(project.getBasePath(), _BUILD_MAVEN_FILE_NAME);
-
-		if (!pomFile.exists()) {
-			return false;
-		}
-
-		LocalFileSystem fileSystem = LocalFileSystem.getInstance();
-
-		VirtualFile virtualPom = fileSystem.findFileByPath(pomFile.getPath());
-
-		if (virtualPom.exists()) {
-			boolean pom = MavenUtil.isPomFile(project, virtualPom);
-
-			if (!pom) {
-				return false;
-			}
-		}
-
 		try {
 			MavenProjectsManager mavenProjectsManager = MavenProjectsManager.getInstance(project);
 
-			MavenProject mavenWorkspaceProject = mavenProjectsManager.findProject(virtualPom);
+			if (!mavenProjectsManager.isMavenizedProject()) {
+				return false;
+			}
+
+			MavenProject mavenWorkspaceProject = mavenProjectsManager.findContainingProject(project.getBaseDir());
+
+			if (mavenWorkspaceProject == null) {
+				return false;
+			}
 
 			MavenPlugin liferayWorkspacePlugin = mavenWorkspaceProject.findPlugin(
 				"com.liferay", "com.liferay.portal.tools.bundle.support");
@@ -128,8 +129,6 @@ public class LiferayWorkspaceUtil {
 	}
 
 	private static final String _BUILD_GRADLE_FILE_NAME = "build.gradle";
-
-	private static final String _BUILD_MAVEN_FILE_NAME = "pom.xml";
 
 	private static final String _GRADLE_PROPERTIES_FILE_NAME = "gradle.properties";
 

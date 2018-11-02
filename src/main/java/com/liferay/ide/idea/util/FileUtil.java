@@ -32,6 +32,7 @@ import java.nio.file.Paths;
 
 /**
  * @author Terry Jia
+ * @author Simon Jiang
  */
 public class FileUtil {
 
@@ -110,6 +111,14 @@ public class FileUtil {
 		}
 
 		if (notExists(path.toFile())) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public static boolean notExists(VirtualFile file) {
+		if ((file == null) || !file.exists()) {
 			return true;
 		}
 

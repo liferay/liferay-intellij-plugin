@@ -115,7 +115,7 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
 	}
 
 	private List<Path> _getBndPaths() {
-		File file = new File(workingDirectory);
+		File file = new File(projectDir.getCanonicalPath());
 
 		File bndFile = new File(file, "bnd.bnd");
 

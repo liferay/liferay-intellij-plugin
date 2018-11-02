@@ -14,55 +14,65 @@
 
 package com.liferay.ide.idea.ui.actions;
 
-import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.execution.ExecutionException;
+import com.intellij.execution.Executor;
+import com.intellij.execution.RunnerAndConfigurationSettings;
+import com.intellij.execution.executors.DefaultRunExecutor;
+import com.intellij.execution.impl.DefaultJavaProgramRunner;
+import com.intellij.execution.process.ProcessHandler;
+import com.intellij.execution.runners.ExecutionEnvironment;
+import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 
 import java.util.Collection;
 import java.util.List;
 
 import javax.swing.Icon;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.execution.MavenRunConfigurationType;
 import org.jetbrains.idea.maven.execution.MavenRunnerParameters;
 import org.jetbrains.idea.maven.model.MavenExplicitProfiles;
 import org.jetbrains.idea.maven.project.MavenProject;
 import org.jetbrains.idea.maven.project.MavenProjectsManager;
+import org.jetbrains.idea.maven.utils.MavenUtil;
 import org.jetbrains.idea.maven.utils.actions.MavenActionUtil;
 
 /**
  * @author Joye Luo
+ * @author Simon Jiang
  */
-public abstract class AbstractLiferayMavenGoalAction extends AnAction {
+public abstract class AbstractLiferayMavenGoalAction extends AbstractLiferayAction {
 
 	public AbstractLiferayMavenGoalAction(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
 		super(text, description, icon);
 	}
 
 	@Override
-	public void actionPerformed(AnActionEvent e) {
-		checkOrPerform(e.getDataContext(), true);
-	}
+	protected RunnerAndConfigurationSettings doExecute(AnActionEvent event) {
+		projectDir = getWorkingDirectory(event);
 
-	public boolean checkOrPerform(DataContext context, boolean perform) {
-		Project project = MavenActionUtil.getProject(context);
+		DataContext dataContext = event.getDataContext();
 
-		MavenProject mavenProject = MavenActionUtil.getMavenProject(context);
+		Project project = MavenActionUtil.getProject(dataContext);
+
+		MavenProject mavenProject = MavenActionUtil.getMavenProject(dataContext);
 
 		if ((project == null) || (mavenProject == null)) {
-			return false;
-		}
-
-		if (!perform) {
-			return true;
+			return null;
 		}
 
 		String projectDir = mavenProject.getDirectory();
 
-		MavenProjectsManager mavenProjectsManager = MavenActionUtil.getProjectsManager(context);
+		VirtualFile mavenProjectDirectoryFile = mavenProject.getDirectoryFile();
+
+		VirtualFile pomFile = mavenProjectDirectoryFile.findChild("pom.xml");
+
+		MavenProjectsManager mavenProjectsManager = MavenActionUtil.getProjectsManager(dataContext);
 
 		MavenExplicitProfiles explicitProfiles = mavenProjectsManager.getExplicitProfiles();
 
@@ -70,24 +80,38 @@ public abstract class AbstractLiferayMavenGoalAction extends AnAction {
 		Collection<String> disabledProfiles = explicitProfiles.getDisabledProfiles();
 
 		MavenRunnerParameters params = new MavenRunnerParameters(
-			true, projectDir, goals, enabledProfiles, disabledProfiles);
+			true, projectDir, pomFile.getName(), goals, enabledProfiles, disabledProfiles);
 
-		MavenRunConfigurationType.runConfiguration(project, params, null);
+		if (params == null) {
+			return null;
+		}
 
-		return true;
-	}
+		RunnerAndConfigurationSettings configuration = MavenRunConfigurationType.createRunnerAndConfigurationSettings(
+			null, null, params, project);
 
-	public boolean isEnabledAndVisible(AnActionEvent e) {
-		return checkOrPerform(e.getDataContext(), false);
+		ProgramRunner runner = DefaultJavaProgramRunner.getInstance();
+		Executor executor = DefaultRunExecutor.getRunExecutorInstance();
+
+		try {
+			runner.execute(new ExecutionEnvironment(executor, runner, configuration, project), null);
+		}
+		catch (ExecutionException ee) {
+			MavenUtil.showError(project, "Failed to execute Maven goal", ee);
+		}
+
+		return configuration;
 	}
 
 	@Override
-	public void update(AnActionEvent event) {
-		super.update(event);
+	protected void handleProcessStarted(
+		@NotNull String executorIdLocal, @NotNull ExecutionEnvironment environmentLocal,
+		@NotNull ProcessHandler handler) {
+	}
 
-		Presentation eventPresentation = event.getPresentation();
-
-		eventPresentation.setEnabledAndVisible(isEnabledAndVisible(event));
+	@Override
+	protected void handleProcessTerminated(
+		@NotNull String executorIdLocal, @NotNull ExecutionEnvironment environmentLocal,
+		@NotNull ProcessHandler handler) {
 	}
 
 	protected List<String> goals;
