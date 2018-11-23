@@ -40,6 +40,7 @@
 				<li>more support for model-hints xml files(community contribution)</li>
 				<li>bug fixes</li>
 				<li>code completion for java bean for Liferay Taglib(community contribution)</li>
+				<li>add new module ext wizard</li>
 			</ul>
 			<li>1.1.1</li>
 			<ul>
