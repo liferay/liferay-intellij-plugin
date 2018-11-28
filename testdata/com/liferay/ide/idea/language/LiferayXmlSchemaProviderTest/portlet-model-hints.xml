@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<model-hints>
+    <model name="com.liferay.journal.model.JournalArticle">
+        <field name="uuid" type="String" />
+        <field name="id" type="long" />
+        <field name="urlTitle" type="String">
+            <hint name="<caret>">150</hint>
+        </field>
+    </model>
+</model-hints>
