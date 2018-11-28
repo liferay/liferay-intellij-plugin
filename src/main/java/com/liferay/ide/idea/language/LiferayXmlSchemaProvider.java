@@ -49,7 +49,9 @@ public class LiferayXmlSchemaProvider extends XmlSchemaProvider {
 
 		String fileName = psiFile.getName();
 
-		if ("portlet-model-hints.xml".equals(fileName)) {
+		if ("portal-model-hints.xml".equals(fileName) || "ext-model-hints.xml".equals(fileName) ||
+			"portlet-model-hints.xml".equals(fileName) || "portlet-model-hints-ext.xml".equals(fileName)) {
+
 			schemaFileUrl = LiferayXmlSchemaProvider.class.getResource(
 				"/definitions/xsd/liferay-portlet-model-hints_7_0_0.xsd");
 		}
@@ -97,7 +99,9 @@ public class LiferayXmlSchemaProvider extends XmlSchemaProvider {
 
 		String fileName = psiFile.getName();
 
-		if ("portlet-model-hints.xml".equals(fileName)) {
+		if ("portal-model-hints.xml".equals(fileName) || "ext-model-hints.xml".equals(fileName) ||
+			"portlet-model-hints.xml".equals(fileName) || "portlet-model-hints-ext.xml".equals(fileName)) {
+
 			return true;
 		}
 
