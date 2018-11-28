@@ -23,8 +23,11 @@
                     <xs:restriction base="xs:token">
                         <xs:enumeration value="auto-escape"/>
                         <xs:enumeration value="auto-size"/>
+                        <xs:enumeration value="autoSize"/>
+                        <xs:enumeration value="check-tab"/>
                         <xs:enumeration value="day-nullable"/>
                         <xs:enumeration value="default-month-delta"/>
+                        <xs:enumeration value="default-year-delta"/>
                         <xs:enumeration value="default-value"/>
                         <xs:enumeration value="display-height"/>
                         <xs:enumeration value="display-width"/>
