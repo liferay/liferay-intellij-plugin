@@ -53,9 +53,10 @@ public class LiferayTaglibCSSClassAttributeReferenceContributor extends PsiRefer
 	}
 
 	private static final List<String> _attributeNames = Arrays.asList(
-		"cssClass", "iconCssClass", "imageCssClass", "imageCSSClass", "linkCssClass", "triggerCssClass",
-		"elementClasses", "draggableImage", "emptyResultsMessageCssClass", "userIconCssClass", "helpTextCssClass",
-		"wrapperCssClass", "anchorCssClass", "userIconCssClass", "checkboxCSSClass");
+		"anchorCssClass", "checkboxCSSClass", "class", "cssClass", "descriptionCSSClass", "draggableImage",
+		"elementClasses", "emptyResultsMessageCssClass", "helpTextCssClass", "icon", "iconCssClass", "imageCssClass",
+		"imageCSSClass", "labelCSSClass", "linkCssClass", "linkClass", "symbol", "triggerCssClass", "userIconCssClass",
+		"wrapperCssClass");
 
 	private static Map<String, Collection<SimpleImmutableEntry<String, String>>> _taglibAttributes =
 		new HashMap<String, Collection<SimpleImmutableEntry<String, String>>>() {
