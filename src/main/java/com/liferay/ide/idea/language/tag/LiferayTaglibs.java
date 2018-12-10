@@ -19,6 +19,8 @@ package com.liferay.ide.idea.language.tag;
  */
 public class LiferayTaglibs {
 
+	public static final String TAGLIB_URI_LIFERAY_ADAPTIVE_MEDIA_IMAGE = "http://liferay.com/tld/adaptive-media-image";
+
 	public static final String TAGLIB_URI_LIFERAY_ASSET = "http://liferay.com/tld/asset";
 
 	public static final String TAGLIB_URI_LIFERAY_AUI = "http://liferay.com/tld/aui";
@@ -27,6 +29,10 @@ public class LiferayTaglibs {
 
 	public static final String TAGLIB_URI_LIFERAY_CLAY = "http://liferay.com/tld/clay";
 
+	public static final String TAGLIB_URI_LIFERAY_DDM = "http://liferay.com/tld/ddm";
+
+	public static final String TAGLIB_URI_LIFERAY_EDITOR = "http://liferay.com/tld/editor";
+
 	public static final String TAGLIB_URI_LIFERAY_EXPANDO = "http://liferay.com/tld/expando";
 
 	public static final String TAGLIB_URI_LIFERAY_FLAGS = "http://liferay.com/tld/flags";
@@ -34,6 +40,8 @@ public class LiferayTaglibs {
 	public static final String TAGLIB_URI_LIFERAY_FRONTEND = "http://liferay.com/tld/frontend";
 
 	public static final String TAGLIB_URI_LIFERAY_ITEM_SELECTOR = "http://liferay.com/tld/item-selector";
+
+	public static final String TAGLIB_URI_LIFERAY_STAGING = "http://liferay.com/tld/staging";
 
 	public static final String TAGLIB_URI_LIFERAY_TRASH = "http://liferay.com/tld/trash";
 

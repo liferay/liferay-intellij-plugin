@@ -62,6 +62,10 @@ public class LiferayTaglibCSSClassAttributeReferenceContributor extends PsiRefer
 		new HashMap<String, Collection<SimpleImmutableEntry<String, String>>>() {
 			{
 				put(
+					LiferayTaglibs.TAGLIB_URI_LIFERAY_ADAPTIVE_MEDIA_IMAGE,
+					Arrays.asList(new SimpleImmutableEntry<>("img", "class")));
+
+				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI,
 					Arrays.asList(
 						new SimpleImmutableEntry<>("a", "cssClass"), new SimpleImmutableEntry<>("a", "iconCssClass"),
@@ -112,6 +116,88 @@ public class LiferayTaglibCSSClassAttributeReferenceContributor extends PsiRefer
 						new SimpleImmutableEntry<>("select", "wrapperCssClass")));
 
 				put(
+					LiferayTaglibs.TAGLIB_URI_LIFERAY_CLAY,
+					Arrays.asList(
+						new SimpleImmutableEntry<>("alert", "elementClasses"),
+						new SimpleImmutableEntry<>("badge", "elementClasses"),
+						new SimpleImmutableEntry<>("button", "elementClasses"),
+						new SimpleImmutableEntry<>("button", "icon"),
+						new SimpleImmutableEntry<>("checkbox", "elementClasses"),
+						new SimpleImmutableEntry<>("dropdown-actions", "elementClasses"),
+						new SimpleImmutableEntry<>("dropdown-actions", "triggerCssClasses"),
+						new SimpleImmutableEntry<>("dropdown-menu", "elementClasses"),
+						new SimpleImmutableEntry<>("dropdown-menu", "icon"),
+						new SimpleImmutableEntry<>("dropdown-menu", "triggerCssClasses"),
+						new SimpleImmutableEntry<>("file-card", "elementClasses"),
+						new SimpleImmutableEntry<>("file-card", "icon"),
+						new SimpleImmutableEntry<>("horizontal-card", "elementClasses"),
+						new SimpleImmutableEntry<>("horizontal-card", "icon"),
+						new SimpleImmutableEntry<>("icon", "elementClasses"),
+						new SimpleImmutableEntry<>("icon", "symbol"),
+						new SimpleImmutableEntry<>("image-card", "elementClasses"),
+						new SimpleImmutableEntry<>("image-card", "icon"),
+						new SimpleImmutableEntry<>("label", "elementClasses"),
+						new SimpleImmutableEntry<>("link", "elementClasses"),
+						new SimpleImmutableEntry<>("link", "icon"),
+						new SimpleImmutableEntry<>("management-toolbar", "elementClasses"),
+						new SimpleImmutableEntry<>("navigation-bar", "elementClasses"),
+						new SimpleImmutableEntry<>("progressbar", "elementClasses"),
+						new SimpleImmutableEntry<>("radio", "elementClasses"),
+						new SimpleImmutableEntry<>("select", "elementClasses"),
+						new SimpleImmutableEntry<>("sticker", "elementClasses"),
+						new SimpleImmutableEntry<>("sticker", "icon"),
+						new SimpleImmutableEntry<>("stripe", "elementClasses"),
+						new SimpleImmutableEntry<>("user-card", "elementClasses"),
+						new SimpleImmutableEntry<>("user-card", "icon")));
+
+				put(
+					LiferayTaglibs.TAGLIB_URI_LIFERAY_DDM,
+					Arrays.asList(new SimpleImmutableEntry<>("template-selector", "icon")));
+
+				put(
+					LiferayTaglibs.TAGLIB_URI_LIFERAY_EDITOR,
+					Arrays.asList(new SimpleImmutableEntry<>("editor", "cssClass")));
+
+				put(
+					LiferayTaglibs.TAGLIB_URI_LIFERAY_FRONTEND,
+					Arrays.asList(
+						new SimpleImmutableEntry<>("horizontal-card", "checkboxCSSClass"),
+						new SimpleImmutableEntry<>("horizontal-card", "cssClass"),
+						new SimpleImmutableEntry<>("icon-vertical-card", "checkboxCSSClass"),
+						new SimpleImmutableEntry<>("icon-vertical-card", "cssClass"),
+						new SimpleImmutableEntry<>("image-card", "cssClass"),
+						new SimpleImmutableEntry<>("image-card", "imageCssClass"),
+						new SimpleImmutableEntry<>("info-bar-button", "cssClass"),
+						new SimpleImmutableEntry<>("info-bar-button", "iconCssClass"),
+						new SimpleImmutableEntry<>("info-bar-sidenav-toggler-button", "cssClass"),
+						new SimpleImmutableEntry<>("info-bar-sidenav-toggler-button", "iconCssClass"),
+						new SimpleImmutableEntry<>("management-bar-button", "cssClass"),
+						new SimpleImmutableEntry<>("management-bar-button", "iconCssClass"),
+						new SimpleImmutableEntry<>("management-bar-sidenav-toggler-button", "cssClass"),
+						new SimpleImmutableEntry<>("management-bar-sidenav-toggler-button", "iconCssClass"),
+						new SimpleImmutableEntry<>("translation-manager", "cssClass"),
+						new SimpleImmutableEntry<>("user-vertical-card", "checkboxCSSClass"),
+						new SimpleImmutableEntry<>("user-vertical-card", "cssClass"),
+						new SimpleImmutableEntry<>("vertical-card", "checkboxCSSClass"),
+						new SimpleImmutableEntry<>("vertical-card", "cssClass"),
+						new SimpleImmutableEntry<>("vertical-card", "imageCSSClass"),
+						new SimpleImmutableEntry<>("vertical-card-small-image", "cssClass")));
+
+				put(
+					LiferayTaglibs.TAGLIB_URI_LIFERAY_ITEM_SELECTOR,
+					Arrays.asList(new SimpleImmutableEntry<>("image-selector", "draggableImage")));
+
+				put(
+					LiferayTaglibs.TAGLIB_URI_LIFERAY_STAGING,
+					Arrays.asList(
+						new SimpleImmutableEntry<>("menu", "cssClass"),
+						new SimpleImmutableEntry<>("permissions", "descriptionCSSClass"),
+						new SimpleImmutableEntry<>("permissions", "labelCSSClass"),
+						new SimpleImmutableEntry<>("process-message-task-details", "linkClass"),
+						new SimpleImmutableEntry<>("process-status", "linkClass"),
+						new SimpleImmutableEntry<>("status", "cssClass")));
+
+				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_UI,
 					Arrays.asList(
 						new SimpleImmutableEntry<>("alert", "cssClass"),
@@ -160,35 +246,6 @@ public class LiferayTaglibCSSClassAttributeReferenceContributor extends PsiRefer
 						new SimpleImmutableEntry<>("user-display", "userIconCssClass"),
 						new SimpleImmutableEntry<>("user-portrait", "cssClass"),
 						new SimpleImmutableEntry<>("user-portrait", "imageCssClass")));
-
-				put(
-					LiferayTaglibs.TAGLIB_URI_LIFERAY_FRONTEND,
-					Arrays.asList(
-						new SimpleImmutableEntry<>("horizontal-card", "checkboxCSSClass"),
-						new SimpleImmutableEntry<>("horizontal-card", "cssClass"),
-						new SimpleImmutableEntry<>("icon-vertical-card", "checkboxCSSClass"),
-						new SimpleImmutableEntry<>("icon-vertical-card", "cssClass"),
-						new SimpleImmutableEntry<>("image-card", "cssClass"),
-						new SimpleImmutableEntry<>("image-card", "imageCssClass"),
-						new SimpleImmutableEntry<>("info-bar-button", "cssClass"),
-						new SimpleImmutableEntry<>("info-bar-button", "iconCssClass"),
-						new SimpleImmutableEntry<>("info-bar-sidenav-toggler-button", "cssClass"),
-						new SimpleImmutableEntry<>("info-bar-sidenav-toggler-button", "iconCssClass"),
-						new SimpleImmutableEntry<>("management-bar-button", "cssClass"),
-						new SimpleImmutableEntry<>("management-bar-button", "iconCssClass"),
-						new SimpleImmutableEntry<>("management-bar-sidenav-toggler-button", "cssClass"),
-						new SimpleImmutableEntry<>("management-bar-sidenav-toggler-button", "iconCssClass"),
-						new SimpleImmutableEntry<>("translation-manager", "cssClass"),
-						new SimpleImmutableEntry<>("user-vertical-card", "checkboxCSSClass"),
-						new SimpleImmutableEntry<>("user-vertical-card", "cssClass"),
-						new SimpleImmutableEntry<>("vertical-card", "checkboxCSSClass"),
-						new SimpleImmutableEntry<>("vertical-card", "cssClass"),
-						new SimpleImmutableEntry<>("vertical-card", "imageCSSClass"),
-						new SimpleImmutableEntry<>("vertical-card-small-image", "cssClass")));
-
-				put(
-					LiferayTaglibs.TAGLIB_URI_LIFERAY_ITEM_SELECTOR,
-					Arrays.asList(new SimpleImmutableEntry<>("image-selector", "draggableImage")));
 			}
 		};
 
