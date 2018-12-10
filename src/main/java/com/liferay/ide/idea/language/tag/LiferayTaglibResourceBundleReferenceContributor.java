@@ -64,6 +64,104 @@ public class LiferayTaglibResourceBundleReferenceContributor extends PsiReferenc
 		new HashMap<String, Collection<SimpleImmutableEntry<String, String>>>() {
 			{
 				put(
+					LiferayTaglibs.TAGLIB_URI_LIFERAY_ASSET,
+					Arrays.asList(
+						new SimpleImmutableEntry<>("asset-addon-entry-selector", "title"),
+						new SimpleImmutableEntry<>("asset-metadata", "metadataField"),
+						new SimpleImmutableEntry<>("asset-tags-summary", "message")));
+
+				put(
+					LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI,
+					Arrays.asList(
+						new SimpleImmutableEntry<>("a", "title"), new SimpleImmutableEntry<>("a", "label"),
+						new SimpleImmutableEntry<>("button", "value"),
+						new SimpleImmutableEntry<>("field-wrapper", "helpMessage"),
+						new SimpleImmutableEntry<>("field-wrapper", "label"),
+						new SimpleImmutableEntry<>("fieldset", "helpMessage"),
+						new SimpleImmutableEntry<>("fieldset", "label"), new SimpleImmutableEntry<>("icon", "label"),
+						new SimpleImmutableEntry<>("input", "helpMessage"),
+						new SimpleImmutableEntry<>("input", "label"), new SimpleImmutableEntry<>("input", "labelOff"),
+						new SimpleImmutableEntry<>("input", "labelOn"), new SimpleImmutableEntry<>("input", "title"),
+						new SimpleImmutableEntry<>("input", "placeholder"),
+						new SimpleImmutableEntry<>("input", "prefix"), new SimpleImmutableEntry<>("input", "suffix"),
+						new SimpleImmutableEntry<>("nav-bar", "selectedItemName"),
+						new SimpleImmutableEntry<>("nav-item", "label"),
+						new SimpleImmutableEntry<>("nav-item", "title"), new SimpleImmutableEntry<>("option", "label"),
+						new SimpleImmutableEntry<>("panel", "label"), new SimpleImmutableEntry<>("select", "label"),
+						new SimpleImmutableEntry<>("select", "helpMessage"),
+						new SimpleImmutableEntry<>("select", "prefix"), new SimpleImmutableEntry<>("select", "suffix"),
+						new SimpleImmutableEntry<>("select", "title"),
+						new SimpleImmutableEntry<>("validator", "errorMessage"),
+						new SimpleImmutableEntry<>("workflow-status", "helpMessage"),
+						new SimpleImmutableEntry<>("workflow-status", "statusMessage")));
+
+				put(
+					LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI_OLD,
+					Arrays.asList(
+						new SimpleImmutableEntry<>("a", "title"), new SimpleImmutableEntry<>("a", "label"),
+						new SimpleImmutableEntry<>("button", "value"),
+						new SimpleImmutableEntry<>("field-wrapper", "helpMessage"),
+						new SimpleImmutableEntry<>("field-wrapper", "label"),
+						new SimpleImmutableEntry<>("fieldset", "helpMessage"),
+						new SimpleImmutableEntry<>("fieldset", "label"), new SimpleImmutableEntry<>("icon", "label"),
+						new SimpleImmutableEntry<>("input", "helpMessage"),
+						new SimpleImmutableEntry<>("input", "label"), new SimpleImmutableEntry<>("input", "labelOff"),
+						new SimpleImmutableEntry<>("input", "labelOn"), new SimpleImmutableEntry<>("input", "title"),
+						new SimpleImmutableEntry<>("input", "placeholder"),
+						new SimpleImmutableEntry<>("input", "prefix"), new SimpleImmutableEntry<>("input", "suffix"),
+						new SimpleImmutableEntry<>("nav-bar", "selectedItemName"),
+						new SimpleImmutableEntry<>("nav-item", "label"),
+						new SimpleImmutableEntry<>("nav-item", "title"), new SimpleImmutableEntry<>("option", "label"),
+						new SimpleImmutableEntry<>("panel", "label"), new SimpleImmutableEntry<>("select", "label"),
+						new SimpleImmutableEntry<>("select", "helpMessage"),
+						new SimpleImmutableEntry<>("select", "prefix"), new SimpleImmutableEntry<>("select", "suffix"),
+						new SimpleImmutableEntry<>("select", "title"),
+						new SimpleImmutableEntry<>("validator", "errorMessage"),
+						new SimpleImmutableEntry<>("workflow-status", "helpMessage"),
+						new SimpleImmutableEntry<>("workflow-status", "statusMessage")));
+
+				put(
+					LiferayTaglibs.TAGLIB_URI_LIFERAY_DDM,
+					Arrays.asList(new SimpleImmutableEntry<>("template-selector", "label")));
+
+				put(
+					LiferayTaglibs.TAGLIB_URI_LIFERAY_EXPANDO,
+					Arrays.asList(new SimpleImmutableEntry<>("custom-attribute", "name")));
+
+				put(
+					LiferayTaglibs.TAGLIB_URI_LIFERAY_FRONTEND,
+					Arrays.asList(
+						new SimpleImmutableEntry<>("email-notification-settings", "bodyLabel"),
+						new SimpleImmutableEntry<>("email-notification-settings", "helpMessage"),
+						new SimpleImmutableEntry<>("management-bar-button", "label"),
+						new SimpleImmutableEntry<>("management-bar-filter", "label")));
+
+				put(
+					LiferayTaglibs.TAGLIB_URI_LIFERAY_SITE,
+					Arrays.asList(new SimpleImmutableEntry<>("site-browser", "emptyResultsMessage")));
+
+				put(
+					LiferayTaglibs.TAGLIB_URI_LIFERAY_STAGING,
+					Arrays.asList(
+						new SimpleImmutableEntry<>("checkbox", "description"),
+						new SimpleImmutableEntry<>("checkbox", "label"),
+						new SimpleImmutableEntry<>("checkbox", "popover"),
+						new SimpleImmutableEntry<>("checkbox", "suggestion"),
+						new SimpleImmutableEntry<>("checkbox", "warning"),
+						new SimpleImmutableEntry<>("popover", "text"), new SimpleImmutableEntry<>("popover", "title"),
+						new SimpleImmutableEntry<>("process-date", "labelKey"),
+						new SimpleImmutableEntry<>("process-list", "emptyResultsMessage"),
+						new SimpleImmutableEntry<>("radio", "description"),
+						new SimpleImmutableEntry<>("radio", "label"), new SimpleImmutableEntry<>("radio", "popover")));
+
+				put(
+					LiferayTaglibs.TAGLIB_URI_LIFERAY_TRASH,
+					Arrays.asList(
+						new SimpleImmutableEntry<>("empty", "confirmMessage"),
+						new SimpleImmutableEntry<>("empty", "emptyMessage"),
+						new SimpleImmutableEntry<>("empty", "infoMessage")));
+
+				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_UI,
 					Arrays.asList(
 						new SimpleImmutableEntry<>("app-view-search-entry", "containerType"),
@@ -103,80 +201,6 @@ public class LiferayTaglibResourceBundleReferenceContributor extends PsiReferenc
 						new SimpleImmutableEntry<>("search-toggle", "buttonLabel"),
 						new SimpleImmutableEntry<>("success", "message"), new SimpleImmutableEntry<>("tabs", "names"),
 						new SimpleImmutableEntry<>("upload-progress", "message")));
-
-				put(
-					LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI,
-					Arrays.asList(
-						new SimpleImmutableEntry<>("a", "title"), new SimpleImmutableEntry<>("a", "label"),
-						new SimpleImmutableEntry<>("button", "value"),
-						new SimpleImmutableEntry<>("field-wrapper", "helpMessage"),
-						new SimpleImmutableEntry<>("field-wrapper", "label"),
-						new SimpleImmutableEntry<>("fieldset", "helpMessage"),
-						new SimpleImmutableEntry<>("fieldset", "label"), new SimpleImmutableEntry<>("icon", "label"),
-						new SimpleImmutableEntry<>("input", "helpMessage"),
-						new SimpleImmutableEntry<>("input", "label"), new SimpleImmutableEntry<>("input", "labelOff"),
-						new SimpleImmutableEntry<>("input", "labelOn"), new SimpleImmutableEntry<>("input", "title"),
-						new SimpleImmutableEntry<>("input", "placeholder"),
-						new SimpleImmutableEntry<>("input", "prefix"), new SimpleImmutableEntry<>("input", "suffix"),
-						new SimpleImmutableEntry<>("nav-bar", "selectedItemName"),
-						new SimpleImmutableEntry<>("nav-item", "label"),
-						new SimpleImmutableEntry<>("nav-item", "title"), new SimpleImmutableEntry<>("option", "label"),
-						new SimpleImmutableEntry<>("panel", "label"), new SimpleImmutableEntry<>("select", "label"),
-						new SimpleImmutableEntry<>("select", "helpMessage"),
-						new SimpleImmutableEntry<>("select", "prefix"), new SimpleImmutableEntry<>("select", "suffix"),
-						new SimpleImmutableEntry<>("select", "title"),
-						new SimpleImmutableEntry<>("validator", "errorMessage"),
-						new SimpleImmutableEntry<>("workflow-status", "helpMessage"),
-						new SimpleImmutableEntry<>("workflow-status", "statusMessage")));
-				put(
-					LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI_OLD,
-					Arrays.asList(
-						new SimpleImmutableEntry<>("a", "title"), new SimpleImmutableEntry<>("a", "label"),
-						new SimpleImmutableEntry<>("button", "value"),
-						new SimpleImmutableEntry<>("field-wrapper", "helpMessage"),
-						new SimpleImmutableEntry<>("field-wrapper", "label"),
-						new SimpleImmutableEntry<>("fieldset", "helpMessage"),
-						new SimpleImmutableEntry<>("fieldset", "label"), new SimpleImmutableEntry<>("icon", "label"),
-						new SimpleImmutableEntry<>("input", "helpMessage"),
-						new SimpleImmutableEntry<>("input", "label"), new SimpleImmutableEntry<>("input", "labelOff"),
-						new SimpleImmutableEntry<>("input", "labelOn"), new SimpleImmutableEntry<>("input", "title"),
-						new SimpleImmutableEntry<>("input", "placeholder"),
-						new SimpleImmutableEntry<>("input", "prefix"), new SimpleImmutableEntry<>("input", "suffix"),
-						new SimpleImmutableEntry<>("nav-bar", "selectedItemName"),
-						new SimpleImmutableEntry<>("nav-item", "label"),
-						new SimpleImmutableEntry<>("nav-item", "title"), new SimpleImmutableEntry<>("option", "label"),
-						new SimpleImmutableEntry<>("panel", "label"), new SimpleImmutableEntry<>("select", "label"),
-						new SimpleImmutableEntry<>("select", "helpMessage"),
-						new SimpleImmutableEntry<>("select", "prefix"), new SimpleImmutableEntry<>("select", "suffix"),
-						new SimpleImmutableEntry<>("select", "title"),
-						new SimpleImmutableEntry<>("validator", "errorMessage"),
-						new SimpleImmutableEntry<>("workflow-status", "helpMessage"),
-						new SimpleImmutableEntry<>("workflow-status", "statusMessage")));
-				put(
-					LiferayTaglibs.TAGLIB_URI_LIFERAY_ASSET,
-					Arrays.asList(
-						new SimpleImmutableEntry<>("asset-addon-entry-selector", "title"),
-						new SimpleImmutableEntry<>("asset-metadata", "metadataField"),
-						new SimpleImmutableEntry<>("asset-tags-summary", "message")));
-
-				put(
-					LiferayTaglibs.TAGLIB_URI_LIFERAY_EXPANDO,
-					Arrays.asList(new SimpleImmutableEntry<>("custom-attribute", "name")));
-
-				put(
-					LiferayTaglibs.TAGLIB_URI_LIFERAY_FRONTEND,
-					Arrays.asList(
-						new SimpleImmutableEntry<>("email-notification-settings", "bodyLabel"),
-						new SimpleImmutableEntry<>("email-notification-settings", "helpMessage"),
-						new SimpleImmutableEntry<>("management-bar-button", "label"),
-						new SimpleImmutableEntry<>("management-bar-filter", "label")));
-
-				put(
-					LiferayTaglibs.TAGLIB_URI_LIFERAY_TRASH,
-					Arrays.asList(
-						new SimpleImmutableEntry<>("empty", "confirmMessage"),
-						new SimpleImmutableEntry<>("empty", "emptyMessage"),
-						new SimpleImmutableEntry<>("empty", "infoMessage")));
 			}
 		};
 

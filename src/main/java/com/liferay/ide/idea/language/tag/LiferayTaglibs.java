@@ -41,6 +41,8 @@ public class LiferayTaglibs {
 
 	public static final String TAGLIB_URI_LIFERAY_ITEM_SELECTOR = "http://liferay.com/tld/item-selector";
 
+	public static final String TAGLIB_URI_LIFERAY_SITE = "http://liferay.com/tld/site";
+
 	public static final String TAGLIB_URI_LIFERAY_STAGING = "http://liferay.com/tld/staging";
 
 	public static final String TAGLIB_URI_LIFERAY_TRASH = "http://liferay.com/tld/trash";
