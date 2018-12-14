@@ -109,18 +109,12 @@ public abstract class AbstractLiferayAction extends AnAction {
 		return roots[0];
 	}
 
-	protected abstract void handleProcessStarted(
-		@NotNull String executorIdLocal, @NotNull ExecutionEnvironment environmentLocal,
-		@NotNull ProcessHandler handler);
+	protected void handleProcessStarted() {
+		_refreshProjectView();
+	}
 
-	protected abstract void handleProcessTerminated(
-		@NotNull String executorIdLocal, @NotNull ExecutionEnvironment environmentLocal,
-		@NotNull ProcessHandler handler);
-
-	protected void refreshProjectView() {
-		ProjectView projectView = ProjectView.getInstance(project);
-
-		projectView.refresh();
+	protected void handleProcessTerminated() {
+		_refreshProjectView();
 	}
 
 	protected Project project;
@@ -153,17 +147,23 @@ public abstract class AbstractLiferayAction extends AnAction {
 					@NotNull String executorIdLocal, @NotNull ExecutionEnvironment environmentLocal,
 					@NotNull ProcessHandler handler) {
 
-					handleProcessStarted(executorIdLocal, environmentLocal, handler);
+					handleProcessStarted();
 				}
 
 				public void processTerminated(
 					@NotNull String executorIdLocal, @NotNull ExecutionEnvironment environmentLocal,
 					@NotNull ProcessHandler handler, int exitCode) {
 
-					handleProcessTerminated(executorIdLocal, environmentLocal, handler);
+					handleProcessTerminated();
 				}
 
 			});
+	}
+
+	private void _refreshProjectView() {
+		ProjectView projectView = ProjectView.getInstance(project);
+
+		projectView.refresh();
 	}
 
 }

@@ -15,15 +15,10 @@
 package com.liferay.ide.idea.ui.actions;
 
 import com.intellij.execution.RunnerAndConfigurationSettings;
-import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.executors.DefaultRunExecutor;
-import com.intellij.execution.process.ProcessHandler;
-import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
 import com.intellij.openapi.externalSystem.model.execution.ExternalTaskExecutionInfo;
-import com.intellij.openapi.externalSystem.service.execution.ExternalSystemRunConfiguration;
 import com.intellij.openapi.externalSystem.service.notification.ExternalSystemNotificationManager;
 import com.intellij.openapi.externalSystem.service.notification.NotificationCategory;
 import com.intellij.openapi.externalSystem.service.notification.NotificationData;
@@ -32,6 +27,7 @@ import com.intellij.openapi.externalSystem.task.TaskCallback;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.execution.ParametersListUtil;
 
 import com.liferay.ide.idea.util.CoreUtil;
@@ -72,37 +68,16 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 		return false;
 	}
 
-	protected boolean checkProcess(
-		ExternalTaskExecutionInfo taskExecutionInfo, @NotNull String executorIdLocal,
-		@NotNull ExecutionEnvironment environmentLocal) {
+	@Override
+	public boolean isEnabledAndVisible(AnActionEvent event) {
+		Project project = event.getProject();
 
-		RunnerAndConfigurationSettings runAndConfigurationSettings =
-			environmentLocal.getRunnerAndConfigurationSettings();
+		VirtualFile baseDir = project.getBaseDir();
 
-		RunConfiguration runConfiguration = runAndConfigurationSettings.getConfiguration();
+		VirtualFile gradleFile = baseDir.findChild("build.gradle");
 
-		if (runConfiguration instanceof ExternalSystemRunConfiguration) {
-			ExternalSystemRunConfiguration runnerExternalSystemRunConfiguration =
-				(ExternalSystemRunConfiguration)runAndConfigurationSettings.getConfiguration();
-
-			ExternalSystemTaskExecutionSettings runningTaskSettings =
-				runnerExternalSystemRunConfiguration.getSettings();
-
-			ExternalSystemTaskExecutionSettings taskRunnerSettings = taskExecutionInfo.getSettings();
-
-			String externalPath = taskRunnerSettings.getExternalProjectPath();
-			List<String> taskNames = taskRunnerSettings.getTaskNames();
-			ProjectSystemId externalSystemId = taskRunnerSettings.getExternalSystemId();
-
-			String executorId = taskExecutionInfo.getExecutorId();
-
-			if (externalPath.equals(runningTaskSettings.getExternalProjectPath()) &&
-				taskNames.equals(runningTaskSettings.getTaskNames()) &&
-				externalSystemId.equals(runningTaskSettings.getExternalSystemId()) &&
-				executorId.equals(executorIdLocal)) {
-
-				return true;
-			}
+		if (baseDir.equals(getVirtualFile(event)) && (gradleFile != null)) {
+			return true;
 		}
 
 		return false;
@@ -117,14 +92,14 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 			return null;
 		}
 
-		_taskExecutionInfo = _buildTaskExecutionInfo(project, workingDirectory, _taskName);
+		ExternalTaskExecutionInfo taskExecutionInfo = _buildTaskExecutionInfo(project, workingDirectory, _taskName);
 
-		if (_taskExecutionInfo == null) {
+		if (taskExecutionInfo == null) {
 			return null;
 		}
 
 		ExternalSystemUtil.runTask(
-			_taskExecutionInfo.getSettings(), _taskExecutionInfo.getExecutorId(), project, GradleConstants.SYSTEM_ID,
+			taskExecutionInfo.getSettings(), taskExecutionInfo.getExecutorId(), project, GradleConstants.SYSTEM_ID,
 			new TaskCallback() {
 
 				@Override
@@ -142,36 +117,13 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 
 		RunnerAndConfigurationSettings configuration =
 			ExternalSystemUtil.createExternalSystemRunnerAndConfigurationSettings(
-				_taskExecutionInfo.getSettings(), project, GradleConstants.SYSTEM_ID);
+				taskExecutionInfo.getSettings(), project, GradleConstants.SYSTEM_ID);
 
 		if (configuration == null) {
 			return null;
 		}
 
 		return configuration;
-	}
-
-	protected void handleProcessStarted(
-		@NotNull String executorIdLocal, @NotNull ExecutionEnvironment environmentLocal,
-		@NotNull ProcessHandler handler) {
-
-		if (!checkProcess(_taskExecutionInfo, executorIdLocal, environmentLocal)) {
-			return;
-		}
-
-		refreshProjectView();
-	}
-
-	@Override
-	protected void handleProcessTerminated(
-		@NotNull String executorIdLocal, @NotNull ExecutionEnvironment environmentLocal,
-		@NotNull ProcessHandler handler) {
-
-		if (!checkProcess(_taskExecutionInfo, executorIdLocal, environmentLocal)) {
-			return;
-		}
-
-		refreshProjectView();
 	}
 
 	private ExternalTaskExecutionInfo _buildTaskExecutionInfo(
@@ -238,7 +190,6 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 		}
 	}
 
-	private ExternalTaskExecutionInfo _taskExecutionInfo;
 	private final String _taskName;
 
 }

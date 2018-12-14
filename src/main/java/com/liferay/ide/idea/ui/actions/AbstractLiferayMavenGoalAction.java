@@ -19,7 +19,6 @@ import com.intellij.execution.Executor;
 import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.executors.DefaultRunExecutor;
 import com.intellij.execution.impl.DefaultJavaProgramRunner;
-import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -32,7 +31,6 @@ import java.util.List;
 
 import javax.swing.Icon;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.execution.MavenRunConfigurationType;
 import org.jetbrains.idea.maven.execution.MavenRunnerParameters;
@@ -50,6 +48,21 @@ public abstract class AbstractLiferayMavenGoalAction extends AbstractLiferayActi
 
 	public AbstractLiferayMavenGoalAction(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
 		super(text, description, icon);
+	}
+
+	@Override
+	public boolean isEnabledAndVisible(AnActionEvent event) {
+		Project project = event.getProject();
+
+		VirtualFile baseDir = project.getBaseDir();
+
+		VirtualFile pomFile = baseDir.findChild("pom.xml");
+
+		if (baseDir.equals(getVirtualFile(event)) && (pomFile != null)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override
@@ -100,18 +113,6 @@ public abstract class AbstractLiferayMavenGoalAction extends AbstractLiferayActi
 		}
 
 		return configuration;
-	}
-
-	@Override
-	protected void handleProcessStarted(
-		@NotNull String executorIdLocal, @NotNull ExecutionEnvironment environmentLocal,
-		@NotNull ProcessHandler handler) {
-	}
-
-	@Override
-	protected void handleProcessTerminated(
-		@NotNull String executorIdLocal, @NotNull ExecutionEnvironment environmentLocal,
-		@NotNull ProcessHandler handler) {
 	}
 
 	protected List<String> goals;
