@@ -39,6 +39,7 @@
 				<li>more OSGi component properties support(community contribution)</li>
 				<li>more support for model-hints xml files(community contribution)</li>
 				<li>bug fixes</li>
+				<li>code completion for java bean for Liferay Taglib(community contribution)</li>
 			</ul>
 			<li>1.1.1</li>
 			<ul>
