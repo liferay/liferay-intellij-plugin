@@ -19,6 +19,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.CharsetToolkit;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.terminal.JBTerminalWidget;
 import com.intellij.util.EnvironmentUtil;
 
 import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
@@ -34,7 +35,6 @@ import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.plugins.terminal.JBTabbedTerminalWidget;
 import org.jetbrains.plugins.terminal.LocalTerminalDirectRunner;
 import org.jetbrains.plugins.terminal.TerminalProjectOptionsProvider;
 
@@ -48,13 +48,13 @@ public class GogoShellLocalRunner extends LocalTerminalDirectRunner {
 	}
 
 	@Override
-	public JBTabbedTerminalWidget createTerminalWidget(Disposable parent) {
-		_terminalWidget = super.createTerminalWidget(parent);
+	public JBTerminalWidget createTerminalWidget(Disposable parent, @Nullable VirtualFile currentWorkingDirectory) {
+		_terminalWidget = super.createTerminalWidget(parent, currentWorkingDirectory);
 
 		return _terminalWidget;
 	}
 
-	public JBTabbedTerminalWidget getTerminalWidget() {
+	public JBTerminalWidget getTerminalWidget() {
 		return _terminalWidget;
 	}
 
@@ -127,6 +127,6 @@ public class GogoShellLocalRunner extends LocalTerminalDirectRunner {
 		return port;
 	}
 
-	private JBTabbedTerminalWidget _terminalWidget;
+	private JBTerminalWidget _terminalWidget;
 
 }

@@ -28,6 +28,7 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
+import com.intellij.terminal.JBTerminalWidget;
 import com.intellij.ui.awt.RelativePoint;
 import com.intellij.ui.awt.RelativeRectangle;
 import com.intellij.ui.content.Content;
@@ -36,11 +37,8 @@ import com.intellij.ui.content.ContentManager;
 import com.intellij.ui.docking.DockContainer;
 import com.intellij.ui.docking.DockManager;
 import com.intellij.ui.docking.DockableContent;
-import com.intellij.util.ui.UIUtil;
 
 import com.jediterm.terminal.ui.JediTermWidget;
-import com.jediterm.terminal.ui.TabbedTerminalWidget;
-import com.jediterm.terminal.ui.TerminalWidget;
 
 import java.awt.Image;
 import java.awt.event.FocusEvent;
@@ -50,7 +48,6 @@ import javax.swing.JComponent;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.plugins.terminal.JBTabbedTerminalWidget;
 import org.jetbrains.plugins.terminal.vfs.TerminalSessionVirtualFileImpl;
 
 /**
@@ -117,7 +114,7 @@ public class GogoShellView {
 
 	public class TerminalDockContainer implements DockContainer {
 
-		public TerminalDockContainer(ToolWindow toolWindow, JBTabbedTerminalWidget terminalWidget) {
+		public TerminalDockContainer(ToolWindow toolWindow, JBTerminalWidget terminalWidget) {
 			_terminalToolWindow = toolWindow;
 			_terminalWidget = terminalWidget;
 		}
@@ -128,9 +125,9 @@ public class GogoShellView {
 			if (_isTerminalSessionContent(content)) {
 				TerminalSessionVirtualFileImpl terminalFile = (TerminalSessionVirtualFileImpl)content.getKey();
 
-				_terminalWidget.addTab(terminalFile.getName(), terminalFile.getTerminal());
+				_terminalWidget.add(terminalFile.getName(), terminalFile.getTerminalWidget());
 
-				JediTermWidget jediTermWidget = terminalFile.getTerminal();
+				JediTermWidget jediTermWidget = terminalFile.getTerminalWidget();
 
 				jediTermWidget.setNextProvider(_terminalWidget);
 			}
@@ -217,12 +214,12 @@ public class GogoShellView {
 		}
 
 		private final ToolWindow _terminalToolWindow;
-		private JBTabbedTerminalWidget _terminalWidget;
+		private JBTerminalWidget _terminalWidget;
 
 	}
 
 	private static ActionToolbar _createToolbar(
-		@Nullable final GogoShellLocalRunner gogoShellLocalRunner, @NotNull final JBTabbedTerminalWidget terminalWidget,
+		@Nullable final GogoShellLocalRunner gogoShellLocalRunner, @NotNull final JBTerminalWidget terminalWidget,
 		@NotNull ToolWindow toolWindow) {
 
 		DefaultActionGroup group = new DefaultActionGroup();
@@ -238,9 +235,9 @@ public class GogoShellView {
 	}
 
 	private static void _hideIfNoActiveSessions(
-		@NotNull final ToolWindow toolWindow, @NotNull JBTabbedTerminalWidget terminalWidget) {
+		@NotNull final ToolWindow toolWindow, @NotNull JBTerminalWidget terminalWidget) {
 
-		if (terminalWidget.isNoActiveSessions()) {
+		if (!terminalWidget.isSessionRunning()) {
 			ContentManager contentManager = toolWindow.getContentManager();
 
 			contentManager.removeAllContents(true);
@@ -259,22 +256,7 @@ public class GogoShellView {
 
 		content.setCloseable(true);
 
-		JBTabbedTerminalWidget terminalWidget = gogoShellLocalRunner.createTerminalWidget(content);
-
-		terminalWidget.addTabListener(
-			new TabbedTerminalWidget.TabListener() {
-
-				@Override
-				public void tabClosed(JediTermWidget terminal) {
-					UIUtil.invokeLaterIfNeeded(
-						() -> {
-							if (terminalWidget != null) {
-								_hideIfNoActiveSessions(toolWindow, terminalWidget);
-							}
-						});
-				}
-
-			});
+		JBTerminalWidget terminalWidget = gogoShellLocalRunner.createTerminalWidget(content, _project.getProjectFile());
 
 		Disposer.register(
 			_project,
@@ -336,7 +318,7 @@ public class GogoShellView {
 	}
 
 	private void _openSession(@NotNull ToolWindow toolWindow, @NotNull GogoShellLocalRunner terminalRunner) {
-		JBTabbedTerminalWidget terminalWidget = terminalRunner.getTerminalWidget();
+		JBTerminalWidget terminalWidget = terminalRunner.getTerminalWidget();
 
 		if (terminalWidget == null) {
 			ContentManager contentManager = toolWindow.getContentManager();
@@ -356,7 +338,7 @@ public class GogoShellView {
 
 	private static class CloseSession extends DumbAwareAction {
 
-		public CloseSession(@NotNull JBTabbedTerminalWidget terminal, @NotNull ToolWindow toolWindow) {
+		public CloseSession(@NotNull JBTerminalWidget terminal, @NotNull ToolWindow toolWindow) {
 			super("Close Session", "Close Terminal Session", AllIcons.Actions.Delete);
 
 			_terminal = terminal;
@@ -365,19 +347,19 @@ public class GogoShellView {
 
 		@Override
 		public void actionPerformed(AnActionEvent e) {
-			_terminal.closeCurrentSession();
+			_terminal.close();
 
 			_hideIfNoActiveSessions(_toolWindow, _terminal);
 		}
 
-		private final JBTabbedTerminalWidget _terminal;
+		private final JBTerminalWidget _terminal;
 		private final ToolWindow _toolWindow;
 
 	}
 
 	private static class NewSession extends DumbAwareAction {
 
-		public NewSession(@NotNull GogoShellLocalRunner terminalRunner, @NotNull TerminalWidget terminal) {
+		public NewSession(@NotNull GogoShellLocalRunner terminalRunner, @NotNull JBTerminalWidget terminal) {
 			super("New Session", "Create New Terminal Session", AllIcons.General.Add);
 
 			_terminalRunner = terminalRunner;
@@ -389,7 +371,7 @@ public class GogoShellView {
 			_terminalRunner.openSession(_terminal);
 		}
 
-		private final TerminalWidget _terminal;
+		private final JBTerminalWidget _terminal;
 		private final GogoShellLocalRunner _terminalRunner;
 
 	}

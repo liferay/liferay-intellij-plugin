@@ -17,7 +17,6 @@ package com.liferay.ide.idea.ui.modules;
 import com.intellij.framework.addSupport.FrameworkSupportInModuleProvider;
 import com.intellij.framework.addSupport.FrameworkSupportInModuleProvider.FrameworkDependency;
 import com.intellij.ide.projectWizard.ProjectCategory;
-import com.intellij.ide.projectWizard.ProjectCategoryUsagesCollector;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.ide.util.frameworkSupport.FrameworkRole;
 import com.intellij.ide.util.frameworkSupport.FrameworkSupportUtil;
@@ -390,12 +389,6 @@ public class LiferayProjectTypeStep extends ModuleWizardStep implements Settings
 			if (!ok) {
 				throw new CommitStepException(null);
 			}
-		}
-
-		TemplatesGroup group = _getSelectedGroup();
-
-		if (group != null) {
-			ProjectCategoryUsagesCollector.projectTypeUsed(group.getId());
 		}
 	}
 
