@@ -1,7 +1,6 @@
 <idea-plugin>
 	<id>com.liferay.ide.intellij.plugin</id>
 	<name>Liferay IntelliJ Plugin</name>
-	<idea-version since-build="172.0"/>
 	<vendor url="https://www.liferay.com">Liferay Inc.</vendor>
 	<description><![CDATA[<p>
 		Liferay Plugin for IntelliJ IDEA
@@ -88,19 +87,10 @@
 	</p>]]>
 	</change-notes>
 	<depends>org.jetbrains.plugins.gradle</depends>
-	<depends>org.jetbrains.plugins.terminal</depends>
 	<depends>org.jetbrains.idea.maven</depends>
 	<depends optional="true" config-file="javaee.xml">com.intellij.javaee</depends>
 	<depends optional="true" config-file="css.xml">com.intellij.css</depends>
 	<depends optional="true" config-file="javascript.xml">JavaScript</depends>
-	<!--
-	<project-components>
-		<component>
-			<interface-class>com.liferay.ide.idea.terminal.GogoShellView</interface-class>
-			<implementation-class>com.liferay.ide.idea.terminal.GogoShellView</implementation-class>
-		</component>
-	</project-components>
-	-->
 
 	<actions>
 		<action id="NewLiferayModule" class="com.liferay.ide.idea.ui.modules.NewLiferayModuleAction"
@@ -115,12 +105,10 @@
 			<action class="com.liferay.ide.idea.ui.actions.DeployMavenModuleAction" id="DeployLiferayMavenModule"/>
 			<action class="com.liferay.ide.idea.ui.actions.InitBundleGradleAction" id="GradleInitBundle"/>
 			<action class="com.liferay.ide.idea.ui.actions.InitBundleMavenAction" id="MavenInitBundle"/>
-			<!--<action class="com.liferay.ide.idea.ui.actions.OpenGogoShellAction" id="OpenGogoShell"/>-->
 		</group>
 	</actions>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<!--<toolWindow id="Gogo Shell" anchor="bottom" icon="LiferayIcons.OSGI_ICON" factoryClass="com.liferay.ide.idea.terminal.GogoShellToolWindowFactory" secondary="false"/>-->
 		<projectTemplatesFactory implementation="com.liferay.ide.idea.ui.modules.LiferayWorkspaceTemplatesFactory"/>
 		<configurationType implementation="com.liferay.ide.idea.server.LiferayServerConfigurationType"/>
 		<programRunner id="Run" implementation="com.liferay.ide.idea.server.LiferayServerRunner"/>
