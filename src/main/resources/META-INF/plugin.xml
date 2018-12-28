@@ -127,7 +127,6 @@
 		<programRunner id="Debug" implementation="com.liferay.ide.idea.server.LiferayServerDebugger"/>
 		<projectService serviceImplementation="com.liferay.ide.idea.core.LiferayProjectTypeService"/>
 		<fileTypeFactory implementation="com.liferay.ide.idea.bndtools.BndFileFactory"/>
-		<syntaxHighlighter factoryClass="com.liferay.ide.idea.bndtools.BndFileTypeHighlighterProvider"/>
 		<codeInsight.lineMarkerProvider language="XML" implementationClass="com.liferay.ide.idea.language.LiferayServiceXMLLineMarkerProvider"/>
 		<codeInsight.lineMarkerProvider language="JAVA" implementationClass="com.liferay.ide.idea.language.LiferayServiceJavaImplLineMarkerProvider"/>
 		<standardResourceProvider implementation="com.liferay.ide.idea.language.LiferayDefinitionsResourceProvider"/>
@@ -136,7 +135,10 @@
 		<psi.referenceContributor implementation="com.liferay.ide.idea.language.tag.LiferayTaglibResourceBundleReferenceContributor"/>
 		<completion.contributor order="first" language="JAVA" implementationClass="com.liferay.ide.idea.language.osgi.ComponentPropertiesCompletionContributor"/>
 		<completion.contributor order="first" language="XML" implementationClass="com.liferay.ide.idea.language.tag.AuiTagAttributeValueCompletionContributor"/>
+		<completion.contributor language="Manifest" implementationClass="com.liferay.ide.idea.bndtools.completion.OsgiManifestCompletionContributor"/>
 		<projectViewNodeDecorator implementation="com.liferay.ide.idea.ui.decorator.ProjectViewWatchDecorator"/>
 		<implicitUsageProvider order="last" implementation="com.liferay.ide.idea.language.osgi.LiferayOsgiImplicitUsageProvider" />
+		<annotator language="Manifest" implementationClass="com.liferay.ide.idea.bndtools.OsgiManifestHighlightingAnnotator"/>
+		<manifest.parser.provider implementation="com.liferay.ide.idea.bndtools.completion.header.OsgiManifestHeaderParsers"/>
 	</extensions>
 </idea-plugin>
