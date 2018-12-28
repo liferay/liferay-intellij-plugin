@@ -14,56 +14,27 @@
 
 package com.liferay.ide.idea.bndtools;
 
-import com.intellij.ide.highlighter.custom.SyntaxTable;
-import com.intellij.openapi.fileTypes.impl.AbstractFileType;
-import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
+import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import icons.LiferayIcons;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import javax.swing.Icon;
-
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.lang.manifest.ManifestLanguage;
 
 /**
  * @author Dominik Marks
  * @author Joye Luo
  */
-public class BndFileType implements CustomSyntaxTableFileType {
+public class BndFileType extends LanguageFileType {
 
-	public static final BndFileType INSTANCE = new BndFileType();
+	public static final LanguageFileType INSTANCE = new BndFileType();
 
 	public BndFileType() {
-		try (InputStream inputStream = BndFileType.class.getResourceAsStream("/META-INF/bnd.xml")) {
-			if (inputStream != null) {
-				SAXBuilder saxBuilder = new SAXBuilder();
-
-				Document document = saxBuilder.build(inputStream);
-
-				Element root = document.getRootElement();
-
-				Element highlighting = root.getChild(AbstractFileType.ELEMENT_HIGHLIGHTING);
-
-				if (highlighting != null) {
-					_syntaxTable = AbstractFileType.readSyntaxTable(highlighting);
-				}
-			}
-		}
-		catch (IOException ioe) {
-			ioe.printStackTrace();
-		}
-		catch (JDOMException jdome) {
-			jdome.printStackTrace();
-		}
+		super(ManifestLanguage.INSTANCE);
 	}
 
 	@Nullable
@@ -97,20 +68,8 @@ public class BndFileType implements CustomSyntaxTableFileType {
 	}
 
 	@Override
-	public SyntaxTable getSyntaxTable() {
-		return _syntaxTable;
-	}
-
-	@Override
-	public boolean isBinary() {
-		return false;
-	}
-
-	@Override
 	public boolean isReadOnly() {
 		return false;
 	}
-
-	private SyntaxTable _syntaxTable = null;
 
 }
