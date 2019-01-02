@@ -120,8 +120,8 @@ formatSource {
 }
 
 intellij {
-	plugins "CSS", "DatabaseTools", "gradle", "Groovy", "java-i18n", "JavaEE", "JavaScriptLanguage", "jsp", "junit", "maven", "PersistenceSupport", "properties", "sass", "terminal"
-	version "IU-2018.2.2"
+	plugins "CSS", "DatabaseTools", "gradle", "Groovy", "java-i18n", "JavaEE", "JavaScriptLanguage", "jsp", "junit", "maven", "PersistenceSupport", "properties", "sass"
+	version "IU-2018.3.2"
 }
 
 patchPluginXml {
