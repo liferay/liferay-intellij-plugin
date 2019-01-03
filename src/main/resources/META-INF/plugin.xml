@@ -35,6 +35,10 @@
 			<li>1.2.0</li>
 			<ul>
 				<li>add support for Liferay Target Platform in new Liferay Workspace wizard</li>
+				<li>update embed blade to 3.4</li>
+				<li>more OSGi component properties support(community contribution)</li>
+				<li>more support for model-hints xml files(community contribution)</li>
+				<li>bug fixes</li>
 			</ul>
 			<li>1.1.1</li>
 			<ul>
