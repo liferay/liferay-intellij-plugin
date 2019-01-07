@@ -39,6 +39,7 @@
 				<li>more OSGi component properties support(community contribution)</li>
 				<li>more support for model-hints xml files(community contribution)</li>
 				<li>bug fixes</li>
+				<li>code completion for java bean for Liferay Taglib(community contribution)</li>
 			</ul>
 			<li>1.1.1</li>
 			<ul>
@@ -126,6 +127,9 @@
 		<xml.schemaProvider implementation="com.liferay.ide.idea.language.LiferayXmlSchemaProvider" />
 		<psi.referenceContributor implementation="com.liferay.ide.idea.language.LiferayXmlFileReferenceContributor"/>
 		<psi.referenceContributor implementation="com.liferay.ide.idea.language.tag.LiferayTaglibResourceBundleReferenceContributor"/>
+		<psi.referenceContributor implementation="com.liferay.ide.idea.language.tag.LiferayTaglibClassNameReferenceContributor"/>
+		<psi.referenceContributor implementation="com.liferay.ide.idea.language.tag.LiferayTaglibSearchContainerJavaBeanReferenceContributor"/>
+		<psi.referenceContributor implementation="com.liferay.ide.idea.language.tag.LiferayTaglibModelContextJavaBeanReferenceContributor"/>
 		<completion.contributor order="first" language="JAVA" implementationClass="com.liferay.ide.idea.language.osgi.ComponentPropertiesCompletionContributor"/>
 		<completion.contributor order="first" language="XML" implementationClass="com.liferay.ide.idea.language.tag.AuiTagAttributeValueCompletionContributor"/>
 		<projectViewNodeDecorator implementation="com.liferay.ide.idea.ui.decorator.ProjectViewWatchDecorator"/>
