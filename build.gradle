@@ -1,6 +1,7 @@
 buildscript {
 	dependencies {
 		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.source.formatter", version: "latest.release"
+		classpath group: "nu.studer", name: "gradle-credentials-plugin", version: "1.0.4"
 	}
 
 	repositories {
@@ -20,6 +21,7 @@ plugins {
 
 apply plugin: "com.liferay.source.formatter"
 apply plugin: "java"
+apply plugin: "nu.studer.credentials"
 
 task downloadBlade(type: Download)
 task downloadDtds(type: Download)
@@ -133,8 +135,8 @@ processResources {
 	dependsOn verifyBlade
 }
 
-def intellijPortalUsername = project.properties["intellijPortalUsername"] ?: ""
-def intellijPortalPassword = project.properties["intellijPortalPassword"] ?: ""
+def intellijPortalUsername = credentials.intellijPortalUsername ?: ""
+def intellijPortalPassword = credentials.intellijPortalPassword ?: ""
 
 publishPlugin {
 	username intellijPortalUsername
