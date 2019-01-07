@@ -117,8 +117,8 @@ public class FileUtil {
 		return false;
 	}
 
-	public static boolean notExists(VirtualFile file) {
-		if ((file == null) || !file.exists()) {
+	public static boolean notExists(VirtualFile virtualFile) {
+		if ((virtualFile == null) || !virtualFile.exists()) {
 			return true;
 		}
 

@@ -52,25 +52,25 @@ public abstract class AbstractLiferayAction extends AnAction {
 	}
 
 	@Override
-	public void actionPerformed(final AnActionEvent event) {
-		project = event.getRequiredData(CommonDataKeys.PROJECT);
+	public void actionPerformed(final AnActionEvent anActionEvent) {
+		project = anActionEvent.getRequiredData(CommonDataKeys.PROJECT);
 
 		DumbService dumbService = DumbService.getInstance(project);
 
-		dumbService.suspendIndexingAndRun("Start execute action", () -> _perform(event));
+		dumbService.suspendIndexingAndRun("Start execute action", () -> _perform(anActionEvent));
 	}
 
-	public boolean isEnabledAndVisible(AnActionEvent event) {
+	public boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
 		return true;
 	}
 
 	@Override
-	public void update(AnActionEvent event) {
-		super.update(event);
+	public void update(AnActionEvent anActionEvent) {
+		super.update(anActionEvent);
 
-		Presentation eventPresentation = event.getPresentation();
+		Presentation eventPresentation = anActionEvent.getPresentation();
 
-		eventPresentation.setEnabledAndVisible(isEnabledAndVisible(event));
+		eventPresentation.setEnabledAndVisible(isEnabledAndVisible(anActionEvent));
 	}
 
 	protected abstract RunnerAndConfigurationSettings doExecute(AnActionEvent event);
@@ -89,10 +89,10 @@ public abstract class AbstractLiferayAction extends AnAction {
 		return null;
 	}
 
-	protected VirtualFile getWorkingDirectory(AnActionEvent event) {
-		VirtualFile virtualFile = getVirtualFile(event);
+	protected VirtualFile getWorkingDirectory(AnActionEvent anActionEvent) {
+		VirtualFile virtualFile = getVirtualFile(anActionEvent);
 
-		ProjectRootManager projectRootManager = ProjectRootManager.getInstance(event.getProject());
+		ProjectRootManager projectRootManager = ProjectRootManager.getInstance(anActionEvent.getProject());
 
 		ProjectFileIndex projectFileIndex = projectRootManager.getFileIndex();
 
@@ -102,11 +102,11 @@ public abstract class AbstractLiferayAction extends AnAction {
 
 		ModifiableRootModel modifiableRootModel = moduleRootManager.getModifiableModel();
 
-		VirtualFile[] roots = modifiableRootModel.getContentRoots();
+		VirtualFile[] contentRootsVirtualFiles = modifiableRootModel.getContentRoots();
 
-		assert roots != null && roots[0] != null;
+		assert contentRootsVirtualFiles != null && contentRootsVirtualFiles[0] != null;
 
-		return roots[0];
+		return contentRootsVirtualFiles[0];
 	}
 
 	protected void handleProcessStarted() {
@@ -120,19 +120,19 @@ public abstract class AbstractLiferayAction extends AnAction {
 	protected Project project;
 	protected VirtualFile projectDir;
 
-	private void _perform(AnActionEvent event) {
-		RunnerAndConfigurationSettings configurationSetting = doExecute(event);
+	private void _perform(AnActionEvent anActionEvent) {
+		RunnerAndConfigurationSettings runnerAndConfigurationSetting = doExecute(anActionEvent);
 
 		RunManager runManager = RunManager.getInstance(project);
 
-		RunnerAndConfigurationSettings existingConfiguration = runManager.findConfigurationByName(
-			configurationSetting.getName());
+		RunnerAndConfigurationSettings existingConfigurationSettings = runManager.findConfigurationByName(
+			runnerAndConfigurationSetting.getName());
 
-		if (existingConfiguration == null) {
-			runManager.setTemporaryConfiguration(configurationSetting);
+		if (existingConfigurationSettings == null) {
+			runManager.setTemporaryConfiguration(runnerAndConfigurationSetting);
 		}
 		else {
-			runManager.setSelectedConfiguration(existingConfiguration);
+			runManager.setSelectedConfiguration(existingConfigurationSettings);
 		}
 
 		MessageBus messageBus = project.getMessageBus();

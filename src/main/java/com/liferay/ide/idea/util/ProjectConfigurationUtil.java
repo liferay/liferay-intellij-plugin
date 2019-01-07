@@ -34,9 +34,9 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Simon Jiang
  */
-public class IntellijUtil {
+public class ProjectConfigurationUtil {
 
-	public static void configExcludeFolder(@NotNull Project project, String directory) {
+	public static void configExcludedFolder(@NotNull Project project, String directory) {
 		if (!LiferayWorkspaceUtil.isValidWorkspaceLocation(project)) {
 			return;
 		}
@@ -79,8 +79,8 @@ public class IntellijUtil {
 			});
 	}
 
-	private static VirtualFile _getContentRoot(@NotNull Module module, @Nullable VirtualFile root) {
-		if (root == null) {
+	private static VirtualFile _getContentRoot(@NotNull Module module, @Nullable VirtualFile virtualFile) {
+		if (virtualFile == null) {
 			return null;
 		}
 
@@ -90,9 +90,9 @@ public class IntellijUtil {
 			return null;
 		}
 
-		ProjectFileIndex fileIndex = projectRootManager.getFileIndex();
+		ProjectFileIndex projectFileIndex = projectRootManager.getFileIndex();
 
-		return fileIndex.getContentRootForFile(root);
+		return projectFileIndex.getContentRootForFile(virtualFile);
 	}
 
 	private static Collection<String> _getOldExcludedFolders(

@@ -14,8 +14,8 @@
 
 package com.liferay.ide.idea.ui.actions;
 
-import com.liferay.ide.idea.util.IntellijUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
+import com.liferay.ide.idea.util.ProjectConfigurationUtil;
 
 import icons.LiferayIcons;
 
@@ -35,7 +35,7 @@ public class InitBundleGradleAction extends AbstractLiferayGradleTaskAction {
 
 		String homeDir = LiferayWorkspaceUtil.getHomeDir(project.getBasePath());
 
-		IntellijUtil.configExcludeFolder(project, homeDir);
+		ProjectConfigurationUtil.configExcludedFolder(project, homeDir);
 	}
 
 }

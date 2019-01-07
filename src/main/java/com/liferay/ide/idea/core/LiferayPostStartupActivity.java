@@ -24,8 +24,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 
-import com.liferay.ide.idea.util.IntellijUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
+import com.liferay.ide.idea.util.ProjectConfigurationUtil;
 import com.liferay.ide.idea.util.WorkspaceConstants;
 
 import java.util.stream.Stream;
@@ -40,13 +40,13 @@ public class LiferayPostStartupActivity implements StartupActivity, DumbAware {
 
 	@Override
 	public void runActivity(@NotNull Project project) {
-		VirtualFile projectDir = project.getBaseDir();
+		VirtualFile projectDirVirtualFile = project.getBaseDir();
 
-		projectDir.refresh(false, true);
+		projectDirVirtualFile.refresh(false, true);
 
-		MessageBus projectMessageBus = project.getMessageBus();
+		MessageBus messageBus = project.getMessageBus();
 
-		MessageBusConnection messageBusConnection = projectMessageBus.connect(project);
+		MessageBusConnection messageBusConnection = messageBus.connect(project);
 
 		StartupManager startupManager = StartupManager.getInstance(project);
 
@@ -57,7 +57,7 @@ public class LiferayPostStartupActivity implements StartupActivity, DumbAware {
 					if (projectPath.equals(project.getBasePath())) {
 						String homeDir = LiferayWorkspaceUtil.getHomeDir(project.getBasePath());
 
-						IntellijUtil.configExcludeFolder(project, homeDir);
+						ProjectConfigurationUtil.configExcludedFolder(project, homeDir);
 					}
 				}));
 
@@ -77,7 +77,7 @@ public class LiferayPostStartupActivity implements StartupActivity, DumbAware {
 							moduleProject, WorkspaceConstants.MAVEN_HOME_DIR_PROPERTY,
 							WorkspaceConstants.DEFAULT_HOME_DIR);
 
-						IntellijUtil.configExcludeFolder(moduleProject, homeDir);
+						ProjectConfigurationUtil.configExcludedFolder(moduleProject, homeDir);
 					}
 				);
 			});

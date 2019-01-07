@@ -14,8 +14,8 @@
 
 package com.liferay.ide.idea.ui.actions;
 
-import com.liferay.ide.idea.util.IntellijUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
+import com.liferay.ide.idea.util.ProjectConfigurationUtil;
 import com.liferay.ide.idea.util.WorkspaceConstants;
 
 import icons.LiferayIcons;
@@ -41,7 +41,7 @@ public class InitBundleMavenAction extends AbstractLiferayMavenGoalAction {
 		String homeDir = LiferayWorkspaceUtil.getMavenProperty(
 			project, WorkspaceConstants.MAVEN_HOME_DIR_PROPERTY, WorkspaceConstants.DEFAULT_HOME_DIR);
 
-		IntellijUtil.configExcludeFolder(project, homeDir);
+		ProjectConfigurationUtil.configExcludedFolder(project, homeDir);
 	}
 
 }
