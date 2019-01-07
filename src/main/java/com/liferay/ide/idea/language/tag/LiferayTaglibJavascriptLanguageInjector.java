@@ -191,6 +191,7 @@ public class LiferayTaglibJavascriptLanguageInjector implements MultiHostInjecto
 		);
 	}
 
+	@SuppressWarnings("serial")
 	private static Map<String, Collection<SimpleImmutableEntry<String, String>>> _taglibAttributes =
 		new HashMap<String, Collection<SimpleImmutableEntry<String, String>>>() {
 			{

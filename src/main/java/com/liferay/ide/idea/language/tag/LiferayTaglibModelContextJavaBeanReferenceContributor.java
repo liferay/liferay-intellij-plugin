@@ -71,6 +71,7 @@ public class LiferayTaglibModelContextJavaBeanReferenceContributor extends Abstr
 		return false;
 	}
 
+	@SuppressWarnings("serial")
 	private static Map<String, Collection<AbstractMap.SimpleImmutableEntry<String, String>>> _taglibAttributes =
 		new HashMap<String, Collection<AbstractMap.SimpleImmutableEntry<String, String>>>() {
 			{

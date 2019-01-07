@@ -60,6 +60,7 @@ public class LiferayTaglibResourceBundleReferenceContributor extends PsiReferenc
 			new LiferayTaglibResourceBundleReferenceProvider(true));
 	}
 
+	@SuppressWarnings("serial")
 	private static Map<String, Collection<SimpleImmutableEntry<String, String>>> _taglibAttributes =
 		new HashMap<String, Collection<SimpleImmutableEntry<String, String>>>() {
 			{

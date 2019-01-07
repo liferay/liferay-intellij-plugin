@@ -142,6 +142,7 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 
 	// https://dev.liferay.com/develop/reference/-/knowledge_base/7-0/portlet-descriptor-to-osgi-service-property-map
 
+	@SuppressWarnings("serial")
 	private static Map<String, String[][]> _componentProperties = new HashMap<String, String[][]>() {
 		{
 
