@@ -29,7 +29,7 @@ public class LiferayTaglibSearchContainerJavaBeanReferenceProvider
 	@Nullable
 	@Override
 	protected String getClassName(PsiElement element) {
-		PsiElement classNameElement = PsiTreeUtil.findFirstParent(
+		PsiElement classNamePsiElement = PsiTreeUtil.findFirstParent(
 			element,
 			psiElement -> {
 				if (psiElement instanceof XmlTag) {
@@ -48,8 +48,8 @@ public class LiferayTaglibSearchContainerJavaBeanReferenceProvider
 				return false;
 			});
 
-		if (classNameElement != null) {
-			XmlTag xmlTag = (XmlTag)classNameElement;
+		if (classNamePsiElement != null) {
+			XmlTag xmlTag = (XmlTag)classNamePsiElement;
 
 			return xmlTag.getAttributeValue("className");
 		}

@@ -27,8 +27,8 @@ public class LiferayTaglibModelContextJavaBeanReferenceProvider extends Abstract
 
 	@Nullable
 	@Override
-	protected String getClassName(PsiElement element) {
-		XmlTag xmlTag = PsiTreeUtil.getParentOfType(element, XmlTag.class);
+	protected String getClassName(PsiElement psiElement) {
+		XmlTag xmlTag = PsiTreeUtil.getParentOfType(psiElement, XmlTag.class);
 
 		if (xmlTag != null) {
 			String modelAttributeValue = xmlTag.getAttributeValue("model");
@@ -37,11 +37,11 @@ public class LiferayTaglibModelContextJavaBeanReferenceProvider extends Abstract
 				return modelAttributeValue;
 			}
 
-			XmlTag modelContextTag = (XmlTag)_getPrevSiblingOrParent(
-				element, LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI, "model-context");
+			XmlTag modelContextXmlTag = (XmlTag)_getPrevSiblingOrParent(
+				psiElement, LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI, "model-context");
 
-			if (modelContextTag != null) {
-				return modelContextTag.getAttributeValue("model");
+			if (modelContextXmlTag != null) {
+				return modelContextXmlTag.getAttributeValue("model");
 			}
 		}
 
@@ -49,31 +49,31 @@ public class LiferayTaglibModelContextJavaBeanReferenceProvider extends Abstract
 	}
 
 	private static PsiElement _getPrevSiblingOrParent(
-		PsiElement element, String classNameElementNamespace, String classNameElementLocalName) {
+		PsiElement psiElement, String classNameElementNamespace, String classNameElementLocalName) {
 
-		PsiElement sibling = element.getPrevSibling();
+		PsiElement siblingPsiElement = psiElement.getPrevSibling();
 
-		while (sibling != null) {
-			if (sibling instanceof XmlTag) {
-				XmlTag xmlTag = (XmlTag)sibling;
+		while (siblingPsiElement != null) {
+			if (siblingPsiElement instanceof XmlTag) {
+				XmlTag xmlTag = (XmlTag)siblingPsiElement;
 
 				String namespace = xmlTag.getNamespace();
 				String localName = xmlTag.getLocalName();
 
 				if (classNameElementNamespace.equals(namespace)) {
 					if (classNameElementLocalName.equals(localName)) {
-						return sibling;
+						return siblingPsiElement;
 					}
 				}
 			}
 
-			sibling = sibling.getPrevSibling();
+			siblingPsiElement = siblingPsiElement.getPrevSibling();
 		}
 
-		PsiElement parent = element.getParent();
+		PsiElement parentPsiElement = psiElement.getParent();
 
-		if (parent != null) {
-			return _getPrevSiblingOrParent(parent, classNameElementNamespace, classNameElementLocalName);
+		if (parentPsiElement != null) {
+			return _getPrevSiblingOrParent(parentPsiElement, classNameElementNamespace, classNameElementLocalName);
 		}
 
 		return null;

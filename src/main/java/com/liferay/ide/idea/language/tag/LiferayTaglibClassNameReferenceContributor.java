@@ -44,17 +44,17 @@ public class LiferayTaglibClassNameReferenceContributor extends AbstractLiferayT
 	}
 
 	@Override
-	protected PsiReferenceProvider getReferenceProvider() {
-		JavaClassReferenceProvider provider = new JavaClassReferenceProvider();
+	protected PsiReferenceProvider getPsiReferenceProvider() {
+		JavaClassReferenceProvider javaClassReferenceProvider = new JavaClassReferenceProvider();
 
-		provider.setOption(JavaClassReferenceProvider.ADVANCED_RESOLVE, Boolean.TRUE);
-		provider.setOption(JavaClassReferenceProvider.RESOLVE_QUALIFIED_CLASS_NAME, Boolean.TRUE);
+		javaClassReferenceProvider.setOption(JavaClassReferenceProvider.ADVANCED_RESOLVE, Boolean.TRUE);
+		javaClassReferenceProvider.setOption(JavaClassReferenceProvider.RESOLVE_QUALIFIED_CLASS_NAME, Boolean.TRUE);
 
-		return provider;
+		return javaClassReferenceProvider;
 	}
 
 	@Override
-	protected boolean isSuitableAttribute(XmlAttribute xmlAttribute) {
+	protected boolean isSuitableXmlAttribute(XmlAttribute xmlAttribute) {
 		if (_containsTextOnly(xmlAttribute)) {
 			XmlTag xmlTag = xmlAttribute.getParent();
 
@@ -109,6 +109,7 @@ public class LiferayTaglibClassNameReferenceContributor extends AbstractLiferayT
 		);
 	}
 
+	@SuppressWarnings("serial")
 	private static Map<String, Collection<AbstractMap.SimpleImmutableEntry<String, String>>> _taglibAttributes =
 		new HashMap<String, Collection<AbstractMap.SimpleImmutableEntry<String, String>>>() {
 			{

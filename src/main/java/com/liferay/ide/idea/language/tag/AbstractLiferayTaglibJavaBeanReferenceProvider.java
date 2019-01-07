@@ -38,7 +38,7 @@ public abstract class AbstractLiferayTaglibJavaBeanReferenceProvider extends Psi
 	@NotNull
 	@Override
 	public PsiReference[] getReferencesByElement(@NotNull PsiElement element, @NotNull ProcessingContext context) {
-		List<PsiReference> result = new ArrayList<>();
+		List<PsiReference> psiReferences = new ArrayList<>();
 
 		String className = getClassName(element);
 
@@ -48,16 +48,16 @@ public abstract class AbstractLiferayTaglibJavaBeanReferenceProvider extends Psi
 			PsiClass psiClass = ClassUtil.findPsiClass(psiManager, className);
 
 			if (psiClass != null) {
-				result.add(
+				psiReferences.add(
 					new LiferayTaglibJavaBeanReference(
 						(XmlAttributeValue)element, ElementManipulators.getValueTextRange(element), psiClass));
 			}
 		}
 
-		return result.toArray(new PsiReference[result.size()]);
+		return psiReferences.toArray(new PsiReference[psiReferences.size()]);
 	}
 
 	@Nullable
-	protected abstract String getClassName(PsiElement element);
+	protected abstract String getClassName(PsiElement psiElement);
 
 }

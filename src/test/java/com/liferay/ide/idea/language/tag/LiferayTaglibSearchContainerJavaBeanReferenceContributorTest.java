@@ -48,7 +48,7 @@ public class LiferayTaglibSearchContainerJavaBeanReferenceContributorTest extend
 	@NotNull
 	@Override
 	protected LightProjectDescriptor getProjectDescriptor() {
-		return _javaDescriptor;
+		return _lightProjectDescriptor;
 	}
 
 	@Override
@@ -57,21 +57,17 @@ public class LiferayTaglibSearchContainerJavaBeanReferenceContributorTest extend
 			"testdata/com/liferay/ide/idea/language/tag/LiferayTaglibSearchContainerJavaBeanReferenceContributorTest";
 	}
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	private static final LightProjectDescriptor _javaDescriptor = new DefaultLightProjectDescriptor() {
+	private static final LightProjectDescriptor _lightProjectDescriptor = new DefaultLightProjectDescriptor() {
 
 		@Override
 		public void configureModule(
 			@NotNull Module module, @NotNull ModifiableRootModel model, @NotNull ContentEntry contentEntry) {
 
-			LanguageLevelModuleExtension extension = model.getModuleExtension(LanguageLevelModuleExtension.class);
+			LanguageLevelModuleExtension languageLevelModuleExtension = model.getModuleExtension(
+				LanguageLevelModuleExtension.class);
 
-			if (extension != null) {
-				extension.setLanguageLevel(LanguageLevel.JDK_1_8);
+			if (languageLevelModuleExtension != null) {
+				languageLevelModuleExtension.setLanguageLevel(LanguageLevel.JDK_1_8);
 			}
 
 			Sdk jdk = JavaAwareProjectJdkTableImpl.getInstanceEx().getInternalJdk();

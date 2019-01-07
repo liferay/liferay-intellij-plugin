@@ -36,12 +36,12 @@ public class LiferayTaglibModelContextJavaBeanReferenceContributor extends Abstr
 	}
 
 	@Override
-	protected PsiReferenceProvider getReferenceProvider() {
+	protected PsiReferenceProvider getPsiReferenceProvider() {
 		return new LiferayTaglibModelContextJavaBeanReferenceProvider();
 	}
 
 	@Override
-	protected boolean isSuitableAttribute(XmlAttribute xmlAttribute) {
+	protected boolean isSuitableXmlAttribute(XmlAttribute xmlAttribute) {
 		XmlTag xmlTag = xmlAttribute.getParent();
 
 		if (xmlTag != null) {

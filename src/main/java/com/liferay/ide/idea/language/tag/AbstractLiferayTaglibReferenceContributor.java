@@ -32,31 +32,32 @@ public abstract class AbstractLiferayTaglibReferenceContributor extends PsiRefer
 	@Override
 	public void registerReferenceProviders(@NotNull PsiReferenceRegistrar registrar) {
 		XmlUtil.registerXmlAttributeValueReferenceProvider(
-			registrar, getAttributeNames(), new LiferayTaglibFilter(), false, getReferenceProvider());
+			registrar, getAttributeNames(), new LiferayTaglibFilter(), false, getPsiReferenceProvider());
 	}
 
 	protected abstract String[] getAttributeNames();
 
-	protected abstract PsiReferenceProvider getReferenceProvider();
+	protected abstract PsiReferenceProvider getPsiReferenceProvider();
 
-	protected abstract boolean isSuitableAttribute(XmlAttribute xmlAttribute);
+	protected abstract boolean isSuitableXmlAttribute(XmlAttribute xmlAttribute);
 
 	private class LiferayTaglibFilter implements ElementFilter {
 
-		public boolean isAcceptable(Object element, PsiElement context) {
+		public boolean isAcceptable(Object element, PsiElement psiElementContext) {
 			PsiElement psiElement = (PsiElement)element;
 
-			PsiElement parent = psiElement.getParent();
+			PsiElement psiElementParent = psiElement.getParent();
 
-			if (parent instanceof XmlAttribute) {
-				XmlAttribute xmlAttribute = (XmlAttribute)parent;
+			if (psiElementParent instanceof XmlAttribute) {
+				XmlAttribute xmlAttribute = (XmlAttribute)psiElementParent;
 
-				return AbstractLiferayTaglibReferenceContributor.this.isSuitableAttribute(xmlAttribute);
+				return AbstractLiferayTaglibReferenceContributor.this.isSuitableXmlAttribute(xmlAttribute);
 			}
 
 			return false;
 		}
 
+		@SuppressWarnings("rawtypes")
 		public boolean isClassAcceptable(Class hintClass) {
 			return true;
 		}
