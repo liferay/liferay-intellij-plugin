@@ -29,6 +29,9 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.DocumentAdapter;
 
+import com.liferay.ide.idea.ui.modules.ext.LiferayModuleExtBuilder;
+import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
+
 import java.io.File;
 
 import javax.swing.JPanel;
@@ -285,11 +288,14 @@ public class LiferayModuleNameLocationComponent {
 		AbstractModuleBuilder builder = getModuleBuilder();
 		LiferayModuleBuilder liferayModuleBuilder = null;
 
+		String targetFolder = "modules";
+
 		if (builder instanceof LiferayModuleBuilder) {
 			liferayModuleBuilder = (LiferayModuleBuilder)builder;
 		}
-
-		String targetFolder = "modules";
+		else if (builder instanceof LiferayModuleExtBuilder) {
+			targetFolder = LiferayWorkspaceUtil.getModuleExtDir(_context.getProject());
+		}
 
 		if (liferayModuleBuilder != null) {
 			String templateType = liferayModuleBuilder.getType();
