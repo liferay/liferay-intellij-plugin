@@ -61,6 +61,7 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 
 			return _getSelectedArtifact();
 		};
+
 		_overrideFilesPanel.setProject(_project);
 
 		_moduleNameHintLabel.setFont(UIUtil.getLabelFont(UIUtil.FontSize.SMALL));
@@ -166,18 +167,6 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 		return true;
 	}
 
-	private LibraryData _getSelectedArtifact() {
-		String originalModuleName = _getOriginalModuleName();
-
-		for (LibraryData lib : _targetPlatformArtifacts) {
-			if (originalModuleName.equals(lib.getArtifactId())) {
-				return lib;
-			}
-		}
-
-		return null;
-	}
-
 	private ComboBoxEditor _getEditor() {
 		return _originalModuleNameComboBox.getEditor();
 	}
@@ -186,6 +175,18 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 		Object item = _getEditor().getItem();
 
 		return item.toString();
+	}
+
+	private LibraryData _getSelectedArtifact() {
+		String originalModuleName = _getOriginalModuleName();
+
+		for (LibraryData libraryData : _targetPlatformArtifacts) {
+			if (originalModuleName.equals(libraryData.getArtifactId())) {
+				return libraryData;
+			}
+		}
+
+		return null;
 	}
 
 	private void _insertOriginalModuleNames(boolean clear) {

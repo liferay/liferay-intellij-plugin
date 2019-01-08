@@ -36,7 +36,6 @@ import com.liferay.ide.idea.ui.compoments.FixedSizeRefreshButton;
 import com.liferay.ide.idea.util.GradleDependency;
 import com.liferay.ide.idea.util.GradleDependencyUpdater;
 import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
-import com.liferay.ide.idea.util.StringPool;
 
 import java.io.IOException;
 
@@ -66,13 +65,13 @@ public class NewModuleExtFilesAction extends AnAction implements DumbAware {
 
 		VirtualFile moduleExtDir = LiferayWorkspaceUtil.getModuleExtDirFile(event.getProject());
 
-		if (contextFile == null || moduleExtDir == null) {
+		if ((contextFile == null) || (moduleExtDir == null)) {
 			return;
 		}
 
 		String contextUrl = contextFile.getUrl();
 
-		if (contextFile.equals(moduleExtDir) || (!contextUrl.startsWith(moduleExtDir.getUrl()))) {
+		if (contextFile.equals(moduleExtDir) || !contextUrl.startsWith(moduleExtDir.getUrl())) {
 			return;
 		}
 
@@ -118,7 +117,7 @@ public class NewModuleExtFilesAction extends AnAction implements DumbAware {
 
 			application.executeOnPooledThread(this::_setOriginalModuleText);
 
-			_overrideFilesPanel.function = () -> _lib;
+			_overrideFilesPanel.function = () -> _libraryData;
 			_overrideFilesPanel.prepareRefreshButton(_refreshButton, this::_setOriginalModuleText);
 			_overrideFilesPanel.setProject(_project);
 
@@ -146,8 +145,7 @@ public class NewModuleExtFilesAction extends AnAction implements DumbAware {
 
 				GradleDependencyUpdater updater = new GradleDependencyUpdater(VfsUtil.virtualToIoFile(_gradleFile));
 
-				List<GradleDependency> originalModules = updater.getDependenciesByName(
-					StringPool.ORIGINAL_MODULE_CONFIGURATION);
+				List<GradleDependency> originalModules = updater.getDependenciesByName("originalModule");
 
 				if (!originalModules.isEmpty()) {
 					GradleDependency dependency = originalModules.get(0);
@@ -156,7 +154,7 @@ public class NewModuleExtFilesAction extends AnAction implements DumbAware {
 
 					for (LibraryData lib : targetPlatformArtifacts) {
 						if (artifact.equals(lib.getArtifactId())) {
-							_lib = lib;
+							_libraryData = lib;
 
 							break;
 						}
@@ -171,12 +169,13 @@ public class NewModuleExtFilesAction extends AnAction implements DumbAware {
 		private void _setOriginalModuleText() {
 			_getLibraryData();
 
-			if (_lib != null) {
-				_originalModuleText.setText(_lib.getGroupId() + ":" + _lib.getArtifactId() + ":" + _lib.getVersion());
+			if (_libraryData != null) {
+				_originalModuleText.setText(
+					_libraryData.getGroupId() + ":" + _libraryData.getArtifactId() + ":" + _libraryData.getVersion());
 			}
 		}
 
-		private LibraryData _lib;
+		private LibraryData _libraryData;
 		private JTextField _originalModuleText;
 		private OverrideFilesComponent _overrideFilesPanel;
 		private final Project _project;
