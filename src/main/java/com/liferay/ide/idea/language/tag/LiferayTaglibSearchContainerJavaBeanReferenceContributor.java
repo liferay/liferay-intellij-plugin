@@ -15,13 +15,12 @@
 package com.liferay.ide.idea.language.tag;
 
 import com.intellij.psi.PsiReferenceProvider;
-import com.intellij.psi.xml.XmlAttribute;
-import com.intellij.psi.xml.XmlTag;
 
-import java.util.AbstractMap;
+import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.stream.Stream;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Dominik Marks
@@ -40,42 +39,26 @@ public class LiferayTaglibSearchContainerJavaBeanReferenceContributor
 	}
 
 	@Override
-	protected boolean isSuitableXmlAttribute(XmlAttribute xmlAttribute) {
-		XmlTag xmlTag = xmlAttribute.getParent();
-
-		if (xmlTag != null) {
-			String namespace = xmlTag.getNamespace();
-			String localName = xmlTag.getLocalName();
-			String attributeName = xmlAttribute.getLocalName();
-
-			if (LiferayTaglibs.TAGLIB_URI_LIFERAY_UI.equals(namespace)) {
-				Stream<AbstractMap.SimpleImmutableEntry<String, String>> entriesStream = _taglibAttributes.stream();
-
-				return entriesStream.anyMatch(
-					entry -> {
-						String key = entry.getKey();
-						String value = entry.getValue();
-
-						if (key.equals(localName) && value.equals(attributeName)) {
-							return true;
-						}
-
-						return false;
-					});
-			}
-		}
-
-		return false;
+	protected Map<String, Collection<SimpleImmutableEntry<String, String>>> getTaglibAttributesMap() {
+		return _taglibAttributes;
 	}
 
-	private static Collection<AbstractMap.SimpleImmutableEntry<String, String>> _taglibAttributes = Arrays.asList(
-		new AbstractMap.SimpleImmutableEntry<>("search-container-column-text", "property"),
-		new AbstractMap.SimpleImmutableEntry<>("search-container-column-text", "name"),
-		new AbstractMap.SimpleImmutableEntry<>("search-container-column-text", "orderableProperty"),
-		new AbstractMap.SimpleImmutableEntry<>("search-container-column-date", "property"),
-		new AbstractMap.SimpleImmutableEntry<>("search-container-column-status", "property"),
-		new AbstractMap.SimpleImmutableEntry<>("search-container-column-user", "property"),
-		new AbstractMap.SimpleImmutableEntry<>("search-container-row", "keyProperty"),
-		new AbstractMap.SimpleImmutableEntry<>("search-container-row", "rowIdProperty"));
+	@SuppressWarnings("serial")
+	private static Map<String, Collection<SimpleImmutableEntry<String, String>>> _taglibAttributes =
+		new HashMap<String, Collection<SimpleImmutableEntry<String, String>>>() {
+			{
+				put(
+					LiferayTaglibs.TAGLIB_URI_LIFERAY_UI,
+					Arrays.asList(
+						new SimpleImmutableEntry<>("search-container-column-text", "property"),
+						new SimpleImmutableEntry<>("search-container-column-text", "name"),
+						new SimpleImmutableEntry<>("search-container-column-text", "orderableProperty"),
+						new SimpleImmutableEntry<>("search-container-column-date", "property"),
+						new SimpleImmutableEntry<>("search-container-column-status", "property"),
+						new SimpleImmutableEntry<>("search-container-column-user", "property"),
+						new SimpleImmutableEntry<>("search-container-row", "keyProperty"),
+						new SimpleImmutableEntry<>("search-container-row", "rowIdProperty")));
+			}
+		};
 
 }

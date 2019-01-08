@@ -20,7 +20,13 @@ import com.intellij.psi.PsiReferenceProvider;
 import com.intellij.psi.PsiReferenceRegistrar;
 import com.intellij.psi.filters.ElementFilter;
 import com.intellij.psi.xml.XmlAttribute;
+import com.intellij.psi.xml.XmlTag;
 import com.intellij.xml.util.XmlUtil;
+
+import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.Collection;
+import java.util.Map;
+import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -39,7 +45,40 @@ public abstract class AbstractLiferayTaglibReferenceContributor extends PsiRefer
 
 	protected abstract PsiReferenceProvider getPsiReferenceProvider();
 
-	protected abstract boolean isSuitableXmlAttribute(XmlAttribute xmlAttribute);
+	protected abstract Map<String, Collection<SimpleImmutableEntry<String, String>>> getTaglibAttributesMap();
+
+	protected boolean isSuitableXmlAttribute(XmlAttribute xmlAttribute) {
+		XmlTag xmlTag = xmlAttribute.getParent();
+
+		if (xmlTag != null) {
+			String namespace = xmlTag.getNamespace();
+			String localName = xmlTag.getLocalName();
+			String attributeName = xmlAttribute.getLocalName();
+
+			Map<String, Collection<SimpleImmutableEntry<String, String>>> taglibAttributesMap =
+				getTaglibAttributesMap();
+
+			if (taglibAttributesMap.containsKey(namespace)) {
+				Collection<SimpleImmutableEntry<String, String>> entries = taglibAttributesMap.get(namespace);
+
+				Stream<SimpleImmutableEntry<String, String>> entriesStream = entries.stream();
+
+				return entriesStream.anyMatch(
+					entry -> {
+						String key = entry.getKey();
+						String value = entry.getValue();
+
+						if (key.equals(localName) && value.equals(attributeName)) {
+							return true;
+						}
+
+						return false;
+					});
+			}
+		}
+
+		return false;
+	}
 
 	private class LiferayTaglibFilter implements ElementFilter {
 

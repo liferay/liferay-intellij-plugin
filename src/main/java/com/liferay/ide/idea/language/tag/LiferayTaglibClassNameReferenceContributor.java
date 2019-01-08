@@ -18,11 +18,10 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReferenceProvider;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.JavaClassReferenceProvider;
 import com.intellij.psi.xml.XmlAttribute;
-import com.intellij.psi.xml.XmlTag;
 import com.intellij.psi.xml.XmlToken;
 import com.intellij.psi.xml.XmlTokenType;
 
-import java.util.AbstractMap;
+import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -54,34 +53,14 @@ public class LiferayTaglibClassNameReferenceContributor extends AbstractLiferayT
 	}
 
 	@Override
+	protected Map<String, Collection<SimpleImmutableEntry<String, String>>> getTaglibAttributesMap() {
+		return _taglibAttributes;
+	}
+
+	@Override
 	protected boolean isSuitableXmlAttribute(XmlAttribute xmlAttribute) {
 		if (_containsTextOnly(xmlAttribute)) {
-			XmlTag xmlTag = xmlAttribute.getParent();
-
-			if (xmlTag != null) {
-				String namespace = xmlTag.getNamespace();
-				String xmlTagLocalName = xmlTag.getLocalName();
-				String xmlAttributeLocalName = xmlAttribute.getLocalName();
-
-				if (_taglibAttributes.containsKey(namespace)) {
-					Collection<AbstractMap.SimpleImmutableEntry<String, String>> entries = _taglibAttributes.get(
-						namespace);
-
-					Stream<AbstractMap.SimpleImmutableEntry<String, String>> entriesStream = entries.stream();
-
-					return entriesStream.anyMatch(
-						entry -> {
-							String key = entry.getKey();
-							String value = entry.getValue();
-
-							if (key.equals(xmlTagLocalName) && value.equals(xmlAttributeLocalName)) {
-								return true;
-							}
-
-							return false;
-						});
-				}
-			}
+			return super.isSuitableXmlAttribute(xmlAttribute);
 		}
 
 		return false;
@@ -110,8 +89,8 @@ public class LiferayTaglibClassNameReferenceContributor extends AbstractLiferayT
 	}
 
 	@SuppressWarnings("serial")
-	private static Map<String, Collection<AbstractMap.SimpleImmutableEntry<String, String>>> _taglibAttributes =
-		new HashMap<String, Collection<AbstractMap.SimpleImmutableEntry<String, String>>>() {
+	private static Map<String, Collection<SimpleImmutableEntry<String, String>>> _taglibAttributes =
+		new HashMap<String, Collection<SimpleImmutableEntry<String, String>>>() {
 			{
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI,
