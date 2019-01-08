@@ -25,6 +25,7 @@ import javax.swing.JComponent;
 /**
  * @author Charle Wu
  */
+@SuppressWarnings("serial")
 public class FixedSizeRefreshButton extends FixedSizeButton {
 
 	public FixedSizeRefreshButton() {
@@ -38,11 +39,11 @@ public class FixedSizeRefreshButton extends FixedSizeButton {
 			setIcon(icon);
 		}
 
-		setSize(size);
 		setAttachedComponent(component);
-		setMargin(JBUI.emptyInsets());
 		setDefaultCapable(false);
 		setFocusable(false);
+		setMargin(JBUI.emptyInsets());
+		setSize(size);
 
 		if ((UIUtil.isUnderAquaLookAndFeel() && (size == -1)) || UIUtil.isUnderIntelliJLaF() ||
 			UIUtil.isUnderDarcula()) {

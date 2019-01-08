@@ -64,6 +64,7 @@ public class LiferayModuleExtBuilder extends ModuleBuilder {
 	}
 
 	@Override
+	@SuppressWarnings("rawtypes")
 	public ModuleType getModuleType() {
 		return StdModuleTypes.JAVA;
 	}
@@ -88,12 +89,12 @@ public class LiferayModuleExtBuilder extends ModuleBuilder {
 
 	@Override
 	public void setupRootModel(ModifiableRootModel rootModel) {
-		VirtualFile projectRoot = _createAndGetContentEntry();
+		VirtualFile virtualFile = _createAndGetContentEntry();
 		Project project = rootModel.getProject();
 
-		_createProject(projectRoot, project);
+		_createProject(virtualFile, project);
 
-		rootModel.addContentEntry(projectRoot);
+		rootModel.addContentEntry(virtualFile);
 
 		if (myJdk != null) {
 			rootModel.setSdk(myJdk);
@@ -102,7 +103,7 @@ public class LiferayModuleExtBuilder extends ModuleBuilder {
 			rootModel.inheritSdk();
 		}
 
-		projectRoot.refresh(true, true);
+		virtualFile.refresh(true, true);
 
 		ExternalSystemUtil.refreshProject(
 			project, GradleConstants.SYSTEM_ID, LiferayWorkspaceUtil.getWorkspaceLocationPath(project), false,
@@ -122,11 +123,11 @@ public class LiferayModuleExtBuilder extends ModuleBuilder {
 	}
 
 	private void _createProject(VirtualFile projectRoot, Project project) {
-		VirtualFile moduleParentDir = projectRoot.getParent();
+		VirtualFile virtualFile = projectRoot.getParent();
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("create -d \"");
-		sb.append(moduleParentDir.getPath());
+		sb.append(virtualFile.getPath());
 		sb.append("\" -t ");
 		sb.append("modules-ext ");
 		sb.append("-m ");

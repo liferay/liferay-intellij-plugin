@@ -34,7 +34,6 @@ import com.intellij.util.ui.UIUtil;
 
 import com.liferay.ide.idea.ui.compoments.FixedSizeRefreshButton;
 import com.liferay.ide.idea.util.CoreUtil;
-import com.liferay.ide.idea.util.GradleUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
 
 import java.awt.event.ActionEvent;
@@ -61,15 +60,16 @@ import org.jetbrains.plugins.gradle.util.GradleConstants;
  */
 public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 
-	public LiferayModuleExtWizardStep(WizardContext wizardContext, LiferayModuleExtBuilder builder) {
+	@SuppressWarnings("serial")
+	public LiferayModuleExtWizardStep(WizardContext wizardContext, LiferayModuleExtBuilder liferayModuleExtBuilder) {
 		_project = wizardContext.getProject();
-		_builder = builder;
+		_liferayModuleExtBuilder = liferayModuleExtBuilder;
 
-		_moduleNameHint.setFont(UIUtil.getLabelFont(UIUtil.FontSize.SMALL));
+		_moduleNameHintLabel.setFont(UIUtil.getLabelFont(UIUtil.FontSize.SMALL));
 
 		// customize the presentation of a artifact
 
-		_originalModuleName.setRenderer(
+		_originalModuleNameComboBox.setRenderer(
 			new ColoredListCellRenderer<LibraryData>() {
 
 				@Override
@@ -85,7 +85,7 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 
 		// only set the artifact name when select the value from list.
 
-		_originalModuleName.setEditor(
+		_originalModuleNameComboBox.setEditor(
 			new BasicComboBoxEditor() {
 
 				@Override
@@ -103,13 +103,13 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 
 		// fill out the module version field automatic
 
-		_originalModuleName.addItemListener(
+		_originalModuleNameComboBox.addItemListener(
 			event -> {
 				if (event.getStateChange() == ItemEvent.SELECTED) {
 					Object item = event.getItem();
 
 					if (item instanceof LibraryData) {
-						_originalModuleVersion.setText(((LibraryData)item).getVersion());
+						_originalModuleVersionField.setText(((LibraryData)item).getVersion());
 					}
 				}
 			});
@@ -117,8 +117,8 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 		if (LiferayWorkspaceUtil.getTargetPlatformVersion(_project) != null) {
 			_insertOriginalModuleNames(false);
 
-			_originalModuleName.setMaximumRowCount(12);
-			_originalModuleVersion.setEnabled(false);
+			_originalModuleNameComboBox.setMaximumRowCount(12);
+			_originalModuleVersionField.setEnabled(false);
 		}
 
 		_refreshButton.addActionListener(
@@ -172,9 +172,9 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 
 	@Override
 	public void updateDataModel() {
-		_builder.setOriginalModuleName(_getOriginalModuleName());
+		_liferayModuleExtBuilder.setOriginalModuleName(_getOriginalModuleName());
 
-		_builder.setOriginalModuleVersion(_originalModuleVersion.getText());
+		_liferayModuleExtBuilder.setOriginalModuleVersion(_originalModuleVersionField.getText());
 	}
 
 	@Override
@@ -185,7 +185,7 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 			throw new ConfigurationException("Please input original module name", validationTitle);
 		}
 		else if ((LiferayWorkspaceUtil.getTargetPlatformVersion(_project) == null) &&
-				 CoreUtil.isNullOrEmpty(_originalModuleVersion.getText())) {
+				 CoreUtil.isNullOrEmpty(_originalModuleVersionField.getText())) {
 
 			throw new ConfigurationException("Please input original module version", validationTitle);
 		}
@@ -194,7 +194,7 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 	}
 
 	private String _getOriginalModuleName() {
-		ComboBoxEditor editor = _originalModuleName.getEditor();
+		ComboBoxEditor editor = _originalModuleNameComboBox.getEditor();
 
 		Object item = editor.getItem();
 
@@ -202,11 +202,11 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 	}
 
 	private void _insertOriginalModuleNames(boolean clear) {
-		List<LibraryData> targetPlatformArtifacts = GradleUtil.getTargetPlatformArtifacts(_project);
+		List<LibraryData> targetPlatformArtifacts = LiferayWorkspaceUtil.getTargetPlatformArtifacts(_project);
 
 		if (clear) {
 			try {
-				_originalModuleName.removeAllItems();
+				_originalModuleNameComboBox.removeAllItems();
 			}
 			catch (NullPointerException npe) {
 			}
@@ -215,16 +215,16 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 		targetPlatformArtifacts.forEach(
 			artifact -> {
 				if ("com.liferay".equals(artifact.getGroupId())) {
-					_originalModuleName.addItem(artifact);
+					_originalModuleNameComboBox.addItem(artifact);
 				}
 			});
 	}
 
-	private LiferayModuleExtBuilder _builder;
+	private LiferayModuleExtBuilder _liferayModuleExtBuilder;
 	private JPanel _mainPanel;
-	private JLabel _moduleNameHint;
-	private JComboBox<LibraryData> _originalModuleName;
-	private JTextField _originalModuleVersion;
+	private JLabel _moduleNameHintLabel;
+	private JComboBox<LibraryData> _originalModuleNameComboBox;
+	private JTextField _originalModuleVersionField;
 	private final Project _project;
 	private FixedSizeRefreshButton _refreshButton;
 
