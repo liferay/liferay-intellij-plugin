@@ -59,6 +59,8 @@ public class WorkspaceConstants {
 
 	public static final String[] LIFERAY_VERSIONS = {"7.1", "7.0"};
 
+	public static final String MAVEN_HOME_DIR_PROPERTY = "liferayHome";
+
 	public static final String[] TARGET_PLATFORM_VERSIONS_7_0 = {"7.0.6"};
 
 	public static final String[] TARGET_PLATFORM_VERSIONS_7_1 = {"7.1.0"};

@@ -115,7 +115,7 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
 	}
 
 	private List<Path> _getBndPaths() {
-		File file = new File(workingDirectory);
+		File file = new File(projectDir.getCanonicalPath());
 
 		File bndFile = new File(file, "bnd.bnd");
 
@@ -128,7 +128,7 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
 					new SimpleFileVisitor<Path>() {
 
 						@Override
-						public FileVisitResult postVisitDirectory(Path dir, IOException e) throws IOException {
+						public FileVisitResult postVisitDirectory(Path dir, IOException e) {
 							if (new File(dir.toFile(), "bnd.bnd").exists()) {
 								return FileVisitResult.SKIP_SUBTREE;
 							}
@@ -137,7 +137,7 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
 						}
 
 						@Override
-						public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+						public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
 							if (file.endsWith("bnd.bnd")) {
 								bndFiles.add(file);
 

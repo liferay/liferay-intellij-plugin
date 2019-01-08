@@ -14,15 +14,14 @@
 
 package com.liferay.ide.idea.ui.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
+import com.liferay.ide.idea.util.ProjectConfigurationUtil;
 
 import icons.LiferayIcons;
 
 /**
  * @author Andy Wu
+ * @author Simon Jiang
  */
 public class InitBundleGradleAction extends AbstractLiferayGradleTaskAction {
 
@@ -31,25 +30,12 @@ public class InitBundleGradleAction extends AbstractLiferayGradleTaskAction {
 	}
 
 	@Override
-	public boolean isEnabledAndVisible(AnActionEvent event) {
-		Project project = event.getProject();
+	protected void handleProcessTerminated() {
+		super.handleProcessTerminated();
 
-		VirtualFile baseDir = project.getBaseDir();
+		String homeDir = LiferayWorkspaceUtil.getHomeDir(project.getBasePath());
 
-		VirtualFile gradleFile = baseDir.findChild("build.gradle");
-
-		if (baseDir.equals(getVirtualFile(event)) && (gradleFile != null)) {
-			return true;
-		}
-
-		return false;
-	}
-
-	@Override
-	protected String getWorkingDirectory(AnActionEvent event) {
-		Project project = event.getRequiredData(CommonDataKeys.PROJECT);
-
-		return project.getBasePath();
+		ProjectConfigurationUtil.configExcludedFolder(project, homeDir);
 	}
 
 }

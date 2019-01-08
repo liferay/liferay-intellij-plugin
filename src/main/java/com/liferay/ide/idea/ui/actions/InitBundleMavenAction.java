@@ -14,12 +14,17 @@
 
 package com.liferay.ide.idea.ui.actions;
 
+import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
+import com.liferay.ide.idea.util.ProjectConfigurationUtil;
+import com.liferay.ide.idea.util.WorkspaceConstants;
+
 import icons.LiferayIcons;
 
 import java.util.Arrays;
 
 /**
  * @author Joye Luo
+ * @author Simon Jiang
  */
 public class InitBundleMavenAction extends AbstractLiferayMavenGoalAction {
 
@@ -27,6 +32,16 @@ public class InitBundleMavenAction extends AbstractLiferayMavenGoalAction {
 		super("InitBundle", "Run initBundle goal", LiferayIcons.LIFERAY_ICON);
 
 		goals = Arrays.asList("bundle-support:init");
+	}
+
+	@Override
+	protected void handleProcessTerminated() {
+		super.handleProcessTerminated();
+
+		String homeDir = LiferayWorkspaceUtil.getMavenProperty(
+			project, WorkspaceConstants.MAVEN_HOME_DIR_PROPERTY, WorkspaceConstants.DEFAULT_HOME_DIR);
+
+		ProjectConfigurationUtil.configExcludedFolder(project, homeDir);
 	}
 
 }
