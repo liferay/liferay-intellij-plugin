@@ -42,6 +42,8 @@ public class StringPool {
 
 	public static final String FORWARD_SLASH = "/";
 
+	public static final String ORIGINAL_MODULE_CONFIGURATION = "originalModule";
+
 	public static final String PERIOD = ".";
 
 	public static final String SINGLE_QUOTE = "\'";

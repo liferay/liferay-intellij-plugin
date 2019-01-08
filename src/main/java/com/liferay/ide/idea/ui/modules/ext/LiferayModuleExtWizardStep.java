@@ -16,18 +16,9 @@ package com.liferay.ide.idea.ui.modules.ext;
 
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.externalSystem.importing.ImportSpecBuilder;
-import com.intellij.openapi.externalSystem.model.DataNode;
 import com.intellij.openapi.externalSystem.model.project.LibraryData;
-import com.intellij.openapi.externalSystem.model.project.ProjectData;
-import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode;
-import com.intellij.openapi.externalSystem.service.project.ExternalProjectRefreshCallback;
-import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.UIUtil;
@@ -36,9 +27,9 @@ import com.liferay.ide.idea.ui.compoments.FixedSizeRefreshButton;
 import com.liferay.ide.idea.util.CoreUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import java.util.List;
 
@@ -52,8 +43,6 @@ import javax.swing.JTextField;
 import javax.swing.plaf.basic.BasicComboBoxEditor;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.plugins.gradle.util.GradleConstants;
 
 /**
  * @author Charle Wu
@@ -64,6 +53,15 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 	public LiferayModuleExtWizardStep(WizardContext wizardContext, LiferayModuleExtBuilder liferayModuleExtBuilder) {
 		_project = wizardContext.getProject();
 		_liferayModuleExtBuilder = liferayModuleExtBuilder;
+
+		_overrideFilesPanel.prepareRefreshButton(_refreshButton, () -> _insertOriginalModuleNames(true));
+
+		_overrideFilesPanel.function = () -> {
+			validate();
+
+			return _getSelectedArtifact();
+		};
+		_overrideFilesPanel.setProject(_project);
 
 		_moduleNameHintLabel.setFont(UIUtil.getLabelFont(UIUtil.FontSize.SMALL));
 
@@ -114,55 +112,30 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 				}
 			});
 
+		KeyAdapter keyAdapter = new KeyAdapter() {
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				//reset the selected source files when input changed
+
+				_overrideFilesPanel.listModel.clear();
+			}
+
+		};
+
+		JTextField textField = (JTextField)_getEditor().getEditorComponent();
+
+		textField.addKeyListener(keyAdapter);
+
 		if (LiferayWorkspaceUtil.getTargetPlatformVersion(_project) != null) {
 			_insertOriginalModuleNames(false);
 
 			_originalModuleNameComboBox.setMaximumRowCount(12);
 			_originalModuleVersionField.setEnabled(false);
 		}
-
-		_refreshButton.addActionListener(
-			new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					_refreshButton.setEnabled(false);
-
-					if (LiferayWorkspaceUtil.getTargetPlatformVersion(_project) == null) {
-						Messages.showMessageDialog(
-							_project, "No Target Platform configuration claimed in gradle.properties.", "Warning",
-							Messages.getWarningIcon());
-						_refreshButton.setEnabled(true);
-
-						return;
-					}
-
-					ImportSpecBuilder builder = new ImportSpecBuilder(_project, GradleConstants.SYSTEM_ID);
-
-					builder.use(ProgressExecutionMode.START_IN_FOREGROUND_ASYNC);
-					builder.callback(
-						new ExternalProjectRefreshCallback() {
-
-							@Override
-							public void onFailure(@NotNull String errorMessage, @Nullable String errorDetails) {
-								_refreshButton.setEnabled(true);
-							}
-
-							@Override
-							public void onSuccess(@Nullable DataNode<ProjectData> externalProject) {
-								Application application = ApplicationManager.getApplication();
-
-								application.invokeLater(() -> _insertOriginalModuleNames(true));
-
-								_refreshButton.setEnabled(true);
-							}
-
-						});
-
-					ExternalSystemUtil.refreshProjects(builder);
-				}
-
-			});
+		else {
+			_originalModuleVersionField.addKeyListener(keyAdapter);
+		}
 	}
 
 	@Override
@@ -173,8 +146,8 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 	@Override
 	public void updateDataModel() {
 		_liferayModuleExtBuilder.setOriginalModuleName(_getOriginalModuleName());
-
 		_liferayModuleExtBuilder.setOriginalModuleVersion(_originalModuleVersionField.getText());
+		_liferayModuleExtBuilder.setOverrideFilesPanel(_overrideFilesPanel);
 	}
 
 	@Override
@@ -193,16 +166,30 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 		return true;
 	}
 
-	private String _getOriginalModuleName() {
-		ComboBoxEditor editor = _originalModuleNameComboBox.getEditor();
+	private LibraryData _getSelectedArtifact() {
+		String originalModuleName = _getOriginalModuleName();
 
-		Object item = editor.getItem();
+		for (LibraryData lib : _targetPlatformArtifacts) {
+			if (originalModuleName.equals(lib.getArtifactId())) {
+				return lib;
+			}
+		}
+
+		return null;
+	}
+
+	private ComboBoxEditor _getEditor() {
+		return _originalModuleNameComboBox.getEditor();
+	}
+
+	private String _getOriginalModuleName() {
+		Object item = _getEditor().getItem();
 
 		return item.toString();
 	}
 
 	private void _insertOriginalModuleNames(boolean clear) {
-		List<LibraryData> targetPlatformArtifacts = LiferayWorkspaceUtil.getTargetPlatformArtifacts(_project);
+		_targetPlatformArtifacts = LiferayWorkspaceUtil.getTargetPlatformArtifacts(_project);
 
 		if (clear) {
 			try {
@@ -212,7 +199,7 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 			}
 		}
 
-		targetPlatformArtifacts.forEach(
+		_targetPlatformArtifacts.forEach(
 			artifact -> {
 				if ("com.liferay".equals(artifact.getGroupId())) {
 					_originalModuleNameComboBox.addItem(artifact);
@@ -225,7 +212,9 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 	private JLabel _moduleNameHintLabel;
 	private JComboBox<LibraryData> _originalModuleNameComboBox;
 	private JTextField _originalModuleVersionField;
+	private OverrideFilesComponent _overrideFilesPanel;
 	private final Project _project;
 	private FixedSizeRefreshButton _refreshButton;
+	private List<LibraryData> _targetPlatformArtifacts;
 
 }

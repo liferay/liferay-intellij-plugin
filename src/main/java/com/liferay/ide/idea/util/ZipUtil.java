@@ -14,6 +14,8 @@
 
 package com.liferay.ide.idea.util;
 
+import com.intellij.openapi.util.Pair;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -21,6 +23,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -42,67 +46,50 @@ public class ZipUtil {
 		}
 	}
 
-	public static void unzip(File file, File destdir) throws IOException {
-		unzip(file, null, destdir);
-	}
-
-	public static void unzip(File file, String entryToStart, File destdir) throws IOException {
+	public static void unzip(File file, File destDir, PathFilter filter) throws IOException {
 		ZipFile zip = open(file);
 
 		try {
 			Enumeration<? extends ZipEntry> entries = zip.entries();
-
-			boolean foundStartEntry = false;
-
-			if (entryToStart == null) {
-				foundStartEntry = true;
-			}
+			Map<String, File> folders = new HashMap<>();
 
 			while (entries.hasMoreElements()) {
 				ZipEntry entry = entries.nextElement();
 
-				if (!foundStartEntry) {
-					foundStartEntry = entryToStart.equals(entry.getName());
+				String entryName = entry.getName();
 
-					continue;
-				}
+				if (!folders.isEmpty()) {
+					boolean hasCopied = false;
 
-				String entryName = null;
+					for (Map.Entry<String, File> e : folders.entrySet()) {
+						if (entryName.startsWith(e.getKey())) {
+							//if the entry folder is accepted that means the sub-nodes should be accepted too
 
-				if (entryToStart == null) {
-					entryName = entry.getName();
-				}
-				else {
-					String name = entry.getName();
+							_copyEntry(zip, entry, e.getValue());
+							hasCopied = true;
 
-					entryName = name.replaceFirst(entryToStart, "");
-				}
-
-				if (entry.isDirectory()) {
-					File emptyDir = new File(destdir, entryName);
-
-					_mkdir(emptyDir);
-
-					continue;
-				}
-
-				File f = new File(destdir, entryName);
-
-				File dir = f.getParentFile();
-
-				_mkdir(dir);
-
-				try (InputStream in = zip.getInputStream(entry); FileOutputStream out = new FileOutputStream(f)) {
-					byte[] bytes = new byte[1024];
-
-					int count = in.read(bytes);
-
-					while (count != -1) {
-						out.write(bytes, 0, count);
-						count = in.read(bytes);
+							break;
+						}
 					}
 
-					out.flush();
+					if (hasCopied) {
+						continue;
+					}
+				}
+
+				if (filter != null) {
+					Pair<Boolean, File> pair = filter.accept(entryName);
+
+					if (pair.getFirst()) {
+						if (entry.isDirectory()) {
+							folders.put(entryName, pair.getSecond());
+						}
+
+						_copyEntry(zip, entry, pair.getSecond());
+					}
+				}
+				else {
+					_copyEntry(zip, entry, destDir);
 				}
 			}
 		}
@@ -112,6 +99,52 @@ public class ZipUtil {
 			}
 			catch (IOException ioe) {
 			}
+		}
+	}
+
+	@FunctionalInterface
+	public interface PathFilter {
+
+		/**
+		 * A filter for zip entry
+		 *
+		 * @return a pair of return values, if the input entry path is accepted then
+		 * return true and the expected directory, otherwise return false and null.
+		 */
+		public Pair<Boolean, File> accept(String entryPath);
+
+	}
+
+	private static void _copyEntry(ZipFile zip, ZipEntry entry, File destDir) throws IOException {
+		String entryName = entry.getName();
+
+		if (entry.isDirectory()) {
+			File emptyDir = new File(destDir, entryName);
+
+			_mkdir(emptyDir);
+
+			return;
+		}
+
+		File f = new File(destDir, entryName);
+
+		File dir = f.getParentFile();
+
+		_mkdir(dir);
+
+		try (InputStream in = zip.getInputStream(entry);
+			FileOutputStream out = new FileOutputStream(f)) {
+
+			byte[] bytes = new byte[1024];
+
+			int count = in.read(bytes);
+
+			while (count != -1) {
+				out.write(bytes, 0, count);
+				count = in.read(bytes);
+			}
+
+			out.flush();
 		}
 	}
 
