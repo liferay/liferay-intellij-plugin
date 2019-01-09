@@ -26,7 +26,7 @@
         <properties>
           <editable value="false"/>
           <enabled value="false"/>
-          <text resource-bundle="messages/LiferayBundle" key="modules.ext.files.undefined"/>
+          <text resource-bundle="messages/Messages" key="modules.ext.files.undefined"/>
         </properties>
       </component>
       <component id="d3966" class="com.liferay.ide.idea.ui.compoments.FixedSizeRefreshButton" binding="_refreshButton">
@@ -36,7 +36,7 @@
         <properties>
           <enabled value="true"/>
           <text value=""/>
-          <toolTipText resource-bundle="messages/LiferayBundle" key="modules.ext.refresh.tip"/>
+          <toolTipText resource-bundle="messages/Messages" key="modules.ext.refresh.tip"/>
         </properties>
       </component>
       <nested-form id="66eeb" form-file="com/liferay/ide/idea/ui/modules/ext/OverrideFilesComponent.form" binding="_overrideFilesPanel">

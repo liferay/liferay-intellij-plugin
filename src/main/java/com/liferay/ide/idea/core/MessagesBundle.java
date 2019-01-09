@@ -22,20 +22,20 @@ import org.jetbrains.annotations.PropertyKey;
 /**
  * @author Charles Wu
  */
-public class LiferayBundle extends AbstractBundle {
+public class MessagesBundle extends AbstractBundle {
 
-	public static final String PATH_TO_BUNDLE = "messages.LiferayBundle";
+	public static final String MESSAGES = "messages.Messages";
 
 	public static String message(
-		@NotNull @PropertyKey(resourceBundle = PATH_TO_BUNDLE) String key, @NotNull Object... params) {
+		@NotNull @PropertyKey(resourceBundle = MESSAGES) String key, @NotNull Object... params) {
 
 		return _bundle.getMessage(key, params);
 	}
 
-	public LiferayBundle() {
-		super(PATH_TO_BUNDLE);
+	public MessagesBundle() {
+		super(MESSAGES);
 	}
 
-	private static final LiferayBundle _bundle = new LiferayBundle();
+	private static final MessagesBundle _bundle = new MessagesBundle();
 
 }

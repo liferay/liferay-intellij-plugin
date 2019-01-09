@@ -40,7 +40,7 @@ import com.intellij.ui.components.JBList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 
-import com.liferay.ide.idea.core.LiferayBundle;
+import com.liferay.ide.idea.core.MessagesBundle;
 import com.liferay.ide.idea.ui.compoments.FixedSizeRefreshButton;
 import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
 import com.liferay.ide.idea.util.ZipUtil;
@@ -79,35 +79,35 @@ public class OverrideFilesComponent {
 		_prepareListPanel();
 	}
 
-	public void doFinish(VirtualFile moduleRoot) {
+	public void doFinish(VirtualFile moduleRootVirtualFile) {
 		Application application = ApplicationManager.getApplication();
 
 		application.executeOnPooledThread(
 			() -> {
-				Path sourceFolder = Paths.get(moduleRoot.getPath(), "src/main/java/");
-				Path resourcesFolder = Paths.get(moduleRoot.getPath(), "src/main/resources/");
+				Path sourcePath = Paths.get(moduleRootVirtualFile.getPath(), "src/main/java/");
+				Path resourcesPath = Paths.get(moduleRootVirtualFile.getPath(), "src/main/resources/");
 
 				List<String> relativePaths = new ArrayList<>(listModel.getSize());
-				Enumeration<EntryDescription> enumeration = listModel.elements();
+				Enumeration<EntryDescription> elements = listModel.elements();
 
-				while (enumeration.hasMoreElements()) {
-					EntryDescription entry = enumeration.nextElement();
+				while (elements.hasMoreElements()) {
+					EntryDescription entry = elements.nextElement();
 
 					relativePaths.add(entry.getPresentableUrl());
 				}
 
 				try {
 					ZipUtil.unzip(
-						new File(_sourceJar), sourceFolder.toFile(),
+						new File(_sourceJar), sourcePath.toFile(),
 						path -> {
 							//choose the folder where the file should go
 
 							if (relativePaths.contains(path)) {
 								if (path.startsWith("com/")) {
-									return Pair.create(true, sourceFolder.toFile());
+									return Pair.create(true, sourcePath.toFile());
 								}
 								else {
-									return Pair.create(true, resourcesFolder.toFile());
+									return Pair.create(true, resourcesPath.toFile());
 								}
 							}
 							else {
@@ -116,10 +116,10 @@ public class OverrideFilesComponent {
 						});
 				}
 				catch (IOException ioe) {
-					_log.error(ioe);
+					_logger.error(ioe);
 				}
 
-				moduleRoot.refresh(true, true);
+				moduleRootVirtualFile.refresh(true, true);
 			});
 	}
 
@@ -130,17 +130,17 @@ public class OverrideFilesComponent {
 
 				if (LiferayWorkspaceUtil.getTargetPlatformVersion(_project) == null) {
 					Messages.showMessageDialog(
-						_project, LiferayBundle.message("modules.ext.targetPlatform.mention"), "Warning",
+						_project, MessagesBundle.message("modules.ext.targetPlatform.mention"), "Warning",
 						Messages.getWarningIcon());
 					refreshButton.setEnabled(true);
 
 					return;
 				}
 
-				ImportSpecBuilder builder = new ImportSpecBuilder(_project, GradleConstants.SYSTEM_ID);
+				ImportSpecBuilder importSpecBuilder = new ImportSpecBuilder(_project, GradleConstants.SYSTEM_ID);
 
-				builder.use(ProgressExecutionMode.START_IN_FOREGROUND_ASYNC);
-				builder.callback(
+				importSpecBuilder.use(ProgressExecutionMode.START_IN_FOREGROUND_ASYNC);
+				importSpecBuilder.callback(
 					new ExternalProjectRefreshCallback() {
 
 						@Override
@@ -159,7 +159,7 @@ public class OverrideFilesComponent {
 
 					});
 
-				ExternalSystemUtil.refreshProjects(builder);
+				ExternalSystemUtil.refreshProjects(importSpecBuilder);
 			});
 	}
 
@@ -191,18 +191,18 @@ public class OverrideFilesComponent {
 			return;
 		}
 
-		LocalFileSystem fileSystem = LocalFileSystem.getInstance();
+		LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
 
-		VirtualFile rootFile = fileSystem.findFileByPath(_sourceJar);
+		VirtualFile rootVirtualFile = localFileSystem.findFileByPath(_sourceJar);
 
-		FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, false, false, true, true);
+		FileChooserDescriptor fileChooserDescriptor = new FileChooserDescriptor(true, true, false, false, true, true);
 
-		descriptor.setTitle(LiferayBundle.message("modules.ext.override.dialog.title"));
-		descriptor.setRoots(rootFile);
-		descriptor.setForcedToUseIdeaFileChooser(true);
+		fileChooserDescriptor.setTitle(MessagesBundle.message("modules.ext.override.dialog.title"));
+		fileChooserDescriptor.setRoots(rootVirtualFile);
+		fileChooserDescriptor.setForcedToUseIdeaFileChooser(true);
 
 		FileChooser.chooseFiles(
-			descriptor, _project, rootFile,
+			fileChooserDescriptor, _project, rootVirtualFile,
 			chosenFiles -> chosenFiles.forEach(
 				file -> {
 					EntryDescription description = new EntryDescription(file);
@@ -220,27 +220,29 @@ public class OverrideFilesComponent {
 	}
 
 	private String _getSourceJar() throws ConfigurationException {
-		LibraryData lib = function.get();
+		LibraryData libraryData = function.get();
 
-		if (lib != null) {
-			return ContainerUtil.getFirstItem(lib.getPaths(LibraryPathType.SOURCE));
+		if (libraryData != null) {
+			return ContainerUtil.getFirstItem(libraryData.getPaths(LibraryPathType.SOURCE));
 		}
 
-		throw new ConfigurationException(LiferayBundle.message("modules.ext.override.jar.undefined"), "Error");
+		throw new ConfigurationException(MessagesBundle.message("modules.ext.override.jar.undefined"), "Error");
 	}
 
+	@SuppressWarnings("serial")
 	private void _prepareListPanel() {
 		_jbList.setCellRenderer(
 			new DefaultListCellRenderer() {
 
 				@Override
+				@SuppressWarnings("rawtypes")
 				public final Component getListCellRendererComponent(
 					JList list, Object value, int index, boolean selected, boolean cellHasFocus) {
 
 					super.getListCellRendererComponent(list, _getItemText(value), index, selected, cellHasFocus);
 
 					if (selected) {
-						setForeground(UIUtil.getListSelectionForeground());
+						setForeground(UIUtil.getListSelectionForeground(true));
 					}
 					else if (value instanceof EntryDescription && !((EntryDescription)value).isValid()) {
 						setForeground(JBColor.RED);
@@ -261,16 +263,16 @@ public class OverrideFilesComponent {
 
 			});
 
-		ToolbarDecorator decorator = ToolbarDecorator.createDecorator(_jbList);
+		ToolbarDecorator toolbarDecorator = ToolbarDecorator.createDecorator(_jbList);
 
-		decorator.disableUpDownActions();
-		decorator.setAddAction(action -> _doAdd());
-		decorator.setRemoveAction(action -> _doRemove());
+		toolbarDecorator.disableUpDownActions();
+		toolbarDecorator.setAddAction(action -> _doAdd());
+		toolbarDecorator.setRemoveAction(action -> _doRemove());
 
-		_sourcePanel.add(decorator.createPanel());
+		_sourcePanel.add(toolbarDecorator.createPanel());
 	}
 
-	private static final Logger _log = Logger.getInstance(LiferayModuleExtBuilder.class);
+	private static final Logger _logger = Logger.getInstance(LiferayModuleExtBuilder.class);
 
 	private JBList<EntryDescription> _jbList;
 	private Project _project;

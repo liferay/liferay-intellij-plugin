@@ -63,28 +63,28 @@ public class EntryDescription {
 
 		if (fileExtension != null) {
 			switch (fileExtension) {
-				case "xml":
-					icon = AllIcons.FileTypes.Xml;
-
-					break;
-				case "properties":
-					icon = AllIcons.FileTypes.Properties;
-
-					break;
-				case "java":
-					icon = AllIcons.FileTypes.Java;
+				case "css":
+					icon = AllIcons.FileTypes.Css;
 
 					break;
 				case "html":
 					icon = AllIcons.FileTypes.Html;
 
 					break;
-				case "css":
-					icon = AllIcons.FileTypes.Css;
+				case "java":
+					icon = AllIcons.FileTypes.Java;
 
 					break;
 				case "jsp":
 					icon = AllIcons.FileTypes.Jsp;
+
+					break;
+				case "properties":
+					icon = AllIcons.FileTypes.Properties;
+
+					break;
+				case "xml":
+					icon = AllIcons.FileTypes.Xml;
 
 					break;
 			}

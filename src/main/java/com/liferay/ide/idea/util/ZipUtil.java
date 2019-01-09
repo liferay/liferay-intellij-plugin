@@ -46,11 +46,11 @@ public class ZipUtil {
 		}
 	}
 
-	public static void unzip(File file, File destDir, PathFilter filter) throws IOException {
-		ZipFile zip = open(file);
+	public static void unzip(File file, File destDir, PathFilter pathFilter) throws IOException {
+		ZipFile zipFile = open(file);
 
 		try {
-			Enumeration<? extends ZipEntry> entries = zip.entries();
+			Enumeration<? extends ZipEntry> entries = zipFile.entries();
 			Map<String, File> folders = new HashMap<>();
 
 			while (entries.hasMoreElements()) {
@@ -65,7 +65,7 @@ public class ZipUtil {
 						if (entryName.startsWith(e.getKey())) {
 							//if the entry folder is accepted that means the sub-nodes should be accepted too
 
-							_copyEntry(zip, entry, e.getValue());
+							_copyEntry(zipFile, entry, e.getValue());
 							hasCopied = true;
 
 							break;
@@ -77,25 +77,25 @@ public class ZipUtil {
 					}
 				}
 
-				if (filter != null) {
-					Pair<Boolean, File> pair = filter.accept(entryName);
+				if (pathFilter != null) {
+					Pair<Boolean, File> pair = pathFilter.accept(entryName);
 
 					if (pair.getFirst()) {
 						if (entry.isDirectory()) {
 							folders.put(entryName, pair.getSecond());
 						}
 
-						_copyEntry(zip, entry, pair.getSecond());
+						_copyEntry(zipFile, entry, pair.getSecond());
 					}
 				}
 				else {
-					_copyEntry(zip, entry, destDir);
+					_copyEntry(zipFile, entry, destDir);
 				}
 			}
 		}
 		finally {
 			try {
-				zip.close();
+				zipFile.close();
 			}
 			catch (IOException ioe) {
 			}
@@ -126,14 +126,14 @@ public class ZipUtil {
 			return;
 		}
 
-		File f = new File(destDir, entryName);
+		File file = new File(destDir, entryName);
 
-		File dir = f.getParentFile();
+		File dir = file.getParentFile();
 
 		_mkdir(dir);
 
 		try (InputStream in = zip.getInputStream(entry);
-			FileOutputStream out = new FileOutputStream(f)) {
+			FileOutputStream out = new FileOutputStream(file)) {
 
 			byte[] bytes = new byte[1024];
 
