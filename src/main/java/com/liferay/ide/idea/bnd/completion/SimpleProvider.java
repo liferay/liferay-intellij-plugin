@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.ide.idea.bndtools.completion;
+package com.liferay.ide.idea.bnd.completion;
 
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionProvider;

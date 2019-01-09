@@ -12,10 +12,10 @@
  * details.
  */
 
-package com.liferay.ide.idea.bndtools.psi;
+package com.liferay.ide.idea.bnd.psi;
 
 /**
  * @author Charles Wu
  */
-public interface Directive extends AssignmentExpression {
+public interface Attribute extends AssignmentExpression {
 }

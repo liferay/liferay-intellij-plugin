@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.ide.idea.bndtools.completion.header;
+package com.liferay.ide.idea.bnd.completion.header;
 
 import aQute.bnd.osgi.Constants;
 

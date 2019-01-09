@@ -12,15 +12,14 @@
  * details.
  */
 
-package com.liferay.ide.idea.bndtools.completion.header;
+package com.liferay.ide.idea.bnd.completion.header;
 
 import static com.intellij.lang.PsiBuilderUtil.expect;
 
 import com.intellij.lang.PsiBuilder;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
-
-import com.liferay.ide.idea.bndtools.psi.OsgiManifestElementType;
+import com.liferay.ide.idea.bnd.psi.OsgiManifestElementType;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.lang.manifest.header.HeaderParser;

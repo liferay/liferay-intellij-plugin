@@ -12,18 +12,17 @@
  * details.
  */
 
-package com.liferay.ide.idea.bndtools;
+package com.liferay.ide.idea.bnd;
 
 import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
-
-import com.liferay.ide.idea.bndtools.psi.AssignmentExpression;
-import com.liferay.ide.idea.bndtools.psi.Attribute;
-import com.liferay.ide.idea.bndtools.psi.Clause;
-import com.liferay.ide.idea.bndtools.psi.Directive;
+import com.liferay.ide.idea.bnd.psi.AssignmentExpression;
+import com.liferay.ide.idea.bnd.psi.Attribute;
+import com.liferay.ide.idea.bnd.psi.Clause;
+import com.liferay.ide.idea.bnd.psi.Directive;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.lang.manifest.psi.Header;

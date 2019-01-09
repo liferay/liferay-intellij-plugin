@@ -12,21 +12,25 @@
  * details.
  */
 
-package com.liferay.ide.idea.bndtools.psi;
+package com.liferay.ide.idea.bnd.psi.impl;
 
-import com.intellij.psi.PsiNamedElement;
+import com.intellij.lang.ASTNode;
+import com.liferay.ide.idea.bnd.psi.Attribute;
 
-import org.jetbrains.lang.manifest.psi.HeaderValuePart;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Charles Wu
  */
-public interface AssignmentExpression extends PsiNamedElement {
+public class AttributeImpl extends AbstractAssignmentExpression implements Attribute {
 
-	public HeaderValuePart getNameElement();
+	public AttributeImpl(@NotNull ASTNode node) {
+		super(node);
+	}
 
-	public String getValue();
-
-	public HeaderValuePart getValueElement();
+	@Override
+	public String toString() {
+		return "Attribute:" + getName();
+	}
 
 }

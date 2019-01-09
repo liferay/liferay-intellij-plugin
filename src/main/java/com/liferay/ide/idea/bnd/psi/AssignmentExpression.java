@@ -12,26 +12,21 @@
  * details.
  */
 
-package com.liferay.ide.idea.bndtools.psi.impl;
+package com.liferay.ide.idea.bnd.psi;
 
-import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiNamedElement;
 
-import com.liferay.ide.idea.bndtools.psi.Directive;
-
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.lang.manifest.psi.HeaderValuePart;
 
 /**
  * @author Charles Wu
  */
-public class DirectiveImpl extends AbstractAssignmentExpression implements Directive {
+public interface AssignmentExpression extends PsiNamedElement {
 
-	public DirectiveImpl(@NotNull ASTNode node) {
-		super(node);
-	}
+	public HeaderValuePart getNameElement();
 
-	@Override
-	public String toString() {
-		return "Directive:" + getName();
-	}
+	public String getValue();
+
+	public HeaderValuePart getValueElement();
 
 }

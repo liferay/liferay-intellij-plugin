@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.ide.idea.bndtools;
+package com.liferay.ide.idea.bnd;
 
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.vfs.VirtualFile;

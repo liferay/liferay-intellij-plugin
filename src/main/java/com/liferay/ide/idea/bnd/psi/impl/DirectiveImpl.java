@@ -12,26 +12,25 @@
  * details.
  */
 
-package com.liferay.ide.idea.bndtools.psi.impl;
+package com.liferay.ide.idea.bnd.psi.impl;
 
 import com.intellij.lang.ASTNode;
-
-import com.liferay.ide.idea.bndtools.psi.Attribute;
+import com.liferay.ide.idea.bnd.psi.Directive;
 
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Charles Wu
  */
-public class AttributeImpl extends AbstractAssignmentExpression implements Attribute {
+public class DirectiveImpl extends AbstractAssignmentExpression implements Directive {
 
-	public AttributeImpl(@NotNull ASTNode node) {
+	public DirectiveImpl(@NotNull ASTNode node) {
 		super(node);
 	}
 
 	@Override
 	public String toString() {
-		return "Attribute:" + getName();
+		return "Directive:" + getName();
 	}
 
 }

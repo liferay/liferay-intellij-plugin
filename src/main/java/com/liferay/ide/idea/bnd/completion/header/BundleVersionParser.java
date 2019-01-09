@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.ide.idea.bndtools.completion.header;
+package com.liferay.ide.idea.bnd.completion.header;
 
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.openapi.util.TextRange;

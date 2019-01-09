@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.ide.idea.bndtools.psi;
+package com.liferay.ide.idea.bnd.psi;
 
 import java.util.List;
 

@@ -12,15 +12,14 @@
  * details.
  */
 
-package com.liferay.ide.idea.bndtools.psi.impl;
+package com.liferay.ide.idea.bnd.psi.impl;
 
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
-
-import com.liferay.ide.idea.bndtools.psi.AssignmentExpression;
+import com.liferay.ide.idea.bnd.psi.AssignmentExpression;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.lang.manifest.psi.HeaderValuePart;

@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.ide.idea.bndtools;
+package com.liferay.ide.idea.bnd;
 
 import com.intellij.openapi.fileTypes.FileTypeConsumer;
 import com.intellij.openapi.fileTypes.FileTypeFactory;
@@ -22,11 +22,11 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author Dominik Marks
  */
-public class BndFileFactory extends FileTypeFactory {
+public class BndFileTypeFactory extends FileTypeFactory {
 
 	@Override
-	public void createFileTypes(@NotNull FileTypeConsumer consumer) {
-		consumer.consume(BndFileType.INSTANCE, "bnd");
+	public void createFileTypes(@NotNull FileTypeConsumer fileTypeConsumer) {
+		fileTypeConsumer.consume(BndFileType.INSTANCE, "bnd");
 	}
 
 }
