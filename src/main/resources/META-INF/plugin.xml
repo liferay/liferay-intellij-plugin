@@ -104,7 +104,14 @@
 			<add-to-group anchor="last" group-id="NewGroup" />
 		</action>
 
-		<group id="LiferayActionGroup" class="com.liferay.ide.idea.ui.actions.LiferayActionGroup" popup="true" text="Liferay" icon="/icons/liferay.svg">
+		<action id="NewModuleExtFiles" class="com.liferay.ide.idea.ui.modules.ext.NewModuleExtFilesAction"
+				text="Module Ext Files"
+				description="Add source files to module ext project to override original bundle"
+				icon="LiferayIcons.LIFERAY_ICON">
+			<add-to-group group-id="NewGroup" anchor="last"/>
+		</action>
+
+		<group id="LiferayActionGroup" class="com.liferay.ide.idea.ui.actions.LiferayActionGroup" popup="true" text="Liferay" icon="/icons/liferay.png">
 			<add-to-group group-id="ProjectViewPopupMenu" />
 			<action class="com.liferay.ide.idea.ui.actions.DeployGradleModuleAction" id="DeployLiferayGradleModule"/>
 			<action class="com.liferay.ide.idea.ui.actions.WatchGradleModuleAction" id="WatchLiferayGradleModule"/>

@@ -87,6 +87,10 @@ public class LiferayModuleExtBuilder extends ModuleBuilder {
 		_originalModuleVersion = originalModuleVersion;
 	}
 
+	public void setOverrideFilesPanel(OverrideFilesComponent overrideFilesPanel) {
+		_overrideFilesPanel = overrideFilesPanel;
+	}
+
 	@Override
 	public void setupRootModel(ModifiableRootModel rootModel) {
 		VirtualFile virtualFile = _createAndGetContentEntry();
@@ -103,7 +107,7 @@ public class LiferayModuleExtBuilder extends ModuleBuilder {
 			rootModel.inheritSdk();
 		}
 
-		virtualFile.refresh(true, true);
+		_overrideFilesPanel.doFinish(virtualFile);
 
 		ExternalSystemUtil.refreshProject(
 			project, GradleConstants.SYSTEM_ID, LiferayWorkspaceUtil.getWorkspaceLocationPath(project), false,
@@ -150,5 +154,6 @@ public class LiferayModuleExtBuilder extends ModuleBuilder {
 
 	private String _originalModuleName;
 	private String _originalModuleVersion;
+	private OverrideFilesComponent _overrideFilesPanel;
 
 }

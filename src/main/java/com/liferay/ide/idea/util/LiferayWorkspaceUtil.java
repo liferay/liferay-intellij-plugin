@@ -21,6 +21,7 @@ import com.intellij.openapi.externalSystem.model.project.LibraryData;
 import com.intellij.openapi.externalSystem.model.project.ProjectData;
 import com.intellij.openapi.externalSystem.service.project.ProjectDataManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import java.io.File;
@@ -88,6 +89,21 @@ public class LiferayWorkspaceUtil {
 		}
 
 		return retval;
+	}
+
+	@Nullable
+	public static VirtualFile getModuleExtDirFile(Project project) {
+		String moduleExtDir = getModuleExtDir(project);
+
+		File file = new File(moduleExtDir);
+
+		if (!file.isAbsolute()) {
+			file = new File(getWorkspaceLocation(project), moduleExtDir);
+		}
+
+		LocalFileSystem fileSystem = LocalFileSystem.getInstance();
+
+		return fileSystem.findFileByPath(file.getPath());
 	}
 
 	public static List<LibraryData> getTargetPlatformArtifacts(Project project) {
