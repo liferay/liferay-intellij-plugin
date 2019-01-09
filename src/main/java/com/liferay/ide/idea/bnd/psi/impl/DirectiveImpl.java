@@ -15,6 +15,7 @@
 package com.liferay.ide.idea.bnd.psi.impl;
 
 import com.intellij.lang.ASTNode;
+
 import com.liferay.ide.idea.bnd.psi.Directive;
 
 import org.jetbrains.annotations.NotNull;

@@ -17,6 +17,7 @@ package com.liferay.ide.idea.bnd.psi;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
+
 import com.liferay.ide.idea.bnd.psi.impl.AttributeImpl;
 import com.liferay.ide.idea.bnd.psi.impl.ClauseImpl;
 import com.liferay.ide.idea.bnd.psi.impl.DirectiveImpl;

@@ -37,8 +37,8 @@ public class HeaderParametersProvider extends CompletionProvider<CompletionParam
 
 	@Override
 	public void addCompletions(
-		@NotNull CompletionParameters parameters, @NotNull ProcessingContext context,
-		@NotNull CompletionResultSet result) {
+		@NotNull CompletionParameters completionParameters, @NotNull ProcessingContext processingContext,
+		@NotNull CompletionResultSet completionResultSet) {
 
 		for (String name : _names) {
 			boolean directive = StringUtil.endsWithChar(name, ':');
@@ -50,7 +50,7 @@ public class HeaderParametersProvider extends CompletionProvider<CompletionParam
 				insertHandler = _directiveHandler;
 			}
 
-			result.addElement(
+			completionResultSet.addElement(
 				LookupElementBuilder.create(
 					name
 				).withCaseSensitivity(

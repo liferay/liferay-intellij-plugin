@@ -19,6 +19,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
+
 import com.liferay.ide.idea.bnd.psi.AssignmentExpression;
 
 import org.jetbrains.annotations.NotNull;

@@ -33,11 +33,11 @@ public class SimpleProvider extends CompletionProvider<CompletionParameters> {
 
 	@Override
 	public void addCompletions(
-		@NotNull CompletionParameters parameters, @NotNull ProcessingContext context,
-		@NotNull CompletionResultSet result) {
+		@NotNull CompletionParameters completionParameters, @NotNull ProcessingContext processingContext,
+		@NotNull CompletionResultSet completeResultSet) {
 
 		for (String item : _items) {
-			result.addElement(
+			completeResultSet.addElement(
 				LookupElementBuilder.create(
 					item
 				).withCaseSensitivity(

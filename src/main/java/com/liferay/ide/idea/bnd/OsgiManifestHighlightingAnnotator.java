@@ -19,6 +19,7 @@ import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
+
 import com.liferay.ide.idea.bnd.psi.AssignmentExpression;
 import com.liferay.ide.idea.bnd.psi.Attribute;
 import com.liferay.ide.idea.bnd.psi.Clause;
@@ -36,56 +37,58 @@ import org.jetbrains.lang.manifest.psi.ManifestTokenType;
 public class OsgiManifestHighlightingAnnotator implements Annotator {
 
 	@Override
-	public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
-		if (element instanceof HeaderValuePart) {
-			PsiElement parent = element.getParent();
+	public void annotate(@NotNull PsiElement psiElement, @NotNull AnnotationHolder annotationHolder) {
+		if (psiElement instanceof HeaderValuePart) {
+			PsiElement parentPsiElement = psiElement.getParent();
 
-			if (parent instanceof AssignmentExpression) {
-				HeaderValuePart nameElement = ((AssignmentExpression)parent).getNameElement();
+			if (parentPsiElement instanceof AssignmentExpression) {
+				HeaderValuePart nameElement = ((AssignmentExpression)parentPsiElement).getNameElement();
 
-				if (parent instanceof Attribute) {
-					if (element == nameElement) {
-						_annotate(element, OsgiManifestColorsAndFonts.ATTRIBUTE_NAME_KEY, holder);
+				if (parentPsiElement instanceof Attribute) {
+					if (psiElement == nameElement) {
+						_annotate(psiElement, OsgiManifestColorsAndFonts.ATTRIBUTE_NAME_KEY, annotationHolder);
 					}
 					else {
-						_annotate(element, OsgiManifestColorsAndFonts.ATTRIBUTE_VALUE_KEY, holder);
+						_annotate(psiElement, OsgiManifestColorsAndFonts.ATTRIBUTE_VALUE_KEY, annotationHolder);
 					}
 				}
-				else if (parent instanceof Directive) {
-					if (element == nameElement) {
-						_annotate(element, OsgiManifestColorsAndFonts.DIRECTIVE_NAME_KEY, holder);
+				else if (parentPsiElement instanceof Directive) {
+					if (psiElement == nameElement) {
+						_annotate(psiElement, OsgiManifestColorsAndFonts.DIRECTIVE_NAME_KEY, annotationHolder);
 					}
 					else {
-						_annotate(element, OsgiManifestColorsAndFonts.DIRECTIVE_VALUE_KEY, holder);
+						_annotate(psiElement, OsgiManifestColorsAndFonts.DIRECTIVE_VALUE_KEY, annotationHolder);
 					}
 				}
 			}
 		}
-		else if (element instanceof ManifestToken) {
-			ManifestTokenType type = ((ManifestToken)element).getTokenType();
+		else if (psiElement instanceof ManifestToken) {
+			ManifestTokenType type = ((ManifestToken)psiElement).getTokenType();
 
-			if (element.getParent() instanceof Attribute && (type == ManifestTokenType.EQUALS)) {
-				_annotate(element, OsgiManifestColorsAndFonts.ATTRIBUTE_ASSIGNMENT_KEY, holder);
+			if (psiElement.getParent() instanceof Attribute && (type == ManifestTokenType.EQUALS)) {
+				_annotate(psiElement, OsgiManifestColorsAndFonts.ATTRIBUTE_ASSIGNMENT_KEY, annotationHolder);
 			}
-			else if (element.getParent() instanceof Directive &&
+			else if (psiElement.getParent() instanceof Directive &&
 					 ((type == ManifestTokenType.COLON) || (type == ManifestTokenType.EQUALS))) {
 
-				_annotate(element, OsgiManifestColorsAndFonts.DIRECTIVE_ASSIGNMENT_KEY, holder);
+				_annotate(psiElement, OsgiManifestColorsAndFonts.DIRECTIVE_ASSIGNMENT_KEY, annotationHolder);
 			}
-			else if (element.getParent() instanceof Clause && (type == ManifestTokenType.SEMICOLON)) {
-				_annotate(element, OsgiManifestColorsAndFonts.PARAMETER_SEPARATOR_KEY, holder);
+			else if (psiElement.getParent() instanceof Clause && (type == ManifestTokenType.SEMICOLON)) {
+				_annotate(psiElement, OsgiManifestColorsAndFonts.PARAMETER_SEPARATOR_KEY, annotationHolder);
 			}
-			else if (element.getParent() instanceof Header && (type == ManifestTokenType.COMMA)) {
-				_annotate(element, OsgiManifestColorsAndFonts.CLAUSE_SEPARATOR_KEY, holder);
+			else if (psiElement.getParent() instanceof Header && (type == ManifestTokenType.COMMA)) {
+				_annotate(psiElement, OsgiManifestColorsAndFonts.CLAUSE_SEPARATOR_KEY, annotationHolder);
 			}
 		}
 	}
 
-	private static void _annotate(PsiElement element, TextAttributesKey key, AnnotationHolder holder) {
-		if (element != null) {
-			Annotation annotation = holder.createInfoAnnotation(element, null);
+	private static void _annotate(
+		PsiElement psiElement, TextAttributesKey textAttributesKey, AnnotationHolder annotationHolder) {
 
-			annotation.setTextAttributes(key);
+		if (psiElement != null) {
+			Annotation annotation = annotationHolder.createInfoAnnotation(psiElement, null);
+
+			annotation.setTextAttributes(textAttributesKey);
 		}
 	}
 

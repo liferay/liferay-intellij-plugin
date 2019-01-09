@@ -35,7 +35,7 @@ public class BundleVersionParser extends StandardHeaderParser {
 	public static final HeaderParser INSTANCE = new BundleVersionParser();
 
 	@Override
-	public boolean annotate(@NotNull Header header, @NotNull AnnotationHolder holder) {
+	public boolean annotate(@NotNull Header header, @NotNull AnnotationHolder annotationHolder) {
 		HeaderValue value = header.getHeaderValue();
 
 		if (value instanceof HeaderValuePart) {
@@ -45,7 +45,7 @@ public class BundleVersionParser extends StandardHeaderParser {
 			catch (IllegalArgumentException iae) {
 				TextRange range = ((HeaderValuePart)value).getHighlightingRange();
 
-				holder.createErrorAnnotation(range, iae.getMessage());
+				annotationHolder.createErrorAnnotation(range, iae.getMessage());
 
 				return true;
 			}

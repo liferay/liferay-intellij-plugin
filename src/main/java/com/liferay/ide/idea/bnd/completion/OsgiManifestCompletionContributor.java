@@ -21,6 +21,7 @@ import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.patterns.ElementPattern;
 import com.intellij.patterns.PsiElementPattern;
 import com.intellij.psi.PsiElement;
+
 import com.liferay.ide.idea.bnd.psi.Directive;
 
 import org.jetbrains.lang.manifest.psi.Header;
