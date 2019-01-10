@@ -12,21 +12,10 @@
  * details.
  */
 
-package com.liferay.ide.idea.bndtools;
-
-import com.intellij.openapi.fileTypes.FileTypeConsumer;
-import com.intellij.openapi.fileTypes.FileTypeFactory;
-
-import org.jetbrains.annotations.NotNull;
+package com.liferay.ide.idea.bnd.psi;
 
 /**
- * @author Dominik Marks
+ * @author Charles Wu
  */
-public class BndFileFactory extends FileTypeFactory {
-
-	@Override
-	public void createFileTypes(@NotNull FileTypeConsumer consumer) {
-		consumer.consume(BndFileType.INSTANCE, "bnd");
-	}
-
+public interface Attribute extends AssignmentExpression {
 }
