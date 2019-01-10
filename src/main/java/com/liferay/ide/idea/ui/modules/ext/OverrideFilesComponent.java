@@ -67,7 +67,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.gradle.util.GradleConstants;
 
 /**
- * @author Charle Wu
+ * @author Charles Wu
  */
 public class OverrideFilesComponent {
 

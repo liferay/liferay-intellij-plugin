@@ -45,7 +45,7 @@ import javax.swing.plaf.basic.BasicComboBoxEditor;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * @author Charle Wu
+ * @author Charles Wu
  */
 public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 
