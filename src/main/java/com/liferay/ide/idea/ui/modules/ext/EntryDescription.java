@@ -21,7 +21,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import javax.swing.Icon;
 
 /**
- * @author Charle Wu
+ * @author Charles Wu
  */
 public class EntryDescription {
 

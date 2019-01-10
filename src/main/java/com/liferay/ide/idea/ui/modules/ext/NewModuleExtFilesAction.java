@@ -46,7 +46,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 /**
- * @author Charle Wu
+ * @author Charles Wu
  */
 public class NewModuleExtFilesAction extends AnAction implements DumbAware {
 
