@@ -31,6 +31,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.ComboBoxEditor;
@@ -216,6 +217,6 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 	private OverrideFilesComponent _overrideFilesPanel;
 	private final Project _project;
 	private FixedSizeRefreshButton _refreshButton;
-	private List<LibraryData> _targetPlatformArtifacts;
+	private List<LibraryData> _targetPlatformArtifacts = Collections.emptyList();
 
 }
