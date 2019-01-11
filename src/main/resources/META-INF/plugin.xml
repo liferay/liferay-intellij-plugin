@@ -25,7 +25,6 @@
 			<li><a href="https://github.com/dmarks2">Dominik Marks</a></li>
 		</ul>
 	</p>]]></description>
-	<version>1.2.0</version>
 	<change-notes>
 	<![CDATA[<p>
 		See for all changes: https://github.com/liferay/liferay-intellij-plugin/commits/
@@ -41,6 +40,7 @@
 				<li>bug fixes</li>
 				<li>code completion for java bean for Liferay Taglib(community contribution)</li>
 				<li>add new module ext wizard</li>
+				<li>better bnd file type support</li>
 			</ul>
 			<li>1.1.1</li>
 			<ul>
