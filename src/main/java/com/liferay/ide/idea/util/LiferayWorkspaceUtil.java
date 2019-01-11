@@ -227,6 +227,10 @@ public class LiferayWorkspaceUtil {
 		return false;
 	}
 
+	public static boolean isValidGradleWorkspaceProject(Project project) {
+		return isValidGradleWorkspaceLocation(getWorkspaceLocation(project).getPath());
+	}
+
 	@SuppressWarnings("deprecation")
 	public static boolean isValidMavenWorkspaceLocation(Project project) {
 		if (project == null) {
