@@ -96,6 +96,10 @@ public class OverrideFilesComponent {
 					relativePaths.add(entry.getPresentableUrl());
 				}
 
+				if ((_sourceJar == null) || relativePaths.isEmpty()) {
+					return;
+				}
+
 				try {
 					ZipUtil.unzip(
 						new File(_sourceJar), sourcePath.toFile(),
