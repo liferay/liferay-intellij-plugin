@@ -96,6 +96,10 @@ public class OverrideFilesComponent {
 					relativePaths.add(entry.getPresentableUrl());
 				}
 
+				if ((_sourceJar == null) || relativePaths.isEmpty()) {
+					return;
+				}
+
 				try {
 					ZipUtil.unzip(
 						new File(_sourceJar), sourcePath.toFile(),
@@ -242,7 +246,7 @@ public class OverrideFilesComponent {
 					super.getListCellRendererComponent(list, _getItemText(value), index, selected, cellHasFocus);
 
 					if (selected) {
-						setForeground(UIUtil.getListSelectionForeground(true));
+						setForeground(UIUtil.getListSelectionForeground());
 					}
 					else if (value instanceof EntryDescription && !((EntryDescription)value).isValid()) {
 						setForeground(JBColor.RED);

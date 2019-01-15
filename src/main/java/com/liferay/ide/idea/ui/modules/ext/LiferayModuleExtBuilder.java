@@ -107,6 +107,8 @@ public class LiferayModuleExtBuilder extends ModuleBuilder {
 			rootModel.inheritSdk();
 		}
 
+		virtualFile.refresh(true, true);
+
 		_overrideFilesPanel.doFinish(virtualFile);
 
 		ExternalSystemUtil.refreshProject(
