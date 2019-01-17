@@ -26,6 +26,8 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 
+import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -54,11 +56,7 @@ public abstract class AbstractLiferayMavenGoalAction extends AbstractLiferayActi
 	public boolean isEnabledAndVisible(AnActionEvent event) {
 		Project project = event.getProject();
 
-		VirtualFile baseDir = project.getBaseDir();
-
-		VirtualFile pomFile = baseDir.findChild("pom.xml");
-
-		if (baseDir.equals(getVirtualFile(event)) && (pomFile != null)) {
+		if (LiferayWorkspaceUtil.isValidMavenWorkspaceLocation(project)) {
 			return true;
 		}
 

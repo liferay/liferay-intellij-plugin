@@ -14,6 +14,10 @@
 
 package com.liferay.ide.idea.ui.actions;
 
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
+
 import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
 import com.liferay.ide.idea.util.ProjectConfigurationUtil;
 import com.liferay.ide.idea.util.WorkspaceConstants;
@@ -32,6 +36,20 @@ public class InitBundleMavenAction extends AbstractLiferayMavenGoalAction {
 		super("InitBundle", "Run initBundle goal", LiferayIcons.LIFERAY_ICON);
 
 		goals = Arrays.asList("bundle-support:init");
+	}
+
+	@Override
+	public boolean isEnabledAndVisible(AnActionEvent event) {
+		if (super.isEnabledAndVisible(event)) {
+			VirtualFile rootDir = getVirtualFile(event);
+			Project project = event.getProject();
+
+			if ((rootDir != null) && rootDir.equals(project.getBaseDir())) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	@Override
