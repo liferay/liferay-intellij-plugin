@@ -114,11 +114,6 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
 		return GradleUtil.isWatchableProject(module);
 	}
 
-	@Override
-	protected ProgressExecutionMode getProgressMode() {
-		return ProgressExecutionMode.NO_PROGRESS_ASYNC;
-	}
-
 	private List<Path> _getBndPaths() {
 		File file = new File(projectDir.getCanonicalPath());
 
