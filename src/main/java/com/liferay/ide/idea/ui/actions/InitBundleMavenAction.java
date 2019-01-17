@@ -39,8 +39,8 @@ public class InitBundleMavenAction extends AbstractLiferayMavenGoalAction {
 	}
 
 	@Override
-	protected void handleProcessTerminated() {
-		super.handleProcessTerminated();
+	protected void handleProcessTerminated(Project project) {
+		super.handleProcessTerminated(project);
 
 		String homeDir = LiferayWorkspaceUtil.getMavenProperty(
 			project, WorkspaceConstants.MAVEN_HOME_DIR_PROPERTY, WorkspaceConstants.DEFAULT_HOME_DIR);

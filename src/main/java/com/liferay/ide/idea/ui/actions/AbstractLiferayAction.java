@@ -53,11 +53,11 @@ public abstract class AbstractLiferayAction extends AnAction {
 
 	@Override
 	public void actionPerformed(final AnActionEvent anActionEvent) {
-		project = anActionEvent.getRequiredData(CommonDataKeys.PROJECT);
+		Project project = anActionEvent.getRequiredData(CommonDataKeys.PROJECT);
 
 		DumbService dumbService = DumbService.getInstance(project);
 
-		dumbService.suspendIndexingAndRun("Start execute action", () -> _perform(anActionEvent));
+		dumbService.suspendIndexingAndRun("Start execute action", () -> _perform(anActionEvent, project));
 	}
 
 	@Override
@@ -101,21 +101,19 @@ public abstract class AbstractLiferayAction extends AnAction {
 		return contentRootsVirtualFiles[0];
 	}
 
-	protected void handleProcessStarted() {
-		_refreshProjectView();
+	protected void handleProcessStarted(Project project) {
+		_refreshProjectView(project);
 	}
 
-	protected void handleProcessTerminated() {
-		_refreshProjectView();
+	protected void handleProcessTerminated(Project project) {
+		_refreshProjectView(project);
 	}
 
 	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
 		return true;
 	}
 
-	protected Project project;
-
-	private void _perform(AnActionEvent anActionEvent) {
+	private void _perform(AnActionEvent anActionEvent, Project project) {
 		RunnerAndConfigurationSettings runnerAndConfigurationSettings = doExecute(anActionEvent);
 
 		RunManager runManager = RunManager.getInstance(project);
@@ -142,20 +140,20 @@ public abstract class AbstractLiferayAction extends AnAction {
 					@NotNull String executorIdLocal, @NotNull ExecutionEnvironment executionEnvironment,
 					@NotNull ProcessHandler processHandler) {
 
-					handleProcessStarted();
+					handleProcessStarted(project);
 				}
 
 				public void processTerminated(
 					@NotNull String executorIdLocal, @NotNull ExecutionEnvironment executionEnvironment,
 					@NotNull ProcessHandler processHandler, int exitCode) {
 
-					handleProcessTerminated();
+					handleProcessTerminated(project);
 				}
 
 			});
 	}
 
-	private void _refreshProjectView() {
+	private void _refreshProjectView(Project project) {
 		ProjectView projectView = ProjectView.getInstance(project);
 
 		projectView.refresh();

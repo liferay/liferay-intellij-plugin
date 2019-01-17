@@ -14,6 +14,8 @@
 
 package com.liferay.ide.idea.ui.actions;
 
+import com.intellij.openapi.project.Project;
+
 import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
 import com.liferay.ide.idea.util.ProjectConfigurationUtil;
 
@@ -30,8 +32,8 @@ public class InitBundleGradleAction extends AbstractLiferayGradleTaskAction {
 	}
 
 	@Override
-	protected void handleProcessTerminated() {
-		super.handleProcessTerminated();
+	protected void handleProcessTerminated(Project project) {
+		super.handleProcessTerminated(project);
 
 		String homeDir = LiferayWorkspaceUtil.getHomeDir(project.getBasePath());
 

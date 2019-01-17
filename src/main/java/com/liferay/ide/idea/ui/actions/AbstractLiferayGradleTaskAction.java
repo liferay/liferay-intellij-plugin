@@ -17,6 +17,7 @@ package com.liferay.ide.idea.ui.actions;
 import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.executors.DefaultRunExecutor;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
 import com.intellij.openapi.externalSystem.model.execution.ExternalTaskExecutionInfo;
 import com.intellij.openapi.externalSystem.service.notification.ExternalSystemNotificationManager;
@@ -69,6 +70,8 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 	}
 
 	protected RunnerAndConfigurationSettings doExecute(AnActionEvent anActionEvent) {
+		Project project = anActionEvent.getRequiredData(CommonDataKeys.PROJECT);
+
 		final VirtualFile projectDir = getWorkingDirectory(anActionEvent);
 
 		final String workingDirectory = projectDir.getCanonicalPath();
