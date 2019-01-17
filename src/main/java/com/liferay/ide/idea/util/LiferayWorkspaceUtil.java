@@ -14,6 +14,7 @@
 
 package com.liferay.ide.idea.util;
 
+import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.externalSystem.model.DataNode;
 import com.intellij.openapi.externalSystem.model.ExternalProjectInfo;
 import com.intellij.openapi.externalSystem.model.ProjectKeys;
@@ -25,6 +26,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import java.io.File;
+import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -55,6 +57,35 @@ public class LiferayWorkspaceUtil {
 		}
 
 		return result;
+	}
+
+	@Nullable
+	public static String getLiferayVersion(Project project) {
+		PropertiesComponent component = PropertiesComponent.getInstance(project);
+
+		String liferayVersion = component.getValue(WorkspaceConstants.WIZARD_LIFERAY_VERSION_FIELD);
+
+		if (liferayVersion != null) {
+			return liferayVersion;
+		}
+
+		VirtualFile projectRoot = project.getBaseDir();
+
+		VirtualFile settings = projectRoot.findFileByRelativePath("/.blade/settings.properties");
+
+		if (settings != null) {
+			Properties props = new Properties();
+
+			try {
+				props.load(settings.getInputStream());
+
+				liferayVersion = props.getProperty(WorkspaceConstants.BLADE_LIFERAY_VERSION_FIELD);
+			}
+			catch (IOException ioe) {
+			}
+		}
+
+		return liferayVersion;
 	}
 
 	public static String getMavenProperty(Project project, String key, String defaultValue) {

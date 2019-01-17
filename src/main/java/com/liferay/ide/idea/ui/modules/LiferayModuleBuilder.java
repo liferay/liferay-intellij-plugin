@@ -14,7 +14,6 @@
 
 package com.liferay.ide.idea.ui.modules;
 
-import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
@@ -34,6 +33,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.liferay.ide.idea.core.LiferayProjectTypeService;
 import com.liferay.ide.idea.util.BladeCLI;
 import com.liferay.ide.idea.util.CoreUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
 import com.liferay.ide.idea.util.WorkspaceConstants;
 
 import icons.LiferayIcons;
@@ -58,7 +58,7 @@ public class LiferayModuleBuilder extends ModuleBuilder {
 	}
 
 	public ModuleWizardStep getCustomOptionsStep(WizardContext context, Disposable parentDisposable) {
-		return new LiferayModuleWizardStep(this);
+		return new LiferayModuleWizardStep(this, context.getProject());
 	}
 
 	@Override
@@ -132,10 +132,7 @@ public class LiferayModuleBuilder extends ModuleBuilder {
 			mavenModule = true;
 		}
 
-		PropertiesComponent component = PropertiesComponent.getInstance(project);
-		String selectedLiferayVersionProperty = "selected.liferay.version";
-
-		String liferayVersion = component.getValue(selectedLiferayVersionProperty);
+		String liferayVersion = LiferayWorkspaceUtil.getLiferayVersion(project);
 
 		if (liferayVersion == null) {
 			liferayVersion = WorkspaceConstants.LIFERAY_VERSIONS[0];

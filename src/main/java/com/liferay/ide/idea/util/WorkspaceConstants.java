@@ -19,6 +19,8 @@ package com.liferay.ide.idea.util;
  */
 public class WorkspaceConstants {
 
+	public static final String BLADE_LIFERAY_VERSION_FIELD = "liferay.version.default";
+
 	public static final String BUNDLE_URL_CE_7_0 =
 		"https://releases-cdn.liferay.com/portal/7.0.6-ga7/liferay-ce-portal-tomcat-7.0-ga7-20180507111753223.zip";
 
@@ -64,5 +66,7 @@ public class WorkspaceConstants {
 	public static final String[] TARGET_PLATFORM_VERSIONS_7_0 = {"7.0.6"};
 
 	public static final String[] TARGET_PLATFORM_VERSIONS_7_1 = {"7.1.0"};
+
+	public static final String WIZARD_LIFERAY_VERSION_FIELD = "selected.liferay.version";
 
 }
