@@ -60,10 +60,6 @@ public abstract class AbstractLiferayAction extends AnAction {
 		dumbService.suspendIndexingAndRun("Start execute action", () -> _perform(anActionEvent));
 	}
 
-	public boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
-		return true;
-	}
-
 	@Override
 	public void update(AnActionEvent anActionEvent) {
 		super.update(anActionEvent);
@@ -111,6 +107,10 @@ public abstract class AbstractLiferayAction extends AnAction {
 
 	protected void handleProcessTerminated() {
 		_refreshProjectView();
+	}
+
+	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
+		return true;
 	}
 
 	protected Project project;

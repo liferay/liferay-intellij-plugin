@@ -61,30 +61,15 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 		_taskName = taskName;
 	}
 
-	public void afterTask() {
+	protected void afterTask(VirtualFile projectDir) {
 	}
 
-	public boolean continuous() {
+	protected boolean continuous() {
 		return false;
 	}
 
-	@Override
-	public boolean isEnabledAndVisible(AnActionEvent event) {
-		Project project = event.getProject();
-
-		VirtualFile baseDir = project.getBaseDir();
-
-		VirtualFile gradleFile = baseDir.findChild("build.gradle");
-
-		if (baseDir.equals(getVirtualFile(event)) && (gradleFile != null)) {
-			return true;
-		}
-
-		return false;
-	}
-
-	protected RunnerAndConfigurationSettings doExecute(AnActionEvent event) {
-		projectDir = getWorkingDirectory(event);
+	protected RunnerAndConfigurationSettings doExecute(AnActionEvent anActionEvent) {
+		final VirtualFile projectDir = getWorkingDirectory(anActionEvent);
 
 		final String workingDirectory = projectDir.getCanonicalPath();
 
@@ -124,6 +109,22 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 		}
 
 		return configuration;
+	}
+
+	@Override
+	@SuppressWarnings("deprecation")
+	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
+		Project project = anActionEvent.getProject();
+
+		VirtualFile baseDir = project.getBaseDir();
+
+		VirtualFile gradleFile = baseDir.findChild("build.gradle");
+
+		if (baseDir.equals(getVirtualFile(anActionEvent)) && (gradleFile != null)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	private ExternalTaskExecutionInfo _buildTaskExecutionInfo(

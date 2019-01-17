@@ -86,15 +86,20 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
 	}
 
 	@Override
-	public boolean continuous() {
+	protected boolean continuous() {
 		return true;
 	}
 
 	@Override
-	public boolean isEnabledAndVisible(AnActionEvent event) {
-		Project project = event.getProject();
+	protected ProgressExecutionMode getProgressMode() {
+		return ProgressExecutionMode.NO_PROGRESS_ASYNC;
+	}
 
-		VirtualFile virtualFile = getVirtualFile(event);
+	@Override
+	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
+		Project project = anActionEvent.getProject();
+
+		VirtualFile virtualFile = getVirtualFile(anActionEvent);
 
 		if (virtualFile == null) {
 			return false;

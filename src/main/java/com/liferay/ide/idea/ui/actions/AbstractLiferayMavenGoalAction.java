@@ -53,16 +53,6 @@ public abstract class AbstractLiferayMavenGoalAction extends AbstractLiferayActi
 	}
 
 	@Override
-	public boolean isEnabledAndVisible(AnActionEvent event) {
-		Project project = event.getProject();
-
-		if (LiferayWorkspaceUtil.isValidMavenWorkspaceLocation(project)) {
-			return true;
-		}
-
-		return false;
-	}
-
 	@Override
 	protected RunnerAndConfigurationSettings doExecute(AnActionEvent event) {
 		projectDir = getWorkingDirectory(event);
@@ -107,6 +97,17 @@ public abstract class AbstractLiferayMavenGoalAction extends AbstractLiferayActi
 		}
 
 		return configuration;
+	}
+
+	@Override
+	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
+		Project project = anActionEvent.getProject();
+
+		if (LiferayWorkspaceUtil.isValidMavenWorkspaceLocation(project)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	protected List<String> goals;

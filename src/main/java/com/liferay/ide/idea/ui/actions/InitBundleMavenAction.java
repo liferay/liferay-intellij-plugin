@@ -39,20 +39,6 @@ public class InitBundleMavenAction extends AbstractLiferayMavenGoalAction {
 	}
 
 	@Override
-	public boolean isEnabledAndVisible(AnActionEvent event) {
-		if (super.isEnabledAndVisible(event)) {
-			VirtualFile rootDir = getVirtualFile(event);
-			Project project = event.getProject();
-
-			if ((rootDir != null) && rootDir.equals(project.getBaseDir())) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	@Override
 	protected void handleProcessTerminated() {
 		super.handleProcessTerminated();
 
@@ -60,6 +46,21 @@ public class InitBundleMavenAction extends AbstractLiferayMavenGoalAction {
 			project, WorkspaceConstants.MAVEN_HOME_DIR_PROPERTY, WorkspaceConstants.DEFAULT_HOME_DIR);
 
 		ProjectConfigurationUtil.configExcludedFolder(project, homeDir);
+	}
+
+	@Override
+	@SuppressWarnings("deprecation")
+	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
+		if (super.isEnabledAndVisible(anActionEvent)) {
+			VirtualFile rootDir = getVirtualFile(anActionEvent);
+			Project project = anActionEvent.getProject();
+
+			if ((rootDir != null) && rootDir.equals(project.getBaseDir())) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 }
