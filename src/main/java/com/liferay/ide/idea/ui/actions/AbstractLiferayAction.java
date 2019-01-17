@@ -73,20 +73,16 @@ public abstract class AbstractLiferayAction extends AnAction {
 		eventPresentation.setEnabledAndVisible(isEnabledAndVisible(anActionEvent));
 	}
 
+	@Nullable
 	protected abstract RunnerAndConfigurationSettings doExecute(AnActionEvent event);
 
 	protected ProgressExecutionMode getProgressMode() {
 		return ProgressExecutionMode.IN_BACKGROUND_ASYNC;
 	}
 
+	@Nullable
 	protected VirtualFile getVirtualFile(AnActionEvent event) {
-		Object virtualFileObject = event.getData(CommonDataKeys.VIRTUAL_FILE);
-
-		if ((virtualFileObject != null) && (virtualFileObject instanceof VirtualFile)) {
-			return (VirtualFile)virtualFileObject;
-		}
-
-		return null;
+		return event.getData(CommonDataKeys.VIRTUAL_FILE);
 	}
 
 	protected VirtualFile getWorkingDirectory(AnActionEvent anActionEvent) {
@@ -104,7 +100,7 @@ public abstract class AbstractLiferayAction extends AnAction {
 
 		VirtualFile[] contentRootsVirtualFiles = modifiableRootModel.getContentRoots();
 
-		assert contentRootsVirtualFiles != null && contentRootsVirtualFiles[0] != null;
+		assert contentRootsVirtualFiles[0] != null;
 
 		return contentRootsVirtualFiles[0];
 	}
@@ -121,15 +117,15 @@ public abstract class AbstractLiferayAction extends AnAction {
 	protected VirtualFile projectDir;
 
 	private void _perform(AnActionEvent anActionEvent) {
-		RunnerAndConfigurationSettings runnerAndConfigurationSetting = doExecute(anActionEvent);
+		RunnerAndConfigurationSettings settings = doExecute(anActionEvent);
 
 		RunManager runManager = RunManager.getInstance(project);
 
 		RunnerAndConfigurationSettings existingConfigurationSettings = runManager.findConfigurationByName(
-			runnerAndConfigurationSetting.getName());
+			settings == null ? null : settings.getName());
 
 		if (existingConfigurationSettings == null) {
-			runManager.setTemporaryConfiguration(runnerAndConfigurationSetting);
+			runManager.setTemporaryConfiguration(settings);
 		}
 		else {
 			runManager.setSelectedConfiguration(existingConfigurationSettings);

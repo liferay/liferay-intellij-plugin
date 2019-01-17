@@ -176,7 +176,7 @@ public class LiferayWorkspaceUtil {
 
 		Matcher matcher = _patternWorkspacePlugin.matcher(settingsContent);
 
-		if ((settingsContent != null) && matcher.matches()) {
+		if (matcher.matches()) {
 			return true;
 		}
 
@@ -184,6 +184,10 @@ public class LiferayWorkspaceUtil {
 	}
 
 	public static boolean isValidMavenWorkspaceLocation(Project project) {
+		if (project == null) {
+			return false;
+		}
+
 		try {
 			MavenProjectsManager mavenProjectsManager = MavenProjectsManager.getInstance(project);
 
