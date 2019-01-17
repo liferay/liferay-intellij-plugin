@@ -114,7 +114,6 @@ public abstract class AbstractLiferayAction extends AnAction {
 	}
 
 	protected Project project;
-	protected VirtualFile projectDir;
 
 	private void _perform(AnActionEvent anActionEvent) {
 		RunnerAndConfigurationSettings runnerAndConfigurationSettings = doExecute(anActionEvent);

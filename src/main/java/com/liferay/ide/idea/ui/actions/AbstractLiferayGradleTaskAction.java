@@ -93,7 +93,7 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 
 				@Override
 				public void onSuccess() {
-					afterTask();
+					afterTask(projectDir);
 				}
 
 			},
