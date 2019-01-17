@@ -70,15 +70,15 @@ public abstract class AbstractLiferayAction extends AnAction {
 	}
 
 	@Nullable
-	protected abstract RunnerAndConfigurationSettings doExecute(AnActionEvent event);
+	protected abstract RunnerAndConfigurationSettings doExecute(AnActionEvent anActionEvent);
 
 	protected ProgressExecutionMode getProgressMode() {
 		return ProgressExecutionMode.IN_BACKGROUND_ASYNC;
 	}
 
 	@Nullable
-	protected VirtualFile getVirtualFile(AnActionEvent event) {
-		return event.getData(CommonDataKeys.VIRTUAL_FILE);
+	protected VirtualFile getVirtualFile(AnActionEvent anActionEvent) {
+		return anActionEvent.getData(CommonDataKeys.VIRTUAL_FILE);
 	}
 
 	protected VirtualFile getWorkingDirectory(AnActionEvent anActionEvent) {
@@ -117,15 +117,15 @@ public abstract class AbstractLiferayAction extends AnAction {
 	protected VirtualFile projectDir;
 
 	private void _perform(AnActionEvent anActionEvent) {
-		RunnerAndConfigurationSettings settings = doExecute(anActionEvent);
+		RunnerAndConfigurationSettings runnerAndConfigurationSettings = doExecute(anActionEvent);
 
 		RunManager runManager = RunManager.getInstance(project);
 
 		RunnerAndConfigurationSettings existingConfigurationSettings = runManager.findConfigurationByName(
-			settings == null ? null : settings.getName());
+			runnerAndConfigurationSettings == null ? null : runnerAndConfigurationSettings.getName());
 
 		if (existingConfigurationSettings == null) {
-			runManager.setTemporaryConfiguration(settings);
+			runManager.setTemporaryConfiguration(runnerAndConfigurationSettings);
 		}
 		else {
 			runManager.setSelectedConfiguration(existingConfigurationSettings);
@@ -140,15 +140,15 @@ public abstract class AbstractLiferayAction extends AnAction {
 			new ExecutionListener() {
 
 				public void processStarted(
-					@NotNull String executorIdLocal, @NotNull ExecutionEnvironment environmentLocal,
-					@NotNull ProcessHandler handler) {
+					@NotNull String executorIdLocal, @NotNull ExecutionEnvironment executionEnvironment,
+					@NotNull ProcessHandler processHandler) {
 
 					handleProcessStarted();
 				}
 
 				public void processTerminated(
-					@NotNull String executorIdLocal, @NotNull ExecutionEnvironment environmentLocal,
-					@NotNull ProcessHandler handler, int exitCode) {
+					@NotNull String executorIdLocal, @NotNull ExecutionEnvironment executionEnvironment,
+					@NotNull ProcessHandler processHandler, int exitCode) {
 
 					handleProcessTerminated();
 				}

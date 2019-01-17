@@ -53,11 +53,8 @@ public abstract class AbstractLiferayMavenGoalAction extends AbstractLiferayActi
 	}
 
 	@Override
-	@Override
-	protected RunnerAndConfigurationSettings doExecute(AnActionEvent event) {
-		projectDir = getWorkingDirectory(event);
-
-		DataContext dataContext = event.getDataContext();
+	protected RunnerAndConfigurationSettings doExecute(AnActionEvent anActionEvent) {
+		DataContext dataContext = anActionEvent.getDataContext();
 
 		Project project = MavenActionUtil.getProject(dataContext);
 

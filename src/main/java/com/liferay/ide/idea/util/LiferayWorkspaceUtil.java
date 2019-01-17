@@ -60,10 +60,11 @@ public class LiferayWorkspaceUtil {
 	}
 
 	@Nullable
+	@SuppressWarnings("deprecation")
 	public static String getLiferayVersion(Project project) {
-		PropertiesComponent component = PropertiesComponent.getInstance(project);
+		PropertiesComponent propertiesComponent = PropertiesComponent.getInstance(project);
 
-		String liferayVersion = component.getValue(WorkspaceConstants.WIZARD_LIFERAY_VERSION_FIELD);
+		String liferayVersion = propertiesComponent.getValue(WorkspaceConstants.WIZARD_LIFERAY_VERSION_FIELD);
 
 		if (liferayVersion != null) {
 			return liferayVersion;
@@ -71,13 +72,13 @@ public class LiferayWorkspaceUtil {
 
 		VirtualFile projectRoot = project.getBaseDir();
 
-		VirtualFile settings = projectRoot.findFileByRelativePath("/.blade/settings.properties");
+		VirtualFile settingsVirtualFile = projectRoot.findFileByRelativePath("/.blade/settings.properties");
 
-		if (settings != null) {
+		if (settingsVirtualFile != null) {
 			Properties props = new Properties();
 
 			try {
-				props.load(settings.getInputStream());
+				props.load(settingsVirtualFile.getInputStream());
 
 				liferayVersion = props.getProperty(WorkspaceConstants.BLADE_LIFERAY_VERSION_FIELD);
 			}
@@ -88,6 +89,7 @@ public class LiferayWorkspaceUtil {
 		return liferayVersion;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static String getMavenProperty(Project project, String key, String defaultValue) {
 		if (!isValidMavenWorkspaceLocation(project)) {
 			return null;
@@ -132,44 +134,45 @@ public class LiferayWorkspaceUtil {
 			file = new File(getWorkspaceLocation(project), moduleExtDir);
 		}
 
-		LocalFileSystem fileSystem = LocalFileSystem.getInstance();
+		LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
 
-		return fileSystem.findFileByPath(file.getPath());
+		return localFileSystem.findFileByPath(file.getPath());
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static List<LibraryData> getTargetPlatformArtifacts(Project project) {
-		ProjectDataManager manager = ProjectDataManager.getInstance();
+		ProjectDataManager projectDataManager = ProjectDataManager.getInstance();
 
-		Collection<ExternalProjectInfo> projectsData = manager.getExternalProjectsData(
+		Collection<ExternalProjectInfo> externalProjectInfos = projectDataManager.getExternalProjectsData(
 			project, GradleConstants.SYSTEM_ID);
 
-		for (ExternalProjectInfo projectInfo : projectsData) {
-			DataNode<ProjectData> projectDataNode = projectInfo.getExternalProjectStructure();
+		for (ExternalProjectInfo externalProjectInfo : externalProjectInfos) {
+			DataNode<ProjectData> projectData = externalProjectInfo.getExternalProjectStructure();
 
-			if (projectDataNode == null) {
+			if (projectData == null) {
 				continue;
 			}
 
-			Collection<DataNode<?>> nodes = projectDataNode.getChildren();
+			Collection<DataNode<?>> dataNodes = projectData.getChildren();
 
-			List<LibraryData> libData = new ArrayList<>(nodes.size());
+			List<LibraryData> libraryData = new ArrayList<>(dataNodes.size());
 
-			for (DataNode child : nodes) {
+			for (DataNode child : dataNodes) {
 				if (!ProjectKeys.LIBRARY.equals(child.getKey())) {
 					continue;
 				}
 
-				libData.add((LibraryData)child.getData());
+				libraryData.add((LibraryData)child.getData());
 			}
 
-			libData.sort(
+			libraryData.sort(
 				(o1, o2) -> {
 					String artifactId = o1.getArtifactId();
 
 					return artifactId.compareToIgnoreCase(o2.getArtifactId());
 				});
 
-			return libData;
+			return libraryData;
 		}
 
 		return Collections.emptyList();
@@ -182,6 +185,7 @@ public class LiferayWorkspaceUtil {
 		return _getGradleProperty(location, WorkspaceConstants.DEFAULT_TARGET_PLATFORM_VERSION_PROPERTY, null);
 	}
 
+	@SuppressWarnings("deprecation")
 	public static File getWorkspaceLocation(Project project) {
 		VirtualFile baseDir = project.getBaseDir();
 
@@ -214,6 +218,7 @@ public class LiferayWorkspaceUtil {
 		return false;
 	}
 
+	@SuppressWarnings("deprecation")
 	public static boolean isValidMavenWorkspaceLocation(Project project) {
 		if (project == null) {
 			return false;
