@@ -17,6 +17,7 @@ package com.liferay.ide.idea.ui.actions;
 import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.executors.DefaultRunExecutor;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
 import com.intellij.openapi.externalSystem.model.execution.ExternalTaskExecutionInfo;
 import com.intellij.openapi.externalSystem.service.notification.ExternalSystemNotificationManager;
@@ -61,30 +62,17 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 		_taskName = taskName;
 	}
 
-	public void afterTask() {
+	protected void afterTask(VirtualFile projectDir) {
 	}
 
-	public boolean continuous() {
+	protected boolean continuous() {
 		return false;
 	}
 
-	@Override
-	public boolean isEnabledAndVisible(AnActionEvent event) {
-		Project project = event.getProject();
+	protected RunnerAndConfigurationSettings doExecute(AnActionEvent anActionEvent) {
+		Project project = anActionEvent.getRequiredData(CommonDataKeys.PROJECT);
 
-		VirtualFile baseDir = project.getBaseDir();
-
-		VirtualFile gradleFile = baseDir.findChild("build.gradle");
-
-		if (baseDir.equals(getVirtualFile(event)) && (gradleFile != null)) {
-			return true;
-		}
-
-		return false;
-	}
-
-	protected RunnerAndConfigurationSettings doExecute(AnActionEvent event) {
-		projectDir = getWorkingDirectory(event);
+		final VirtualFile projectDir = getWorkingDirectory(anActionEvent);
 
 		final String workingDirectory = projectDir.getCanonicalPath();
 
@@ -108,7 +96,7 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 
 				@Override
 				public void onSuccess() {
-					afterTask();
+					afterTask(projectDir);
 				}
 
 			},
@@ -124,6 +112,22 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 		}
 
 		return configuration;
+	}
+
+	@Override
+	@SuppressWarnings("deprecation")
+	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
+		Project project = anActionEvent.getProject();
+
+		VirtualFile baseDir = project.getBaseDir();
+
+		VirtualFile gradleFile = baseDir.findChild("build.gradle");
+
+		if (baseDir.equals(getVirtualFile(anActionEvent)) && (gradleFile != null)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	private ExternalTaskExecutionInfo _buildTaskExecutionInfo(

@@ -14,6 +14,10 @@
 
 package com.liferay.ide.idea.ui.actions;
 
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
+
 import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
 import com.liferay.ide.idea.util.ProjectConfigurationUtil;
 import com.liferay.ide.idea.util.WorkspaceConstants;
@@ -35,13 +39,28 @@ public class InitBundleMavenAction extends AbstractLiferayMavenGoalAction {
 	}
 
 	@Override
-	protected void handleProcessTerminated() {
-		super.handleProcessTerminated();
+	protected void handleProcessTerminated(Project project) {
+		super.handleProcessTerminated(project);
 
 		String homeDir = LiferayWorkspaceUtil.getMavenProperty(
 			project, WorkspaceConstants.MAVEN_HOME_DIR_PROPERTY, WorkspaceConstants.DEFAULT_HOME_DIR);
 
 		ProjectConfigurationUtil.configExcludedFolder(project, homeDir);
+	}
+
+	@Override
+	@SuppressWarnings("deprecation")
+	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
+		if (super.isEnabledAndVisible(anActionEvent)) {
+			VirtualFile rootDir = getVirtualFile(anActionEvent);
+			Project project = anActionEvent.getProject();
+
+			if ((rootDir != null) && rootDir.equals(project.getBaseDir())) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 }

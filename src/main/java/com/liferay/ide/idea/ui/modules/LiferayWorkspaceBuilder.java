@@ -137,9 +137,8 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 		}
 
 		PropertiesComponent component = PropertiesComponent.getInstance(project);
-		String selectedLiferayVersionProperty = "selected.liferay.version";
 
-		component.setValue(selectedLiferayVersionProperty, _liferayVersion);
+		component.setValue(WorkspaceConstants.WIZARD_LIFERAY_VERSION_FIELD, _liferayVersion);
 
 		BladeCLI.execute(sb.toString());
 

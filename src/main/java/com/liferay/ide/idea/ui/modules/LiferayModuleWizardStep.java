@@ -25,6 +25,7 @@ import com.intellij.ui.treeStructure.Tree;
 
 import com.liferay.ide.idea.util.BladeCLI;
 import com.liferay.ide.idea.util.CoreUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -43,9 +44,9 @@ import org.jetbrains.annotations.Nullable;
  */
 public class LiferayModuleWizardStep extends ModuleWizardStep {
 
-	public LiferayModuleWizardStep(LiferayModuleBuilder builder) {
+	public LiferayModuleWizardStep(LiferayModuleBuilder builder, Project project) {
 		_builder = builder;
-
+		_project = project;
 		_typesTree = new Tree();
 
 		_typesTree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode()));
@@ -112,8 +113,12 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode("root", true);
 
+		String liferayVersion = LiferayWorkspaceUtil.getLiferayVersion(_project);
+
 		for (String type : BladeCLI.getProjectTemplates()) {
-			if ("fragment".equals(type) || "modules-ext".equals(type)) {
+			if ("fragment".equals(type) || "modules-ext".equals(type) ||
+				("7.0".equals(liferayVersion) && "social-bookmark".equals(type))) {
+
 				continue;
 			}
 
@@ -212,6 +217,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 	private JTextField _className;
 	private JPanel _mainPanel;
 	private JTextField _packageName;
+	private final Project _project;
 	private JTextField _servcieName;
 	private JPanel _typesPanel;
 	private Tree _typesTree;

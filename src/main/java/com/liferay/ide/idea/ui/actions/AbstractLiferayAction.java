@@ -53,15 +53,11 @@ public abstract class AbstractLiferayAction extends AnAction {
 
 	@Override
 	public void actionPerformed(final AnActionEvent anActionEvent) {
-		project = anActionEvent.getRequiredData(CommonDataKeys.PROJECT);
+		Project project = anActionEvent.getRequiredData(CommonDataKeys.PROJECT);
 
 		DumbService dumbService = DumbService.getInstance(project);
 
-		dumbService.suspendIndexingAndRun("Start execute action", () -> _perform(anActionEvent));
-	}
-
-	public boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
-		return true;
+		dumbService.suspendIndexingAndRun("Start execute action", () -> _perform(anActionEvent, project));
 	}
 
 	@Override
@@ -73,20 +69,16 @@ public abstract class AbstractLiferayAction extends AnAction {
 		eventPresentation.setEnabledAndVisible(isEnabledAndVisible(anActionEvent));
 	}
 
-	protected abstract RunnerAndConfigurationSettings doExecute(AnActionEvent event);
+	@Nullable
+	protected abstract RunnerAndConfigurationSettings doExecute(AnActionEvent anActionEvent);
 
 	protected ProgressExecutionMode getProgressMode() {
 		return ProgressExecutionMode.IN_BACKGROUND_ASYNC;
 	}
 
-	protected VirtualFile getVirtualFile(AnActionEvent event) {
-		Object virtualFileObject = event.getData(CommonDataKeys.VIRTUAL_FILE);
-
-		if ((virtualFileObject != null) && (virtualFileObject instanceof VirtualFile)) {
-			return (VirtualFile)virtualFileObject;
-		}
-
-		return null;
+	@Nullable
+	protected VirtualFile getVirtualFile(AnActionEvent anActionEvent) {
+		return anActionEvent.getData(CommonDataKeys.VIRTUAL_FILE);
 	}
 
 	protected VirtualFile getWorkingDirectory(AnActionEvent anActionEvent) {
@@ -104,32 +96,33 @@ public abstract class AbstractLiferayAction extends AnAction {
 
 		VirtualFile[] contentRootsVirtualFiles = modifiableRootModel.getContentRoots();
 
-		assert contentRootsVirtualFiles != null && contentRootsVirtualFiles[0] != null;
+		assert contentRootsVirtualFiles[0] != null;
 
 		return contentRootsVirtualFiles[0];
 	}
 
-	protected void handleProcessStarted() {
-		_refreshProjectView();
+	protected void handleProcessStarted(Project project) {
+		_refreshProjectView(project);
 	}
 
-	protected void handleProcessTerminated() {
-		_refreshProjectView();
+	protected void handleProcessTerminated(Project project) {
+		_refreshProjectView(project);
 	}
 
-	protected Project project;
-	protected VirtualFile projectDir;
+	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
+		return true;
+	}
 
-	private void _perform(AnActionEvent anActionEvent) {
-		RunnerAndConfigurationSettings runnerAndConfigurationSetting = doExecute(anActionEvent);
+	private void _perform(AnActionEvent anActionEvent, Project project) {
+		RunnerAndConfigurationSettings runnerAndConfigurationSettings = doExecute(anActionEvent);
 
 		RunManager runManager = RunManager.getInstance(project);
 
 		RunnerAndConfigurationSettings existingConfigurationSettings = runManager.findConfigurationByName(
-			runnerAndConfigurationSetting.getName());
+			runnerAndConfigurationSettings == null ? null : runnerAndConfigurationSettings.getName());
 
 		if (existingConfigurationSettings == null) {
-			runManager.setTemporaryConfiguration(runnerAndConfigurationSetting);
+			runManager.setTemporaryConfiguration(runnerAndConfigurationSettings);
 		}
 		else {
 			runManager.setSelectedConfiguration(existingConfigurationSettings);
@@ -144,23 +137,23 @@ public abstract class AbstractLiferayAction extends AnAction {
 			new ExecutionListener() {
 
 				public void processStarted(
-					@NotNull String executorIdLocal, @NotNull ExecutionEnvironment environmentLocal,
-					@NotNull ProcessHandler handler) {
+					@NotNull String executorIdLocal, @NotNull ExecutionEnvironment executionEnvironment,
+					@NotNull ProcessHandler processHandler) {
 
-					handleProcessStarted();
+					handleProcessStarted(project);
 				}
 
 				public void processTerminated(
-					@NotNull String executorIdLocal, @NotNull ExecutionEnvironment environmentLocal,
-					@NotNull ProcessHandler handler, int exitCode) {
+					@NotNull String executorIdLocal, @NotNull ExecutionEnvironment executionEnvironment,
+					@NotNull ProcessHandler processHandler, int exitCode) {
 
-					handleProcessTerminated();
+					handleProcessTerminated(project);
 				}
 
 			});
 	}
 
-	private void _refreshProjectView() {
+	private void _refreshProjectView(Project project) {
 		ProjectView projectView = ProjectView.getInstance(project);
 
 		projectView.refresh();

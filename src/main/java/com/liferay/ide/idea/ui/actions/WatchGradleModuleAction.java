@@ -57,8 +57,8 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
 	}
 
 	@Override
-	public void afterTask() {
-		List<Path> bndPaths = _getBndPaths();
+	protected void afterTask(VirtualFile projectDir) {
+		List<Path> bndPaths = _getBndPaths(projectDir);
 
 		if (bndPaths.isEmpty()) {
 			return;
@@ -86,15 +86,20 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
 	}
 
 	@Override
-	public boolean continuous() {
+	protected boolean continuous() {
 		return true;
 	}
 
 	@Override
-	public boolean isEnabledAndVisible(AnActionEvent event) {
-		Project project = event.getProject();
+	protected ProgressExecutionMode getProgressMode() {
+		return ProgressExecutionMode.NO_PROGRESS_ASYNC;
+	}
 
-		VirtualFile virtualFile = getVirtualFile(event);
+	@Override
+	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
+		Project project = anActionEvent.getProject();
+
+		VirtualFile virtualFile = getVirtualFile(anActionEvent);
 
 		if (virtualFile == null) {
 			return false;
@@ -109,12 +114,7 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
 		return GradleUtil.isWatchableProject(module);
 	}
 
-	@Override
-	protected ProgressExecutionMode getProgressMode() {
-		return ProgressExecutionMode.NO_PROGRESS_ASYNC;
-	}
-
-	private List<Path> _getBndPaths() {
+	private List<Path> _getBndPaths(VirtualFile projectDir) {
 		File file = new File(projectDir.getCanonicalPath());
 
 		File bndFile = new File(file, "bnd.bnd");

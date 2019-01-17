@@ -26,6 +26,8 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 
+import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -51,25 +53,8 @@ public abstract class AbstractLiferayMavenGoalAction extends AbstractLiferayActi
 	}
 
 	@Override
-	public boolean isEnabledAndVisible(AnActionEvent event) {
-		Project project = event.getProject();
-
-		VirtualFile baseDir = project.getBaseDir();
-
-		VirtualFile pomFile = baseDir.findChild("pom.xml");
-
-		if (baseDir.equals(getVirtualFile(event)) && (pomFile != null)) {
-			return true;
-		}
-
-		return false;
-	}
-
-	@Override
-	protected RunnerAndConfigurationSettings doExecute(AnActionEvent event) {
-		projectDir = getWorkingDirectory(event);
-
-		DataContext dataContext = event.getDataContext();
+	protected RunnerAndConfigurationSettings doExecute(AnActionEvent anActionEvent) {
+		DataContext dataContext = anActionEvent.getDataContext();
 
 		Project project = MavenActionUtil.getProject(dataContext);
 
@@ -109,6 +94,17 @@ public abstract class AbstractLiferayMavenGoalAction extends AbstractLiferayActi
 		}
 
 		return configuration;
+	}
+
+	@Override
+	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
+		Project project = anActionEvent.getProject();
+
+		if (LiferayWorkspaceUtil.isValidMavenWorkspaceLocation(project)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	protected List<String> goals;
