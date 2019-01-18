@@ -99,6 +99,10 @@ public class LiferayWorkspaceUtil {
 
 		MavenProject mavenWorkspaceProject = mavenProjectsManager.findContainingProject(project.getBaseDir());
 
+		if (mavenWorkspaceProject == null) {
+			return defaultValue;
+		}
+
 		Properties properties = mavenWorkspaceProject.getProperties();
 
 		return properties.getProperty(key, defaultValue);
@@ -167,9 +171,14 @@ public class LiferayWorkspaceUtil {
 
 			libraryData.sort(
 				(o1, o2) -> {
-					String artifactId = o1.getArtifactId();
+					String artifactId1 = o1.getArtifactId();
+					String artifactId2 = o2.getArtifactId();
 
-					return artifactId.compareToIgnoreCase(o2.getArtifactId());
+					if ((artifactId1 == null) || (artifactId2 == null)) {
+						return 0;
+					}
+
+					return artifactId1.compareToIgnoreCase(artifactId2);
 				});
 
 			return libraryData;
@@ -266,6 +275,10 @@ public class LiferayWorkspaceUtil {
 
 		if (gradleProperties.exists()) {
 			Properties properties = PropertiesUtil.loadProperties(gradleProperties);
+
+			if (properties == null) {
+				return defaultValue;
+			}
 
 			return properties.getProperty(key, defaultValue);
 		}
