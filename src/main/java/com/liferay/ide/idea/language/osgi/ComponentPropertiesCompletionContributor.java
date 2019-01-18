@@ -20,22 +20,30 @@ import com.intellij.codeInsight.completion.CompletionProvider;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.psi.PsiAnnotationMemberValue;
 import com.intellij.psi.PsiAnnotationParameterList;
+import com.intellij.psi.PsiArrayInitializerMemberValue;
 import com.intellij.psi.PsiClassObjectAccessExpression;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiJavaCodeReferenceElement;
 import com.intellij.psi.PsiNameValuePair;
+import com.intellij.psi.PsiType;
 import com.intellij.psi.PsiTypeElement;
+import com.intellij.psi.impl.compiled.ClsElementImpl;
+import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ProcessingContext;
 
 import icons.LiferayIcons;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
@@ -51,15 +59,45 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 		_addCompletions(_createKeywordLookups());
 	}
 
-	private static String _getServiceClassName(PsiElement psiElement) {
+	private static String _getServiceClassName(PsiClassObjectAccessExpression psiClassObjectAccessExpression) {
+		PsiTypeElement operand = psiClassObjectAccessExpression.getOperand();
+
+		PsiJavaCodeReferenceElement referenceElement = null;
+
+		if (operand instanceof ClsElementImpl) {
+			PsiType psiType = operand.getType();
+
+			if (psiType instanceof PsiClassReferenceType) {
+				PsiClassReferenceType psiClassReferenceType = (PsiClassReferenceType)psiType;
+
+				referenceElement = psiClassReferenceType.getReference();
+			}
+		}
+		else {
+			referenceElement = operand.getInnermostComponentReferenceElement();
+		}
+
+		if (referenceElement != null) {
+			String serviceClassName = referenceElement.getQualifiedName();
+
+			return serviceClassName;
+		}
+
+		return null;
+	}
+
+	@NotNull
+	private static List<String> _getServiceClassNames(PsiElement psiElement) {
+		List<String> result = new ArrayList<>();
+
 		PsiAnnotationParameterList annotationParameterList = PsiTreeUtil.getParentOfType(
 			psiElement, PsiAnnotationParameterList.class);
 
 		if (annotationParameterList == null) {
-			return null;
+			return result;
 		}
 
-		return Stream.of(
+		Stream.of(
 			annotationParameterList
 		).map(
 			list -> PsiTreeUtil.getChildrenOfType(list, PsiNameValuePair.class)
@@ -71,26 +109,44 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 			pair -> {
 				String name = pair.getName();
 
-				return name.equals("service");
+				return "service".equals(name);
 			}
 		).map(
 			PsiNameValuePair::getValue
 		).filter(
-			value -> value instanceof PsiClassObjectAccessExpression
-		).map(
+			value -> (value instanceof PsiClassObjectAccessExpression) ||
+			 (value instanceof PsiArrayInitializerMemberValue)
+		).forEach(
 			value -> {
-				PsiTypeElement psiTypeElement = ((PsiClassObjectAccessExpression)value).getOperand();
+				if (value instanceof PsiArrayInitializerMemberValue) {
+					PsiArrayInitializerMemberValue psiArrayInitializerMemberValue =
+						(PsiArrayInitializerMemberValue)value;
 
-				return psiTypeElement.getInnermostComponentReferenceElement();
+					PsiAnnotationMemberValue[] initializers = psiArrayInitializerMemberValue.getInitializers();
+
+					for (PsiAnnotationMemberValue initializer : initializers) {
+						_processInitializer(result, initializer);
+					}
+				}
+				else {
+					_processInitializer(result, value);
+				}
 			}
-		).filter(
-			Objects::nonNull
-		).map(
-			PsiJavaCodeReferenceElement::getQualifiedName
-		).findFirst(
-		).orElse(
-			null
 		);
+
+		return result;
+	}
+
+	private static void _processInitializer(List<String> result, PsiAnnotationMemberValue initializer) {
+		if (initializer instanceof PsiClassObjectAccessExpression) {
+			PsiClassObjectAccessExpression psiClassObjectAccessExpression = (PsiClassObjectAccessExpression)initializer;
+
+			String serviceClassName = _getServiceClassName(psiClassObjectAccessExpression);
+
+			if (serviceClassName != null) {
+				result.add(serviceClassName);
+			}
+		}
 	}
 
 	private void _addCompletions(Map<String, List<LookupElementBuilder>> keywordLookups) {
@@ -103,16 +159,22 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 					@NotNull CompletionParameters parameters, ProcessingContext context,
 					@NotNull CompletionResultSet result) {
 
-					String serviceClassName = _getServiceClassName(parameters.getOriginalPosition());
+					List<String> serviceClassNames = _getServiceClassNames(parameters.getOriginalPosition());
 
-					if (serviceClassName != null) {
-						List<LookupElementBuilder> lookups = keywordLookups.get(serviceClassName);
+					if (!serviceClassNames.isEmpty()) {
+						Set<LookupElementBuilder> lookups = new TreeSet<>(
+							Comparator.comparing(LookupElementBuilder::getLookupString));
 
-						if (lookups != null) {
-							result.addAllElements(lookups);
+						for (String serviceClassName : serviceClassNames) {
+							List<LookupElementBuilder> elements = keywordLookups.get(serviceClassName);
 
-							result.stopHere();
+							if (elements != null) {
+								lookups.addAll(elements);
+							}
 						}
+
+						result.addAllElements(lookups);
+						result.stopHere();
 					}
 				}
 
