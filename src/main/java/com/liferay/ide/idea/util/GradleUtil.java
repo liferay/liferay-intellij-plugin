@@ -14,16 +14,98 @@
 
 package com.liferay.ide.idea.util;
 
+import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.externalSystem.importing.ImportSpecBuilder;
+import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.util.ArrayUtil;
+import com.intellij.util.containers.ContainerUtil;
 
 import java.util.List;
 
 import org.jetbrains.plugins.gradle.settings.GradleExtensionsSettings;
+import org.jetbrains.plugins.gradle.settings.GradleProjectSettings;
+import org.jetbrains.plugins.gradle.settings.GradleSettings;
+import org.jetbrains.plugins.gradle.util.GradleConstants;
+import org.jetbrains.plugins.groovy.lang.psi.GroovyPsiElementFactory;
+import org.jetbrains.plugins.groovy.lang.psi.api.statements.blocks.GrClosableBlock;
+import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrCall;
+import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrExpression;
+import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrMethodCall;
 
 /**
  * @author Terry Jia
+ * @author Charles Wu
  */
 public class GradleUtil {
+
+	/**
+	 * @param file build.gradle file
+	 */
+	public static void addGradleDependencies(PsiFile file, String... dependencies) {
+		Project project = file.getProject();
+
+		WriteCommandAction.Builder builder = WriteCommandAction.writeCommandAction(project, file);
+
+		builder.withName(
+			"Add Gradle Dependency"
+		).run(
+			() -> {
+				GroovyPsiElementFactory groovyPsiElementFactory = GroovyPsiElementFactory.getInstance(project);
+
+				List<GrMethodCall> grMethodCalls = PsiTreeUtil.getChildrenOfTypeAsList(file, GrMethodCall.class);
+
+				GrCall dependenciesBlock = ContainerUtil.find(
+					grMethodCalls,
+					call -> {
+						GrExpression grExpression = call.getInvokedExpression();
+
+						return "dependencies".equals(grExpression.getText());
+					});
+
+				if (dependenciesBlock == null) {
+					StringBuilder stringBuilder = new StringBuilder();
+
+					for (String dependency : dependencies) {
+						stringBuilder.append(String.format("compileOnly '%s'\n", dependency));
+					}
+
+					dependenciesBlock = (GrCall)groovyPsiElementFactory.createStatementFromText(
+						"dependencies{\n" + stringBuilder + "}");
+
+					file.add(dependenciesBlock);
+				}
+				else {
+					GrClosableBlock grClosableBlock = ArrayUtil.getFirstElement(
+						dependenciesBlock.getClosureArguments());
+
+					if (grClosableBlock != null) {
+						for (String dependency : dependencies) {
+							grClosableBlock.addStatementBefore(
+								groovyPsiElementFactory.createStatementFromText(
+									String.format("compileOnly '%s'\n", dependency)),
+								null);
+						}
+					}
+				}
+			}
+		);
+
+		GradleSettings gradleSettings = GradleSettings.getInstance(project);
+
+		String projectRoot = project.getBasePath();
+
+		if (projectRoot != null) {
+			GradleProjectSettings gradleProjectSettings = gradleSettings.getLinkedProjectSettings(projectRoot);
+
+			if ((gradleProjectSettings != null) && !gradleProjectSettings.isUseAutoImport()) {
+				ExternalSystemUtil.refreshProjects(new ImportSpecBuilder(project, GradleConstants.SYSTEM_ID));
+			}
+		}
+	}
 
 	public static boolean isWatchableProject(Module module) {
 		GradleExtensionsSettings.Settings settings = GradleExtensionsSettings.getInstance(module.getProject());
@@ -34,9 +116,7 @@ public class GradleUtil {
 			return false;
 		}
 
-		List<GradleExtensionsSettings.GradleTask> gradleTasks = gradleExtensionsData.tasks;
-
-		for (GradleExtensionsSettings.GradleTask gradleTask : gradleTasks) {
+		for (GradleExtensionsSettings.GradleTask gradleTask : gradleExtensionsData.tasks) {
 			if ("watch".equals(gradleTask.name) &&
 				"com.liferay.gradle.plugins.tasks.WatchTask".equals(gradleTask.typeFqn)) {
 
