@@ -369,10 +369,10 @@ public class LiferayNamePathComponent extends JPanel {
 		public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
 			boolean ok = true;
 
-			for (int idx = 0; idx < str.length() && ok; idx++) {
+			for (int idx = 0; (idx < str.length()) && ok; idx++) {
 				char ch = str.charAt(idx);
 
-				ok = ch != File.separatorChar && ch != '\\' && ch != '/' && ch != '|' && ch != ':';
+				ok = (ch != File.separatorChar) && (ch != '\\') && (ch != '/') && (ch != '|') && (ch != ':');
 			}
 
 			if (ok) {

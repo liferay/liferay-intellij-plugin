@@ -111,7 +111,7 @@ public class NewLiferayModuleAction extends AnAction implements DumbAware {
 				ModulesConfigurator.showDialog(project, null, null);
 			}
 
-			module = modules == null || modules.isEmpty() ? null : modules.get(0);
+			module = (modules == null) || modules.isEmpty() ? null : modules.get(0);
 		}
 
 		project.save();
