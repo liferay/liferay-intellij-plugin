@@ -33,14 +33,14 @@
 		<ul>
 			<li>1.2.0</li>
 			<ul>
-				<li>add support for Liferay Target Platform in new Liferay Workspace wizard</li>
 				<li>update embed blade to 3.4</li>
-				<li>more OSGi component properties support(community contribution)</li>
-				<li>more support for model-hints xml files(community contribution)</li>
+				<li>INTELLIJ-2 add support for Liferay Target Platform in new Liferay Workspace wizard</li>
+				<li>INTELLIJ-19 add new module ext wizard</li>
+				<li>INTELLIJ-29 better bnd file type support</li>
+				<li>INTELLIJ-23 more OSGi component properties support(community contribution)</li>
+				<li>INTELLIJ-26 more support for model-hints xml files(community contribution)</li>
+				<li>INTELLIJ-27 code completion for java bean for Liferay Taglib(community contribution)</li>
 				<li>bug fixes</li>
-				<li>code completion for java bean for Liferay Taglib(community contribution)</li>
-				<li>add new module ext wizard</li>
-				<li>better bnd file type support</li>
 			</ul>
 			<li>1.1.1</li>
 			<ul>
