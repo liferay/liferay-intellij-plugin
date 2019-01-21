@@ -24,6 +24,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryUtil;
+import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 
@@ -31,13 +32,17 @@ import com.liferay.ide.idea.core.MessagesBundle;
 import com.liferay.ide.idea.util.GradleUtil;
 import com.liferay.ide.idea.util.IntellijUtil;
 
+import icons.LiferayIcons;
+
+import javax.swing.Icon;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Charles Wu
  */
-public class GradleDependencyQuickFix implements LocalQuickFix, IntentionAction, HighPriorityAction {
+public class GradleDependencyQuickFix implements LocalQuickFix, IntentionAction, HighPriorityAction, Iconable {
 
 	public GradleDependencyQuickFix(Module contextModule, Library library) {
 		_module = contextModule;
@@ -55,6 +60,10 @@ public class GradleDependencyQuickFix implements LocalQuickFix, IntentionAction,
 	@Override
 	public String getFamilyName() {
 		return MessagesBundle.message("orderEntry.fix.family.add.library.to.gradle");
+	}
+
+	public Icon getIcon(@IconFlags int flags) {
+		return LiferayIcons.LIFERAY_ICON;
 	}
 
 	@NotNull
