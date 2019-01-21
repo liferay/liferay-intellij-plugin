@@ -60,25 +60,25 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 	}
 
 	private static String _getServiceClassName(PsiClassObjectAccessExpression psiClassObjectAccessExpression) {
-		PsiTypeElement operand = psiClassObjectAccessExpression.getOperand();
+		PsiTypeElement operandPsiTypeElement = psiClassObjectAccessExpression.getOperand();
 
-		PsiJavaCodeReferenceElement referenceElement = null;
+		PsiJavaCodeReferenceElement psiJavaCodeReferenceElement = null;
 
-		if (operand instanceof ClsElementImpl) {
-			PsiType psiType = operand.getType();
+		if (operandPsiTypeElement instanceof ClsElementImpl) {
+			PsiType psiType = operandPsiTypeElement.getType();
 
 			if (psiType instanceof PsiClassReferenceType) {
 				PsiClassReferenceType psiClassReferenceType = (PsiClassReferenceType)psiType;
 
-				referenceElement = psiClassReferenceType.getReference();
+				psiJavaCodeReferenceElement = psiClassReferenceType.getReference();
 			}
 		}
 		else {
-			referenceElement = operand.getInnermostComponentReferenceElement();
+			psiJavaCodeReferenceElement = operandPsiTypeElement.getInnermostComponentReferenceElement();
 		}
 
-		if (referenceElement != null) {
-			String serviceClassName = referenceElement.getQualifiedName();
+		if (psiJavaCodeReferenceElement != null) {
+			String serviceClassName = psiJavaCodeReferenceElement.getQualifiedName();
 
 			return serviceClassName;
 		}
@@ -122,10 +122,10 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 					PsiArrayInitializerMemberValue psiArrayInitializerMemberValue =
 						(PsiArrayInitializerMemberValue)value;
 
-					PsiAnnotationMemberValue[] initializers = psiArrayInitializerMemberValue.getInitializers();
+					for (PsiAnnotationMemberValue psiAnnotationMemberValue :
+							psiArrayInitializerMemberValue.getInitializers()) {
 
-					for (PsiAnnotationMemberValue initializer : initializers) {
-						_processInitializer(result, initializer);
+						_processInitializer(result, psiAnnotationMemberValue);
 					}
 				}
 				else {
@@ -137,9 +137,10 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 		return result;
 	}
 
-	private static void _processInitializer(List<String> result, PsiAnnotationMemberValue initializer) {
-		if (initializer instanceof PsiClassObjectAccessExpression) {
-			PsiClassObjectAccessExpression psiClassObjectAccessExpression = (PsiClassObjectAccessExpression)initializer;
+	private static void _processInitializer(List<String> result, PsiAnnotationMemberValue psiAnnotationMemberValue) {
+		if (psiAnnotationMemberValue instanceof PsiClassObjectAccessExpression) {
+			PsiClassObjectAccessExpression psiClassObjectAccessExpression =
+				(PsiClassObjectAccessExpression)psiAnnotationMemberValue;
 
 			String serviceClassName = _getServiceClassName(psiClassObjectAccessExpression);
 
