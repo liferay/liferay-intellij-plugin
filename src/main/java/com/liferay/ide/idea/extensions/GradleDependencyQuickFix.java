@@ -44,14 +44,14 @@ import org.jetbrains.annotations.Nullable;
  */
 public class GradleDependencyQuickFix implements LocalQuickFix, IntentionAction, HighPriorityAction, Iconable {
 
-	public GradleDependencyQuickFix(Module contextModule, Library library) {
-		_module = contextModule;
+	public GradleDependencyQuickFix(Module module, Library library) {
+		_module = module;
 		_library = library;
 	}
 
 	@Override
-	public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
-		PsiElement psiElement = descriptor.getPsiElement();
+	public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor problemDescriptor) {
+		PsiElement psiElement = problemDescriptor.getPsiElement();
 
 		invoke(project, null, psiElement.getContainingFile());
 	}
@@ -73,7 +73,7 @@ public class GradleDependencyQuickFix implements LocalQuickFix, IntentionAction,
 	}
 
 	@Override
-	public void invoke(@NotNull Project project, @Nullable Editor editor, PsiFile file) {
+	public void invoke(@NotNull Project project, @Nullable Editor editor, PsiFile psiFile) {
 		String moduleName = _module.getName();
 		PsiFile gradleFile = null;
 
@@ -102,7 +102,7 @@ public class GradleDependencyQuickFix implements LocalQuickFix, IntentionAction,
 	}
 
 	@Override
-	public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+	public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile psiFile) {
 		if (!project.isDisposed() && !_module.isDisposed() && !((LibraryEx)_library).isDisposed()) {
 			return true;
 		}

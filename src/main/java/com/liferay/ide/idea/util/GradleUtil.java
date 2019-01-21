@@ -48,22 +48,22 @@ public class GradleUtil {
 	public static void addGradleDependencies(PsiFile file, String... dependencies) {
 		Project project = file.getProject();
 
-		WriteCommandAction.Builder action = WriteCommandAction.writeCommandAction(project, file);
+		WriteCommandAction.Builder builder = WriteCommandAction.writeCommandAction(project, file);
 
-		action.withName(
+		builder.withName(
 			"Add Gradle Dependency"
 		).run(
 			() -> {
-				GroovyPsiElementFactory factory = GroovyPsiElementFactory.getInstance(project);
+				GroovyPsiElementFactory groovyPsiElementFactory = GroovyPsiElementFactory.getInstance(project);
 
-				List<GrMethodCall> closableBlocks = PsiTreeUtil.getChildrenOfTypeAsList(file, GrMethodCall.class);
+				List<GrMethodCall> grMethodCalls = PsiTreeUtil.getChildrenOfTypeAsList(file, GrMethodCall.class);
 
 				GrCall dependenciesBlock = ContainerUtil.find(
-					closableBlocks,
+					grMethodCalls,
 					call -> {
-						GrExpression expression = call.getInvokedExpression();
+						GrExpression grExpression = call.getInvokedExpression();
 
-						return "dependencies".equals(expression.getText());
+						return "dependencies".equals(grExpression.getText());
 					});
 
 				if (dependenciesBlock == null) {
@@ -73,18 +73,21 @@ public class GradleUtil {
 						stringBuilder.append(String.format("compileOnly '%s'\n", dependency));
 					}
 
-					dependenciesBlock = (GrCall)factory.createStatementFromText(
+					dependenciesBlock = (GrCall)groovyPsiElementFactory.createStatementFromText(
 						"dependencies{\n" + stringBuilder + "}");
 
 					file.add(dependenciesBlock);
 				}
 				else {
-					GrClosableBlock closableBlock = ArrayUtil.getFirstElement(dependenciesBlock.getClosureArguments());
+					GrClosableBlock grClosableBlock = ArrayUtil.getFirstElement(
+						dependenciesBlock.getClosureArguments());
 
-					if (closableBlock != null) {
+					if (grClosableBlock != null) {
 						for (String dependency : dependencies) {
-							closableBlock.addStatementBefore(
-								factory.createStatementFromText(String.format("compileOnly '%s'\n", dependency)), null);
+							grClosableBlock.addStatementBefore(
+								groovyPsiElementFactory.createStatementFromText(
+									String.format("compileOnly '%s'\n", dependency)),
+								null);
 						}
 					}
 				}
@@ -96,9 +99,9 @@ public class GradleUtil {
 		String projectRoot = project.getBasePath();
 
 		if (projectRoot != null) {
-			GradleProjectSettings projectSettings = gradleSettings.getLinkedProjectSettings(projectRoot);
+			GradleProjectSettings gradleProjectSettings = gradleSettings.getLinkedProjectSettings(projectRoot);
 
-			if ((projectSettings != null) && !projectSettings.isUseAutoImport()) {
+			if ((gradleProjectSettings != null) && !gradleProjectSettings.isUseAutoImport()) {
 				ExternalSystemUtil.refreshProjects(new ImportSpecBuilder(project, GradleConstants.SYSTEM_ID));
 			}
 		}
@@ -113,9 +116,7 @@ public class GradleUtil {
 			return false;
 		}
 
-		List<GradleExtensionsSettings.GradleTask> gradleTasks = gradleExtensionsData.tasks;
-
-		for (GradleExtensionsSettings.GradleTask gradleTask : gradleTasks) {
+		for (GradleExtensionsSettings.GradleTask gradleTask : gradleExtensionsData.tasks) {
 			if ("watch".equals(gradleTask.name) &&
 				"com.liferay.gradle.plugins.tasks.WatchTask".equals(gradleTask.typeFqn)) {
 

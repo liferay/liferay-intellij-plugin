@@ -66,33 +66,34 @@ public class GradleDependencyQuickFixProvider extends UnresolvedReferenceQuickFi
 
 	@Override
 	public void registerFixes(
-		@NotNull PsiJavaCodeReferenceElement reference, @NotNull QuickFixActionRegistrar registrar) {
+		@NotNull PsiJavaCodeReferenceElement psiJavaCodeReferenceElement,
+		@NotNull QuickFixActionRegistrar quickFixActionRegistrar) {
 
-		PsiElement psiElement = reference.getElement();
+		PsiElement psiElement = psiJavaCodeReferenceElement.getElement();
 
-		TextRange textRange = reference.getRangeInElement();
+		TextRange textRange = psiJavaCodeReferenceElement.getRangeInElement();
 
 		String shortReferenceName = textRange.substring(psiElement.getText());
 
 		Project project = psiElement.getProject();
 
-		PsiFile containingFile = psiElement.getContainingFile();
+		PsiFile containingPsiFile = psiElement.getContainingFile();
 
-		if (!LiferayWorkspaceUtil.isValidGradleWorkspaceProject(project) || (containingFile == null)) {
+		if (!LiferayWorkspaceUtil.isValidGradleWorkspaceProject(project) || (containingPsiFile == null)) {
 			return;
 		}
 
-		VirtualFile refVFile = containingFile.getVirtualFile();
+		VirtualFile refVirtualFile = containingPsiFile.getVirtualFile();
 
-		if (refVFile == null) {
+		if (refVirtualFile == null) {
 			return;
 		}
 
 		ProjectRootManager projectRootManager = ProjectRootManager.getInstance(project);
 
-		ProjectFileIndex fileIndex = projectRootManager.getFileIndex();
+		ProjectFileIndex projectFileIndex = projectRootManager.getFileIndex();
 
-		Module currentModule = fileIndex.getModuleForFile(refVFile);
+		Module currentModule = projectFileIndex.getModuleForFile(refVirtualFile);
 
 		if (currentModule == null) {
 			return;
@@ -100,29 +101,29 @@ public class GradleDependencyQuickFixProvider extends UnresolvedReferenceQuickFi
 
 		PsiShortNamesCache psiShortNamesCache = PsiShortNamesCache.getInstance(project);
 
-		PsiClass[] classes = psiShortNamesCache.getClassesByName(
+		PsiClass[] psiClasses = psiShortNamesCache.getClassesByName(
 			shortReferenceName, GlobalSearchScope.allScope(project));
 
-		List<PsiClass> allowedDependencies = _filterAllowedDependencies(psiElement, classes);
+		List<PsiClass> allowedDependenciesPsiClasses = _filterAllowedDependencies(psiElement, psiClasses);
 
-		if (allowedDependencies.isEmpty()) {
+		if (allowedDependenciesPsiClasses.isEmpty()) {
 			return;
 		}
 
-		String qualifiedName = _getQualifiedName(reference, shortReferenceName, containingFile);
+		String qualifiedName = _getQualifiedName(psiJavaCodeReferenceElement, shortReferenceName, containingPsiFile);
 
 		if (qualifiedName != null) {
-			allowedDependencies.removeIf(psiClass -> !qualifiedName.equals(psiClass.getQualifiedName()));
+			allowedDependenciesPsiClasses.removeIf(psiClass -> !qualifiedName.equals(psiClass.getQualifiedName()));
 		}
 
-		JavaPsiFacade facade = JavaPsiFacade.getInstance(psiElement.getProject());
+		JavaPsiFacade javaPsiFacade = JavaPsiFacade.getInstance(psiElement.getProject());
 
-		PsiResolveHelper resolveHelper = facade.getResolveHelper();
+		PsiResolveHelper psiResolveHelper = javaPsiFacade.getResolveHelper();
 
 		Set<Object> librariesToAdd = new HashSet<>();
 
-		for (PsiClass psiClass : allowedDependencies) {
-			if (!resolveHelper.isAccessible(psiClass, psiElement, psiClass)) {
+		for (PsiClass psiClass : allowedDependenciesPsiClasses) {
+			if (!psiResolveHelper.isAccessible(psiClass, psiElement, psiClass)) {
 				continue;
 			}
 
@@ -138,79 +139,81 @@ public class GradleDependencyQuickFixProvider extends UnresolvedReferenceQuickFi
 				continue;
 			}
 
-			for (OrderEntry orderEntry : fileIndex.getOrderEntriesForFile(virtualFile)) {
+			for (OrderEntry orderEntry : projectFileIndex.getOrderEntriesForFile(virtualFile)) {
 				if (orderEntry instanceof LibraryOrderEntry) {
-					final LibraryOrderEntry libraryEntry = (LibraryOrderEntry)orderEntry;
+					final LibraryOrderEntry libraryOrderEntry = (LibraryOrderEntry)orderEntry;
 
-					final Library library = libraryEntry.getLibrary();
+					final Library library = libraryOrderEntry.getLibrary();
 
 					if (library == null) {
 						continue;
 					}
 
-					VirtualFile[] files = library.getFiles(OrderRootType.CLASSES);
+					VirtualFile[] virutalFiles = library.getFiles(OrderRootType.CLASSES);
 
-					if (files.length == 0) {
+					if (virutalFiles.length == 0) {
 						continue;
 					}
 
-					final VirtualFile jar = files[0];
+					final VirtualFile jarVirtualFile = virutalFiles[0];
 
-					if ((jar == null) || !librariesToAdd.add(library)) {
+					if ((jarVirtualFile == null) || !librariesToAdd.add(library)) {
 						continue;
 					}
-					else if (libraryEntry.isModuleLevel() && !librariesToAdd.add(jar)) {
+					else if (libraryOrderEntry.isModuleLevel() && !librariesToAdd.add(jarVirtualFile)) {
 						continue;
 					}
 
 					String libraryName = library.getName();
 
 					if ((libraryName != null) && libraryName.startsWith(GRADLE_LIBRARY_PREFIX)) {
-						IntentionAction quickFix = new GradleDependencyQuickFix(currentModule, library);
+						IntentionAction intentionAction = new GradleDependencyQuickFix(currentModule, library);
 
-						registrar.register(quickFix);
+						quickFixActionRegistrar.register(intentionAction);
 					}
 				}
 			}
 		}
 	}
 
-	private static List<PsiClass> _filterAllowedDependencies(PsiElement element, PsiClass[] classes) {
+	private static List<PsiClass> _filterAllowedDependencies(PsiElement psiElement, PsiClass[] psiClasses) {
 		DependencyValidationManager dependencyValidationManager = DependencyValidationManager.getInstance(
-			element.getProject());
-		PsiFile fromFile = element.getContainingFile();
-		List<PsiClass> result = new ArrayList<>();
+			psiElement.getProject());
+		PsiFile fromPsiFile = psiElement.getContainingFile();
+		List<PsiClass> resultPsiClasses = new ArrayList<>();
 
-		for (PsiClass psiClass : classes) {
+		for (PsiClass psiClass : psiClasses) {
 			PsiFile containingFile = psiClass.getContainingFile();
 
 			if ((containingFile != null) &&
-				(dependencyValidationManager.getViolatorDependencyRule(fromFile, containingFile) == null)) {
+				(dependencyValidationManager.getViolatorDependencyRule(fromPsiFile, containingFile) == null)) {
 
-				result.add(psiClass);
+				resultPsiClasses.add(psiClass);
 			}
 		}
 
-		return result;
+		return resultPsiClasses;
 	}
 
 	@Nullable
 	private static String _getQualifiedName(
-		@NotNull PsiJavaCodeReferenceElement reference, String shortReferenceName, PsiFile containingFile) {
+		@NotNull PsiJavaCodeReferenceElement psiJavaCodeReferenceElement, String shortReferenceName,
+		PsiFile containingFile) {
 
 		String qualifiedName = null;
 
-		if (reference.isQualified()) {
-			qualifiedName = reference.getQualifiedName();
+		if (psiJavaCodeReferenceElement.isQualified()) {
+			qualifiedName = psiJavaCodeReferenceElement.getQualifiedName();
 		}
 		else if (containingFile instanceof PsiJavaFile) {
-			PsiImportList list = ((PsiJavaFile)containingFile).getImportList();
+			PsiImportList psiImports = ((PsiJavaFile)containingFile).getImportList();
 
-			if (list != null) {
-				PsiImportStatementBase statement = list.findSingleImportStatement(shortReferenceName);
+			if (psiImports != null) {
+				PsiImportStatementBase psiImportStatementBase = psiImports.findSingleImportStatement(
+					shortReferenceName);
 
-				if (statement != null) {
-					PsiJavaCodeReferenceElement importReference = statement.getImportReference();
+				if (psiImportStatementBase != null) {
+					PsiJavaCodeReferenceElement importReference = psiImportStatementBase.getImportReference();
 
 					qualifiedName = importReference.getQualifiedName();
 				}

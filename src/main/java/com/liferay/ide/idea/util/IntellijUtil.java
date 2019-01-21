@@ -36,12 +36,12 @@ public class IntellijUtil {
 
 	@Nullable
 	public static PsiFile getModulePsiFileByName(@NotNull Module module, String fileName) {
-		PsiFile[] files = getModulePsiFilesByName(module, fileName);
+		PsiFile[] psiFiles = getModulePsiFilesByName(module, fileName);
 
-		if (files.length > 0) {
-			assert files.length < 2;
+		if (psiFiles.length > 0) {
+			assert psiFiles.length < 2;
 
-			return files[0];
+			return psiFiles[0];
 		}
 
 		return null;
@@ -59,18 +59,18 @@ public class IntellijUtil {
 
 	@Nullable
 	public static Module getParentModule(Module module) {
-		ModuleManager instance = ModuleManager.getInstance(module.getProject());
+		ModuleManager moduleManager = ModuleManager.getInstance(module.getProject());
 
-		ModifiableModuleModel modifiableModel = instance.getModifiableModel();
+		ModifiableModuleModel modifiableModuleModel = moduleManager.getModifiableModel();
 
-		String[] groupPaths = modifiableModel.getModuleGroupPath(module);
+		String[] groupPaths = modifiableModuleModel.getModuleGroupPath(module);
 
 		String path = ArrayUtil.getLastElement(groupPaths);
 
 		if (path != null) {
-			for (Module m : modifiableModel.getModules()) {
-				if (path.equals(m.getName())) {
-					return m;
+			for (Module modifiableModule : modifiableModuleModel.getModules()) {
+				if (path.equals(modifiableModule.getName())) {
+					return modifiableModule;
 				}
 			}
 		}
