@@ -31,6 +31,7 @@ import com.intellij.psi.PsiFile;
 import com.liferay.ide.idea.core.MessagesBundle;
 import com.liferay.ide.idea.util.GradleUtil;
 import com.liferay.ide.idea.util.IntellijUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
 
 import icons.LiferayIcons;
 
@@ -97,8 +98,17 @@ public class GradleDependencyQuickFix implements LocalQuickFix, IntentionAction,
 
 		String libraryName = _library.getName();
 
-		GradleUtil.addGradleDependencies(
-			gradleFile, libraryName.split(GradleDependencyQuickFixProvider.GRADLE_LIBRARY_PREFIX)[1]);
+		String result = libraryName.split(GradleDependencyQuickFixProvider.GRADLE_LIBRARY_PREFIX)[1];
+
+		try {
+			if (LiferayWorkspaceUtil.getTargetPlatformVersion(project) != null) {
+				result = result.substring(0, result.lastIndexOf(":"));
+			}
+		}
+		catch (Exception e) {
+		}
+
+		GradleUtil.addGradleDependencies(gradleFile, result);
 	}
 
 	@Override
