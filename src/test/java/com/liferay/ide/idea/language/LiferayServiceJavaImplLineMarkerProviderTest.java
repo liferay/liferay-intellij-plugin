@@ -41,14 +41,15 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LiferayServiceJavaImplLineMarkerProviderTest extends LightCodeInsightFixtureTestCase {
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	public void testExceptionNameInspection() {
 		myFixture.configureByFiles("com/liferay/ide/model/impl/MyModelImpl.java", "service.xml");
 
 		boolean lineMarkerFound = false;
-		List<GutterMark> allMarkers = myFixture.findAllGutters();
 
-		for (GutterMark gutterMark : allMarkers) {
+		List<GutterMark> allGutterMarks = myFixture.findAllGutters();
+
+		for (GutterMark gutterMark : allGutterMarks) {
 			if (gutterMark instanceof LineMarkerInfo.LineMarkerGutterIconRenderer) {
 				LineMarkerInfo.LineMarkerGutterIconRenderer lineMarkerGutterIconRenderer =
 					(LineMarkerInfo.LineMarkerGutterIconRenderer)gutterMark;
@@ -63,9 +64,9 @@ public class LiferayServiceJavaImplLineMarkerProviderTest extends LightCodeInsig
 					if (!gotoRelatedItems.isEmpty()) {
 						GotoRelatedItem gotoRelatedItem = gotoRelatedItems.iterator().next();
 
-						PsiElement element = gotoRelatedItem.getElement();
+						PsiElement psiElement = gotoRelatedItem.getElement();
 
-						if (element != null) {
+						if (psiElement != null) {
 							lineMarkerFound = true;
 						}
 					}
@@ -91,17 +92,21 @@ public class LiferayServiceJavaImplLineMarkerProviderTest extends LightCodeInsig
 
 		@Override
 		public void configureModule(
-			@NotNull Module module, @NotNull ModifiableRootModel model, @NotNull ContentEntry contentEntry) {
+			@NotNull Module module, @NotNull ModifiableRootModel modifiableRootModel,
+			@NotNull ContentEntry contentEntry) {
 
-			LanguageLevelModuleExtension extension = model.getModuleExtension(LanguageLevelModuleExtension.class);
+			LanguageLevelModuleExtension languageLevelModuleExtension = modifiableRootModel.getModuleExtension(
+				LanguageLevelModuleExtension.class);
 
-			if (extension != null) {
-				extension.setLanguageLevel(LanguageLevel.JDK_1_8);
+			if (languageLevelModuleExtension != null) {
+				languageLevelModuleExtension.setLanguageLevel(LanguageLevel.JDK_1_8);
 			}
 
-			Sdk jdk = JavaAwareProjectJdkTableImpl.getInstanceEx().getInternalJdk();
+			JavaAwareProjectJdkTableImpl javaAwareProjectJdkTableImpl = JavaAwareProjectJdkTableImpl.getInstanceEx();
 
-			model.setSdk(jdk);
+			Sdk sdk = javaAwareProjectJdkTableImpl.getInternalJdk();
+
+			modifiableRootModel.setSdk(sdk);
 		}
 
 		@Override

@@ -40,12 +40,13 @@ import org.jetbrains.annotations.NotNull;
 public class LiferayServiceJavaImplLineMarkerProvider extends RelatedItemLineMarkerProvider {
 
 	@Override
+	@SuppressWarnings("rawtypes")
 	protected void collectNavigationMarkers(
-		@NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo> result) {
+		@NotNull PsiElement psiElement, @NotNull Collection<? super RelatedItemLineMarkerInfo> lineMarkerInfos) {
 
-		if (element instanceof PsiIdentifier) {
-			if (element.getParent() instanceof PsiClass) {
-				PsiClass psiClass = (PsiClass)element.getParent();
+		if (psiElement instanceof PsiIdentifier) {
+			if (psiElement.getParent() instanceof PsiClass) {
+				PsiClass psiClass = (PsiClass)psiElement.getParent();
 
 				String name = psiClass.getName();
 				PsiJavaFile psiJavaFile = (PsiJavaFile)psiClass.getContainingFile();
@@ -57,33 +58,33 @@ public class LiferayServiceJavaImplLineMarkerProvider extends RelatedItemLineMar
 						String targetName = name.substring(0, name.length() - 4);
 						String targetPackage = packageName.substring(0, packageName.length() - 11);
 
-						Collection<PsiElement> targets = new ArrayList<>();
+						Collection<PsiElement> targetPsiElements = new ArrayList<>();
 
-						Project project = element.getProject();
+						Project project = psiElement.getProject();
 
-						PsiFile[] files = FilenameIndex.getFilesByName(
+						PsiFile[] psiFiles = FilenameIndex.getFilesByName(
 							project, "service.xml", GlobalSearchScope.allScope(project));
 
-						for (PsiFile psiFile : files) {
+						for (PsiFile psiFile : psiFiles) {
 							if (psiFile instanceof XmlFile) {
 								XmlFile xmlFile = (XmlFile)psiFile;
 
 								if (xmlFile.isValid()) {
-									XmlTag rootTag = xmlFile.getRootTag();
+									XmlTag rootXmlTag = xmlFile.getRootTag();
 
-									if ("service-builder".equals(rootTag.getLocalName())) {
-										String packagePath = rootTag.getAttributeValue("package-path");
+									if ("service-builder".equals(rootXmlTag.getLocalName())) {
+										String packagePath = rootXmlTag.getAttributeValue("package-path");
 
 										if (packagePath != null) {
 											if (targetPackage.equals(packagePath)) {
-												XmlTag[] subtags = rootTag.findSubTags("entity");
+												XmlTag[] xmlTags = rootXmlTag.findSubTags("entity");
 
-												for (XmlTag xmlTag : subtags) {
+												for (XmlTag xmlTag : xmlTags) {
 													String entityName = xmlTag.getAttributeValue("name");
 
 													if (entityName != null) {
 														if (targetName.equals(entityName)) {
-															targets.add(xmlTag);
+															targetPsiElements.add(xmlTag);
 														}
 													}
 												}
@@ -94,14 +95,14 @@ public class LiferayServiceJavaImplLineMarkerProvider extends RelatedItemLineMar
 							}
 						}
 
-						if (!targets.isEmpty()) {
+						if (!targetPsiElements.isEmpty()) {
 							NavigationGutterIconBuilder<PsiElement> builder = NavigationGutterIconBuilder.create(
 								AllIcons.Gutter.ImplementingMethod);
 
-							builder.setTargets(targets);
+							builder.setTargets(targetPsiElements);
 							builder.setTooltipText("Navigate to Declaration");
 
-							result.add(builder.createLineMarkerInfo(element));
+							lineMarkerInfos.add(builder.createLineMarkerInfo(psiElement));
 						}
 					}
 				}
