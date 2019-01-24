@@ -23,10 +23,16 @@ import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlTag;
+import com.intellij.psi.xml.XmlToken;
+import com.intellij.psi.xml.XmlTokenType;
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -37,44 +43,68 @@ public class LiferayServiceXMLLineMarkerProvider extends RelatedItemLineMarkerPr
 
 	@Override
 	protected void collectNavigationMarkers(
-		@NotNull PsiElement element, Collection<? super RelatedItemLineMarkerInfo> result) {
+		@NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo> result) {
 
-		if (element instanceof XmlTag) {
-			XmlTag xmlTag = (XmlTag)element;
+		XmlAttribute nameXmlAttribute = Stream.of(
+			element
+		).filter(
+			xmlToken -> xmlToken instanceof XmlToken
+		).map(
+			xmlToken -> (XmlToken)xmlToken
+		).filter(
+			xmlToken -> XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN.equals(xmlToken.getTokenType())
+		).map(
+			xmlAttribute -> PsiTreeUtil.getParentOfType(xmlAttribute, XmlAttribute.class)
+		).filter(
+			Objects::nonNull
+		).filter(
+			xmlAttribute -> "name".equals(xmlAttribute.getLocalName())
+		).findFirst(
+		).orElse(
+			null
+		);
 
-			String name = xmlTag.getLocalName();
+		if (nameXmlAttribute != null) {
+			XmlTag serviceBuilderXmlTag = Stream.of(
+				nameXmlAttribute
+			).map(
+				xmlTag -> PsiTreeUtil.getParentOfType(xmlTag, XmlTag.class)
+			).filter(
+				Objects::nonNull
+			).map(
+				PsiElement::getParent
+			).filter(
+				parentXmlTag -> parentXmlTag instanceof XmlTag
+			).map(
+				parentXmlTag -> (XmlTag)parentXmlTag
+			).filter(
+				parentXmlTag -> "service-builder".equals(parentXmlTag.getLocalName())
+			).findFirst(
+			).orElse(
+				null
+			);
 
-			if ("entity".equals(name)) {
-				if (xmlTag.getParent() instanceof XmlTag) {
-					XmlTag parent = (XmlTag)xmlTag.getParent();
+			if (serviceBuilderXmlTag != null) {
+				String packagePath = serviceBuilderXmlTag.getAttributeValue("package-path");
+				String entityName = nameXmlAttribute.getValue();
 
-					if ("service-builder".equals(parent.getName())) {
-						String packagePath = parent.getAttributeValue("package-path");
+				if ((packagePath != null) && (entityName != null)) {
+					Project project = element.getProject();
 
-						if (packagePath != null) {
-							String entityName = xmlTag.getAttributeValue("name");
+					String targetClassName = packagePath + ".model.impl." + entityName + "Impl";
 
-							if (entityName != null) {
-								Project project = element.getProject();
+					JavaPsiFacade javaPsiFacade = JavaPsiFacade.getInstance(project);
 
-								String targetClassName = packagePath + ".model.impl." + entityName + "Impl";
+					PsiClass psiClass = javaPsiFacade.findClass(targetClassName, GlobalSearchScope.allScope(project));
 
-								JavaPsiFacade javaPsiFacade = JavaPsiFacade.getInstance(project);
+					if (psiClass != null) {
+						NavigationGutterIconBuilder<PsiElement> builder = NavigationGutterIconBuilder.create(
+							AllIcons.Gutter.ImplementedMethod);
 
-								PsiClass psiClass = javaPsiFacade.findClass(
-									targetClassName, GlobalSearchScope.allScope(project));
+						builder.setTargets(Collections.singletonList(psiClass));
+						builder.setTooltipText("Navigate to Implementation");
 
-								if (psiClass != null) {
-									NavigationGutterIconBuilder<PsiElement> builder =
-										NavigationGutterIconBuilder.create(AllIcons.Gutter.ImplementedMethod);
-
-									builder.setTargets(Arrays.asList(psiClass));
-									builder.setTooltipText("Navigate to Implementation");
-
-									result.add(builder.createLineMarkerInfo(element));
-								}
-							}
-						}
+						result.add(builder.createLineMarkerInfo(element));
 					}
 				}
 			}

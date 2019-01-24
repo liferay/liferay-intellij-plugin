@@ -41,7 +41,7 @@ public class LiferayServiceJavaImplLineMarkerProvider extends RelatedItemLineMar
 
 	@Override
 	protected void collectNavigationMarkers(
-		@NotNull PsiElement element, Collection<? super RelatedItemLineMarkerInfo> result) {
+		@NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo> result) {
 
 		if (element instanceof PsiIdentifier) {
 			if (element.getParent() instanceof PsiClass) {
