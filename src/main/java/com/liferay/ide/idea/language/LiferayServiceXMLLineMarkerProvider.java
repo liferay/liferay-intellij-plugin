@@ -32,7 +32,7 @@ import com.intellij.psi.xml.XmlTokenType;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
-import java.util.stream.Stream;
+import java.util.Optional;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -42,54 +42,48 @@ import org.jetbrains.annotations.NotNull;
 public class LiferayServiceXMLLineMarkerProvider extends RelatedItemLineMarkerProvider {
 
 	@Override
+	@SuppressWarnings("rawtypes")
 	protected void collectNavigationMarkers(
-		@NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo> result) {
+		@NotNull PsiElement psiElement, @NotNull Collection<? super RelatedItemLineMarkerInfo> lineMarkerInfos) {
 
-		XmlAttribute nameXmlAttribute = Stream.of(
-			element
+		Optional<XmlAttribute> nameXmlAttribute = Optional.of(
+			psiElement
 		).filter(
-			xmlToken -> xmlToken instanceof XmlToken
+			XmlToken.class::isInstance
 		).map(
-			xmlToken -> (XmlToken)xmlToken
+			XmlToken.class::cast
 		).filter(
 			xmlToken -> XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN.equals(xmlToken.getTokenType())
 		).map(
-			xmlAttribute -> PsiTreeUtil.getParentOfType(xmlAttribute, XmlAttribute.class)
+			xmlToken -> PsiTreeUtil.getParentOfType(xmlToken, XmlAttribute.class)
 		).filter(
 			Objects::nonNull
 		).filter(
 			xmlAttribute -> "name".equals(xmlAttribute.getLocalName())
-		).findFirst(
-		).orElse(
-			null
 		);
 
-		if (nameXmlAttribute != null) {
-			XmlTag serviceBuilderXmlTag = Stream.of(
-				nameXmlAttribute
-			).map(
-				xmlTag -> PsiTreeUtil.getParentOfType(xmlTag, XmlTag.class)
-			).filter(
-				Objects::nonNull
-			).map(
-				PsiElement::getParent
-			).filter(
-				parentXmlTag -> parentXmlTag instanceof XmlTag
-			).map(
-				parentXmlTag -> (XmlTag)parentXmlTag
-			).filter(
-				parentXmlTag -> "service-builder".equals(parentXmlTag.getLocalName())
-			).findFirst(
-			).orElse(
-				null
-			);
+		nameXmlAttribute.map(
+			xmlAttribute -> PsiTreeUtil.getParentOfType(xmlAttribute, XmlTag.class)
+		).filter(
+			Objects::nonNull
+		).map(
+			PsiElement::getParent
+		).filter(
+			XmlTag.class::isInstance
+		).map(
+			XmlTag.class::cast
+		).filter(
+			parentXmlTag -> "service-builder".equals(parentXmlTag.getLocalName())
+		).ifPresent(
+			serviceBuilderXmlTag -> {
+				XmlAttribute xmlAttribute = nameXmlAttribute.get();
 
-			if (serviceBuilderXmlTag != null) {
+				String entityName = xmlAttribute.getValue();
+
 				String packagePath = serviceBuilderXmlTag.getAttributeValue("package-path");
-				String entityName = nameXmlAttribute.getValue();
 
-				if ((packagePath != null) && (entityName != null)) {
-					Project project = element.getProject();
+				if ((entityName != null) && (packagePath != null)) {
+					Project project = psiElement.getProject();
 
 					String targetClassName = packagePath + ".model.impl." + entityName + "Impl";
 
@@ -98,17 +92,17 @@ public class LiferayServiceXMLLineMarkerProvider extends RelatedItemLineMarkerPr
 					PsiClass psiClass = javaPsiFacade.findClass(targetClassName, GlobalSearchScope.allScope(project));
 
 					if (psiClass != null) {
-						NavigationGutterIconBuilder<PsiElement> builder = NavigationGutterIconBuilder.create(
-							AllIcons.Gutter.ImplementedMethod);
+						NavigationGutterIconBuilder<PsiElement> navigationGutterIconBuilder =
+							NavigationGutterIconBuilder.create(AllIcons.Gutter.ImplementedMethod);
 
-						builder.setTargets(Collections.singletonList(psiClass));
-						builder.setTooltipText("Navigate to Implementation");
+						navigationGutterIconBuilder.setTargets(Collections.singletonList(psiClass));
+						navigationGutterIconBuilder.setTooltipText("Navigate to Implementation");
 
-						result.add(builder.createLineMarkerInfo(element));
+						lineMarkerInfos.add(navigationGutterIconBuilder.createLineMarkerInfo(psiElement));
 					}
 				}
 			}
-		}
+		);
 	}
 
 }
