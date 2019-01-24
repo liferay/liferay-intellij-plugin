@@ -23,10 +23,16 @@ import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlTag;
+import com.intellij.psi.xml.XmlToken;
+import com.intellij.psi.xml.XmlTokenType;
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Optional;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -36,49 +42,67 @@ import org.jetbrains.annotations.NotNull;
 public class LiferayServiceXMLLineMarkerProvider extends RelatedItemLineMarkerProvider {
 
 	@Override
+	@SuppressWarnings("rawtypes")
 	protected void collectNavigationMarkers(
-		@NotNull PsiElement element, Collection<? super RelatedItemLineMarkerInfo> result) {
+		@NotNull PsiElement psiElement, @NotNull Collection<? super RelatedItemLineMarkerInfo> lineMarkerInfos) {
 
-		if (element instanceof XmlTag) {
-			XmlTag xmlTag = (XmlTag)element;
+		Optional<XmlAttribute> nameXmlAttribute = Optional.of(
+			psiElement
+		).filter(
+			XmlToken.class::isInstance
+		).map(
+			XmlToken.class::cast
+		).filter(
+			xmlToken -> XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN.equals(xmlToken.getTokenType())
+		).map(
+			xmlToken -> PsiTreeUtil.getParentOfType(xmlToken, XmlAttribute.class)
+		).filter(
+			Objects::nonNull
+		).filter(
+			xmlAttribute -> "name".equals(xmlAttribute.getLocalName())
+		);
 
-			String name = xmlTag.getLocalName();
+		nameXmlAttribute.map(
+			xmlAttribute -> PsiTreeUtil.getParentOfType(xmlAttribute, XmlTag.class)
+		).filter(
+			Objects::nonNull
+		).map(
+			PsiElement::getParent
+		).filter(
+			XmlTag.class::isInstance
+		).map(
+			XmlTag.class::cast
+		).filter(
+			parentXmlTag -> "service-builder".equals(parentXmlTag.getLocalName())
+		).ifPresent(
+			serviceBuilderXmlTag -> {
+				XmlAttribute xmlAttribute = nameXmlAttribute.get();
 
-			if ("entity".equals(name)) {
-				if (xmlTag.getParent() instanceof XmlTag) {
-					XmlTag parent = (XmlTag)xmlTag.getParent();
+				String entityName = xmlAttribute.getValue();
 
-					if ("service-builder".equals(parent.getName())) {
-						String packagePath = parent.getAttributeValue("package-path");
+				String packagePath = serviceBuilderXmlTag.getAttributeValue("package-path");
 
-						if (packagePath != null) {
-							String entityName = xmlTag.getAttributeValue("name");
+				if ((entityName != null) && (packagePath != null)) {
+					Project project = psiElement.getProject();
 
-							if (entityName != null) {
-								Project project = element.getProject();
+					String targetClassName = packagePath + ".model.impl." + entityName + "Impl";
 
-								String targetClassName = packagePath + ".model.impl." + entityName + "Impl";
+					JavaPsiFacade javaPsiFacade = JavaPsiFacade.getInstance(project);
 
-								JavaPsiFacade javaPsiFacade = JavaPsiFacade.getInstance(project);
+					PsiClass psiClass = javaPsiFacade.findClass(targetClassName, GlobalSearchScope.allScope(project));
 
-								PsiClass psiClass = javaPsiFacade.findClass(
-									targetClassName, GlobalSearchScope.allScope(project));
+					if (psiClass != null) {
+						NavigationGutterIconBuilder<PsiElement> navigationGutterIconBuilder =
+							NavigationGutterIconBuilder.create(AllIcons.Gutter.ImplementedMethod);
 
-								if (psiClass != null) {
-									NavigationGutterIconBuilder<PsiElement> builder =
-										NavigationGutterIconBuilder.create(AllIcons.Gutter.ImplementedMethod);
+						navigationGutterIconBuilder.setTargets(Collections.singletonList(psiClass));
+						navigationGutterIconBuilder.setTooltipText("Navigate to Implementation");
 
-									builder.setTargets(Arrays.asList(psiClass));
-									builder.setTooltipText("Navigate to Implementation");
-
-									result.add(builder.createLineMarkerInfo(element));
-								}
-							}
-						}
+						lineMarkerInfos.add(navigationGutterIconBuilder.createLineMarkerInfo(psiElement));
 					}
 				}
 			}
-		}
+		);
 	}
 
 }
