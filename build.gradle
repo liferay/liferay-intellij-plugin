@@ -143,12 +143,10 @@ processResources {
 	dependsOn verifyBlade
 }
 
-def intellijPortalUsername = credentials.intellijPortalUsername ?: ""
-def intellijPortalPassword = credentials.intellijPortalPassword ?: ""
+def intellijPortalToken = credentials.intellijPortalToken ?: ""
 
 publishPlugin {
-	username intellijPortalUsername
-	password intellijPortalPassword
+	token intellijPortalToken
 }
 
 repositories {
