@@ -14,6 +14,8 @@
 
 package com.liferay.ide.idea.server.portal;
 
+import com.intellij.openapi.projectRoots.Sdk;
+
 import java.nio.file.Path;
 
 /**
@@ -29,7 +31,7 @@ public interface PortalBundle {
 
 	public String[] getRuntimeStartProgArgs();
 
-	public String[] getRuntimeStartVMArgs();
+	public String[] getRuntimeStartVMArgs(Sdk javaJdk);
 
 	public String getType();
 

@@ -14,6 +14,8 @@
 
 package com.liferay.ide.idea.server.portal;
 
+import com.intellij.openapi.projectRoots.Sdk;
+
 import com.liferay.ide.idea.util.FileUtil;
 import com.liferay.ide.idea.util.ListUtil;
 
@@ -86,7 +88,7 @@ public class PortalWildFlyBundle extends AbstractPortalBundle {
 	}
 
 	@Override
-	public String[] getRuntimeStartVMArgs() {
+	public String[] getRuntimeStartVMArgs(Sdk javaJdk) {
 		List<String> args = new ArrayList<>();
 
 		args.add("-Dorg.jboss.resolver.warning=true");

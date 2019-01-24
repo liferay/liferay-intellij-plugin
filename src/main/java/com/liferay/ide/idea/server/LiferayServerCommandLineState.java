@@ -106,7 +106,8 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 
 		ParametersList vmParametersList = javaParameters.getVMParametersList();
 
-		String[] runtimeStartVMArgs = portalBundle.getRuntimeStartVMArgs();
+		String[] runtimeStartVMArgs = portalBundle.getRuntimeStartVMArgs(
+			JavaParametersUtil.createProjectJdk(liferayServerConfiguration.getProject(), jrePath));
 
 		Stream.of(
 			runtimeStartVMArgs
