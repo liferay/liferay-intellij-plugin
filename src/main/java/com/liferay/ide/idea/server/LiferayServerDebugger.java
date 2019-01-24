@@ -15,6 +15,7 @@
 package com.liferay.ide.idea.server;
 
 import com.intellij.debugger.impl.GenericDebuggerRunner;
+import com.intellij.debugger.settings.DebuggerSettings;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionManager;
 import com.intellij.execution.configurations.RunProfile;
@@ -59,7 +60,18 @@ public class LiferayServerDebugger extends GenericDebuggerRunner {
 	protected RunContentDescriptor doExecute(@NotNull RunProfileState state, @NotNull ExecutionEnvironment environment)
 		throws ExecutionException {
 
-		RunContentDescriptor runContentDescriptor = super.doExecute(state, environment);
+		DebuggerSettings debuggerSettings = DebuggerSettings.getInstance();
+
+		RunContentDescriptor runContentDescriptor;
+
+		if (debuggerSettings.INSTRUMENTING_AGENT) {
+			debuggerSettings.INSTRUMENTING_AGENT = false;
+			runContentDescriptor = super.doExecute(state, environment);
+			debuggerSettings.INSTRUMENTING_AGENT = true;
+		}
+		else {
+			runContentDescriptor = super.doExecute(state, environment);
+		}
 
 		if (runContentDescriptor != null) {
 			ProcessHandler processHandler = runContentDescriptor.getProcessHandler();
