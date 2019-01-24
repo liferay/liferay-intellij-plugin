@@ -52,7 +52,7 @@ public class LiferayServerDebugger extends GenericDebuggerRunner {
 	@NotNull
 	@Override
 	public String getRunnerId() {
-		return "LiferayBundleDebugger";
+		return "LiferayServerDebugger";
 	}
 
 	@Nullable
@@ -66,7 +66,9 @@ public class LiferayServerDebugger extends GenericDebuggerRunner {
 
 		if (debuggerSettings.INSTRUMENTING_AGENT) {
 			debuggerSettings.INSTRUMENTING_AGENT = false;
+
 			runContentDescriptor = super.doExecute(state, environment);
+
 			debuggerSettings.INSTRUMENTING_AGENT = true;
 		}
 		else {
