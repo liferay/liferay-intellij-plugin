@@ -14,12 +14,19 @@
 
 package com.liferay.ide.idea.server.portal;
 
+import com.intellij.openapi.projectRoots.JdkUtil;
+import com.intellij.openapi.projectRoots.Sdk;
+
+import com.liferay.ide.idea.util.CoreUtil;
 import com.liferay.ide.idea.util.FileUtil;
 
 import java.nio.file.Path;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.jar.Attributes;
+
+import org.osgi.framework.Version;
 
 /**
  * @author Simon Jiang
@@ -70,8 +77,8 @@ public class PortalTomcatBundle extends AbstractPortalBundle {
 	}
 
 	@Override
-	public String[] getRuntimeStartVMArgs() {
-		return _getRuntimeVMArgs();
+	public String[] getRuntimeStartVMArgs(Sdk sdk) {
+		return _getRuntimeVMArgs(sdk);
 	}
 
 	@Override
@@ -79,7 +86,7 @@ public class PortalTomcatBundle extends AbstractPortalBundle {
 		return "tomcat";
 	}
 
-	private String[] _getRuntimeVMArgs() {
+	private String[] _getRuntimeVMArgs(Sdk sdk) {
 		List<String> args = new ArrayList<>();
 		Path tempPath = FileUtil.pathAppend(bundlePath, "temp");
 		Path endorsedPath = FileUtil.pathAppend(bundlePath, "endorsed");
@@ -87,7 +94,22 @@ public class PortalTomcatBundle extends AbstractPortalBundle {
 		args.add("-Dcatalina.base=" + bundlePath);
 		args.add("-Dcatalina.home=" + bundlePath);
 		args.add("-Dfile.encoding=UTF8");
-		args.add("-Djava.endorsed.dirs=" + endorsedPath);
+
+		String jdkVersionString = JdkUtil.getJdkMainAttribute(sdk, Attributes.Name.SPECIFICATION_VERSION);
+
+		if (!CoreUtil.isNullOrEmpty(jdkVersionString)) {
+			Version jdkVersion = Version.parseVersion(jdkVersionString);
+
+			Version jdk8Version = Version.parseVersion("1.8");
+
+			if (jdkVersion.compareTo(jdk8Version) <= 0) {
+				args.add("-Djava.endorsed.dirs=" + endorsedPath);
+			}
+		}
+		else {
+			args.add("-Djava.endorsed.dirs=" + endorsedPath);
+		}
+
 		args.add("-Djava.io.tmpdir=" + tempPath);
 		args.add("-Djava.net.preferIPv4Stack=true");
 		args.add("-Djava.util.logging.config.file=" + FileUtil.pathAppend(bundlePath, "conf/logging.properties"));
