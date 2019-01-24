@@ -132,7 +132,7 @@
 		<projectTemplatesFactory implementation="com.liferay.ide.idea.ui.modules.LiferayWorkspaceTemplatesFactory"/>
 		<configurationType implementation="com.liferay.ide.idea.server.LiferayServerConfigurationType"/>
 		<programRunner id="Run" implementation="com.liferay.ide.idea.server.LiferayServerRunner"/>
-		<programRunner id="Debug" implementation="com.liferay.ide.idea.server.LiferayServerDebugger"/>
+		<programRunner id="Debug" implementation="com.liferay.ide.idea.server.LiferayServerDebuggerRunner"/>
 		<projectService serviceImplementation="com.liferay.ide.idea.core.LiferayProjectTypeService"/>
 		<fileTypeFactory implementation="com.liferay.ide.idea.bnd.BndFileTypeFactory"/>
 		<codeInsight.lineMarkerProvider language="XML" implementationClass="com.liferay.ide.idea.language.LiferayServiceXMLLineMarkerProvider"/>

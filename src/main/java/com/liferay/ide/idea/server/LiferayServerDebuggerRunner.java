@@ -38,11 +38,11 @@ import org.jetbrains.annotations.Nullable;
  * @author Terry Jia
  * @author Simon Jiang
  */
-public class LiferayServerDebugger extends GenericDebuggerRunner {
+public class LiferayServerDebuggerRunner extends GenericDebuggerRunner {
 
 	@Override
-	public boolean canRun(@NotNull String executorId, @NotNull RunProfile profile) {
-		if (DefaultDebugExecutor.EXECUTOR_ID.equals(executorId) && profile instanceof LiferayServerConfiguration) {
+	public boolean canRun(@NotNull String executorId, @NotNull RunProfile runProfile) {
+		if (DefaultDebugExecutor.EXECUTOR_ID.equals(executorId) && runProfile instanceof LiferayServerConfiguration) {
 			return true;
 		}
 
@@ -57,7 +57,8 @@ public class LiferayServerDebugger extends GenericDebuggerRunner {
 
 	@Nullable
 	@Override
-	protected RunContentDescriptor doExecute(@NotNull RunProfileState state, @NotNull ExecutionEnvironment environment)
+	protected RunContentDescriptor doExecute(
+			@NotNull RunProfileState runProfileState, @NotNull ExecutionEnvironment executionEnvironment)
 		throws ExecutionException {
 
 		DebuggerSettings debuggerSettings = DebuggerSettings.getInstance();
@@ -67,12 +68,12 @@ public class LiferayServerDebugger extends GenericDebuggerRunner {
 		if (debuggerSettings.INSTRUMENTING_AGENT) {
 			debuggerSettings.INSTRUMENTING_AGENT = false;
 
-			runContentDescriptor = super.doExecute(state, environment);
+			runContentDescriptor = super.doExecute(runProfileState, executionEnvironment);
 
 			debuggerSettings.INSTRUMENTING_AGENT = true;
 		}
 		else {
-			runContentDescriptor = super.doExecute(state, environment);
+			runContentDescriptor = super.doExecute(runProfileState, executionEnvironment);
 		}
 
 		if (runContentDescriptor != null) {
@@ -87,7 +88,7 @@ public class LiferayServerDebugger extends GenericDebuggerRunner {
 
 					@Override
 					public void processWillTerminate(@NotNull ProcessEvent event, boolean willBeDestroyed) {
-						Project project = environment.getProject();
+						Project project = executionEnvironment.getProject();
 
 						ExecutionManager executionManager = ExecutionManager.getInstance(project);
 
