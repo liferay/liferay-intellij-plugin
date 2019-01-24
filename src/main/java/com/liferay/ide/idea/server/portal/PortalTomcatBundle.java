@@ -77,8 +77,8 @@ public class PortalTomcatBundle extends AbstractPortalBundle {
 	}
 
 	@Override
-	public String[] getRuntimeStartVMArgs(Sdk javaJdk) {
-		return _getRuntimeVMArgs(javaJdk);
+	public String[] getRuntimeStartVMArgs(Sdk sdk) {
+		return _getRuntimeVMArgs(sdk);
 	}
 
 	@Override
@@ -86,7 +86,7 @@ public class PortalTomcatBundle extends AbstractPortalBundle {
 		return "tomcat";
 	}
 
-	private String[] _getRuntimeVMArgs(Sdk javaJdk) {
+	private String[] _getRuntimeVMArgs(Sdk sdk) {
 		List<String> args = new ArrayList<>();
 		Path tempPath = FileUtil.pathAppend(bundlePath, "temp");
 		Path endorsedPath = FileUtil.pathAppend(bundlePath, "endorsed");
@@ -95,12 +95,14 @@ public class PortalTomcatBundle extends AbstractPortalBundle {
 		args.add("-Dcatalina.home=" + bundlePath);
 		args.add("-Dfile.encoding=UTF8");
 
-		String jdkVersionString = JdkUtil.getJdkMainAttribute(javaJdk, Attributes.Name.SPECIFICATION_VERSION);
+		String jdkVersionString = JdkUtil.getJdkMainAttribute(sdk, Attributes.Name.SPECIFICATION_VERSION);
 
 		if (!CoreUtil.isNullOrEmpty(jdkVersionString)) {
 			Version jdkVersion = Version.parseVersion(jdkVersionString);
 
-			if (jdkVersion.compareTo(_jdk8Version) <= 0) {
+			Version jdk8Version = Version.parseVersion("1.8");
+
+			if (jdkVersion.compareTo(jdk8Version) <= 0) {
 				args.add("-Djava.endorsed.dirs=" + endorsedPath);
 			}
 		}
@@ -117,7 +119,5 @@ public class PortalTomcatBundle extends AbstractPortalBundle {
 
 		return args.toArray(new String[0]);
 	}
-
-	private static Version _jdk8Version = Version.parseVersion("1.8");
 
 }

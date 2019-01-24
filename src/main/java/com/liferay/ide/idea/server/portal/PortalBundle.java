@@ -31,7 +31,7 @@ public interface PortalBundle {
 
 	public String[] getRuntimeStartProgArgs();
 
-	public String[] getRuntimeStartVMArgs(Sdk javaJdk);
+	public String[] getRuntimeStartVMArgs(Sdk sdk);
 
 	public String getType();
 

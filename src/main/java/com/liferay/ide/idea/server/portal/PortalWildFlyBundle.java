@@ -88,7 +88,7 @@ public class PortalWildFlyBundle extends AbstractPortalBundle {
 	}
 
 	@Override
-	public String[] getRuntimeStartVMArgs(Sdk javaJdk) {
+	public String[] getRuntimeStartVMArgs(Sdk sdk) {
 		List<String> args = new ArrayList<>();
 
 		args.add("-Dorg.jboss.resolver.warning=true");
