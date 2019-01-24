@@ -31,6 +31,12 @@
 	</p>
 	<p>
 		<ul>
+			<li>1.2.1</li>
+			<ul>
+				<li>INTELLIJ-33 quick fix for missing Liferay dependencies</li>
+				<li>INTELLIJ-35 bug fix for starting 7.1.x server in debug mode</li>
+				<li>INTELLIJ-41 bug fix for starting server with java 11</li>
+			</ul>
 			<li>1.2.0</li>
 			<ul>
 				<li>update embed blade to 3.4</li>
