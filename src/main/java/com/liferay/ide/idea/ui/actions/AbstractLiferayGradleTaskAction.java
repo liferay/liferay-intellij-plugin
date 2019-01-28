@@ -32,6 +32,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.execution.ParametersListUtil;
 
 import com.liferay.ide.idea.util.CoreUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -115,11 +116,14 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
 		Project project = anActionEvent.getProject();
 
-		VirtualFile baseDir = project.getBaseDir();
+		VirtualFile baseDir = LiferayWorkspaceUtil.getWorkspaceVirtualFile(project);
+
+		if (baseDir == null) {
+			return false;
+		}
 
 		VirtualFile gradleFile = baseDir.findChild("build.gradle");
 

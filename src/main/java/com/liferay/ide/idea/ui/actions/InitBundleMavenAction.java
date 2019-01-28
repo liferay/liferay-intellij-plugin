@@ -49,13 +49,12 @@ public class InitBundleMavenAction extends AbstractLiferayMavenGoalAction {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
 		if (super.isEnabledAndVisible(anActionEvent)) {
 			VirtualFile rootDir = getVirtualFile(anActionEvent);
 			Project project = anActionEvent.getProject();
 
-			if ((rootDir != null) && rootDir.equals(project.getBaseDir())) {
+			if ((rootDir != null) && rootDir.equals(LiferayWorkspaceUtil.getWorkspaceVirtualFile(project))) {
 				return true;
 			}
 		}

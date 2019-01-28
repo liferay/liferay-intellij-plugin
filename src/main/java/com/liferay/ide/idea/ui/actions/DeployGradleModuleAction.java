@@ -35,12 +35,15 @@ public class DeployGradleModuleAction extends AbstractLiferayGradleTaskAction {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
 		Project project = anActionEvent.getProject();
 		VirtualFile virtualFile = getVirtualFile(anActionEvent);
 
-		VirtualFile baseDir = project.getBaseDir();
+		VirtualFile baseDir = LiferayWorkspaceUtil.getWorkspaceVirtualFile(project);
+
+		if (baseDir == null) {
+			return false;
+		}
 
 		VirtualFile gradleFile = baseDir.findChild("build.gradle");
 

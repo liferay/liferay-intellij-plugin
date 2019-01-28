@@ -112,7 +112,7 @@ public class LiferayModuleExtBuilder extends ModuleBuilder {
 		_overrideFilesPanel.doFinish(virtualFile);
 
 		ExternalSystemUtil.refreshProject(
-			project, GradleConstants.SYSTEM_ID, LiferayWorkspaceUtil.getWorkspaceLocationPath(project), false,
+			project, GradleConstants.SYSTEM_ID, project.getBasePath(), false,
 			ProgressExecutionMode.IN_BACKGROUND_ASYNC);
 	}
 

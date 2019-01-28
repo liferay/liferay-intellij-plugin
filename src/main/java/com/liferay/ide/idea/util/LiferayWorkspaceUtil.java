@@ -60,7 +60,6 @@ public class LiferayWorkspaceUtil {
 	}
 
 	@Nullable
-	@SuppressWarnings("deprecation")
 	public static String getLiferayVersion(Project project) {
 		PropertiesComponent propertiesComponent = PropertiesComponent.getInstance(project);
 
@@ -70,7 +69,11 @@ public class LiferayWorkspaceUtil {
 			return liferayVersion;
 		}
 
-		VirtualFile projectRoot = project.getBaseDir();
+		VirtualFile projectRoot = getWorkspaceVirtualFile(project);
+
+		if (projectRoot == null) {
+			return null;
+		}
 
 		VirtualFile settingsVirtualFile = projectRoot.findFileByRelativePath("/.blade/settings.properties");
 
@@ -89,7 +92,7 @@ public class LiferayWorkspaceUtil {
 		return liferayVersion;
 	}
 
-	@SuppressWarnings("deprecation")
+	@Nullable
 	public static String getMavenProperty(Project project, String key, String defaultValue) {
 		if (!isValidMavenWorkspaceLocation(project)) {
 			return null;
@@ -97,7 +100,8 @@ public class LiferayWorkspaceUtil {
 
 		MavenProjectsManager mavenProjectsManager = MavenProjectsManager.getInstance(project);
 
-		MavenProject mavenWorkspaceProject = mavenProjectsManager.findContainingProject(project.getBaseDir());
+		MavenProject mavenWorkspaceProject = mavenProjectsManager.findContainingProject(
+			getWorkspaceVirtualFile(project));
 
 		if (mavenWorkspaceProject == null) {
 			return defaultValue;
@@ -135,7 +139,13 @@ public class LiferayWorkspaceUtil {
 		File file = new File(moduleExtDir);
 
 		if (!file.isAbsolute()) {
-			file = new File(getWorkspaceLocation(project), moduleExtDir);
+			String projectBasePath = project.getBasePath();
+
+			if (projectBasePath == null) {
+				return null;
+			}
+
+			file = new File(projectBasePath, moduleExtDir);
 		}
 
 		LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
@@ -143,7 +153,6 @@ public class LiferayWorkspaceUtil {
 		return localFileSystem.findFileByPath(file.getPath());
 	}
 
-	@SuppressWarnings("rawtypes")
 	public static List<LibraryData> getTargetPlatformArtifacts(Project project) {
 		ProjectDataManager projectDataManager = ProjectDataManager.getInstance();
 
@@ -161,7 +170,7 @@ public class LiferayWorkspaceUtil {
 
 			List<LibraryData> libraryData = new ArrayList<>(dataNodes.size());
 
-			for (DataNode child : dataNodes) {
+			for (DataNode<?> child : dataNodes) {
 				if (!ProjectKeys.LIBRARY.equals(child.getKey())) {
 					continue;
 				}
@@ -194,18 +203,28 @@ public class LiferayWorkspaceUtil {
 		return _getGradleProperty(location, WorkspaceConstants.DEFAULT_TARGET_PLATFORM_VERSION_PROPERTY, null);
 	}
 
-	@SuppressWarnings("deprecation")
-	public static File getWorkspaceLocation(Project project) {
-		VirtualFile baseDir = project.getBaseDir();
+	@Nullable
+	public static VirtualFile getWorkspaceVirtualFile(@Nullable Project project) {
+		if (project == null) {
+			return null;
+		}
 
-		return new File(baseDir.getPath());
+		String projectBasePath = project.getBasePath();
+
+		if (projectBasePath == null) {
+			return null;
+		}
+
+		LocalFileSystem fileSystem = LocalFileSystem.getInstance();
+
+		return fileSystem.findFileByPath(projectBasePath);
 	}
 
-	public static String getWorkspaceLocationPath(Project project) {
-		return getWorkspaceLocation(project).getPath();
-	}
+	public static boolean isValidGradleWorkspaceLocation(@Nullable String location) {
+		if (location == null) {
+			return false;
+		}
 
-	public static boolean isValidGradleWorkspaceLocation(String location) {
 		File workspaceDir = new File(location);
 
 		File buildGradle = new File(workspaceDir, _BUILD_GRADLE_FILE_NAME);
@@ -220,18 +239,13 @@ public class LiferayWorkspaceUtil {
 
 		Matcher matcher = _patternWorkspacePlugin.matcher(settingsContent);
 
-		if (matcher.matches()) {
-			return true;
-		}
-
-		return false;
+		return matcher.matches();
 	}
 
 	public static boolean isValidGradleWorkspaceProject(Project project) {
-		return isValidGradleWorkspaceLocation(getWorkspaceLocation(project).getPath());
+		return isValidGradleWorkspaceLocation(project.getBasePath());
 	}
 
-	@SuppressWarnings("deprecation")
 	public static boolean isValidMavenWorkspaceLocation(Project project) {
 		if (project == null) {
 			return false;
@@ -244,7 +258,13 @@ public class LiferayWorkspaceUtil {
 				return false;
 			}
 
-			MavenProject mavenWorkspaceProject = mavenProjectsManager.findContainingProject(project.getBaseDir());
+			VirtualFile workspaceVirtualFile = getWorkspaceVirtualFile(project);
+
+			if (workspaceVirtualFile == null) {
+				return false;
+			}
+
+			MavenProject mavenWorkspaceProject = mavenProjectsManager.findContainingProject(workspaceVirtualFile);
 
 			if (mavenWorkspaceProject == null) {
 				return false;
