@@ -101,7 +101,7 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
 
 		VirtualFile virtualFile = getVirtualFile(anActionEvent);
 
-		if (virtualFile == null) {
+		if ((project == null) || (virtualFile == null)) {
 			return false;
 		}
 

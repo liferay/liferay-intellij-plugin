@@ -22,7 +22,6 @@ import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMo
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.module.StdModuleTypes;
-import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectType;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -106,7 +105,7 @@ public class LiferayModuleBuilder extends ModuleBuilder {
 	}
 
 	@Override
-	public void setupRootModel(ModifiableRootModel rootModel) throws ConfigurationException {
+	public void setupRootModel(ModifiableRootModel rootModel) {
 		Project project = rootModel.getProject();
 
 		ProjectType liferayProjectType = LiferayProjectTypeService.getProjectType(project);
@@ -123,9 +122,9 @@ public class LiferayModuleBuilder extends ModuleBuilder {
 		sb.append("\" ");
 
 		String typeId = liferayProjectType.getId();
-		Boolean mavenModule = false;
+		boolean mavenModule = false;
 
-		if ((liferayProjectType != null) && typeId.equals(LiferayProjectType.LIFERAY_MAVEN_WORKSPACE)) {
+		if (typeId.equals(LiferayProjectType.LIFERAY_MAVEN_WORKSPACE)) {
 			sb.append("-b ");
 			sb.append("maven ");
 

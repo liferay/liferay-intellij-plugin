@@ -17,7 +17,6 @@ package com.liferay.ide.idea.core;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
-import com.intellij.openapi.project.DefaultProjectTypeEP;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectType;
 
@@ -38,35 +37,28 @@ public class LiferayProjectTypeService implements PersistentStateComponent<Proje
 		return ServiceManager.getService(project, LiferayProjectTypeService.class);
 	}
 
-	@Nullable
-	public static ProjectType getProjectType(@Nullable Project project) {
+	@NotNull
+	public static ProjectType getProjectType(@NotNull Project project) {
 		ProjectType projectType;
 
-		if (project != null) {
-			projectType = getInstance(project)._projectType;
+		projectType = getInstance(project)._projectType;
 
-			if (projectType != null) {
-				return projectType;
-			}
+		if (projectType != null) {
+			return projectType;
 		}
 
-		boolean validGradleWorkspaceLocation = LiferayWorkspaceUtil.isValidGradleWorkspaceLocation(
-			project.getBasePath());
-
-		if (validGradleWorkspaceLocation) {
+		if (LiferayWorkspaceUtil.isValidGradleWorkspaceLocation(project.getBasePath())) {
 			return new ProjectType(LiferayProjectType.LIFERAY_GRADLE_WORKSPACE);
 		}
 
-		boolean validMavenWorkspaceLocation = LiferayWorkspaceUtil.isValidMavenWorkspaceLocation(project);
-
-		if (validMavenWorkspaceLocation) {
+		if (LiferayWorkspaceUtil.isValidMavenWorkspaceLocation(project)) {
 			return new ProjectType(LiferayProjectType.LIFERAY_MAVEN_WORKSPACE);
 		}
 
-		return DefaultProjectTypeEP.getDefaultProjectType();
+		throw new RuntimeException(MessagesBundle.message("invalid.workspace.location", project.getBasePath()));
 	}
 
-	public static void setProjectType(@NotNull Project project, @Nullable ProjectType projectType) {
+	public static void setProjectType(@NotNull Project project, @NotNull ProjectType projectType) {
 		getInstance(project).loadState(projectType);
 	}
 
@@ -77,8 +69,8 @@ public class LiferayProjectTypeService implements PersistentStateComponent<Proje
 	}
 
 	@Override
-	public void loadState(ProjectType state) {
-		_projectType = state;
+	public void loadState(@NotNull ProjectType projectType) {
+		_projectType = projectType;
 	}
 
 	private ProjectType _projectType;
