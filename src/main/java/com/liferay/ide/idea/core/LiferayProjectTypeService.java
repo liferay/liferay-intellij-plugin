@@ -69,8 +69,8 @@ public class LiferayProjectTypeService implements PersistentStateComponent<Proje
 	}
 
 	@Override
-	public void loadState(@NotNull ProjectType state) {
-		_projectType = state;
+	public void loadState(@NotNull ProjectType projectType) {
+		_projectType = projectType;
 	}
 
 	private ProjectType _projectType;
