@@ -143,10 +143,10 @@ processResources {
 	dependsOn verifyBlade
 }
 
-def intellijPortalToken = credentials.intellijPortalToken ?: ""
+def intellijApiKey = credentials.intellijApiKey ?: ""
 
 publishPlugin {
-	token intellijPortalToken
+	token intellijApiKey
 }
 
 repositories {
