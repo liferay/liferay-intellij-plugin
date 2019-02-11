@@ -31,6 +31,10 @@
 	</p>
 	<p>
 		<ul>
+			<li>1.2.2</li>
+			<ul>
+				<li>INTELLIJ-47 fix display error of liferay icon on 2018.3.4</li>
+			</ul>
 			<li>1.2.1</li>
 			<ul>
 				<li>INTELLIJ-33 quick fix for missing Liferay dependencies</li>
