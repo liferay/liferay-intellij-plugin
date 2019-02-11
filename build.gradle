@@ -131,7 +131,7 @@ formatSource {
 
 intellij {
 	plugins "CSS", "DatabaseTools", "gradle", "Groovy", "java-i18n", "JavaEE", "JavaScriptLanguage", "jsp", "junit", "maven", "PersistenceSupport", "properties", "sass"
-	version "IU-2018.3.2"
+	version "IU-2018.3.4"
 }
 
 patchPluginXml {
