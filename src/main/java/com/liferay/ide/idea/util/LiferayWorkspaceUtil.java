@@ -134,6 +134,10 @@ public class LiferayWorkspaceUtil {
 
 	@Nullable
 	public static VirtualFile getModuleExtDirFile(Project project) {
+		if (project == null) {
+			return null;
+		}
+
 		String moduleExtDir = getModuleExtDir(project);
 
 		File file = new File(moduleExtDir);

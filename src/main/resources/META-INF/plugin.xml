@@ -121,7 +121,7 @@
 			<add-to-group group-id="NewGroup" anchor="last"/>
 		</action>
 
-		<group id="LiferayActionGroup" class="com.liferay.ide.idea.ui.actions.LiferayActionGroup" popup="true" text="Liferay" icon="/icons/liferay.png">
+		<group id="LiferayActionGroup" class="com.liferay.ide.idea.ui.actions.LiferayActionGroup" popup="true" text="Liferay" icon="/icons/liferay.svg">
 			<add-to-group group-id="ProjectViewPopupMenu" />
 			<action class="com.liferay.ide.idea.ui.actions.DeployGradleModuleAction" id="DeployLiferayGradleModule"/>
 			<action class="com.liferay.ide.idea.ui.actions.WatchGradleModuleAction" id="WatchLiferayGradleModule"/>

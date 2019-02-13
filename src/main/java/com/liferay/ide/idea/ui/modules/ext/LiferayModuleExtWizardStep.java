@@ -55,7 +55,7 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 		_project = wizardContext.getProject();
 		_liferayModuleExtBuilder = liferayModuleExtBuilder;
 
-		_overrideFilesPanel.prepareRefreshButton(_refreshButton, () -> _insertOriginalModuleNames(true));
+		_overrideFilesPanel.prepareRefreshButton(_refreshButton, false, () -> _insertOriginalModuleNames(true));
 
 		_overrideFilesPanel.function = () -> {
 			validate();
