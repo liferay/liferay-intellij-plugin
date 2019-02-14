@@ -127,18 +127,18 @@ public class OverrideFilesComponent {
 			});
 	}
 
-	public void prepareRefreshButton(@NotNull FixedSizeRefreshButton refreshButton, Runnable callBack) {
+	public void prepareRefreshButton(
+		@NotNull FixedSizeRefreshButton refreshButton, boolean selectingFiles, Runnable callBack) {
+
 		refreshButton.addActionListener(
 			event -> {
 				refreshButton.setEnabled(false);
 
-				if (LiferayWorkspaceUtil.getTargetPlatformVersion(_project) == null) {
+				if ((LiferayWorkspaceUtil.getTargetPlatformVersion(_project) == null) && !selectingFiles) {
 					Messages.showMessageDialog(
 						_project, MessagesBundle.message("modules.ext.targetPlatform.mention"), "Warning",
 						Messages.getWarningIcon());
 					refreshButton.setEnabled(true);
-
-					return;
 				}
 
 				ImportSpecBuilder importSpecBuilder = new ImportSpecBuilder(_project, GradleConstants.SYSTEM_ID);
