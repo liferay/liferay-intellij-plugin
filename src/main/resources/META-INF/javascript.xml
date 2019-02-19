@@ -4,4 +4,9 @@
         <multiHostInjector implementation="com.liferay.ide.idea.language.tag.LiferayTaglibJavascriptLanguageInjector"/>
     </extensions>
 
+    <extensions defaultExtensionNs="JavaScript">
+        <!-- Provide predefined JavaScript Libraries for Liferay -->
+        <predefinedLibraryProvider implementation="com.liferay.ide.idea.language.javascript.LiferayJSPredefinedLibraryProvider"/>
+    </extensions>
+
 </idea-plugin>
