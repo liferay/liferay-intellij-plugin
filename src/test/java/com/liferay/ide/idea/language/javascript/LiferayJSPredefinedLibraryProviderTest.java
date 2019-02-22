@@ -15,9 +15,17 @@
 package com.liferay.ide.idea.language.javascript;
 
 import com.intellij.codeInsight.completion.CompletionType;
+import com.intellij.openapi.externalSystem.model.project.LibraryData;
+import com.intellij.openapi.externalSystem.model.project.LibraryPathType;
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import com.intellij.util.PathUtil;
 
+import java.io.File;
+
+import java.util.ArrayList;
 import java.util.List;
+
+import org.jetbrains.plugins.gradle.util.GradleConstants;
 
 /**
  * @author Dominik Marks
@@ -34,6 +42,30 @@ public class LiferayJSPredefinedLibraryProviderTest extends LightCodeInsightFixt
 		List<String> lookupElementStrings = myFixture.getLookupElementStrings();
 
 		assertTrue(lookupElementStrings.contains("Liferay"));
+	}
+
+	public void setUp() throws Exception {
+		final String testDataPath = PathUtil.toSystemIndependentName(new File(_TEST_DATA_PATH).getAbsolutePath());
+
+		final LibraryData libraryData = new LibraryData(
+			GradleConstants.SYSTEM_ID, "Liferay Frontend JS Web (Mock)", false);
+
+		libraryData.setGroup("com.liferay");
+		libraryData.setArtifactId("com.liferay.frontend.js.web");
+		libraryData.setVersion("1.0.0");
+
+		String jarPath = testDataPath + "/com.liferay.frontend.js.web.jar";
+
+		libraryData.addPath(LibraryPathType.BINARY, jarPath);
+		libraryData.addPath(LibraryPathType.SOURCE, jarPath);
+
+		List<LibraryData> targetPlatformArtifacts = new ArrayList<>();
+
+		targetPlatformArtifacts.add(libraryData);
+
+		LiferayJSPredefinedLibraryProvider.setTargetPlatformArtifacts(targetPlatformArtifacts);
+
+		super.setUp();
 	}
 
 	public void testAuiScriptTagLiferay() {
