@@ -25,8 +25,6 @@ apply plugin: "com.liferay.source.formatter"
 apply plugin: "java"
 apply plugin: "nu.studer.credentials"
 
-def generatedResources = "$buildDir/generated-resources"
-
 sourceSets {
 	main {
 		java {
@@ -35,18 +33,13 @@ sourceSets {
 		resources {
 			srcDirs = ["src/main/resources"]
 		}
-
-		output.dir(generatedResources, builtBy: ["unzipLiferayFrontendJsAuiLib", "unzipLiferayFrontendJsLib"])
 	}
 }
 
 task downloadBlade(type: Download)
 task downloadDtds(type: Download)
-task downloadLiferayFrontendJsLibs(type: Download)
 task downloadTlds(type: Download)
 task downloadXsds(type: Download)
-task unzipLiferayFrontendJsAuiLib(dependsOn: downloadLiferayFrontendJsLibs, type: Copy)
-task unzipLiferayFrontendJsLib(dependsOn: downloadLiferayFrontendJsLibs, type: Copy)
 task verifyBlade(type: Verify)
 
 check.dependsOn checkSourceFormatting
@@ -141,48 +134,6 @@ downloadXsds {
 
 	dest target
 	overwrite false
-}
-
-downloadLiferayFrontendJsLibs {
-	def target = file("$buildDir/tmp")
-
-	target.mkdirs()
-
-	src([
-			"http://central.maven.org/maven2/com/liferay/com.liferay.frontend.js.web/2.0.6/com.liferay.frontend.js.web-2.0.6.jar",
-			"http://central.maven.org/maven2/com/liferay/com.liferay.frontend.js.aui.web/2.0.2/com.liferay.frontend.js.aui.web-2.0.2.jar"
-		])
-
-	dest target
-	overwrite false
-}
-
-unzipLiferayFrontendJsLib {
-	def target = new File(generatedResources, "/definitions/js/frontend")
-
-	target.mkdirs()
-
-	from zipTree("$buildDir/tmp/com.liferay.frontend.js.web-2.0.6.jar")
-	into file(target)
-	include {
-		FileTreeElement e ->
-		e.file.name.endsWith(".js") &&
-		(! (e.file.name.endsWith("-min.js") || e.file.name.endsWith("-debug.js") || e.file.name.endsWith("-coverage.js")) )
-	}
-}
-
-unzipLiferayFrontendJsAuiLib {
-	def target = new File(generatedResources, "/definitions/js/aui")
-
-	target.mkdirs()
-
-	from zipTree(file("$buildDir/tmp/com.liferay.frontend.js.aui.web-2.0.2.jar"))
-	into file(target)
-	include {
-		FileTreeElement e ->
-		e.file.name.endsWith(".js") &&
-		(! (e.file.name.endsWith("-min.js") || e.file.name.endsWith("-debug.js") || e.file.name.endsWith("-coverage.js")) )
-	}
 }
 
 formatSource {
