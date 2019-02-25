@@ -24,10 +24,10 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.platform.ProjectTemplate;
 import com.intellij.platform.templates.ArchivedProjectTemplate;
 import com.intellij.ui.CollectionListModel;
-import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.popup.list.GroupedItemsListRenderer;
 import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ui.JBUI;
 
 import java.awt.BorderLayout;
 
@@ -85,7 +85,7 @@ public class LiferayProjectTemplateList extends JPanel {
 				}
 
 				myTextLabel.setEnabled(_templateList.isEnabled());
-				myTextLabel.setBorder(IdeBorderFactory.createEmptyBorder(3, 3, 3, 3));
+				myTextLabel.setBorder(JBUI.Borders.empty(3, 3, 3, 3));
 			}
 
 		};

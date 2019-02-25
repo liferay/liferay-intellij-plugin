@@ -14,13 +14,11 @@
 
 package com.liferay.ide.idea.server;
 
-import com.intellij.execution.configuration.ConfigurationFactoryEx;
+import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.execution.configurations.ConfigurationType;
 import com.intellij.execution.configurations.ConfigurationTypeBase;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
 
 import icons.LiferayIcons;
 
@@ -36,25 +34,12 @@ public class LiferayServerConfigurationType extends ConfigurationTypeBase implem
 			"LiferayServerConfiguration", "Liferay Server", "Run or Debug a Liferay Server", LiferayIcons.LIFERAY_ICON);
 
 		addFactory(
-			new ConfigurationFactoryEx<RunConfiguration>(this) {
+			new ConfigurationFactory(this) {
 
-				public RunConfiguration createTemplateConfiguration(Project project) {
-					return new LiferayServerConfiguration(project, this, "");
-				}
-
+				@NotNull
 				@Override
-				public void onNewConfigurationCreated(@NotNull RunConfiguration configuration) {
-					LiferayServerConfiguration jarApplicationConfiguration = (LiferayServerConfiguration)configuration;
-
-					if (StringUtil.isEmpty(jarApplicationConfiguration.getWorkingDirectory())) {
-						Project project = configuration.getProject();
-
-						String basePath = StringUtil.notNullize(project.getBasePath());
-
-						String baseDir = FileUtil.toSystemIndependentName(basePath);
-
-						jarApplicationConfiguration.setWorkingDirectory(baseDir);
-					}
+				public RunConfiguration createTemplateConfiguration(@NotNull Project project) {
+					return new LiferayServerConfiguration(project, this, "");
 				}
 
 			});

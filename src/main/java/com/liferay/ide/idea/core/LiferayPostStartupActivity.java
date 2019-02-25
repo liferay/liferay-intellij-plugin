@@ -40,7 +40,11 @@ public class LiferayPostStartupActivity implements StartupActivity, DumbAware {
 
 	@Override
 	public void runActivity(@NotNull Project project) {
-		VirtualFile projectDirVirtualFile = project.getBaseDir();
+		VirtualFile projectDirVirtualFile = LiferayWorkspaceUtil.getWorkspaceVirtualFile(project);
+
+		if (projectDirVirtualFile == null) {
+			return;
+		}
 
 		projectDirVirtualFile.refresh(false, true);
 

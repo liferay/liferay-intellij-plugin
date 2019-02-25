@@ -112,6 +112,8 @@
 	<depends optional="true" config-file="css.xml">com.intellij.css</depends>
 	<depends optional="true" config-file="javascript.xml">JavaScript</depends>
 
+	<depends>com.intellij.modules.java</depends>
+
 	<actions>
 		<action id="NewLiferayModule" class="com.liferay.ide.idea.ui.modules.NewLiferayModuleAction"
 				text="Liferay Module" description="Add new liferay module to the liferay workspace">

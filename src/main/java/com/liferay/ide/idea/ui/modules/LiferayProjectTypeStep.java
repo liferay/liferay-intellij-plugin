@@ -50,7 +50,6 @@ import com.intellij.platform.ProjectTemplatesFactory;
 import com.intellij.platform.templates.BuilderBasedTemplate;
 import com.intellij.platform.templates.TemplateModuleBuilder;
 import com.intellij.ui.CollectionListModel;
-import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.ListSpeedSearch;
 import com.intellij.ui.SingleSelectionModel;
 import com.intellij.ui.components.JBLabel;
@@ -62,6 +61,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.FactoryMap;
 import com.intellij.util.containers.MultiMap;
+import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 
 import com.liferay.ide.idea.ui.modules.ext.LiferayModuleExtBuilder;
@@ -193,7 +193,7 @@ public class LiferayProjectTypeStep extends ModuleWizardStep implements Settings
 				@Override
 				protected JComponent createItemComponent() {
 					JComponent component = super.createItemComponent();
-					myTextLabel.setBorder(IdeBorderFactory.createEmptyBorder(3));
+					myTextLabel.setBorder(JBUI.Borders.empty(3));
 
 					return component;
 				}
@@ -240,7 +240,7 @@ public class LiferayProjectTypeStep extends ModuleWizardStep implements Settings
 
 		_frameworksLabel.setLabelFor(_frameworksPanel.getFrameworksTree());
 
-		_frameworksLabel.setBorder(IdeBorderFactory.createEmptyBorder(3));
+		_frameworksLabel.setBorder(JBUI.Borders.empty(3));
 
 		_configurationUpdater = new ModuleBuilder.ModuleConfigurationUpdater() {
 
@@ -669,7 +669,7 @@ public class LiferayProjectTypeStep extends ModuleWizardStep implements Settings
 
 	private static final Logger _log = Logger.getInstance(LiferayProjectTypeStep.class);
 
-	private Map<ProjectTemplate, ModuleBuilder> _builders = FactoryMap.createMap(
+	private Map<ProjectTemplate, ModuleBuilder> _builders = FactoryMap.create(
 		key -> (ModuleBuilder)key.createModuleBuilder());
 	private ModuleBuilder.ModuleConfigurationUpdater _configurationUpdater;
 	private WizardContext _context;

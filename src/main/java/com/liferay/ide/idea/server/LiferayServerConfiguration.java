@@ -37,6 +37,8 @@ import com.intellij.openapi.options.SettingsEditorGroup;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
+import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
@@ -208,6 +210,17 @@ public class LiferayServerConfiguration
 	@Override
 	public boolean isPassParentEnvs() {
 		return _liferayServerConfig.passParentEnvironments;
+	}
+
+	@Override
+	public void onNewConfigurationCreated() {
+		super.onNewConfigurationCreated();
+
+		if (StringUtil.isEmpty(getWorkingDirectory())) {
+			String baseDir = FileUtil.toSystemIndependentName(StringUtil.notNullize(getProject().getBasePath()));
+
+			setWorkingDirectory(baseDir);
+		}
 	}
 
 	@Override
