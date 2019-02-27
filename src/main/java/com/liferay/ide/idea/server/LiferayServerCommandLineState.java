@@ -31,6 +31,7 @@ import com.liferay.ide.idea.util.ServerUtil;
 import java.io.File;
 import java.io.InputStream;
 
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -166,7 +167,7 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 
 			contents = contents.replace("include-and-override=portal-developer.properties", "");
 
-			FileUtils.write(portalExtPropertiesFile, contents);
+			FileUtils.write(portalExtPropertiesFile, contents, Charset.defaultCharset());
 		}
 	}
 

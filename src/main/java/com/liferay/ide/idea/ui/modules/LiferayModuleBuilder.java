@@ -191,7 +191,11 @@ public class LiferayModuleBuilder extends ModuleBuilder {
 	}
 
 	private void _refreshProject(Project project, Boolean mavenModule) {
-		VirtualFile projectDir = project.getBaseDir();
+		VirtualFile projectDir = LiferayWorkspaceUtil.getWorkspaceVirtualFile(project);
+
+		if (projectDir == null) {
+			return;
+		}
 
 		projectDir.refresh(false, true);
 

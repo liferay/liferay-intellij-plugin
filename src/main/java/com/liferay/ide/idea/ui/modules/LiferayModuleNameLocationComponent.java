@@ -221,7 +221,7 @@ public class LiferayModuleNameLocationComponent {
 
 		assert project != null;
 
-		VirtualFile baseDir = project.getBaseDir();
+		VirtualFile baseDir = LiferayWorkspaceUtil.getWorkspaceVirtualFile(project);
 
 		if (baseDir != null) {
 			String baseDirPath = baseDir.getPath();
@@ -264,7 +264,7 @@ public class LiferayModuleNameLocationComponent {
 
 			assert project != null;
 
-			VirtualFile baseDir = project.getBaseDir();
+			VirtualFile baseDir = LiferayWorkspaceUtil.getWorkspaceVirtualFile(project);
 
 			if (baseDir != null) {
 				return baseDir.getPath();

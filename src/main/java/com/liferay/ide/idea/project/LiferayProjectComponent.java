@@ -25,7 +25,7 @@ import com.intellij.javaee.web.facet.WebFacetConfiguration;
 import com.intellij.javaee.web.facet.WebFacetType;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.AbstractProjectComponent;
+import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.ModuleListener;
 import com.intellij.openapi.project.Project;
@@ -45,24 +45,16 @@ import org.jetbrains.annotations.NotNull;
  * @author Joye Luo
  * @author Charles Wu
  */
-public class LiferayProjectComponent extends AbstractProjectComponent {
-
-	public LiferayProjectComponent(Project project) {
-		super(project);
-	}
+public class LiferayProjectComponent implements ProjectComponent {
 
 	@Override
 	public void disposeComponent() {
 		_messageBusConnection.disconnect();
-
-		super.disposeComponent();
 	}
 
 	@Override
 	public void initComponent() {
-		super.initComponent();
-
-		MessageBus messageBus = myProject.getMessageBus();
+		MessageBus messageBus = _project.getMessageBus();
 
 		_messageBusConnection = messageBus.connect();
 
@@ -78,6 +70,10 @@ public class LiferayProjectComponent extends AbstractProjectComponent {
 		};
 
 		_messageBusConnection.subscribe(ProjectTopics.MODULES, moduleListener);
+	}
+
+	protected LiferayProjectComponent(Project project) {
+		_project = project;
 	}
 
 	private void _addWebRoot(Module module) {
@@ -146,5 +142,6 @@ public class LiferayProjectComponent extends AbstractProjectComponent {
 	}
 
 	private MessageBusConnection _messageBusConnection;
+	private final Project _project;
 
 }

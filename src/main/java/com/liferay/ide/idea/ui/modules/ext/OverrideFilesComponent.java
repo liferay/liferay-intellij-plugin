@@ -246,6 +246,7 @@ public class OverrideFilesComponent {
 					super.getListCellRendererComponent(list, _getItemText(value), index, selected, cellHasFocus);
 
 					if (selected) {
+						//noinspection deprecation
 						setForeground(UIUtil.getListSelectionForeground());
 					}
 					else if (value instanceof EntryDescription && !((EntryDescription)value).isValid()) {

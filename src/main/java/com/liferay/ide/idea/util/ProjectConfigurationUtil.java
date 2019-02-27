@@ -45,7 +45,11 @@ public class ProjectConfigurationUtil {
 			return;
 		}
 
-		VirtualFile projectDir = project.getBaseDir();
+		VirtualFile projectDir = LiferayWorkspaceUtil.getWorkspaceVirtualFile(project);
+
+		if (projectDir == null) {
+			return;
+		}
 
 		projectDir.refresh(
 			true, true,
