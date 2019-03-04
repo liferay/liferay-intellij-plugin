@@ -63,10 +63,8 @@ public class LiferayJSPredefinedLibraryProvider extends JSPredefinedLibraryProvi
 	public ScriptingLibraryModel[] getPredefinedLibraries(@NotNull Project project) {
 		Set<VirtualFile> javascriptFiles = _getJavascriptFiles(project);
 
-		VirtualFile[] javascriptFilesArray = VfsUtilCore.toVirtualFileArray(javascriptFiles);
-
 		ScriptingLibraryModel scriptingLibraryModel = ScriptingLibraryModel.createPredefinedLibrary(
-			_LIFERAY_JAVASCRIPT_LIBRARY_DESCRIPTIVE_NAME, javascriptFilesArray, true);
+			_LIFERAY_JAVASCRIPT_LIBRARY_DESCRIPTIVE_NAME, VfsUtilCore.toVirtualFileArray(javascriptFiles), true);
 
 		if (!_rootsChangeListenerRegistered) {
 			MessageBus messageBus = project.getMessageBus();
