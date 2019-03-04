@@ -127,26 +127,22 @@ public class LiferayJSPredefinedLibraryProvider extends JSPredefinedLibraryProvi
 
 	@NotNull
 	private static Set<VirtualFile> _getJavascriptFiles(@NotNull Project project) {
-		Set<VirtualFile> virtualFiles = new TreeSet<>(Comparator.comparing(VirtualFile::getUrl));
-
 		List<LibraryData> targetPlatformArtifacts = _getTargetPlatformArtifacts(project);
 
-		Stream<LibraryData> targetPlatformArtifactsStream = targetPlatformArtifacts.stream();
+		Stream<LibraryData> stream = targetPlatformArtifacts.stream();
 
-		List<LibraryData> javascriptLibrariesDatas = targetPlatformArtifactsStream.filter(
+		return stream.filter(
 			libraryData -> "com.liferay".equals(libraryData.getGroupId())
 		).filter(
 			libraryData -> ("com.liferay.frontend.js.web".equals(libraryData.getArtifactId())) ||
 			 ("com.liferay.frontend.js.aui.web".equals(libraryData.getArtifactId()))
+		).map(
+			LiferayJSPredefinedLibraryProvider::_getJavascriptFilesFromLibraryData
+		).flatMap(
+			javascriptFiles -> javascriptFiles.stream()
 		).collect(
-			Collectors.toList()
+			Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(VirtualFile::getUrl)))
 		);
-
-		for (LibraryData libraryData : javascriptLibrariesDatas) {
-			virtualFiles.addAll(_getJavascriptFilesFromLibraryData(libraryData));
-		}
-
-		return virtualFiles;
 	}
 
 	@NotNull
