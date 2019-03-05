@@ -122,10 +122,6 @@ public class LiferayJSPredefinedLibraryProvider extends JSPredefinedLibraryProvi
 			});
 	}
 
-	protected static void setTargetPlatformArtifacts(List<LibraryData> targetPlatformArtifacts) {
-		LiferayJSPredefinedLibraryProvider._targetPlatformArtifacts = targetPlatformArtifacts;
-	}
-
 	@NotNull
 	private static Set<VirtualFile> _getJavascriptFiles(@NotNull Project project) {
 		List<LibraryData> targetPlatformArtifacts = _getTargetPlatformArtifacts(project);
@@ -147,6 +143,7 @@ public class LiferayJSPredefinedLibraryProvider extends JSPredefinedLibraryProvi
 	}
 
 	@NotNull
+	@SuppressWarnings("rawtypes")
 	private static Set<VirtualFile> _getJavascriptFilesFromJarRoot(@NotNull VirtualFile jarRoot) {
 		Set<VirtualFile> virtualFiles = new HashSet<>();
 

@@ -22,6 +22,8 @@ import com.intellij.util.PathUtil;
 
 import java.io.File;
 
+import java.lang.reflect.Field;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +65,10 @@ public class LiferayJSPredefinedLibraryProviderTest extends LightCodeInsightFixt
 
 		targetPlatformArtifacts.add(libraryData);
 
-		LiferayJSPredefinedLibraryProvider.setTargetPlatformArtifacts(targetPlatformArtifacts);
+		Field field = LiferayJSPredefinedLibraryProvider.class.getDeclaredField("_targetPlatformArtifacts");
+
+		field.setAccessible(true);
+		field.set(null, targetPlatformArtifacts);
 
 		super.setUp();
 	}
