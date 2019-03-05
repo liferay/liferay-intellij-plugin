@@ -56,7 +56,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Dominik Marks
  */
-public class LiferayJSPredefinedLibraryProvider extends JSPredefinedLibraryProvider {
+public class LiferayJSPredefinedLibraryProvider extends JSPredefinedLibraryProvider implements ModuleRootListener {
 
 	@NotNull
 	@Override
@@ -64,59 +64,62 @@ public class LiferayJSPredefinedLibraryProvider extends JSPredefinedLibraryProvi
 		Set<VirtualFile> javascriptFiles = _getJavascriptFiles(project);
 
 		ScriptingLibraryModel scriptingLibraryModel = ScriptingLibraryModel.createPredefinedLibrary(
-			_LIFERAY_JAVASCRIPT_LIBRARY_DESCRIPTIVE_NAME, VfsUtilCore.toVirtualFileArray(javascriptFiles), true);
+			_LIFERAY_JAVASCRIPT_LIBRARY_NAME, VfsUtilCore.toVirtualFileArray(javascriptFiles), true);
 
-		if (!_rootsChangeListenerRegistered) {
+		if (!_moduleRootListenerRegistered) {
 			MessageBus messageBus = project.getMessageBus();
 
 			MessageBusConnection messageBusConnection = messageBus.connect(project);
 
-			messageBusConnection.subscribe(
-				ProjectTopics.PROJECT_ROOTS,
-				new ModuleRootListener() {
+			messageBusConnection.subscribe(ProjectTopics.PROJECT_ROOTS, this);
 
-					@Override
-					public void rootsChanged(@NotNull ModuleRootEvent moduleRootEvent) {
-						DumbService dumbService = DumbService.getInstance(project);
-
-						dumbService.smartInvokeLater(
-							() -> {
-								ScriptingLibraryManager scriptingLibraryManager = JSLibraryManager.getInstance(project);
-
-								ScriptingLibraryModel liferayScriptingLibraryModel =
-									scriptingLibraryManager.getLibraryByName(
-										_LIFERAY_JAVASCRIPT_LIBRARY_DESCRIPTIVE_NAME);
-
-								if (liferayScriptingLibraryModel != null) {
-									Set<VirtualFile> oldSourceFiles = liferayScriptingLibraryModel.getSourceFiles();
-									Set<VirtualFile> javascriptFiles = _getJavascriptFiles(project);
-
-									boolean filesChanged = true;
-
-									if (oldSourceFiles.size() == javascriptFiles.size()) {
-										if (oldSourceFiles.containsAll(javascriptFiles)) {
-											filesChanged = false;
-										}
-									}
-
-									if (filesChanged) {
-										WriteAction.run(
-											() -> {
-												liferayScriptingLibraryModel.setSourceFiles(
-													VfsUtilCore.toVirtualFileArray(javascriptFiles));
-												scriptingLibraryManager.commitChanges();
-											});
-									}
-								}
-							});
-					}
-
-				});
-
-			_rootsChangeListenerRegistered = true;
+			_moduleRootListenerRegistered = true;
 		}
 
 		return new ScriptingLibraryModel[] {scriptingLibraryModel};
+	}
+
+	@Override
+	public void rootsChanged(ModuleRootEvent event) {
+		Object source = event.getSource();
+
+		if (!(source instanceof Project)) {
+			return;
+		}
+
+		Project project = (Project)event.getSource();
+
+		DumbService dumbService = DumbService.getInstance(project);
+
+		dumbService.smartInvokeLater(
+			() -> {
+				ScriptingLibraryManager scriptingLibraryManager = JSLibraryManager.getInstance(project);
+
+				ScriptingLibraryModel liferayScriptingLibraryModel = scriptingLibraryManager.getLibraryByName(
+					_LIFERAY_JAVASCRIPT_LIBRARY_NAME);
+
+				if (liferayScriptingLibraryModel != null) {
+					Set<VirtualFile> oldSourceFiles = liferayScriptingLibraryModel.getSourceFiles();
+					Set<VirtualFile> javascriptFiles = _getJavascriptFiles(project);
+
+					boolean filesChanged = true;
+
+					if (oldSourceFiles.size() == javascriptFiles.size()) {
+						if (oldSourceFiles.containsAll(javascriptFiles)) {
+							filesChanged = false;
+						}
+					}
+
+					if (filesChanged) {
+						WriteAction.run(
+							() -> {
+								liferayScriptingLibraryModel.setSourceFiles(
+									VfsUtilCore.toVirtualFileArray(javascriptFiles));
+								scriptingLibraryManager.commitChanges();
+							});
+					}
+				}
+			});
 	}
 
 	protected static void setTargetPlatformArtifacts(List<LibraryData> targetPlatformArtifacts) {
@@ -219,9 +222,9 @@ public class LiferayJSPredefinedLibraryProvider extends JSPredefinedLibraryProvi
 		return LiferayWorkspaceUtil.getTargetPlatformArtifacts(project);
 	}
 
-	private static final String _LIFERAY_JAVASCRIPT_LIBRARY_DESCRIPTIVE_NAME = "Liferay JavaScripts";
+	private static final String _LIFERAY_JAVASCRIPT_LIBRARY_NAME = "Liferay JavaScript";
 
-	private static boolean _rootsChangeListenerRegistered = false;
+	private static boolean _moduleRootListenerRegistered = false;
 	private static List<LibraryData> _targetPlatformArtifacts = new ArrayList<>();
 
 }
