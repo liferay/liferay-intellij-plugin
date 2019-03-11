@@ -25,7 +25,6 @@ import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.LanguageLevelModuleExtension;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.pom.java.LanguageLevel;
-import com.intellij.psi.PsiElement;
 import com.intellij.testFramework.IdeaTestUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.DefaultLightProjectDescriptor;
@@ -33,11 +32,15 @@ import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Dominik Marks
+ * @author Gregory Amerson
  */
 public class LiferayServiceJavaImplLineMarkerProviderTest extends LightCodeInsightFixtureTestCase {
 
@@ -45,36 +48,41 @@ public class LiferayServiceJavaImplLineMarkerProviderTest extends LightCodeInsig
 	public void testExceptionNameInspection() {
 		myFixture.configureByFiles("com/liferay/ide/model/impl/MyModelImpl.java", "service.xml");
 
-		boolean lineMarkerFound = false;
+		AtomicBoolean lineMarkerFound = new AtomicBoolean(false);
 
 		List<GutterMark> allGutterMarks = myFixture.findAllGutters();
 
-		for (GutterMark gutterMark : allGutterMarks) {
-			if (gutterMark instanceof LineMarkerInfo.LineMarkerGutterIconRenderer) {
+		Stream<GutterMark> s = allGutterMarks.stream();
+
+		s.filter(
+			gutterMark -> gutterMark instanceof LineMarkerInfo.LineMarkerGutterIconRenderer
+		).map(
+			gutterMark -> {
 				LineMarkerInfo.LineMarkerGutterIconRenderer lineMarkerGutterIconRenderer =
 					(LineMarkerInfo.LineMarkerGutterIconRenderer)gutterMark;
 
-				LineMarkerInfo lineMarkerInfo = lineMarkerGutterIconRenderer.getLineMarkerInfo();
-
-				if (lineMarkerInfo instanceof RelatedItemLineMarkerInfo) {
-					RelatedItemLineMarkerInfo relatedItemLineMarkerInfo = (RelatedItemLineMarkerInfo)lineMarkerInfo;
-
-					Collection<GotoRelatedItem> gotoRelatedItems = relatedItemLineMarkerInfo.createGotoRelatedItems();
-
-					if (!gotoRelatedItems.isEmpty()) {
-						GotoRelatedItem gotoRelatedItem = gotoRelatedItems.iterator().next();
-
-						PsiElement psiElement = gotoRelatedItem.getElement();
-
-						if (psiElement != null) {
-							lineMarkerFound = true;
-						}
-					}
-				}
+				return lineMarkerGutterIconRenderer.getLineMarkerInfo();
 			}
-		}
+		).filter(
+			lineMarkerInfo -> lineMarkerInfo instanceof RelatedItemLineMarkerInfo
+		).flatMap(
+			lineMarkerInfo -> {
+				RelatedItemLineMarkerInfo relatedItemLineMarkerInfo = (RelatedItemLineMarkerInfo)lineMarkerInfo;
 
-		assertTrue("Java Implementation line marker not found", lineMarkerFound);
+				Collection<GotoRelatedItem> items = relatedItemLineMarkerInfo.createGotoRelatedItems();
+
+				return items.stream();
+			}
+		).map(
+			GotoRelatedItem::getElement
+		).filter(
+			Objects::nonNull
+		).findAny(
+		).ifPresent(
+			e -> lineMarkerFound.set(true)
+		);
+
+		assertTrue("Java Implementation line marker not found", lineMarkerFound.get());
 	}
 
 	@NotNull
