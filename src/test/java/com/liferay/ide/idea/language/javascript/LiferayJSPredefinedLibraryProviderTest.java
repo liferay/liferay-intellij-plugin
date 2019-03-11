@@ -34,48 +34,6 @@ import org.jetbrains.plugins.gradle.util.GradleConstants;
  */
 public class LiferayJSPredefinedLibraryProviderTest extends LightCodeInsightFixtureTestCase {
 
-	public void ignoreTestAuiScriptTagLiferay() {
-
-		// ignore this as it would fail on Macos and Linux, but works fine on Windows, need more research on it
-
-		myFixture.configureByFiles("aui.jsp", "liferay-aui.tld");
-
-		myFixture.complete(CompletionType.BASIC, 1);
-
-		List<String> lookupElementStrings = myFixture.getLookupElementStrings();
-
-		assertTrue(
-			"lookupElementStrings are " + lookupElementStrings + ", do not have \"Liferay\"",
-			lookupElementStrings.contains("Liferay"));
-	}
-
-	public void ignoreTestHtmlScriptTagLiferay() {
-		//Does not work in <script>-Tags inside JSPs in IntelliJ 2018.3.x
-		//See bug report here https://youtrack.jetbrains.com/issue/WEB-37355
-		myFixture.configureByFiles("view.jsp");
-
-		myFixture.complete(CompletionType.BASIC, 1);
-
-		List<String> lookupElementStrings = myFixture.getLookupElementStrings();
-
-		assertTrue(lookupElementStrings.contains("Liferay"));
-	}
-
-	public void ignoreTestJavascriptLiferay() {
-
-		// ignore this as it would fail on Macos and Linux, but works fine on Windows, need more research on it
-
-		myFixture.configureByFiles("main.js");
-
-		myFixture.complete(CompletionType.BASIC, 1);
-
-		List<String> lookupElementStrings = myFixture.getLookupElementStrings();
-
-		assertTrue(
-			"lookupElementStrings are " + lookupElementStrings + ", do not have \"Liferay\"",
-			lookupElementStrings.contains("Liferay"));
-	}
-
 	public void setUp() throws Exception {
 		File testFile = new File(_TEST_DATA_PATH);
 
@@ -107,9 +65,63 @@ public class LiferayJSPredefinedLibraryProviderTest extends LightCodeInsightFixt
 		super.setUp();
 	}
 
+	public void testAuiScriptTagLiferay() {
+		myFixture.configureByFiles("aui.jsp", "liferay-aui.tld");
+
+		myFixture.complete(CompletionType.BASIC, 1);
+
+		List<String> lookupElementStrings = myFixture.getLookupElementStrings();
+
+		assertTrue(
+			"lookupElementStrings are " + lookupElementStrings + ", do not have \"Liferay\"",
+			lookupElementStrings.contains("Liferay"));
+	}
+
+	public void testHtmlScriptTagLiferay() {
+		//Does not work in <script>-Tags inside JSPs in IntelliJ 2018.3.x
+		//See bug report here https://youtrack.jetbrains.com/issue/WEB-37355
+		myFixture.configureByFiles("view.jsp");
+
+		myFixture.complete(CompletionType.BASIC, 1);
+
+		List<String> lookupElementStrings = myFixture.getLookupElementStrings();
+
+		assertTrue(lookupElementStrings.contains("Liferay"));
+	}
+
+	public void testJavascriptLiferay() {
+		myFixture.configureByFiles("main.js");
+
+		myFixture.complete(CompletionType.BASIC, 1);
+
+		List<String> lookupElementStrings = myFixture.getLookupElementStrings();
+
+		assertTrue(
+			"lookupElementStrings are " + lookupElementStrings + ", do not have \"Liferay\"",
+			lookupElementStrings.contains("Liferay"));
+	}
+
 	@Override
 	protected String getTestDataPath() {
 		return _TEST_DATA_PATH;
+	}
+
+	@Override
+	protected void runTest() throws Throwable {
+
+		// ignore all tests if not on windows
+
+		if (_isWindows()) {
+			super.runTest();
+		}
+	}
+
+	private static boolean _isWindows() {
+		String osName = System.getProperty("os.name");
+
+		osName = osName.toLowerCase();
+
+		return osName.contains("windows");
 	}
 
 	private static final String _TEST_DATA_PATH =
