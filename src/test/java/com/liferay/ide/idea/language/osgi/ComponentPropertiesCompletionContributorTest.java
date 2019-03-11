@@ -91,9 +91,11 @@ public class ComponentPropertiesCompletionContributorTest extends LightCodeInsig
 				extension.setLanguageLevel(LanguageLevel.JDK_1_8);
 			}
 
-			Sdk internalJdk = JavaAwareProjectJdkTableImpl.getInstanceEx().getInternalJdk();
+			JavaAwareProjectJdkTableImpl javaAwareProjectJdkTableImpl = JavaAwareProjectJdkTableImpl.getInstanceEx();
 
-			model.setSdk(internalJdk);
+			Sdk sdk = javaAwareProjectJdkTableImpl.getInternalJdk();
+
+			model.setSdk(sdk);
 
 			final String testDataPath = PathUtil.toSystemIndependentName(new File(_TEST_DATA_PATH).getAbsolutePath());
 

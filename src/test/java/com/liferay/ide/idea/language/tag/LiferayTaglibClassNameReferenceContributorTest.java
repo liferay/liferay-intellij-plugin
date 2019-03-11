@@ -68,7 +68,9 @@ public class LiferayTaglibClassNameReferenceContributorTest extends LightCodeIns
 				languageLevelModuleExtension.setLanguageLevel(LanguageLevel.JDK_1_8);
 			}
 
-			Sdk jdk = JavaAwareProjectJdkTableImpl.getInstanceEx().getInternalJdk();
+			JavaAwareProjectJdkTableImpl javaAwareProjectJdkTableImpl = JavaAwareProjectJdkTableImpl.getInstanceEx();
+
+			Sdk jdk = javaAwareProjectJdkTableImpl.getInternalJdk();
 
 			model.setSdk(jdk);
 		}
