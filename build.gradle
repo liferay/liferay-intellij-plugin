@@ -25,6 +25,17 @@ apply plugin: "com.liferay.source.formatter"
 apply plugin: "java"
 apply plugin: "nu.studer.credentials"
 
+sourceSets {
+	main {
+		java {
+			srcDirs = ["src/main/java"]
+		}
+		resources {
+			srcDirs = ["src/main/resources"]
+		}
+	}
+}
+
 task downloadBlade(type: Download)
 task downloadDtds(type: Download)
 task downloadTlds(type: Download)

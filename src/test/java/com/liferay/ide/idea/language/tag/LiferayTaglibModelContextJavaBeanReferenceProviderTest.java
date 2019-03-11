@@ -96,9 +96,11 @@ public class LiferayTaglibModelContextJavaBeanReferenceProviderTest extends Ligh
 				languageLevelModuleExtension.setLanguageLevel(LanguageLevel.JDK_1_8);
 			}
 
-			Sdk jdk = JavaAwareProjectJdkTableImpl.getInstanceEx().getInternalJdk();
+			JavaAwareProjectJdkTableImpl javaAwareProjectJdkTableImpl = JavaAwareProjectJdkTableImpl.getInstanceEx();
 
-			model.setSdk(jdk);
+			Sdk sdk = javaAwareProjectJdkTableImpl.getInternalJdk();
+
+			model.setSdk(sdk);
 		}
 
 		@Override

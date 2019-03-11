@@ -17,6 +17,7 @@ package com.liferay.ide.idea.language.tag;
 import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiReference;
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
 
 import java.util.List;
@@ -41,9 +42,13 @@ public class LiferayTaglibResourceBundleReferenceContributorTest extends LightCo
 
 		PsiFile file = myFixture.getFile();
 
-		PsiElement element = file.findElementAt(myFixture.getCaretOffset()).getParent();
+		PsiElement element = file.findElementAt(myFixture.getCaretOffset());
 
-		PsiElement resolve = element.getReferences()[0].resolve();
+		PsiElement parentElement = element.getParent();
+
+		PsiReference[] references = parentElement.getReferences();
+
+		PsiElement resolve = references[0].resolve();
 
 		assertTrue("\"foo\" should not be resolvable, because it is in a non-Language file", resolve == null);
 	}
@@ -53,9 +58,13 @@ public class LiferayTaglibResourceBundleReferenceContributorTest extends LightCo
 
 		PsiFile file = myFixture.getFile();
 
-		PsiElement element = file.findElementAt(myFixture.getCaretOffset()).getParent();
+		PsiElement element = file.findElementAt(myFixture.getCaretOffset());
 
-		PsiElement resolve = element.getReferences()[0].resolve();
+		PsiElement parentElement = element.getParent();
+
+		PsiReference[] references = parentElement.getReferences();
+
+		PsiElement resolve = references[0].resolve();
 
 		assertTrue("\"lang\" should be resolvable, because it is in Language.properties", resolve != null);
 	}
