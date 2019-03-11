@@ -70,7 +70,9 @@ public class LiferayTaglibSearchContainerJavaBeanReferenceContributorTest extend
 				languageLevelModuleExtension.setLanguageLevel(LanguageLevel.JDK_1_8);
 			}
 
-			Sdk jdk = JavaAwareProjectJdkTableImpl.getInstanceEx().getInternalJdk();
+			JavaAwareProjectJdkTableImpl instanceEx = JavaAwareProjectJdkTableImpl.getInstanceEx();
+
+			Sdk jdk = instanceEx.getInternalJdk();
 
 			model.setSdk(jdk);
 		}
