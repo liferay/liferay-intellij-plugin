@@ -33,6 +33,7 @@
 		<ul>
 			<li>1.3.0</li>
 			<ul>
+				<li>update embed blade to 3.5</li>
 				<li>INTELLIJ-1 Add Liferay frontend development support(community contribution)</li>
 			</ul>
 			<li>1.2.2</li>
