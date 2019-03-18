@@ -114,7 +114,9 @@ public class BladeCLI {
 		StringBuilder errors = new StringBuilder();
 
 		for (String line : lines) {
-			if (line.startsWith("Error")) {
+			String lineLowerCase = line.toLowerCase();
+
+			if (lineLowerCase.startsWith("error")) {
 				hasErrors = true;
 			}
 			else if (hasErrors) {
