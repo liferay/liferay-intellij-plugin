@@ -134,6 +134,9 @@ public class LiferayModuleExtBuilder extends ModuleBuilder {
 
 		sb.append("create -d \"");
 		sb.append(virtualFile.getPath());
+		sb.append("\" ");
+		sb.append("--base \"");
+		sb.append(project.getBasePath());
 		sb.append("\" -t ");
 		sb.append("modules-ext ");
 		sb.append("-m ");

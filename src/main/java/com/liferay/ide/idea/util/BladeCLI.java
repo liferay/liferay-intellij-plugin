@@ -114,7 +114,7 @@ public class BladeCLI {
 		StringBuilder errors = new StringBuilder();
 
 		for (String line : lines) {
-			if (line.startsWith("Error")) {
+			if (line.startsWith("Error") || line.startsWith("error")) {
 				hasErrors = true;
 			}
 			else if (hasErrors) {
