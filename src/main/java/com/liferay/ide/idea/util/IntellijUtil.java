@@ -127,5 +127,4 @@ public class IntellijUtil {
 		return FilenameIndex.getFilesByName(project, name, GlobalSearchScope.projectScope(project));
 	}
 
-
 }
