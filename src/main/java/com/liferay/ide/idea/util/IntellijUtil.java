@@ -19,6 +19,9 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.JarFileSystem;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -33,6 +36,48 @@ import org.jetbrains.annotations.Nullable;
  * @author Charles Wu
  */
 public class IntellijUtil {
+
+	public static VirtualFile getChild(VirtualFile parent, String name) {
+		int index = name.indexOf('/');
+
+		String pathElement = name;
+
+		if (index > -1) {
+			pathElement = name.substring(0, index);
+		}
+
+		if (parent != null) {
+			for (VirtualFile virtualFile : parent.getChildren()) {
+				if (pathElement.equals(virtualFile.getName())) {
+					if (index == -1) {
+						return virtualFile;
+					} else {
+						return getChild(virtualFile, name.substring(index + 1));
+					}
+				}
+			}
+		}
+
+		return null;
+	}
+
+	public static VirtualFile getJarRoot(VirtualFile virtualFile) {
+		VirtualFile jarRoot;
+
+		VirtualFileSystem virtualFileSystem = virtualFile.getFileSystem();
+
+		if (virtualFileSystem instanceof JarFileSystem) {
+			JarFileSystem jarFileSystem = (JarFileSystem)virtualFileSystem;
+
+			jarRoot = jarFileSystem.getRootByEntry(virtualFile);
+		} else {
+			JarFileSystem jarFileSystem = JarFileSystem.getInstance();
+
+			jarRoot = jarFileSystem.getJarRootForLocalFile(virtualFile);
+		}
+
+		return jarRoot;
+	}
 
 	@Nullable
 	public static PsiFile getModulePsiFileByName(@NotNull Module module, String fileName) {
@@ -81,5 +126,6 @@ public class IntellijUtil {
 	public static PsiFile[] getProjectPsiFilesByName(Project project, String name) {
 		return FilenameIndex.getFilesByName(project, name, GlobalSearchScope.projectScope(project));
 	}
+
 
 }

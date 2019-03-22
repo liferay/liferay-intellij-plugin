@@ -1,4 +1,8 @@
 <idea-plugin>
+	<extensions defaultExtensionNs="com.intellij">
+		<debugger.positionManagerFactory id="liferayPositionManager" implementation="com.liferay.ide.idea.language.jsp.LiferayJspDebuggerPositionManagerFactory" />
+	</extensions>
+
 	<project-components>
 		<component>
 			<implementation-class>com.liferay.ide.idea.project.LiferayProjectComponent</implementation-class>

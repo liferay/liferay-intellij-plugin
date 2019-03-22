@@ -1,3 +1,5 @@
+import org.gradle.internal.jvm.Jvm
+
 buildscript {
 	dependencies {
 		classpath group: "com.gradle", name: "build-scan-plugin", version: "1.16"
@@ -49,6 +51,7 @@ checkSourceFormatting {
 }
 
 dependencies {
+	compile files(Jvm.current().toolsJar)
 	compile group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.4.0"
 	compile group: "commons-configuration", name: "commons-configuration", version: "1.10"
 	compile group: "org.apache.ant", name: "ant", version: "1.10.1"
@@ -142,7 +145,7 @@ formatSource {
 
 intellij {
 	plugins "CSS", "DatabaseTools", "gradle", "Groovy", "java-i18n", "JavaEE", "JavaScriptLanguage", "jsp", "junit", "maven", "PersistenceSupport", "properties", "sass"
-	version "IU-2018.3.4"
+	version "IU-2018.3.5"
 }
 
 patchPluginXml {

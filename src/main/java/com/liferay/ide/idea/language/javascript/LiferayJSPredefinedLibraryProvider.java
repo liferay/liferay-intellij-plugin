@@ -26,11 +26,9 @@ import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.roots.ModuleRootListener;
-import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.messages.MessageBus;
@@ -38,6 +36,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.webcore.libraries.ScriptingLibraryManager;
 import com.intellij.webcore.libraries.ScriptingLibraryModel;
 
+import com.liferay.ide.idea.util.IntellijUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
 
 import java.util.ArrayList;
@@ -184,20 +183,7 @@ public class LiferayJSPredefinedLibraryProvider extends JSPredefinedLibraryProvi
 			VirtualFile rootVirtualFile = localFileSystem.findFileByPath(sourcePath);
 
 			if (rootVirtualFile != null) {
-				VirtualFileSystem virtualFileSystem = rootVirtualFile.getFileSystem();
-
-				VirtualFile jarRoot;
-
-				if (virtualFileSystem instanceof JarFileSystem) {
-					JarFileSystem jarFileSystem = (JarFileSystem)virtualFileSystem;
-
-					jarRoot = jarFileSystem.getRootByEntry(rootVirtualFile);
-				}
-				else {
-					JarFileSystem jarFileSystem = JarFileSystem.getInstance();
-
-					jarRoot = jarFileSystem.getJarRootForLocalFile(rootVirtualFile);
-				}
+				VirtualFile jarRoot = IntellijUtil.getJarRoot(rootVirtualFile);
 
 				if (jarRoot != null) {
 					virtualFiles.addAll(_getJavascriptFilesFromJarRoot(jarRoot));

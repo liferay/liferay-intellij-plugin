@@ -77,18 +77,6 @@ public class LiferayJSPredefinedLibraryProviderTest extends LightCodeInsightFixt
 			lookupElementStrings.contains("Liferay"));
 	}
 
-	public void testHtmlScriptTagLiferay() {
-		//Does not work in <script>-Tags inside JSPs in IntelliJ 2018.3.x
-		//See bug report here https://youtrack.jetbrains.com/issue/WEB-37355
-		myFixture.configureByFiles("view.jsp");
-
-		myFixture.complete(CompletionType.BASIC, 1);
-
-		List<String> lookupElementStrings = myFixture.getLookupElementStrings();
-
-		assertTrue(lookupElementStrings.contains("Liferay"));
-	}
-
 	public void testJavascriptLiferay() {
 		myFixture.configureByFiles("main.js");
 
