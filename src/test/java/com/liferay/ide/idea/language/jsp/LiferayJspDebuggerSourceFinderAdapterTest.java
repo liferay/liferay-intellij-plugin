@@ -48,93 +48,93 @@ import org.jetbrains.plugins.gradle.util.GradleConstants;
  */
 public class LiferayJspDebuggerSourceFinderAdapterTest extends LightCodeInsightFixtureTestCase {
 
-    public void testSourceFinderInLibrary() {
-        SourcesFinder<JavaeeFacet[]> sourcesFinder = new LiferayJspDebuggerSourceFinderAdapter();
+	public void testSourceFinderInLibrary() {
+		SourcesFinder<JavaeeFacet[]> sourcesFinder = new LiferayJspDebuggerSourceFinderAdapter();
 
-        PsiFile sourceFile = sourcesFinder.findSourceFile("init.jsp", myFixture.getProject(), new JavaeeFacet[0]);
+		PsiFile sourceFile = sourcesFinder.findSourceFile("init.jsp", myFixture.getProject(), new JavaeeFacet[0]);
 
-        assertNotNull("SourcesFinder should have found \"init.jsp\" inside \"com.liferay.login.web.jar\"", sourceFile);
-    }
+		assertNotNull("SourcesFinder should have found \"init.jsp\" inside \"com.liferay.login.web.jar\"", sourceFile);
+	}
 
-    public void testSourceFinderInTargetPlatformArtifacts() {
-        SourcesFinder<JavaeeFacet[]> sourcesFinder = new LiferayJspDebuggerSourceFinderAdapter();
+	public void testSourceFinderInTargetPlatformArtifacts() {
+		SourcesFinder<JavaeeFacet[]> sourcesFinder = new LiferayJspDebuggerSourceFinderAdapter();
 
-        PsiFile sourceFile = sourcesFinder.findSourceFile(
-            "edit_article.jsp", myFixture.getProject(), new JavaeeFacet[0]);
+		PsiFile sourceFile = sourcesFinder.findSourceFile(
+			"edit_article.jsp", myFixture.getProject(), new JavaeeFacet[0]);
 
-        assertNotNull(
-            "SourcesFinder should have found \"edit_article.jsp\" inside target platform artifacts", sourceFile);
-    }
+		assertNotNull(
+			"SourcesFinder should have found \"edit_article.jsp\" inside target platform artifacts", sourceFile);
+	}
 
-    @NotNull
-    protected LightProjectDescriptor getProjectDescriptor() {
-        return _JAVA_LOGIN_WEB_DESCRIPTOR;
-    }
+	@NotNull
+	protected LightProjectDescriptor getProjectDescriptor() {
+		return _JAVA_LOGIN_WEB_DESCRIPTOR;
+	}
 
-    protected String getTestDataPath() {
-        return _TEST_DATA_PATH;
-    }
+	protected String getTestDataPath() {
+		return _TEST_DATA_PATH;
+	}
 
-    @Override
-    protected void setUp() throws Exception {
-        File testFile = new File(_TEST_DATA_PATH);
+	@Override
+	protected void setUp() throws Exception {
+		File testFile = new File(_TEST_DATA_PATH);
 
-        final String testDataPath = PathUtil.toSystemIndependentName(testFile.getAbsolutePath());
+		final String testDataPath = PathUtil.toSystemIndependentName(testFile.getAbsolutePath());
 
-        final LibraryData libraryData = new LibraryData(
-            GradleConstants.SYSTEM_ID, "Liferay Journal Web (Mock)", false);
+		final LibraryData libraryData = new LibraryData(GradleConstants.SYSTEM_ID, "Liferay Journal Web (Mock)", false);
 
-        libraryData.setGroup("com.liferay");
-        libraryData.setArtifactId("com.liferay.journal.web");
-        libraryData.setVersion("1.0.0");
+		libraryData.setGroup("com.liferay");
+		libraryData.setArtifactId("com.liferay.journal.web");
+		libraryData.setVersion("1.0.0");
 
-        File jarFile = new File(testDataPath, "com.liferay.journal.web.jar");
+		File jarFile = new File(testDataPath, "com.liferay.journal.web.jar");
 
-        assertTrue(jarFile.exists());
+		assertTrue(jarFile.exists());
 
-        libraryData.addPath(LibraryPathType.BINARY, jarFile.getPath());
-        libraryData.addPath(LibraryPathType.SOURCE, jarFile.getPath());
+		libraryData.addPath(LibraryPathType.BINARY, jarFile.getPath());
+		libraryData.addPath(LibraryPathType.SOURCE, jarFile.getPath());
 
-        List<LibraryData> targetPlatformArtifacts = new ArrayList<>();
+		List<LibraryData> targetPlatformArtifacts = new ArrayList<>();
 
-        targetPlatformArtifacts.add(libraryData);
+		targetPlatformArtifacts.add(libraryData);
 
-        Field field = LiferayJspDebuggerSourceFinderAdapter.class.getDeclaredField("_targetPlatformArtifacts");
+		Field field = LiferayJspDebuggerSourceFinderAdapter.class.getDeclaredField("_targetPlatformArtifacts");
 
-        field.setAccessible(true);
-        field.set(null, targetPlatformArtifacts);
+		field.setAccessible(true);
+		field.set(null, targetPlatformArtifacts);
 
-        super.setUp();
-    }
+		super.setUp();
+	}
 
-    private static final LightProjectDescriptor _JAVA_LOGIN_WEB_DESCRIPTOR = new DefaultLightProjectDescriptor() {
+	private static final LightProjectDescriptor _JAVA_LOGIN_WEB_DESCRIPTOR = new DefaultLightProjectDescriptor() {
 
-        @Override
-        public void configureModule(@NotNull Module module, @NotNull ModifiableRootModel model, @NotNull ContentEntry contentEntry) {
-            LanguageLevelModuleExtension extension = model.getModuleExtension(LanguageLevelModuleExtension.class);
+		@Override
+		public void configureModule(
+			@NotNull Module module, @NotNull ModifiableRootModel model, @NotNull ContentEntry contentEntry) {
 
-            if (extension != null) {
-                extension.setLanguageLevel(LanguageLevel.JDK_1_8);
-            }
+			LanguageLevelModuleExtension extension = model.getModuleExtension(LanguageLevelModuleExtension.class);
 
-            JavaAwareProjectJdkTableImpl javaAwareProjectJdkTable = JavaAwareProjectJdkTableImpl.getInstanceEx();
+			if (extension != null) {
+				extension.setLanguageLevel(LanguageLevel.JDK_1_8);
+			}
 
-            Sdk jdk = javaAwareProjectJdkTable.getInternalJdk();
+			JavaAwareProjectJdkTableImpl javaAwareProjectJdkTable = JavaAwareProjectJdkTableImpl.getInstanceEx();
 
-            model.setSdk(jdk);
+			Sdk jdk = javaAwareProjectJdkTable.getInternalJdk();
 
-            final String testDataPath = PathUtil.toSystemIndependentName(new File(_TEST_DATA_PATH).getAbsolutePath());
+			model.setSdk(jdk);
 
-            VfsRootAccess.allowRootAccess( testDataPath );
+			final String testDataPath = PathUtil.toSystemIndependentName(new File(_TEST_DATA_PATH).getAbsolutePath());
 
-            PsiTestUtil.addLibrary(
-                module, model, "com.liferay:com.liferay.login.web", testDataPath, "com.liferay.login.web.jar");
-        }
+			VfsRootAccess.allowRootAccess(testDataPath);
 
-    };
+			PsiTestUtil.addLibrary(
+				module, model, "com.liferay:com.liferay.login.web", testDataPath, "com.liferay.login.web.jar");
+		}
 
-    private static final String _TEST_DATA_PATH =
-        "testdata/com/liferay/ide/idea/language/jsp/LiferayJspDebuggerSourceFinderAdapterTest";
+	};
 
+	private static final String _TEST_DATA_PATH =
+		"testdata/com/liferay/ide/idea/language/jsp/LiferayJspDebuggerSourceFinderAdapterTest";
 
 }

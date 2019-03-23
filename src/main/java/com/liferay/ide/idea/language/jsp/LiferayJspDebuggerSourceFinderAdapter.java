@@ -52,130 +52,129 @@ import org.jetbrains.annotations.Nullable;
  */
 public class LiferayJspDebuggerSourceFinderAdapter implements SourcesFinder<JavaeeFacet[]> {
 
-    @Nullable
-    public PsiFile findSourceFile(String relPath, Project project, JavaeeFacet[] scope) {
-        Collection<PsiFile> results = findSourceFiles(relPath, project, scope);
+	@Nullable
+	public PsiFile findSourceFile(String relPath, Project project, JavaeeFacet[] scope) {
+		Collection<PsiFile> results = findSourceFiles(relPath, project, scope);
 
-        if (!results.isEmpty()) {
-            Iterator<PsiFile> iterator = results.iterator();
+		if (!results.isEmpty()) {
+			Iterator<PsiFile> iterator = results.iterator();
 
-            return iterator.next();
-        }
+			return iterator.next();
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    @NotNull
-    public Collection<PsiFile> findSourceFiles(String relPath, Project project, JavaeeFacet[] scope) {
-        Collection<PsiFile> sourceFiles = new ArrayList<>();
+	@NotNull
+	public Collection<PsiFile> findSourceFiles(String relPath, Project project, JavaeeFacet[] scope) {
+		Collection<PsiFile> sourceFiles = new ArrayList<>();
 
-        if (_isJava(relPath)) {
-            return sourceFiles;
-        }
+		if (_isJava(relPath)) {
+			return sourceFiles;
+		}
 
-        JspDeploymentManager jspDeploymentManager = JspDeploymentManager.getInstance();
+		JspDeploymentManager jspDeploymentManager = JspDeploymentManager.getInstance();
 
-        PsiFile deployedJspSourceFromFacets = jspDeploymentManager.getDeployedJspSource(relPath, project, scope);
+		PsiFile deployedJspSourceFromFacets = jspDeploymentManager.getDeployedJspSource(relPath, project, scope);
 
-        if (deployedJspSourceFromFacets != null) {
-            sourceFiles.add(deployedJspSourceFromFacets);
-        }
+		if (deployedJspSourceFromFacets != null) {
+			sourceFiles.add(deployedJspSourceFromFacets);
+		}
 
-        ProjectRootManager projectRootManager = ProjectRootManager.getInstance(project);
+		ProjectRootManager projectRootManager = ProjectRootManager.getInstance(project);
 
-        OrderEnumerator orderEntries = projectRootManager.orderEntries();
+		OrderEnumerator orderEntries = projectRootManager.orderEntries();
 
-        orderEntries.forEachLibrary(
-            library -> {
-                VirtualFile[] virtualFiles = library.getFiles(OrderRootType.CLASSES);
+		orderEntries.forEachLibrary(
+			library -> {
+				VirtualFile[] virtualFiles = library.getFiles(OrderRootType.CLASSES);
 
-                for (VirtualFile virtualFile : virtualFiles) {
-                    VirtualFile jarRoot = IntellijUtil.getJarRoot(virtualFile);
+				for (VirtualFile virtualFile : virtualFiles) {
+					VirtualFile jarRoot = IntellijUtil.getJarRoot(virtualFile);
 
-                    _addJspFiles(relPath, project, sourceFiles, jarRoot);
-                }
-                return true;
-            }
-        );
+					_addJspFiles(relPath, project, sourceFiles, jarRoot);
+				}
 
-        List<LibraryData> targetPlatformArtifacts = _getTargetPlatformArtifacts(project);
+				return true;
+			});
 
-        Stream<LibraryData> libraryDataStream = targetPlatformArtifacts.stream();
+		List<LibraryData> targetPlatformArtifacts = _getTargetPlatformArtifacts(project);
 
-        libraryDataStream.forEach(
-            libraryData -> {
-                Set<String> sourcePaths = libraryData.getPaths(LibraryPathType.SOURCE);
+		Stream<LibraryData> libraryDataStream = targetPlatformArtifacts.stream();
 
-                String sourcePath = ContainerUtil.getFirstItem(sourcePaths);
+		libraryDataStream.forEach(
+			libraryData -> {
+				Set<String> sourcePaths = libraryData.getPaths(LibraryPathType.SOURCE);
 
-                if (sourcePath != null) {
-                    LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
+				String sourcePath = ContainerUtil.getFirstItem(sourcePaths);
 
-                    VirtualFile rootVirtualFile = localFileSystem.findFileByPath(sourcePath);
+				if (sourcePath != null) {
+					LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
 
-                    if (rootVirtualFile != null) {
-                        VirtualFile jarRoot = IntellijUtil.getJarRoot(rootVirtualFile);
+					VirtualFile rootVirtualFile = localFileSystem.findFileByPath(sourcePath);
 
-                        _addJspFiles(relPath, project, sourceFiles, jarRoot);
-                    }
-                }
-            }
-        );
+					if (rootVirtualFile != null) {
+						VirtualFile jarRoot = IntellijUtil.getJarRoot(rootVirtualFile);
 
-        return sourceFiles;
-    }
+						_addJspFiles(relPath, project, sourceFiles, jarRoot);
+					}
+				}
+			});
 
-    @NotNull
-    private static List<LibraryData> _getTargetPlatformArtifacts(@NotNull Project project) {
-        Application application = ApplicationManager.getApplication();
+		return sourceFiles;
+	}
 
-        if (application.isUnitTestMode()) {
-            return _targetPlatformArtifacts;
-        }
+	@NotNull
+	private static List<LibraryData> _getTargetPlatformArtifacts(@NotNull Project project) {
+		Application application = ApplicationManager.getApplication();
 
-        return LiferayWorkspaceUtil.getTargetPlatformArtifacts(project);
-    }
+		if (application.isUnitTestMode()) {
+			return _targetPlatformArtifacts;
+		}
 
-    private void _addJspFiles(String relPath, Project project, Collection<PsiFile> psiFiles, VirtualFile jarRoot) {
-        if (jarRoot != null) {
-            VirtualFile child = IntellijUtil.getChild(jarRoot, "META-INF/resources");
+		return LiferayWorkspaceUtil.getTargetPlatformArtifacts(project);
+	}
 
-            if (child != null) {
-                VirtualFile virtualFile = IntellijUtil.getChild(child, relPath);
+	private void _addJspFiles(String relPath, Project project, Collection<PsiFile> psiFiles, VirtualFile jarRoot) {
+		if (jarRoot != null) {
+			VirtualFile child = IntellijUtil.getChild(jarRoot, "META-INF/resources");
 
-                if (virtualFile != null) {
-                    PsiManager psiManager = PsiManager.getInstance(project);
+			if (child != null) {
+				VirtualFile virtualFile = IntellijUtil.getChild(child, relPath);
 
-                    PsiFile psiFile = psiManager.findFile(virtualFile);
+				if (virtualFile != null) {
+					PsiManager psiManager = PsiManager.getInstance(project);
 
-                    if (psiFile != null) {
-                        psiFiles.add(psiFile);
-                    }
-                }
-            }
-        }
-    }
+					PsiFile psiFile = psiManager.findFile(virtualFile);
 
-    private boolean _isJava(String relPath) {
-        FileTypeManager fileTypeManager = FileTypeManager.getInstance();
+					if (psiFile != null) {
+						psiFiles.add(psiFile);
+					}
+				}
+			}
+		}
+	}
 
-        List<FileNameMatcher> fileNameMatchers = fileTypeManager.getAssociations(StdFileTypes.JAVA);
+	private boolean _isJava(String relPath) {
+		FileTypeManager fileTypeManager = FileTypeManager.getInstance();
 
-        Iterator iterator = fileNameMatchers.iterator();
+		List<FileNameMatcher> fileNameMatchers = fileTypeManager.getAssociations(StdFileTypes.JAVA);
 
-        FileNameMatcher matcher;
+		Iterator iterator = fileNameMatchers.iterator();
 
-        do {
-            if (!iterator.hasNext()) {
-                return false;
-            }
+		FileNameMatcher matcher;
 
-            matcher = (FileNameMatcher)iterator.next();
-        } while (!matcher.accept(relPath));
+		do {
+			if (!iterator.hasNext()) {
+				return false;
+			}
 
-        return true;
-    }
+			matcher = (FileNameMatcher)iterator.next();
+		} while (!matcher.accept(relPath));
 
-    private static List<LibraryData> _targetPlatformArtifacts = new ArrayList<>();
+		return true;
+	}
+
+	private static List<LibraryData> _targetPlatformArtifacts = new ArrayList<>();
 
 }

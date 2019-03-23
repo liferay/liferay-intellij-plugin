@@ -26,10 +26,10 @@ import org.jetbrains.annotations.Nullable;
  */
 public class LiferayJspDebuggerPositionManagerFactory extends PositionManagerFactory {
 
-    @Override
-    @Nullable
-    public PositionManager createPositionManager(@NotNull DebugProcess debugProcess) {
-        return new LiferayJspDebuggerPositionManager(debugProcess);
-    }
+	@Nullable
+	@Override
+	public PositionManager createPositionManager(@NotNull DebugProcess debugProcess) {
+		return new LiferayJspDebuggerPositionManager(debugProcess);
+	}
 
 }

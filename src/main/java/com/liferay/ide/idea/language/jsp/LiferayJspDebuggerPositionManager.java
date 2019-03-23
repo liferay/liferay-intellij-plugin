@@ -38,6 +38,7 @@ import com.sun.jdi.ReferenceType;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
@@ -47,77 +48,99 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LiferayJspDebuggerPositionManager extends JSR45PositionManager<JavaeeFacet[]> {
 
-    public LiferayJspDebuggerPositionManager(DebugProcess debugProcess) {
-        super(debugProcess,
-            JavaeeFacetUtil.getInstance().getAllJavaeeFacets(debugProcess.getProject()),
-            "JSP", _LANGUAGE_FILE_TYPES, new LiferayJspDebuggerSourceFinderAdapter());
-    }
+	public LiferayJspDebuggerPositionManager(DebugProcess debugProcess) {
+		super(
+			debugProcess, JavaeeFacetUtil.getInstance().getAllJavaeeFacets(debugProcess.getProject()), "JSP",
+			_LANGUAGE_FILE_TYPES, new LiferayJspDebuggerSourceFinderAdapter());
+	}
 
-    @Override
-    @NotNull
-    public List<Location> locationsOfLine(@NotNull ReferenceType referenceType, @NotNull SourcePosition sourcePosition) throws NoDataException {
-        List<Location> locations = _locationsOfClassAt(referenceType, sourcePosition);
+	@NotNull
+	@Override
+	public List<Location> locationsOfLine(@NotNull ReferenceType referenceType, @NotNull SourcePosition sourcePosition)
+		throws NoDataException {
 
-        return locations != null ? locations : Collections.emptyList();
-    }
+		List<Location> locations = _locationsOfClassAt(referenceType, sourcePosition);
 
-    @Override
-    @NonNls
-    protected String getGeneratedClassesPackage() {
-        return "org.apache.jsp";
-    }
+		if (locations != null) {
+			return locations;
+		}
 
-    private void _checkSourcePositionFileType(final SourcePosition sourcePosition) throws NoDataException {
-        PsiFile psiFile = sourcePosition.getFile();
+		return Collections.emptyList();
+	}
 
-        FileType fileType = psiFile.getFileType();
+	@NonNls
+	@Override
+	protected String getGeneratedClassesPackage() {
+		return "org.apache.jsp";
+	}
 
-        if (!getAcceptedFileTypes().contains(fileType)) {
-            throw NoDataException.INSTANCE;
-        }
-    }
+	private void _checkSourcePositionFileType(final SourcePosition sourcePosition) throws NoDataException {
+		PsiFile psiFile = sourcePosition.getFile();
 
-    private List<Location> _locationsOfClassAt(final ReferenceType referenceType, final SourcePosition sourcePosition) throws NoDataException {
-        _checkSourcePositionFileType(sourcePosition);
+		FileType fileType = psiFile.getFileType();
 
-        Application application = ApplicationManager.getApplication();
+		if (!getAcceptedFileTypes().contains(fileType)) {
+			throw NoDataException.INSTANCE;
+		}
+	}
 
-        return application.runReadAction(new Computable<List<Location>>() {
+	private List<Location> _locationsOfClassAt(final ReferenceType referenceType, final SourcePosition sourcePosition)
+		throws NoDataException {
 
-            @Override
-            public List<Location> compute() {
-                try {
-                    final List<String> relativeSourcePaths = getRelativeSourePathsByType(referenceType);
+		_checkSourcePositionFileType(sourcePosition);
 
-                    LiferayJspDebuggerSourceFinderAdapter liferaySourceFinderAdapter = (LiferayJspDebuggerSourceFinderAdapter)mySourcesFinder;
+		Application application = ApplicationManager.getApplication();
 
-                    for (String relativePath : relativeSourcePaths) {
-                        final Collection<PsiFile> sourceFiles = liferaySourceFinderAdapter.findSourceFiles(relativePath, myDebugProcess.getProject(), myScope);
+		return application.runReadAction(
+			new Computable<List<Location>>() {
 
-                        for (PsiFile sourceFile : sourceFiles) {
-                            if ( (sourceFile != null) && sourceFile.equals(sourcePosition.getFile())) {
-                                return getLocationsOfLine(referenceType, _getSourceName(sourceFile.getName(), referenceType), relativePath, sourcePosition.getLine() + 1);
-                            }
-                        }
-                    }
-                }
-                catch (ObjectCollectedException | ClassNotPreparedException | AbsentInformationException ignoredException) {
-                }
-                catch (InternalError internalError) {
-                    myDebugProcess.printToConsole(
-                        DebuggerBundle.message("internal.error.locations.of.line", referenceType.name()));
-                }
-                return null;
-            }
+				@Override
+				public List<Location> compute() {
+					try {
+						List<String> relativeSourcePaths = getRelativeSourePathsByType(referenceType);
 
-            private String _getSourceName(final String name, final ReferenceType type) throws AbsentInformationException {
-                return type.sourceNames(getStratumId()).stream()
-                    .filter(sourceNameFromType -> sourceNameFromType.contains(name))
-                    .findFirst().orElse(name);
-            }
-        });
-    }
+						LiferayJspDebuggerSourceFinderAdapter liferaySourceFinderAdapter =
+							(LiferayJspDebuggerSourceFinderAdapter)mySourcesFinder;
 
-    private static final LanguageFileType[] _LANGUAGE_FILE_TYPES = new LanguageFileType[]{StdFileTypes.JSP, StdFileTypes.JSPX};
+						for (String relativePath : relativeSourcePaths) {
+							Collection<PsiFile> sourceFiles = liferaySourceFinderAdapter.findSourceFiles(
+								relativePath, myDebugProcess.getProject(), myScope);
+
+							for (PsiFile sourceFile : sourceFiles) {
+								if ((sourceFile != null) && sourceFile.equals(sourcePosition.getFile())) {
+									return getLocationsOfLine(
+										referenceType, _getSourceName(sourceFile.getName(), referenceType),
+										relativePath, sourcePosition.getLine() + 1);
+								}
+							}
+						}
+					}
+					catch (AbsentInformationException | ClassNotPreparedException | ObjectCollectedException e) {
+					}
+					catch (InternalError internalError) {
+						myDebugProcess.printToConsole(
+							DebuggerBundle.message("internal.error.locations.of.line", referenceType.name()));
+					}
+
+					return null;
+				}
+
+				private String _getSourceName(String name, ReferenceType type) throws AbsentInformationException {
+					List<String> sourceNames = type.sourceNames(getStratumId());
+
+					Stream<String> stream = sourceNames.stream();
+
+					return stream.filter(
+						sourceNameFromType -> sourceNameFromType.contains(name)
+					).findFirst(
+					).orElse(
+						name
+					);
+				}
+
+			});
+	}
+
+	private static final LanguageFileType[] _LANGUAGE_FILE_TYPES = {StdFileTypes.JSP, StdFileTypes.JSPX};
 
 }

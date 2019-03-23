@@ -38,6 +38,10 @@ import org.jetbrains.annotations.Nullable;
 public class IntellijUtil {
 
 	public static VirtualFile getChild(VirtualFile parent, String name) {
+		if (parent == null) {
+			return null;
+		}
+
 		int index = name.indexOf('/');
 
 		String pathElement = name;
@@ -46,14 +50,13 @@ public class IntellijUtil {
 			pathElement = name.substring(0, index);
 		}
 
-		if (parent != null) {
-			for (VirtualFile virtualFile : parent.getChildren()) {
-				if (pathElement.equals(virtualFile.getName())) {
-					if (index == -1) {
-						return virtualFile;
-					} else {
-						return getChild(virtualFile, name.substring(index + 1));
-					}
+		for (VirtualFile virtualFile : parent.getChildren()) {
+			if (pathElement.equals(virtualFile.getName())) {
+				if (index == -1) {
+					return virtualFile;
+				}
+				else {
+					return getChild(virtualFile, name.substring(index + 1));
 				}
 			}
 		}
@@ -70,7 +73,8 @@ public class IntellijUtil {
 			JarFileSystem jarFileSystem = (JarFileSystem)virtualFileSystem;
 
 			jarRoot = jarFileSystem.getRootByEntry(virtualFile);
-		} else {
+		}
+		else {
 			JarFileSystem jarFileSystem = JarFileSystem.getInstance();
 
 			jarRoot = jarFileSystem.getJarRootForLocalFile(virtualFile);
