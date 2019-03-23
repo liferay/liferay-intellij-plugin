@@ -49,11 +49,13 @@ public class OsgiManifestCompletionContributor extends CompletionContributor {
 	}
 
 	private static ElementPattern<PsiElement> _directive(String name) {
-		return psiElement(
-			ManifestTokenType.HEADER_VALUE_PART
-		).withSuperParent(
-			2, psiElement(Directive.class).withName(name)
+		PsiElementPattern.Capture<PsiElement> element = psiElement(
+				ManifestTokenType.HEADER_VALUE_PART
 		);
+
+		PsiElementPattern.Capture<Directive> directiveElement = psiElement(Directive.class);
+
+		return element.withSuperParent(2, directiveElement.withName(name));
 	}
 
 	private static ElementPattern<PsiElement> _header(String name) {
@@ -61,7 +63,9 @@ public class OsgiManifestCompletionContributor extends CompletionContributor {
 
 		psiElementCapture.afterLeaf(";");
 
-		return psiElementCapture.withSuperParent(3, psiElement(Header.class).withName(name));
+		PsiElementPattern.Capture<Header> headerElement = psiElement(Header.class);
+
+		return psiElementCapture.withSuperParent(3, headerElement.withName(name));
 	}
 
 }
