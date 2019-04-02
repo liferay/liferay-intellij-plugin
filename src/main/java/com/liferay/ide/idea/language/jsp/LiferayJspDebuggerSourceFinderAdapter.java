@@ -39,10 +39,11 @@ import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -54,24 +55,22 @@ public class LiferayJspDebuggerSourceFinderAdapter implements SourcesFinder<Java
 
 	@Nullable
 	public PsiFile findSourceFile(String relPath, Project project, JavaeeFacet[] scope) {
-		Collection<PsiFile> results = findSourceFiles(relPath, project, scope);
+		List<PsiFile> results = findSourceFiles(relPath, project, scope);
 
 		if (!results.isEmpty()) {
-			Iterator<PsiFile> iterator = results.iterator();
-
-			return iterator.next();
+			return results.get(0);
 		}
 
 		return null;
 	}
 
 	@NotNull
-	public Collection<PsiFile> findSourceFiles(String relPath, Project project, JavaeeFacet[] scope) {
-		Collection<PsiFile> sourceFiles = new ArrayList<>();
-
+	public List<PsiFile> findSourceFiles(String relPath, Project project, JavaeeFacet[] scope) {
 		if (_isJava(relPath)) {
-			return sourceFiles;
+			return Collections.emptyList();
 		}
+
+		List<PsiFile> sourceFiles = new ArrayList<>();
 
 		JspDeploymentManager jspDeploymentManager = JspDeploymentManager.getInstance();
 
@@ -100,26 +99,25 @@ public class LiferayJspDebuggerSourceFinderAdapter implements SourcesFinder<Java
 
 		List<LibraryData> targetPlatformArtifacts = _getTargetPlatformArtifacts(project);
 
-		Stream<LibraryData> libraryDataStream = targetPlatformArtifacts.stream();
-
-		libraryDataStream.forEach(
+		targetPlatformArtifacts.stream().map(
 			libraryData -> {
 				Set<String> sourcePaths = libraryData.getPaths(LibraryPathType.SOURCE);
 
-				String sourcePath = ContainerUtil.getFirstItem(sourcePaths);
+				return ContainerUtil.getFirstItem(sourcePaths);
+			}
+		).filter(Objects::nonNull).map(
+			sourcePath -> {
+				LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
 
-				if (sourcePath != null) {
-					LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
+				return localFileSystem.findFileByPath(sourcePath);
+			}
+		).filter(Objects::nonNull).forEach(
+			rootVirtualFile -> {
+				VirtualFile jarRoot = IntellijUtil.getJarRoot(rootVirtualFile);
 
-					VirtualFile rootVirtualFile = localFileSystem.findFileByPath(sourcePath);
-
-					if (rootVirtualFile != null) {
-						VirtualFile jarRoot = IntellijUtil.getJarRoot(rootVirtualFile);
-
-						_addJspFiles(relPath, project, sourceFiles, jarRoot);
-					}
-				}
-			});
+				_addJspFiles(relPath, project, sourceFiles, jarRoot);
+			}
+		);
 
 		return sourceFiles;
 	}
@@ -136,23 +134,25 @@ public class LiferayJspDebuggerSourceFinderAdapter implements SourcesFinder<Java
 	}
 
 	private void _addJspFiles(String relPath, Project project, Collection<PsiFile> psiFiles, VirtualFile jarRoot) {
-		if (jarRoot != null) {
-			VirtualFile child = IntellijUtil.getChild(jarRoot, "META-INF/resources");
+		PsiManager psiManager = PsiManager.getInstance(project);
 
-			if (child != null) {
-				VirtualFile virtualFile = IntellijUtil.getChild(child, relPath);
-
-				if (virtualFile != null) {
-					PsiManager psiManager = PsiManager.getInstance(project);
-
-					PsiFile psiFile = psiManager.findFile(virtualFile);
-
-					if (psiFile != null) {
-						psiFiles.add(psiFile);
-					}
-				}
-			}
-		}
+		Optional.ofNullable(
+			jarRoot
+		).map(
+			virtualFile -> IntellijUtil.getChild(virtualFile, "META-INF/resources")
+		).filter(
+			Objects::nonNull
+		).map(
+			child -> IntellijUtil.getChild(child, relPath)
+		).filter(
+			Objects::nonNull
+		).map(
+			psiManager::findFile
+		).filter(
+			Objects::nonNull
+		).ifPresent(
+			psiFiles::add
+		);
 	}
 
 	private boolean _isJava(String relPath) {
@@ -160,19 +160,10 @@ public class LiferayJspDebuggerSourceFinderAdapter implements SourcesFinder<Java
 
 		List<FileNameMatcher> fileNameMatchers = fileTypeManager.getAssociations(StdFileTypes.JAVA);
 
-		Iterator iterator = fileNameMatchers.iterator();
+		Optional<FileNameMatcher> fileNameMatcher =
+			fileNameMatchers.stream().filter(matcher -> matcher.accept(relPath)).findFirst();
 
-		FileNameMatcher matcher;
-
-		do {
-			if (!iterator.hasNext()) {
-				return false;
-			}
-
-			matcher = (FileNameMatcher)iterator.next();
-		} while (!matcher.accept(relPath));
-
-		return true;
+		return fileNameMatcher.isPresent();
 	}
 
 	private static List<LibraryData> _targetPlatformArtifacts = new ArrayList<>();

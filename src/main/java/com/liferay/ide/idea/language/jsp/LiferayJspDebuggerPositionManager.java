@@ -35,7 +35,6 @@ import com.sun.jdi.Location;
 import com.sun.jdi.ObjectCollectedException;
 import com.sun.jdi.ReferenceType;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
@@ -99,11 +98,11 @@ public class LiferayJspDebuggerPositionManager extends JSR45PositionManager<Java
 					try {
 						List<String> relativeSourcePaths = getRelativeSourePathsByType(referenceType);
 
-						LiferayJspDebuggerSourceFinderAdapter liferaySourceFinderAdapter =
+						LiferayJspDebuggerSourceFinderAdapter sourcesFinder =
 							(LiferayJspDebuggerSourceFinderAdapter)mySourcesFinder;
 
 						for (String relativePath : relativeSourcePaths) {
-							Collection<PsiFile> sourceFiles = liferaySourceFinderAdapter.findSourceFiles(
+							List<PsiFile> sourceFiles = sourcesFinder.findSourceFiles(
 								relativePath, myDebugProcess.getProject(), myScope);
 
 							for (PsiFile sourceFile : sourceFiles) {
@@ -130,12 +129,7 @@ public class LiferayJspDebuggerPositionManager extends JSR45PositionManager<Java
 
 					Stream<String> stream = sourceNames.stream();
 
-					return stream.filter(
-						sourceNameFromType -> sourceNameFromType.contains(name)
-					).findFirst(
-					).orElse(
-						name
-					);
+					return stream.filter(sourceName -> sourceName.contains(name)).findFirst().orElse(name);
 				}
 
 			});
