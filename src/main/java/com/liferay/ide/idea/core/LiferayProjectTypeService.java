@@ -41,7 +41,9 @@ public class LiferayProjectTypeService implements PersistentStateComponent<Proje
 	public static ProjectType getProjectType(@NotNull Project project) {
 		ProjectType projectType;
 
-		projectType = getInstance(project)._projectType;
+		LiferayProjectTypeService instance = getInstance(project);
+
+		projectType = instance._projectType;
 
 		if (projectType != null) {
 			return projectType;
@@ -59,7 +61,9 @@ public class LiferayProjectTypeService implements PersistentStateComponent<Proje
 	}
 
 	public static void setProjectType(@NotNull Project project, @NotNull ProjectType projectType) {
-		getInstance(project).loadState(projectType);
+		LiferayProjectTypeService instance = getInstance(project);
+
+		instance.loadState(projectType);
 	}
 
 	@Nullable
