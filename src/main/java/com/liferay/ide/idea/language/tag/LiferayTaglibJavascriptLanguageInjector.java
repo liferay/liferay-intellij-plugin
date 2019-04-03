@@ -161,7 +161,9 @@ public class LiferayTaglibJavascriptLanguageInjector implements MultiHostInjecto
 					if ("validator".equals(localName)) {
 						String attributeValue = xmlTag.getAttributeValue("name");
 
-						if ("custom".equals(attributeValue)) {
+						if  ("custom".equals(attributeValue) ||
+							"required".equals(attributeValue)) {
+
 							prefixWrapper = "(";
 							suffixWrapper = ")();";
 						}
