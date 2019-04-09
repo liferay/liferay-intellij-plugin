@@ -151,7 +151,7 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 			List<String> systemProperties = optionsMap.remove("system-prop");
 
 			String vmOptions =
-				systemProperties == null ? "" : StringUtil.join(systemProperties, entry -> "-D" + entry, " ");
+				(systemProperties == null) ? "" : StringUtil.join(systemProperties, entry -> "-D" + entry, " ");
 
 			String scriptParameters = StringUtil.join(
 				optionsMap.entrySet(),

@@ -77,7 +77,7 @@ public class LiferayNamePathComponent extends JPanel {
 			initialProjectName = projectName;
 		}
 
-		component.setPath(projectName == null ? (baseDir + File.separator + initialProjectName) : baseDir);
+		component.setPath((projectName == null) ? (baseDir + File.separator + initialProjectName) : baseDir);
 		component.setNameValue(initialProjectName);
 
 		JTextField jTextField = component.getNameComponent();

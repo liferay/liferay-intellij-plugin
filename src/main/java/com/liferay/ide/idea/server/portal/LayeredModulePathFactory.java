@@ -41,7 +41,7 @@ public class LayeredModulePathFactory {
 	public static File[] getFilesForModule(File modulesFolder, String moduleName, String slot, FilenameFilter filter) {
 		String slashed = moduleName.replaceAll("\\.", "/");
 
-		slot = slot == null ? "main" : slot;
+		slot = (slot == null) ? "main" : slot;
 
 		return _getFiles(modulesFolder, Paths.get(slashed, slot), filter);
 	}
