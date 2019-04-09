@@ -38,7 +38,7 @@ public abstract class AbstractAssignmentExpression extends ASTWrapperPsiElement 
 	public String getName() {
 		HeaderValuePart namePsi = getNameElement();
 
-		String result = namePsi != null ? namePsi.getUnwrappedText() : null;
+		String result = (namePsi != null) ? namePsi.getUnwrappedText() : null;
 
 		if (result != null) {
 			return result;
@@ -56,7 +56,7 @@ public abstract class AbstractAssignmentExpression extends ASTWrapperPsiElement 
 	public String getValue() {
 		HeaderValuePart valuePsi = getValueElement();
 
-		String result = valuePsi != null ? valuePsi.getUnwrappedText() : null;
+		String result = (valuePsi != null) ? valuePsi.getUnwrappedText() : null;
 
 		if (result != null) {
 			return result;

@@ -142,7 +142,7 @@ public class LiferayModuleNameLocationComponent {
 						boolean i = _imlLocationChangedByUser;
 						_imlLocationChangedByUser = true;
 
-						setModuleName(idx >= 0 ? path.substring(idx + 1) : "");
+						setModuleName((idx >= 0) ? path.substring(idx + 1) : "");
 
 						_contentRootChangedByUser = f;
 						_imlLocationChangedByUser = i;

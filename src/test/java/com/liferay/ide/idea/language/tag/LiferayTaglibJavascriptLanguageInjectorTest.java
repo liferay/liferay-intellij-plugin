@@ -24,13 +24,34 @@ import java.util.List;
  */
 public class LiferayTaglibJavascriptLanguageInjectorTest extends LightCodeInsightFixtureTestCase {
 
+	public void testAuiValidatorCustomBody() {
+		myFixture.configureByFiles("aui-validator-custom.jsp", "liferay-aui.tld");
+		myFixture.complete(CompletionType.BASIC, 1);
+
+		List<String> strings = myFixture.getLookupElementStrings();
+
+		assertTrue("Javascript code completion should be possible inside a <aui:validator name=\"custom\"> tag",
+			strings.contains("alert"));
+	}
+
+	public void testAuiValidatorRequiredBody() {
+		myFixture.configureByFiles("aui-validator-required.jsp", "liferay-aui.tld");
+		myFixture.complete(CompletionType.BASIC, 1);
+
+		List<String> strings = myFixture.getLookupElementStrings();
+
+		assertTrue("Javascript code completion should be possible inside a <aui:validator name=\"required\"> tag",
+			strings.contains("alert"));
+	}
+
 	public void testJavascriptAttribute() {
 		myFixture.configureByFiles("view.jsp", "liferay-aui.tld");
 		myFixture.complete(CompletionType.BASIC, 1);
 
 		List<String> strings = myFixture.getLookupElementStrings();
 
-		assertTrue(strings.contains("alert"));
+		assertTrue("Javascript code completion should be possible inside the onClick attribute of a <aui:a> tag",
+			strings.contains("alert"));
 	}
 
 	public void testJavascriptBody() {
@@ -39,7 +60,8 @@ public class LiferayTaglibJavascriptLanguageInjectorTest extends LightCodeInsigh
 
 		List<String> strings = myFixture.getLookupElementStrings();
 
-		assertTrue(strings.contains("alert"));
+		assertTrue("Javascript code completion should be possible inside a <aui:script> tag",
+			strings.contains("alert"));
 	}
 
 	@Override

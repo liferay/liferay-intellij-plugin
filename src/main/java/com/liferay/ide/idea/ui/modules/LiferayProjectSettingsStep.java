@@ -261,7 +261,7 @@ public class LiferayProjectSettingsStep extends ModuleWizardStep implements Sett
 		_restorePanel(_getModulePanel(), _context.isCreatingNewProject() ? 8 : 6);
 		_restorePanel(_expertPanel, _context.isCreatingNewProject() ? 1 : 0);
 
-		_settingsStep = moduleBuilder == null ? null : moduleBuilder.modifySettingsStep(this);
+		_settingsStep = (moduleBuilder == null) ? null : moduleBuilder.modifySettingsStep(this);
 
 		_expertPlaceholder.setVisible(
 			!(moduleBuilder instanceof TemplateModuleBuilder) && (_expertPanel.getComponentCount() > 0));

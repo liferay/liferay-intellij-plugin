@@ -119,7 +119,7 @@ public abstract class AbstractLiferayAction extends AnAction {
 		RunManager runManager = RunManager.getInstance(project);
 
 		RunnerAndConfigurationSettings existingConfigurationSettings = runManager.findConfigurationByName(
-			runnerAndConfigurationSettings == null ? null : runnerAndConfigurationSettings.getName());
+			(runnerAndConfigurationSettings == null) ? null : runnerAndConfigurationSettings.getName());
 
 		if (existingConfigurationSettings == null) {
 			runManager.setTemporaryConfiguration(runnerAndConfigurationSettings);

@@ -51,7 +51,7 @@ public class FindAllDependenciesVisitor extends CodeVisitorSupport {
 
 			String[] groups = text.split(":");
 
-			String version = groups.length > 2 ? groups[2] : null;
+			String version = (groups.length > 2) ? groups[2] : null;
 
 			_dependencies.put(_configurationName, new GradleDependency(groups[0], groups[1], version));
 

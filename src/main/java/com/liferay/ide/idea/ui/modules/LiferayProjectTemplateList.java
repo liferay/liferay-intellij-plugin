@@ -177,7 +177,7 @@ public class LiferayProjectTemplateList extends JPanel {
 		_templateList.setModel(new CollectionListModel<>(list));
 
 		if (_templateList.isEnabled()) {
-			_templateList.setSelectedIndex(index == -1 ? 0 : index);
+			_templateList.setSelectedIndex((index == -1) ? 0 : index);
 		}
 
 		_updateSelection();
