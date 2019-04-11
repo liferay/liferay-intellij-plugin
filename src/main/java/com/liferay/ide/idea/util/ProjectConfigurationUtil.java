@@ -51,6 +51,10 @@ public class ProjectConfigurationUtil {
 			return;
 		}
 
+		if ((project == null) || project.isDisposed()) {
+			return;
+		}
+
 		projectDir.refresh(
 			true, true,
 			() -> {
