@@ -37,6 +37,7 @@
 				<li>INTELLIJ-61 inject Javascript into <aui:validator name="required"> tag(community contribution)</li>
 				<li>INTELLIJ-34 fix frozen when indexing target platform jars in version 2018 3.3(fix on Intellij IDEA 2019.1)</li>
 				<li>INTELLIJ-65 bug fix</li>
+				<li>update embed blade to 3.6</li>
 			</ul>
 			<li>1.3.2</li>
 			<ul>
