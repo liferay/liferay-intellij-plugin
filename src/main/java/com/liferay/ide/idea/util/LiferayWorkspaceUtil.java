@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -182,17 +183,7 @@ public class LiferayWorkspaceUtil {
 				libraryData.add((LibraryData)child.getData());
 			}
 
-			libraryData.sort(
-				(o1, o2) -> {
-					String artifactId1 = o1.getArtifactId();
-					String artifactId2 = o2.getArtifactId();
-
-					if ((artifactId1 == null) || (artifactId2 == null)) {
-						return 0;
-					}
-
-					return artifactId1.compareToIgnoreCase(artifactId2);
-				});
+			libraryData.sort(Comparator.comparing(LibraryData::getArtifactId, Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER)));
 
 			return libraryData;
 		}
