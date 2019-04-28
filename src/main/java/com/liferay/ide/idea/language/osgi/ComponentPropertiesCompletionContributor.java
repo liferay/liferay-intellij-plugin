@@ -78,9 +78,7 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 		}
 
 		if (psiJavaCodeReferenceElement != null) {
-			String serviceClassName = psiJavaCodeReferenceElement.getQualifiedName();
-
-			return serviceClassName;
+			return psiJavaCodeReferenceElement.getQualifiedName();
 		}
 
 		return null;
