@@ -41,9 +41,7 @@ public class ServerUtil {
 	public static File[] getMarketplaceLpkgFiles(File runtime) {
 		File marketplace = new File(new File(runtime, "osgi"), "marketplace");
 
-		File[] files = marketplace.listFiles((dir, name) -> name.matches(".*\\.lpkg"));
-
-		return files;
+		return marketplace.listFiles((dir, name) -> name.matches(".*\\.lpkg"));
 	}
 
 	public static File getModuleFileFrom70Server(File runtime, String hostOsgiBundle, File temp) {
