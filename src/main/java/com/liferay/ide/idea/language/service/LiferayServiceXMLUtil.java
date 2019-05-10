@@ -17,6 +17,7 @@ package com.liferay.ide.idea.language.service;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTagChild;
+import com.intellij.psi.xml.XmlText;
 
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -59,5 +60,24 @@ public class LiferayServiceXMLUtil {
             grandParentTag -> "service-builder".equals(grandParentTag.getLocalName())
         );
     }
+
+    public static boolean isNamespaceTag(@NotNull XmlText xmlText) {
+        return Stream.of(
+            xmlText
+        ).map(
+            XmlTagChild::getParentTag
+        ).filter(
+            Objects::nonNull
+        ).filter(
+            parentTag -> "namespace".equals(parentTag.getLocalName())
+        ).map(
+            XmlTagChild::getParentTag
+        ).filter(
+            Objects::nonNull
+        ).anyMatch(
+            grandParentTag -> "service-builder".equals(grandParentTag.getLocalName())
+        );
+    }
+
 
 }

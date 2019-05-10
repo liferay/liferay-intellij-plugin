@@ -27,7 +27,8 @@ public class LiferayServiceXMLInspectionToolProvider implements InspectionToolPr
     @Override
     public Class[] getInspectionClasses() {
         return new Class<?>[] {
-            LiferayServiceXMLPrimaryKeyColumnInspection.class
+            LiferayServiceXMLPrimaryKeyColumnInspection.class,
+            LiferayServiceXMLNamespaceInspection.class
         };
     }
 
