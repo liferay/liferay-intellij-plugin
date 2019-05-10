@@ -33,7 +33,8 @@ public class LiferayServiceXMLInspectionToolProvider implements InspectionToolPr
             LiferayServiceXMLEntityUuidInspection.class,
             LiferayServiceXMLDuplicateColumnInspection.class,
             LiferayServiceXMLDuplicateEntityInspection.class,
-            LiferayServiceXMLDuplicateExceptionInspection.class
+            LiferayServiceXMLDuplicateExceptionInspection.class,
+            LiferayServiceXMLDuplicateFinderInspection.class
         };
     }
 
