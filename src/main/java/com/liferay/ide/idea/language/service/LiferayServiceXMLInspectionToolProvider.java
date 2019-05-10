@@ -30,7 +30,8 @@ public class LiferayServiceXMLInspectionToolProvider implements InspectionToolPr
             LiferayServiceXMLPrimaryKeyColumnInspection.class,
             LiferayServiceXMLNamespaceInspection.class,
             LiferayServiceXMLExceptionNameInspection.class,
-            LiferayServiceXMLEntityUuidInspection.class
+            LiferayServiceXMLEntityUuidInspection.class,
+            LiferayServiceXMLDuplicateColumnInspection.class
         };
     }
 
