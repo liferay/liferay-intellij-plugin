@@ -29,7 +29,8 @@ public class LiferayServiceXMLInspectionToolProvider implements InspectionToolPr
         return new Class<?>[] {
             LiferayServiceXMLPrimaryKeyColumnInspection.class,
             LiferayServiceXMLNamespaceInspection.class,
-            LiferayServiceXMLExceptionNameInspection.class
+            LiferayServiceXMLExceptionNameInspection.class,
+            LiferayServiceXMLEntityUuidInspection.class
         };
     }
 
