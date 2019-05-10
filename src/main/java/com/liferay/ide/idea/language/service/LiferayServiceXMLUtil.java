@@ -61,6 +61,30 @@ public class LiferayServiceXMLUtil {
         );
     }
 
+    public static boolean isExceptionTag(@NotNull XmlText xmlText) {
+        return Stream.of(
+            xmlText
+        ).map(
+            XmlTagChild::getParentTag
+        ).filter(
+            Objects::nonNull
+        ).filter(
+            parentTag -> "exception".equals(parentTag.getLocalName())
+        ).map(
+            XmlTagChild::getParentTag
+        ).filter(
+            Objects::nonNull
+        ).filter(
+            grandParentTag -> "exceptions".equals(grandParentTag.getLocalName())
+        ).map(
+            XmlTagChild::getParentTag
+        ).filter(
+            Objects::nonNull
+        ).anyMatch(
+            grandParentTag -> "service-builder".equals(grandParentTag.getLocalName())
+        );
+    }
+
     public static boolean isNamespaceTag(@NotNull XmlText xmlText) {
         return Stream.of(
             xmlText
@@ -78,6 +102,5 @@ public class LiferayServiceXMLUtil {
             grandParentTag -> "service-builder".equals(grandParentTag.getLocalName())
         );
     }
-
 
 }
