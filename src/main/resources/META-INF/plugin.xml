@@ -161,8 +161,8 @@
 		<programRunner id="Debug" implementation="com.liferay.ide.idea.server.LiferayServerDebuggerRunner"/>
 		<projectService serviceImplementation="com.liferay.ide.idea.core.LiferayProjectTypeService"/>
 		<fileTypeFactory implementation="com.liferay.ide.idea.bnd.BndFileTypeFactory"/>
-		<codeInsight.lineMarkerProvider language="XML" implementationClass="com.liferay.ide.idea.language.LiferayServiceXMLLineMarkerProvider"/>
-		<codeInsight.lineMarkerProvider language="JAVA" implementationClass="com.liferay.ide.idea.language.LiferayServiceJavaImplLineMarkerProvider"/>
+		<codeInsight.lineMarkerProvider language="XML" implementationClass="com.liferay.ide.idea.language.service.LiferayServiceXMLLineMarkerProvider"/>
+		<codeInsight.lineMarkerProvider language="JAVA" implementationClass="com.liferay.ide.idea.language.service.LiferayServiceJavaImplLineMarkerProvider"/>
 		<standardResourceProvider implementation="com.liferay.ide.idea.language.LiferayDefinitionsResourceProvider"/>
 		<xml.schemaProvider implementation="com.liferay.ide.idea.language.LiferayXmlSchemaProvider" />
 		<psi.referenceContributor implementation="com.liferay.ide.idea.language.LiferayXmlFileReferenceContributor"/>

@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.ide.idea.language;
+package com.liferay.ide.idea.language.service;
 
 import com.intellij.codeInsight.daemon.GutterMark;
 import com.intellij.codeInsight.daemon.LineMarkerInfo;
@@ -40,12 +40,13 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Dominik Marks
+ * @author Gregory Amerson
  */
-public class LiferayServiceXMLLineMarkerProviderTest extends LightCodeInsightFixtureTestCase {
+public class LiferayServiceJavaImplLineMarkerProviderTest extends LightCodeInsightFixtureTestCase {
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	public void testExceptionNameInspection() {
-		myFixture.configureByFiles("service.xml", "com/liferay/ide/model/impl/MyModelImpl.java");
+		myFixture.configureByFiles("com/liferay/ide/model/impl/MyModelImpl.java", "service.xml");
 
 		AtomicBoolean lineMarkerFound = new AtomicBoolean(false);
 
@@ -81,7 +82,7 @@ public class LiferayServiceXMLLineMarkerProviderTest extends LightCodeInsightFix
 			e -> lineMarkerFound.set(true)
 		);
 
-		assertTrue("service.xml line marker not found", lineMarkerFound.get());
+		assertTrue("Java Implementation line marker not found", lineMarkerFound.get());
 	}
 
 	@NotNull
@@ -92,7 +93,7 @@ public class LiferayServiceXMLLineMarkerProviderTest extends LightCodeInsightFix
 
 	@Override
 	protected String getTestDataPath() {
-		return "testdata/com/liferay/ide/idea/language/LiferayServiceXMLLineMarkerProviderTest";
+		return "testdata/com/liferay/ide/idea/language/service/LiferayServiceJavaImplLineMarkerProviderTest";
 	}
 
 	private static final LightProjectDescriptor _MY_PROJECT_DESCRIPTOR = new DefaultLightProjectDescriptor() {
