@@ -178,5 +178,6 @@
 		<annotator language="Manifest" implementationClass="com.liferay.ide.idea.bnd.OsgiManifestHighlightingAnnotator"/>
 		<manifest.parser.provider implementation="com.liferay.ide.idea.bnd.completion.header.OsgiManifestHeaderParsers"/>
 		<codeInsight.unresolvedReferenceQuickFixProvider implementation="com.liferay.ide.idea.extensions.GradleDependencyQuickFixProvider"/>
+		<inspectionToolProvider implementation="com.liferay.ide.idea.language.service.LiferayServiceXMLInspectionToolProvider"/>
 	</extensions>
 </idea-plugin>
