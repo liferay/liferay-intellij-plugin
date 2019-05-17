@@ -31,6 +31,10 @@
 	</p>
 	<p>
 		<ul>
+			<li>1.4.1</li>
+			<ul>
+				<li>INTELLIJ-68 better support for service builder xml editor(community contribution)</li>
+			</ul>
 			<li>1.4.0</li>
 			<ul>
 				<li>INTELLIJ-55 add support for debugging jsps from Liferay modules(Ultimate Only)(community contribution)</li>
