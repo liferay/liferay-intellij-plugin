@@ -30,7 +30,8 @@ public class LiferayTaglibJavascriptLanguageInjectorTest extends LightCodeInsigh
 
 		List<String> strings = myFixture.getLookupElementStrings();
 
-		assertTrue("Javascript code completion should be possible inside a <aui:validator name=\"custom\"> tag",
+		assertTrue(
+			"Javascript code completion should be possible inside a <aui:validator name=\"custom\"> tag",
 			strings.contains("alert"));
 	}
 
@@ -40,7 +41,8 @@ public class LiferayTaglibJavascriptLanguageInjectorTest extends LightCodeInsigh
 
 		List<String> strings = myFixture.getLookupElementStrings();
 
-		assertTrue("Javascript code completion should be possible inside a <aui:validator name=\"required\"> tag",
+		assertTrue(
+			"Javascript code completion should be possible inside a <aui:validator name=\"required\"> tag",
 			strings.contains("alert"));
 	}
 
@@ -50,7 +52,8 @@ public class LiferayTaglibJavascriptLanguageInjectorTest extends LightCodeInsigh
 
 		List<String> strings = myFixture.getLookupElementStrings();
 
-		assertTrue("Javascript code completion should be possible inside the onClick attribute of a <aui:a> tag",
+		assertTrue(
+			"Javascript code completion should be possible inside the onClick attribute of a <aui:a> tag",
 			strings.contains("alert"));
 	}
 
@@ -60,8 +63,8 @@ public class LiferayTaglibJavascriptLanguageInjectorTest extends LightCodeInsigh
 
 		List<String> strings = myFixture.getLookupElementStrings();
 
-		assertTrue("Javascript code completion should be possible inside a <aui:script> tag",
-			strings.contains("alert"));
+		assertTrue(
+			"Javascript code completion should be possible inside a <aui:script> tag", strings.contains("alert"));
 	}
 
 	@Override

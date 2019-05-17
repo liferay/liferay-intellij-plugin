@@ -21,28 +21,28 @@ import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
  */
 public class LiferayServiceXMLEntityUuidInspectionTest extends LightCodeInsightFixtureTestCase {
 
-    public void testInvalidUuidInspection() {
-        myFixture.configureByFiles("service_invalid.xml");
+	public void testInvalidUuidInspection() {
+		myFixture.configureByFiles("service_invalid.xml");
 
-        myFixture.checkHighlighting();
-    }
+		myFixture.checkHighlighting();
+	}
 
-    public void testValidUuidInspection() {
-        myFixture.configureByFiles("service_valid.xml");
+	public void testValidUuidInspection() {
+		myFixture.configureByFiles("service_valid.xml");
 
-        myFixture.checkHighlighting();
-    }
+		myFixture.checkHighlighting();
+	}
 
-    @Override
-    protected String getTestDataPath() {
-        return "testdata/com/liferay/ide/idea/language/service/LiferayServiceXMLEntityUuidInspectionTest";
-    }
+	@Override
+	protected String getTestDataPath() {
+		return "testdata/com/liferay/ide/idea/language/service/LiferayServiceXMLEntityUuidInspectionTest";
+	}
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
 
-        myFixture.enableInspections(new LiferayServiceXMLEntityUuidInspection());
-    }
+		myFixture.enableInspections(new LiferayServiceXMLEntityUuidInspection());
+	}
 
 }

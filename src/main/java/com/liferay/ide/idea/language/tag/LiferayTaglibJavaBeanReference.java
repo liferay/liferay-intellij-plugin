@@ -75,7 +75,7 @@ public class LiferayTaglibJavaBeanReference extends PsiReferenceBase<XmlAttribut
 			result.add(lookupElementBuilder);
 		}
 
-		return result.toArray(new Object[result.size()]);
+		return result.toArray(new Object[0]);
 	}
 
 	@Nullable

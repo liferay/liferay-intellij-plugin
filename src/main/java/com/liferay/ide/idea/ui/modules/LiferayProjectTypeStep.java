@@ -100,7 +100,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Terry Jia
  */
-public class LiferayProjectTypeStep extends ModuleWizardStep implements SettingsStep, Disposable {
+public class LiferayProjectTypeStep extends ModuleWizardStep implements Disposable, SettingsStep {
 
 	public static final Function<FrameworkSupportNode, String> NODE_STRING_FUNCTION = FrameworkSupportNodeBase::getId;
 

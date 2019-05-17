@@ -43,7 +43,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Charles Wu
  */
-public class GradleDependencyQuickFix implements LocalQuickFix, IntentionAction, HighPriorityAction, Iconable {
+public class GradleDependencyQuickFix implements HighPriorityAction, Iconable, IntentionAction, LocalQuickFix {
 
 	public GradleDependencyQuickFix(Module module, Library library) {
 		_module = module;

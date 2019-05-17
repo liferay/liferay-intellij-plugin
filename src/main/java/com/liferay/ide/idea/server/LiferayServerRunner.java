@@ -41,7 +41,7 @@ public class LiferayServerRunner extends DefaultProgramRunner {
 
 	@Override
 	public boolean canRun(@NotNull String executorId, @NotNull RunProfile profile) {
-		if (DefaultRunExecutor.EXECUTOR_ID.equals(executorId) && profile instanceof LiferayServerConfiguration) {
+		if (DefaultRunExecutor.EXECUTOR_ID.equals(executorId) && (profile instanceof LiferayServerConfiguration)) {
 			return true;
 		}
 

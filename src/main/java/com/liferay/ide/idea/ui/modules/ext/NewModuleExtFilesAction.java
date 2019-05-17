@@ -52,7 +52,9 @@ public class NewModuleExtFilesAction extends AnAction implements DumbAware {
 
 	@Override
 	public void actionPerformed(AnActionEvent anActionEvent) {
-		new OverrideFilesDialog(anActionEvent.getProject()).show();
+		new OverrideFilesDialog(
+			anActionEvent.getProject()
+		).show();
 	}
 
 	@Override

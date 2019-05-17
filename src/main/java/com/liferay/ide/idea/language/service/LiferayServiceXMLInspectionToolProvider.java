@@ -23,19 +23,15 @@ import org.jetbrains.annotations.NotNull;
  */
 public class LiferayServiceXMLInspectionToolProvider implements InspectionToolProvider {
 
-    @NotNull
-    @Override
-    public Class[] getInspectionClasses() {
-        return new Class<?>[] {
-            LiferayServiceXMLPrimaryKeyColumnInspection.class,
-            LiferayServiceXMLNamespaceInspection.class,
-            LiferayServiceXMLExceptionNameInspection.class,
-            LiferayServiceXMLEntityUuidInspection.class,
-            LiferayServiceXMLDuplicateColumnInspection.class,
-            LiferayServiceXMLDuplicateEntityInspection.class,
-            LiferayServiceXMLDuplicateExceptionInspection.class,
-            LiferayServiceXMLDuplicateFinderInspection.class
-        };
-    }
+	@NotNull
+	@Override
+	public Class[] getInspectionClasses() {
+		return new Class<?>[] {
+			LiferayServiceXMLPrimaryKeyColumnInspection.class, LiferayServiceXMLNamespaceInspection.class,
+			LiferayServiceXMLExceptionNameInspection.class, LiferayServiceXMLEntityUuidInspection.class,
+			LiferayServiceXMLDuplicateColumnInspection.class, LiferayServiceXMLDuplicateEntityInspection.class,
+			LiferayServiceXMLDuplicateExceptionInspection.class, LiferayServiceXMLDuplicateFinderInspection.class
+		};
+	}
 
 }

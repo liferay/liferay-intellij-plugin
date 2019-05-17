@@ -97,7 +97,10 @@ public class ComponentPropertiesCompletionContributorTest extends LightCodeInsig
 
 			model.setSdk(sdk);
 
-			final String testDataPath = PathUtil.toSystemIndependentName(new File(_TEST_DATA_PATH).getAbsolutePath());
+			final String testDataPath = PathUtil.toSystemIndependentName(
+				new File(
+					_TEST_DATA_PATH
+				).getAbsolutePath());
 
 			VfsRootAccess.allowRootAccess(testDataPath);
 

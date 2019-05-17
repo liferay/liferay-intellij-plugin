@@ -42,7 +42,7 @@ public class LiferayServerDebuggerRunner extends GenericDebuggerRunner {
 
 	@Override
 	public boolean canRun(@NotNull String executorId, @NotNull RunProfile runProfile) {
-		if (DefaultDebugExecutor.EXECUTOR_ID.equals(executorId) && runProfile instanceof LiferayServerConfiguration) {
+		if (DefaultDebugExecutor.EXECUTOR_ID.equals(executorId) && (runProfile instanceof LiferayServerConfiguration)) {
 			return true;
 		}
 

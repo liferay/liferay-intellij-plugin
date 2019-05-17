@@ -37,80 +37,81 @@ import org.jetbrains.annotations.Nullable;
  */
 public class LiferayServiceXMLPrimaryKeyColumnInspection extends XmlSuppressableInspectionTool {
 
-    @NotNull
-    @Override
-    public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean onTheFly) {
-        return new XmlElementVisitor() {
-            @Override
-            public void visitXmlAttributeValue(XmlAttributeValue value) {
-                if (LiferayServiceXMLUtil.isColumnPrimaryAttribute(value)) {
-                    String text = value.getValue();
+	@NotNull
+	@Override
+	public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean onTheFly) {
+		return new XmlElementVisitor() {
 
-                    if ("true".equals(text)) {
-                        XmlTag xmlTag = PsiTreeUtil.getParentOfType(value, XmlTag.class);
-                        if (xmlTag != null) {
-                            String type = xmlTag.getAttributeValue("type");
-                            if (type != null) {
-                                if (!_validPrimaryKeyTypes.contains(type)) {
-                                    String columnName = xmlTag.getAttributeValue("name");
+			@Override
+			public void visitXmlAttributeValue(XmlAttributeValue value) {
+				if (LiferayServiceXMLUtil.isColumnPrimaryAttribute(value)) {
+					String text = value.getValue();
 
-                                    String entityName = null;
+					if ("true".equals(text)) {
+						XmlTag xmlTag = PsiTreeUtil.getParentOfType(value, XmlTag.class);
 
-                                    XmlTag entityTag = PsiTreeUtil.getParentOfType(xmlTag, XmlTag.class);
-                                    if (entityTag != null) {
-                                        entityName = entityTag.getAttributeValue("name");
-                                    }
+						if (xmlTag != null) {
+							String type = xmlTag.getAttributeValue("type");
 
-                                    holder.registerProblem(value,
-                                        "Primary Key " + columnName +
-                                            ( (entityName != null) ? " of entity " + entityName : "") +
-                                            " must be an int, long or String",
-                                        ProblemHighlightType.GENERIC_ERROR_OR_WARNING
-                                    );
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+							if (type != null) {
+								if (!_validPrimaryKeyTypes.contains(type)) {
+									String columnName = xmlTag.getAttributeValue("name");
 
-        };
-    }
+									String entityName = null;
 
-    @Nls
-    @NotNull
-    @Override
-    public String getDisplayName() {
-        return "check for valid type for a primary key column";
-    }
+									XmlTag entityTag = PsiTreeUtil.getParentOfType(xmlTag, XmlTag.class);
 
-    @Nls
-    @NotNull
-    @Override
-    public String getGroupDisplayName() {
-        return LiferayInspectionsConstants.LIFERAY_GROUP_NAME;
-    }
+									if (entityTag != null) {
+										entityName = entityTag.getAttributeValue("name");
+									}
 
-    @NotNull
-    @Override
-    public String[] getGroupPath() {
-        return new String[]{
-            getGroupDisplayName(),
-            LiferayInspectionsConstants.SERVICE_XML_GROUP_NAME
-        };
-    }
+									holder.registerProblem(
+										value,
+										"Primary Key " + columnName +
+											((entityName != null) ? " of entity " + entityName : "") +
+												" must be an int, long or String",
+										ProblemHighlightType.GENERIC_ERROR_OR_WARNING);
+								}
+							}
+						}
+					}
+				}
+			}
 
-    @Nullable
-    @Override
-    public String getStaticDescription() {
-        return "Primary key of entity must be an int, long, or String";
-    }
+		};
+	}
 
-    @Override
-    public boolean isEnabledByDefault() {
-        return true;
-    }
+	@Nls
+	@NotNull
+	@Override
+	public String getDisplayName() {
+		return "check for valid type for a primary key column";
+	}
 
-    private static final List<String> _validPrimaryKeyTypes = Arrays.asList("int", "long", "String");
+	@Nls
+	@NotNull
+	@Override
+	public String getGroupDisplayName() {
+		return LiferayInspectionsConstants.LIFERAY_GROUP_NAME;
+	}
+
+	@NotNull
+	@Override
+	public String[] getGroupPath() {
+		return new String[] {getGroupDisplayName(), LiferayInspectionsConstants.SERVICE_XML_GROUP_NAME};
+	}
+
+	@Nullable
+	@Override
+	public String getStaticDescription() {
+		return "Primary key of entity must be an int, long, or String";
+	}
+
+	@Override
+	public boolean isEnabledByDefault() {
+		return true;
+	}
+
+	private static final List<String> _validPrimaryKeyTypes = Arrays.asList("int", "long", "String");
 
 }

@@ -124,7 +124,10 @@ public class LiferayJspDebuggerSourceFinderAdapterTest extends LightCodeInsightF
 
 			model.setSdk(jdk);
 
-			final String testDataPath = PathUtil.toSystemIndependentName(new File(_TEST_DATA_PATH).getAbsolutePath());
+			final String testDataPath = PathUtil.toSystemIndependentName(
+				new File(
+					_TEST_DATA_PATH
+				).getAbsolutePath());
 
 			VfsRootAccess.allowRootAccess(testDataPath);
 

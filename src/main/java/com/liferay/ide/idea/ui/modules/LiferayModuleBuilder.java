@@ -183,7 +183,9 @@ public class LiferayModuleBuilder extends ModuleBuilder {
 	private VirtualFile _createAndGetContentEntry() {
 		String path = FileUtil.toSystemIndependentName(getContentEntryPath());
 
-		new File(path).mkdirs();
+		new File(
+			path
+		).mkdirs();
 
 		LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
 

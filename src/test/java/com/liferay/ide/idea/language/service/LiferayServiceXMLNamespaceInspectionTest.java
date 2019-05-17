@@ -21,29 +21,28 @@ import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
  */
 public class LiferayServiceXMLNamespaceInspectionTest extends LightCodeInsightFixtureTestCase {
 
-    public void testInvalidNamespaceInspection() {
-        myFixture.configureByFiles("service_invalid.xml");
+	public void testInvalidNamespaceInspection() {
+		myFixture.configureByFiles("service_invalid.xml");
 
-        myFixture.checkHighlighting();
-    }
+		myFixture.checkHighlighting();
+	}
 
-    public void testValidNamespaceInspection() {
-        myFixture.configureByFiles("service_valid.xml");
+	public void testValidNamespaceInspection() {
+		myFixture.configureByFiles("service_valid.xml");
 
-        myFixture.checkHighlighting();
-    }
+		myFixture.checkHighlighting();
+	}
 
-    @Override
-    protected String getTestDataPath() {
-        return "testdata/com/liferay/ide/idea/language/service/LiferayServiceXMLNamespaceInspectionTest";
-    }
+	@Override
+	protected String getTestDataPath() {
+		return "testdata/com/liferay/ide/idea/language/service/LiferayServiceXMLNamespaceInspectionTest";
+	}
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
 
-        myFixture.enableInspections(new LiferayServiceXMLNamespaceInspection());
-    }
+		myFixture.enableInspections(new LiferayServiceXMLNamespaceInspection());
+	}
 
 }
-

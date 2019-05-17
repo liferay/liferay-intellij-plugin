@@ -19,8 +19,8 @@ package com.liferay.ide.idea.util;
  */
 public class LiferayInspectionsConstants {
 
-    public static final String LIFERAY_GROUP_NAME = "Liferay";
+	public static final String LIFERAY_GROUP_NAME = "Liferay";
 
-    public static final String SERVICE_XML_GROUP_NAME = "service.xml";
+	public static final String SERVICE_XML_GROUP_NAME = "service.xml";
 
 }

@@ -46,165 +46,168 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class AbstractLiferayServiceXMLDuplicateEntryInspection extends XmlSuppressableInspectionTool {
 
-    @NotNull
-    @Override
-    public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean onTheFly) {
-        return new XmlElementVisitor() {
-            @Override
-            public void visitXmlAttributeValue(XmlAttributeValue xmlAttributeValue) {
-                if (isSuitableXmlAttributeValue(xmlAttributeValue)) {
-                    String text = xmlAttributeValue.getValue();
+	@NotNull
+	@Override
+	public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean onTheFly) {
+		return new XmlElementVisitor() {
 
-                    if (StringUtil.isNotEmpty(text)) {
-                        XmlAttribute xmlAttribute = PsiTreeUtil.getParentOfType(xmlAttributeValue, XmlAttribute.class);
+			@Override
+			public void visitXmlAttributeValue(XmlAttributeValue xmlAttributeValue) {
+				if (isSuitableXmlAttributeValue(xmlAttributeValue)) {
+					String text = xmlAttributeValue.getValue();
 
-                        if (xmlAttribute != null) {
-                            XmlTag xmlTag = PsiTreeUtil.getParentOfType(xmlAttribute, XmlTag.class);
+					if (StringUtil.isNotEmpty(text)) {
+						XmlAttribute xmlAttribute = PsiTreeUtil.getParentOfType(xmlAttributeValue, XmlAttribute.class);
 
-                            if (xmlTag != null) {
-                                XmlTag parentTag = PsiTreeUtil.getParentOfType(xmlTag, XmlTag.class);
+						if (xmlAttribute != null) {
+							XmlTag xmlTag = PsiTreeUtil.getParentOfType(xmlAttribute, XmlTag.class);
 
-                                if (parentTag != null) {
-                                    List<XmlTag> xmlTags = _getXmlTagsWithAttributeValue(parentTag, xmlTag.getLocalName(), xmlAttribute.getName(), text);
+							if (xmlTag != null) {
+								XmlTag parentTag = PsiTreeUtil.getParentOfType(xmlTag, XmlTag.class);
 
-                                    if (xmlTags.size() > 1) {
-                                        holder.registerProblem(xmlAttributeValue,
-                                            "Duplicate entry",
-                                            ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
-                                            new RemoveXmlTagFix()
-                                        );
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+								if (parentTag != null) {
+									List<XmlTag> xmlTags = _getXmlTagsWithAttributeValue(
+										parentTag, xmlTag.getLocalName(), xmlAttribute.getName(), text);
 
-            @Override
-            public void visitXmlText(XmlText xmlText) {
-                if (isSuitableXmlText(xmlText)) {
-                    String text = xmlText.getText();
+									if (xmlTags.size() > 1) {
+										holder.registerProblem(
+											xmlAttributeValue, "Duplicate entry",
+											ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new RemoveXmlTagFix());
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 
-                    XmlTag xmlTag = PsiTreeUtil.getParentOfType(xmlText, XmlTag.class);
+			@Override
+			public void visitXmlText(XmlText xmlText) {
+				if (isSuitableXmlText(xmlText)) {
+					String text = xmlText.getText();
 
-                    if (xmlTag != null) {
-                        XmlTag parentTag = PsiTreeUtil.getParentOfType(xmlTag, XmlTag.class);
+					XmlTag xmlTag = PsiTreeUtil.getParentOfType(xmlText, XmlTag.class);
 
-                        if (parentTag != null) {
-                            List<XmlTag> xmlTags = _getXmlTagsWithText(parentTag, xmlTag.getLocalName(), text);
+					if (xmlTag != null) {
+						XmlTag parentTag = PsiTreeUtil.getParentOfType(xmlTag, XmlTag.class);
 
-                            if (xmlTags.size() > 1) {
-                                holder.registerProblem(xmlText,
-                                    "Duplicate entry",
-                                    ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
-                                    new RemoveXmlTagFix()
-                                );
-                            }
-                        }
-                    }
-                }
-            }
+						if (parentTag != null) {
+							List<XmlTag> xmlTags = _getXmlTagsWithText(parentTag, xmlTag.getLocalName(), text);
 
-        };
-    }
+							if (xmlTags.size() > 1) {
+								holder.registerProblem(
+									xmlText, "Duplicate entry", ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
+									new RemoveXmlTagFix());
+							}
+						}
+					}
+				}
+			}
 
-    @Nls
-    @NotNull
-    @Override
-    public String getGroupDisplayName() {
-        return LiferayInspectionsConstants.LIFERAY_GROUP_NAME;
-    }
+		};
+	}
 
-    @NotNull
-    @Override
-    public String[] getGroupPath() {
-        return new String[]{
-            getGroupDisplayName(),
-            LiferayInspectionsConstants.SERVICE_XML_GROUP_NAME
-        };
-    }
+	@Nls
+	@NotNull
+	@Override
+	public String getGroupDisplayName() {
+		return LiferayInspectionsConstants.LIFERAY_GROUP_NAME;
+	}
 
-    @Override
-    public boolean isEnabledByDefault() {
-        return true;
-    }
+	@NotNull
+	@Override
+	public String[] getGroupPath() {
+		return new String[] {getGroupDisplayName(), LiferayInspectionsConstants.SERVICE_XML_GROUP_NAME};
+	}
 
-    protected abstract boolean isSuitableXmlAttributeValue(XmlAttributeValue xmlAttributeValue);
+	@Override
+	public boolean isEnabledByDefault() {
+		return true;
+	}
 
-    protected abstract boolean isSuitableXmlText(XmlText xmlText);
+	protected abstract boolean isSuitableXmlAttributeValue(XmlAttributeValue xmlAttributeValue);
 
-    private List<XmlTag> _getXmlTagsWithAttributeValue(XmlTag parentTag, String localName, String attributeName, String attributeValue) {
-        List<XmlTag> result = new ArrayList<>();
+	protected abstract boolean isSuitableXmlText(XmlText xmlText);
 
-        for (XmlTag xmlTag : parentTag.getSubTags()) {
-            if (localName.equals(xmlTag.getLocalName())) {
-                XmlAttribute attribute = xmlTag.getAttribute(attributeName);
+	private List<XmlTag> _getXmlTagsWithAttributeValue(
+		XmlTag parentTag, String localName, String attributeName, String attributeValue) {
 
-                if (attribute != null) {
-                    if (attributeValue.equals(attribute.getValue())) {
-                        result.add(xmlTag);
-                    }
-                }
-            }
-        }
+		List<XmlTag> result = new ArrayList<>();
 
-        return result;
-    }
+		for (XmlTag xmlTag : parentTag.getSubTags()) {
+			if (localName.equals(xmlTag.getLocalName())) {
+				XmlAttribute attribute = xmlTag.getAttribute(attributeName);
 
-    private List<XmlTag> _getXmlTagsWithText(XmlTag parentTag, String localName, String text) {
-        List<XmlTag> result = new ArrayList<>();
+				if (attribute != null) {
+					if (attributeValue.equals(attribute.getValue())) {
+						result.add(xmlTag);
+					}
+				}
+			}
+		}
 
-        for (XmlTag xmlTag : parentTag.getSubTags()) {
-            if (localName.equals(xmlTag.getLocalName())) {
-                XmlTagValue xmlTagValue = xmlTag.getValue();
+		return result;
+	}
 
-                if (text.equals(xmlTagValue.getText())) {
-                    result.add(xmlTag);
-                }
-            }
-        }
+	private List<XmlTag> _getXmlTagsWithText(XmlTag parentTag, String localName, String text) {
+		List<XmlTag> result = new ArrayList<>();
 
-        return result;
-    }
+		for (XmlTag xmlTag : parentTag.getSubTags()) {
+			if (localName.equals(xmlTag.getLocalName())) {
+				XmlTagValue xmlTagValue = xmlTag.getValue();
 
-    private static class RemoveXmlTagFix implements LocalQuickFix {
+				if (text.equals(xmlTagValue.getText())) {
+					result.add(xmlTag);
+				}
+			}
+		}
 
-        @Override
-        public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
-            PsiElement element = descriptor.getPsiElement();
+		return result;
+	}
 
-            PsiFile containingFile = element.getContainingFile();
+	private static class RemoveXmlTagFix implements LocalQuickFix {
 
-            XmlTag xmlTag = PsiTreeUtil.getParentOfType(element, XmlTag.class);
+		@Override
+		public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
+			PsiElement element = descriptor.getPsiElement();
 
-            if (xmlTag != null) {
-                XmlText spacerText = PsiTreeUtil.getPrevSiblingOfType(xmlTag, XmlText.class);
-                XmlTag parentTag = PsiTreeUtil.getParentOfType(xmlTag, XmlTag.class);
+			PsiFile containingFile = element.getContainingFile();
 
-                if (parentTag != null) {
+			XmlTag xmlTag = PsiTreeUtil.getParentOfType(element, XmlTag.class);
 
-                    WriteCommandAction.Builder writeCommandActionBuilder = WriteCommandAction.writeCommandAction(project, containingFile);
+			if (xmlTag != null) {
+				XmlText spacerText = PsiTreeUtil.getPrevSiblingOfType(xmlTag, XmlText.class);
+				XmlTag parentTag = PsiTreeUtil.getParentOfType(xmlTag, XmlTag.class);
 
-                    writeCommandActionBuilder.run(() -> {
-                        parentTag.getNode().removeChild(xmlTag.getNode());
+				if (parentTag != null) {
+					WriteCommandAction.Builder writeCommandActionBuilder = WriteCommandAction.writeCommandAction(
+						project, containingFile);
 
-                        if (spacerText != null) {
-                            parentTag.getNode().removeChild(spacerText.getNode());
-                        }
-                    });
-                }
-            }
-        }
+					writeCommandActionBuilder.run(
+						() -> {
+							parentTag.getNode(
+							).removeChild(
+								xmlTag.getNode()
+							);
 
-        @Nls(capitalization = Nls.Capitalization.Sentence)
-        @NotNull
-        @Override
-        public String getFamilyName() {
-            return "Remove entry";
-        }
+							if (spacerText != null) {
+								parentTag.getNode(
+								).removeChild(
+									spacerText.getNode()
+								);
+							}
+						});
+				}
+			}
+		}
 
-    }
+		@Nls(capitalization = Nls.Capitalization.Sentence)
+		@NotNull
+		@Override
+		public String getFamilyName() {
+			return "Remove entry";
+		}
+
+	}
 
 }
-

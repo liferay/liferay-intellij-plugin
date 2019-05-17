@@ -99,19 +99,24 @@ public class LiferayJspDebuggerSourceFinderAdapter implements SourcesFinder<Java
 
 		List<LibraryData> targetPlatformArtifacts = _getTargetPlatformArtifacts(project);
 
-		targetPlatformArtifacts.stream().map(
+		targetPlatformArtifacts.stream(
+		).map(
 			libraryData -> {
 				Set<String> sourcePaths = libraryData.getPaths(LibraryPathType.SOURCE);
 
 				return ContainerUtil.getFirstItem(sourcePaths);
 			}
-		).filter(Objects::nonNull).map(
+		).filter(
+			Objects::nonNull
+		).map(
 			sourcePath -> {
 				LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
 
 				return localFileSystem.findFileByPath(sourcePath);
 			}
-		).filter(Objects::nonNull).forEach(
+		).filter(
+			Objects::nonNull
+		).forEach(
 			rootVirtualFile -> {
 				VirtualFile jarRoot = IntellijUtil.getJarRoot(rootVirtualFile);
 
@@ -160,8 +165,10 @@ public class LiferayJspDebuggerSourceFinderAdapter implements SourcesFinder<Java
 
 		List<FileNameMatcher> fileNameMatchers = fileTypeManager.getAssociations(StdFileTypes.JAVA);
 
-		Optional<FileNameMatcher> fileNameMatcher =
-			fileNameMatchers.stream().filter(matcher -> matcher.accept(relPath)).findFirst();
+		Optional<FileNameMatcher> fileNameMatcher = fileNameMatchers.stream(
+		).filter(
+			matcher -> matcher.accept(relPath)
+		).findFirst();
 
 		return fileNameMatcher.isPresent();
 	}

@@ -120,7 +120,9 @@ public class FindAllDependenciesVisitor extends CodeVisitorSupport {
 	}
 
 	private String _configurationName = "";
-	private ListMultimap<String, GradleDependency> _dependencies = MultimapBuilder.treeKeys().arrayListValues().build();
+	private ListMultimap<String, GradleDependency> _dependencies = MultimapBuilder.treeKeys(
+	).arrayListValues(
+	).build();
 	private boolean _dependenciesClosure = false;
 	private boolean _dependencyStatement = false;
 

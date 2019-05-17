@@ -36,83 +36,81 @@ import org.jetbrains.annotations.Nullable;
  */
 public class LiferayServiceXMLEntityUuidInspection extends XmlSuppressableInspectionTool {
 
-    @NotNull
-    @Override
-    public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean onTheFloy) {
-        return new XmlElementVisitor() {
-            @Override
-            public void visitXmlAttributeValue(XmlAttributeValue value) {
-                if (LiferayServiceXMLUtil.isEntityUuidAttribute(value)) {
-                    String text = value.getValue();
-                    if ("true".equals(text)) {
-                        XmlTag xmlTag = PsiTreeUtil.getParentOfType(value, XmlTag.class);
-                        if (xmlTag != null) {
-                            XmlTag[] childrenOfType = PsiTreeUtil.getChildrenOfType(xmlTag, XmlTag.class);
+	@NotNull
+	@Override
+	public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean onTheFloy) {
+		return new XmlElementVisitor() {
 
-                            boolean hasPrimaryColumn = false;
+			@Override
+			public void visitXmlAttributeValue(XmlAttributeValue value) {
+				if (LiferayServiceXMLUtil.isEntityUuidAttribute(value)) {
+					String text = value.getValue();
 
-                            if (childrenOfType != null) {
+					if ("true".equals(text)) {
+						XmlTag xmlTag = PsiTreeUtil.getParentOfType(value, XmlTag.class);
 
-                                hasPrimaryColumn = Arrays.stream(
-                                    childrenOfType
-                                ).filter(
-                                    child -> "column".equals(child.getName())
-                                ).map(
-                                    primary -> primary.getAttributeValue("primary")
-                                ).anyMatch(
-                                    "true"::equals
-                                );
+						if (xmlTag != null) {
+							XmlTag[] childrenOfType = PsiTreeUtil.getChildrenOfType(xmlTag, XmlTag.class);
 
-                            }
+							boolean hasPrimaryColumn = false;
 
-                            if (!hasPrimaryColumn) {
-                                String entityName = xmlTag.getAttributeValue("name");
+							if (childrenOfType != null) {
+								hasPrimaryColumn = Arrays.stream(
+									childrenOfType
+								).filter(
+									child -> "column".equals(child.getName())
+								).map(
+									primary -> primary.getAttributeValue("primary")
+								).anyMatch(
+									"true"::equals
+								);
+							}
 
-                                holder.registerProblem(value,
-                                    "Unable to create entity " + entityName + " with a UUID without a primary key",
-                                    ProblemHighlightType.GENERIC_ERROR_OR_WARNING
-                                );
-                            }
-                        }
-                    }
-                }
-            }
+							if (!hasPrimaryColumn) {
+								String entityName = xmlTag.getAttributeValue("name");
 
-        };
-    }
+								holder.registerProblem(
+									value,
+									"Unable to create entity " + entityName + " with a UUID without a primary key",
+									ProblemHighlightType.GENERIC_ERROR_OR_WARNING);
+							}
+						}
+					}
+				}
+			}
 
-    @Nls
-    @NotNull
-    @Override
-    public String getDisplayName() {
-        return "check that entities with a uuid have a primary key column";
-    }
+		};
+	}
 
-    @Nls
-    @NotNull
-    @Override
-    public String getGroupDisplayName() {
-        return LiferayInspectionsConstants.LIFERAY_GROUP_NAME;
-    }
+	@Nls
+	@NotNull
+	@Override
+	public String getDisplayName() {
+		return "check that entities with a uuid have a primary key column";
+	}
 
-    @NotNull
-    @Override
-    public String[] getGroupPath() {
-        return new String[]{
-            getGroupDisplayName(),
-            LiferayInspectionsConstants.SERVICE_XML_GROUP_NAME
-        };
-    }
+	@Nls
+	@NotNull
+	@Override
+	public String getGroupDisplayName() {
+		return LiferayInspectionsConstants.LIFERAY_GROUP_NAME;
+	}
 
-    @Nullable
-    @Override
-    public String getStaticDescription() {
-        return "Unable to create entity with a UUID without a primary key";
-    }
+	@NotNull
+	@Override
+	public String[] getGroupPath() {
+		return new String[] {getGroupDisplayName(), LiferayInspectionsConstants.SERVICE_XML_GROUP_NAME};
+	}
 
-    @Override
-    public boolean isEnabledByDefault() {
-        return true;
-    }
+	@Nullable
+	@Override
+	public String getStaticDescription() {
+		return "Unable to create entity with a UUID without a primary key";
+	}
+
+	@Override
+	public boolean isEnabledByDefault() {
+		return true;
+	}
 
 }

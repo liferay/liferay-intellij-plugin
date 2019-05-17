@@ -21,28 +21,28 @@ import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
  */
 public class LiferayServiceXMLPrimaryKeyColumnInspectionTest extends LightCodeInsightFixtureTestCase {
 
-    public void testInvalidPrimaryKeyInspection() {
-        myFixture.configureByFiles("service_invalid.xml");
+	public void testInvalidPrimaryKeyInspection() {
+		myFixture.configureByFiles("service_invalid.xml");
 
-        myFixture.checkHighlighting();
-    }
+		myFixture.checkHighlighting();
+	}
 
-    public void testValidPrimaryKeyInspection() {
-        myFixture.configureByFiles("service_valid.xml");
+	public void testValidPrimaryKeyInspection() {
+		myFixture.configureByFiles("service_valid.xml");
 
-        myFixture.checkHighlighting();
-    }
+		myFixture.checkHighlighting();
+	}
 
-    @Override
-    protected String getTestDataPath() {
-        return "testdata/com/liferay/ide/idea/language/service/LiferayServiceXMLPrimaryKeyColumnInspectionTest";
-    }
+	@Override
+	protected String getTestDataPath() {
+		return "testdata/com/liferay/ide/idea/language/service/LiferayServiceXMLPrimaryKeyColumnInspectionTest";
+	}
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
 
-        myFixture.enableInspections(new LiferayServiceXMLPrimaryKeyColumnInspection());
-    }
+		myFixture.enableInspections(new LiferayServiceXMLPrimaryKeyColumnInspection());
+	}
 
 }

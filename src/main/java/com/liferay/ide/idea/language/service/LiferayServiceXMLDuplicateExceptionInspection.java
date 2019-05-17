@@ -26,27 +26,27 @@ import org.jetbrains.annotations.Nullable;
  */
 public class LiferayServiceXMLDuplicateExceptionInspection extends AbstractLiferayServiceXMLDuplicateEntryInspection {
 
-    @Nls
-    @NotNull
-    @Override
-    public String getDisplayName() {
-        return "check for duplicate exception entries";
-    }
+	@Nls
+	@NotNull
+	@Override
+	public String getDisplayName() {
+		return "check for duplicate exception entries";
+	}
 
-    @Nullable
-    @Override
-    public String getStaticDescription() {
-        return "Check for duplicate exception entries in service.xml.";
-    }
+	@Nullable
+	@Override
+	public String getStaticDescription() {
+		return "Check for duplicate exception entries in service.xml.";
+	}
 
-    @Override
-    protected boolean isSuitableXmlAttributeValue(XmlAttributeValue xmlAttributeValue) {
-        return false;
-    }
+	@Override
+	protected boolean isSuitableXmlAttributeValue(XmlAttributeValue xmlAttributeValue) {
+		return false;
+	}
 
-    @Override
-    protected boolean isSuitableXmlText(XmlText xmlText) {
-        return LiferayServiceXMLUtil.isExceptionTag(xmlText);
-    }
+	@Override
+	protected boolean isSuitableXmlText(XmlText xmlText) {
+		return LiferayServiceXMLUtil.isExceptionTag(xmlText);
+	}
 
 }

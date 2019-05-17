@@ -24,33 +24,34 @@ import java.util.List;
  */
 public class LiferayServiceXMLDuplicateExceptionInspectionTest extends LightCodeInsightFixtureTestCase {
 
-    public void testDuplicateExceptionInspection() {
-        myFixture.configureByFiles("service.xml");
+	public void testDuplicateExceptionInspection() {
+		myFixture.configureByFiles("service.xml");
 
-        myFixture.checkHighlighting();
+		myFixture.checkHighlighting();
 
-        List<IntentionAction> allQuickFixes = myFixture.getAllQuickFixes();
+		List<IntentionAction> allQuickFixes = myFixture.getAllQuickFixes();
 
-        for (IntentionAction quickFix : allQuickFixes) {
-            if ("Remove entry".equals(quickFix.getFamilyName())) {
-                myFixture.launchAction(quickFix);
-                break;
-            }
-        }
+		for (IntentionAction quickFix : allQuickFixes) {
+			if ("Remove entry".equals(quickFix.getFamilyName())) {
+				myFixture.launchAction(quickFix);
 
-        myFixture.checkResultByFile("service_fixed.xml", true);
-    }
+				break;
+			}
+		}
 
-    @Override
-    protected String getTestDataPath() {
-        return "testdata/com/liferay/ide/idea/language/service/LiferayServiceXMLDuplicateExceptionInspectionTest";
-    }
+		myFixture.checkResultByFile("service_fixed.xml", true);
+	}
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+	@Override
+	protected String getTestDataPath() {
+		return "testdata/com/liferay/ide/idea/language/service/LiferayServiceXMLDuplicateExceptionInspectionTest";
+	}
 
-        myFixture.enableInspections(new LiferayServiceXMLDuplicateExceptionInspection());
-    }
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+
+		myFixture.enableInspections(new LiferayServiceXMLDuplicateExceptionInspection());
+	}
 
 }

@@ -140,16 +140,16 @@ public class LiferayNamePathComponent extends JPanel {
 
 		chooserDescriptor.setHideIgnored(hideIgnored);
 
-		BrowseFilesListener browseButtonActionListener =
-			new BrowseFilesListener(_path, pathChooserTitle, pathChooserDescription, chooserDescriptor) {
+		BrowseFilesListener browseButtonActionListener = new BrowseFilesListener(
+			_path, pathChooserTitle, pathChooserDescription, chooserDescriptor) {
 
-				public void actionPerformed(ActionEvent event) {
-					super.actionPerformed(event);
+			public void actionPerformed(ActionEvent event) {
+				super.actionPerformed(event);
 
-					_pathChangedByUser = true;
-				}
+				_pathChangedByUser = true;
+			}
 
-			};
+		};
 
 		_pathLabel = new JLabel(pathLabelText);
 

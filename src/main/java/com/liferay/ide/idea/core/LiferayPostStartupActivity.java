@@ -36,7 +36,7 @@ import org.jetbrains.idea.maven.project.MavenImportListener;
 /**
  * @author Simon Jiang
  */
-public class LiferayPostStartupActivity implements StartupActivity, DumbAware {
+public class LiferayPostStartupActivity implements DumbAware, StartupActivity {
 
 	@Override
 	public void runActivity(@NotNull Project project) {

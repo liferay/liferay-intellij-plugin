@@ -24,32 +24,32 @@ import java.util.List;
  */
 public class LiferayServiceXMLExceptionNameInspectionTest extends LightCodeInsightFixtureTestCase {
 
-    public void testExceptionNameInspection() {
-        myFixture.configureByFiles("service.xml");
+	public void testExceptionNameInspection() {
+		myFixture.configureByFiles("service.xml");
 
-        myFixture.checkHighlighting();
+		myFixture.checkHighlighting();
 
-        List<IntentionAction> allQuickFixes = myFixture.getAllQuickFixes();
+		List<IntentionAction> allQuickFixes = myFixture.getAllQuickFixes();
 
-        for (IntentionAction quickFix : allQuickFixes) {
-            if ("Remove Exception suffix".equals(quickFix.getFamilyName())) {
-                myFixture.launchAction(quickFix);
-            }
-        }
+		for (IntentionAction quickFix : allQuickFixes) {
+			if ("Remove Exception suffix".equals(quickFix.getFamilyName())) {
+				myFixture.launchAction(quickFix);
+			}
+		}
 
-        myFixture.checkResultByFile("service_fixed.xml");
-    }
+		myFixture.checkResultByFile("service_fixed.xml");
+	}
 
-    @Override
-    protected String getTestDataPath() {
-        return "testdata/com/liferay/ide/idea/language/service/LiferayServiceXMLExceptionNameInspectionTest";
-    }
+	@Override
+	protected String getTestDataPath() {
+		return "testdata/com/liferay/ide/idea/language/service/LiferayServiceXMLExceptionNameInspectionTest";
+	}
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
 
-        myFixture.enableInspections(new LiferayServiceXMLExceptionNameInspection());
-    }
+		myFixture.enableInspections(new LiferayServiceXMLExceptionNameInspection());
+	}
 
 }

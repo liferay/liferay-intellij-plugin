@@ -40,98 +40,92 @@ import org.jetbrains.annotations.Nullable;
  */
 public class LiferayServiceXMLExceptionNameInspection extends XmlSuppressableInspectionTool {
 
-    @NotNull
-    @Override
-    public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean onTheFly) {
-        return new XmlElementVisitor() {
-            @Override
-            public void visitXmlText(XmlText xmlText) {
-                if (LiferayServiceXMLUtil.isExceptionTag(xmlText)) {
-                    String text = xmlText.getText();
+	@NotNull
+	@Override
+	public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean onTheFly) {
+		return new XmlElementVisitor() {
 
-                    if ( (text != null) && (text.endsWith("Exception")) ) {
-                        holder.registerProblem(xmlText,
-                            "Do not add Exception at the end of the name",
-                            ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
-                            new RemoveExceptionSuffixFix()
-                        );
-                    }
-                }
+			@Override
+			public void visitXmlText(XmlText xmlText) {
+				if (LiferayServiceXMLUtil.isExceptionTag(xmlText)) {
+					String text = xmlText.getText();
 
-            }
+					if ((text != null) && text.endsWith("Exception")) {
+						holder.registerProblem(
+							xmlText, "Do not add Exception at the end of the name",
+							ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new RemoveExceptionSuffixFix());
+					}
+				}
+			}
 
-        };
-    }
+		};
+	}
 
-    @Nls
-    @NotNull
-    @Override
-    public String getDisplayName() {
-        return "unneccessary service.xml exception suffix";
-    }
+	@Nls
+	@NotNull
+	@Override
+	public String getDisplayName() {
+		return "unneccessary service.xml exception suffix";
+	}
 
-    @Nls
-    @NotNull
-    @Override
-    public String getGroupDisplayName() {
-        return LiferayInspectionsConstants.LIFERAY_GROUP_NAME;
-    }
+	@Nls
+	@NotNull
+	@Override
+	public String getGroupDisplayName() {
+		return LiferayInspectionsConstants.LIFERAY_GROUP_NAME;
+	}
 
-    @NotNull
-    @Override
-    public String[] getGroupPath() {
-        return new String[] {
-            getGroupDisplayName(),
-            LiferayInspectionsConstants.SERVICE_XML_GROUP_NAME
-        };
-    }
+	@NotNull
+	@Override
+	public String[] getGroupPath() {
+		return new String[] {getGroupDisplayName(), LiferayInspectionsConstants.SERVICE_XML_GROUP_NAME};
+	}
 
-    @Nullable
-    @Override
-    public String getStaticDescription() {
-        return "Check for unneccessary Exception suffix at service.xml exception entries.";
-    }
+	@Nullable
+	@Override
+	public String getStaticDescription() {
+		return "Check for unneccessary Exception suffix at service.xml exception entries.";
+	}
 
-    @Override
-    public boolean isEnabledByDefault() {
-        return true;
-    }
+	@Override
+	public boolean isEnabledByDefault() {
+		return true;
+	}
 
-    private static class RemoveExceptionSuffixFix implements LocalQuickFix {
+	private static class RemoveExceptionSuffixFix implements LocalQuickFix {
 
-        @Override
-        public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
-            PsiElement element = descriptor.getPsiElement();
+		@Override
+		public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
+			PsiElement element = descriptor.getPsiElement();
 
-            PsiFile containingFile = element.getContainingFile();
+			PsiFile containingFile = element.getContainingFile();
 
-            XmlText xmlText = (XmlText)element;
+			XmlText xmlText = (XmlText)element;
 
-            TextRange range = element.getTextRange();
+			TextRange range = element.getTextRange();
 
-            PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(project);
+			PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(project);
 
-            Document document = psiDocumentManager.getDocument(containingFile);
+			Document document = psiDocumentManager.getDocument(containingFile);
 
-            psiDocumentManager.doPostponedOperationsAndUnblockDocument(document);
+			psiDocumentManager.doPostponedOperationsAndUnblockDocument(document);
 
-            String oldText = xmlText.getText();
+			String oldText = xmlText.getText();
 
-            String newText = oldText.substring(0, oldText.length() - "Exception".length());
+			String newText = oldText.substring(0, oldText.length() - "Exception".length());
 
-            document.replaceString(range.getStartOffset(), range.getEndOffset(), newText);
+			document.replaceString(range.getStartOffset(), range.getEndOffset(), newText);
 
-            psiDocumentManager.commitDocument(document);
-        }
+			psiDocumentManager.commitDocument(document);
+		}
 
-        @Nls(capitalization = Nls.Capitalization.Sentence)
-        @NotNull
-        @Override
-        public String getFamilyName() {
-            return "Remove Exception suffix";
-        }
+		@Nls(capitalization = Nls.Capitalization.Sentence)
+		@NotNull
+		@Override
+		public String getFamilyName() {
+			return "Remove Exception suffix";
+		}
 
-    }
+	}
 
 }
-

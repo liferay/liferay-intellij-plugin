@@ -129,7 +129,12 @@ public class LiferayJspDebuggerPositionManager extends JSR45PositionManager<Java
 
 					Stream<String> stream = sourceNames.stream();
 
-					return stream.filter(sourceName -> sourceName.contains(name)).findFirst().orElse(name);
+					return stream.filter(
+						sourceName -> sourceName.contains(name)
+					).findFirst(
+					).orElse(
+						name
+					);
 				}
 
 			});

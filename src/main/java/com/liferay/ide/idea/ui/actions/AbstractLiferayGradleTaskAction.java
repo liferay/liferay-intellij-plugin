@@ -101,7 +101,6 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 				}
 
 			},
-
 			getProgressMode(), true);
 
 		RunnerAndConfigurationSettings configuration =

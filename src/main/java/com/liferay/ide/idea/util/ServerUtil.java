@@ -201,8 +201,9 @@ public class ServerUtil {
 		return false;
 	}
 
-	private static PortalBundleFactory[] _bundleFactories =
-		{new PortalTomcatBundleFactory(), new PortalWildFlyBundleFactory()};
+	private static PortalBundleFactory[] _bundleFactories = {
+		new PortalTomcatBundleFactory(), new PortalWildFlyBundleFactory()
+	};
 	private static String[] _osgiBundleDirs = {"core", "modules", "portal", "static"};
 
 }

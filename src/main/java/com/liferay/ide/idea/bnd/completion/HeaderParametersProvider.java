@@ -57,8 +57,7 @@ public class HeaderParametersProvider extends CompletionProvider<CompletionParam
 					false
 				).withInsertHandler(
 					insertHandler
-				)
-			);
+				));
 		}
 	}
 

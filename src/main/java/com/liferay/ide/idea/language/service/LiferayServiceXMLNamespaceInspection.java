@@ -35,66 +35,62 @@ import org.jetbrains.annotations.Nullable;
  */
 public class LiferayServiceXMLNamespaceInspection extends XmlSuppressableInspectionTool {
 
-    @NotNull
-    @Override
-    public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean onTheFly) {
-        return new XmlElementVisitor() {
-            @Override
-            public void visitXmlText(XmlText xmlText) {
-                if (LiferayServiceXMLUtil.isNamespaceTag(xmlText)) {
-                    String text = xmlText.getText();
+	@NotNull
+	@Override
+	public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean onTheFly) {
+		return new XmlElementVisitor() {
 
-                    if (text != null) {
-                        Matcher matcher = _validNamespaceExpression.matcher(text);
+			@Override
+			public void visitXmlText(XmlText xmlText) {
+				if (LiferayServiceXMLUtil.isNamespaceTag(xmlText)) {
+					String text = xmlText.getText();
 
-                        if (!matcher.matches()) {
-                            holder.registerProblem(xmlText,
-                                "Namespace is not valid",
-                                ProblemHighlightType.GENERIC_ERROR_OR_WARNING
-                            );
-                        }
-                    }
-                }
-            }
+					if (text != null) {
+						Matcher matcher = _validNamespaceExpression.matcher(text);
 
-        };
-    }
+						if (!matcher.matches()) {
+							holder.registerProblem(
+								xmlText, "Namespace is not valid", ProblemHighlightType.GENERIC_ERROR_OR_WARNING);
+						}
+					}
+				}
+			}
 
-    @Nls
-    @NotNull
-    @Override
-    public String getDisplayName() {
-        return "check for valid namespace expression";
-    }
+		};
+	}
 
-    @Nls
-    @NotNull
-    @Override
-    public String getGroupDisplayName() {
-        return LiferayInspectionsConstants.LIFERAY_GROUP_NAME;
-    }
+	@Nls
+	@NotNull
+	@Override
+	public String getDisplayName() {
+		return "check for valid namespace expression";
+	}
 
-    @NotNull
-    @Override
-    public String[] getGroupPath() {
-        return new String[]{
-            getGroupDisplayName(),
-            LiferayInspectionsConstants.SERVICE_XML_GROUP_NAME
-        };
-    }
+	@Nls
+	@NotNull
+	@Override
+	public String getGroupDisplayName() {
+		return LiferayInspectionsConstants.LIFERAY_GROUP_NAME;
+	}
 
-    @Nullable
-    @Override
-    public String getStaticDescription() {
-        return "Namespace must start with a letter or underscore followed by letters," +
-            "numbers or underscores and may not be longer that 63 chars.";
-    }
+	@NotNull
+	@Override
+	public String[] getGroupPath() {
+		return new String[] {getGroupDisplayName(), LiferayInspectionsConstants.SERVICE_XML_GROUP_NAME};
+	}
 
-    @Override
-    public boolean isEnabledByDefault() {
-        return true;
-    }
+	@Nullable
+	@Override
+	public String getStaticDescription() {
+		return "Namespace must start with a letter or underscore followed by letters," +
+			"numbers or underscores and may not be longer that 63 chars.";
+	}
 
-    private static final Pattern _validNamespaceExpression = Pattern.compile("[A-Za-z_]{1}[A-Za-z0-9_]{0,62}");
+	@Override
+	public boolean isEnabledByDefault() {
+		return true;
+	}
+
+	private static final Pattern _validNamespaceExpression = Pattern.compile("[A-Za-z_]{1}[A-Za-z0-9_]{0,62}");
 
 }

@@ -53,8 +53,8 @@ public class LiferayTaglibSearchContainerJavaBeanReferenceContributorTest extend
 
 	@Override
 	protected String getTestDataPath() {
-		return
-			"testdata/com/liferay/ide/idea/language/tag/LiferayTaglibSearchContainerJavaBeanReferenceContributorTest";
+		return "testdata/com/liferay/ide/idea/language/tag" +
+			"/LiferayTaglibSearchContainerJavaBeanReferenceContributorTest";
 	}
 
 	private static final LightProjectDescriptor _lightProjectDescriptor = new DefaultLightProjectDescriptor() {

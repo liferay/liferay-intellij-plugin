@@ -26,27 +26,27 @@ import org.jetbrains.annotations.Nullable;
  */
 public class LiferayServiceXMLDuplicateColumnInspection extends AbstractLiferayServiceXMLDuplicateEntryInspection {
 
-    @Nls
-    @NotNull
-    @Override
-    public String getDisplayName() {
-        return "check for duplicate column names entries";
-    }
+	@Nls
+	@NotNull
+	@Override
+	public String getDisplayName() {
+		return "check for duplicate column names entries";
+	}
 
-    @Nullable
-    @Override
-    public String getStaticDescription() {
-        return "Check for duplicate column names for entities in service.xml.";
-    }
+	@Nullable
+	@Override
+	public String getStaticDescription() {
+		return "Check for duplicate column names for entities in service.xml.";
+	}
 
-    @Override
-    protected boolean isSuitableXmlAttributeValue(XmlAttributeValue xmlAttributeValue) {
-        return LiferayServiceXMLUtil.isColumnNameAttribute(xmlAttributeValue);
-    }
+	@Override
+	protected boolean isSuitableXmlAttributeValue(XmlAttributeValue xmlAttributeValue) {
+		return LiferayServiceXMLUtil.isColumnNameAttribute(xmlAttributeValue);
+	}
 
-    @Override
-    protected boolean isSuitableXmlText(XmlText xmlText) {
-        return false;
-    }
+	@Override
+	protected boolean isSuitableXmlText(XmlText xmlText) {
+		return false;
+	}
 
 }
