@@ -100,7 +100,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Terry Jia
  */
-public class LiferayProjectTypeStep extends ModuleWizardStep implements SettingsStep, Disposable {
+public class LiferayProjectTypeStep extends ModuleWizardStep implements Disposable, SettingsStep {
 
 	public static final Function<FrameworkSupportNode, String> NODE_STRING_FUNCTION = FrameworkSupportNodeBase::getId;
 
@@ -245,9 +245,9 @@ public class LiferayProjectTypeStep extends ModuleWizardStep implements Settings
 		_configurationUpdater = new ModuleBuilder.ModuleConfigurationUpdater() {
 
 			@Override
-			public void update(@NotNull Module module, @NotNull ModifiableRootModel rootModel) {
+			public void update(@NotNull Module module, @NotNull ModifiableRootModel modifiableRootModel) {
 				if (_isFrameworksMode()) {
-					_frameworksPanel.addSupport(module, rootModel);
+					_frameworksPanel.addSupport(module, modifiableRootModel);
 				}
 			}
 

@@ -51,10 +51,8 @@ public class LiferayGradleWorkspaceBuilder extends LiferayWorkspaceBuilder {
 	}
 
 	@Override
-	public void setupRootModel(ModifiableRootModel model) {
-		Project project = model.getProject();
-
-		initWorkspace(project);
+	public void setupRootModel(ModifiableRootModel modifiableRootModel) {
+		initWorkspace(modifiableRootModel.getProject());
 	}
 
 	@Override

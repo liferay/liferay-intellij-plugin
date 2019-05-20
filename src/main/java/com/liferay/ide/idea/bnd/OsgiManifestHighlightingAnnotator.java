@@ -65,18 +65,18 @@ public class OsgiManifestHighlightingAnnotator implements Annotator {
 		else if (psiElement instanceof ManifestToken) {
 			ManifestTokenType type = ((ManifestToken)psiElement).getTokenType();
 
-			if (psiElement.getParent() instanceof Attribute && (type == ManifestTokenType.EQUALS)) {
+			if ((psiElement.getParent() instanceof Attribute) && (type == ManifestTokenType.EQUALS)) {
 				_annotate(psiElement, OsgiManifestColorsAndFonts.ATTRIBUTE_ASSIGNMENT_KEY, annotationHolder);
 			}
-			else if (psiElement.getParent() instanceof Directive &&
+			else if ((psiElement.getParent() instanceof Directive) &&
 					 ((type == ManifestTokenType.COLON) || (type == ManifestTokenType.EQUALS))) {
 
 				_annotate(psiElement, OsgiManifestColorsAndFonts.DIRECTIVE_ASSIGNMENT_KEY, annotationHolder);
 			}
-			else if (psiElement.getParent() instanceof Clause && (type == ManifestTokenType.SEMICOLON)) {
+			else if ((psiElement.getParent() instanceof Clause) && (type == ManifestTokenType.SEMICOLON)) {
 				_annotate(psiElement, OsgiManifestColorsAndFonts.PARAMETER_SEPARATOR_KEY, annotationHolder);
 			}
-			else if (psiElement.getParent() instanceof Header && (type == ManifestTokenType.COMMA)) {
+			else if ((psiElement.getParent() instanceof Header) && (type == ManifestTokenType.COMMA)) {
 				_annotate(psiElement, OsgiManifestColorsAndFonts.CLAUSE_SEPARATOR_KEY, annotationHolder);
 			}
 		}

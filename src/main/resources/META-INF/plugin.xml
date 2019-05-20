@@ -31,6 +31,10 @@
 	</p>
 	<p>
 		<ul>
+			<li>1.4.1</li>
+			<ul>
+				<li>INTELLIJ-68 better support for service builder xml editor(community contribution)</li>
+			</ul>
 			<li>1.4.0</li>
 			<ul>
 				<li>INTELLIJ-55 add support for debugging jsps from Liferay modules(Ultimate Only)(community contribution)</li>
@@ -161,8 +165,8 @@
 		<programRunner id="Debug" implementation="com.liferay.ide.idea.server.LiferayServerDebuggerRunner"/>
 		<projectService serviceImplementation="com.liferay.ide.idea.core.LiferayProjectTypeService"/>
 		<fileTypeFactory implementation="com.liferay.ide.idea.bnd.BndFileTypeFactory"/>
-		<codeInsight.lineMarkerProvider language="XML" implementationClass="com.liferay.ide.idea.language.LiferayServiceXMLLineMarkerProvider"/>
-		<codeInsight.lineMarkerProvider language="JAVA" implementationClass="com.liferay.ide.idea.language.LiferayServiceJavaImplLineMarkerProvider"/>
+		<codeInsight.lineMarkerProvider language="XML" implementationClass="com.liferay.ide.idea.language.service.LiferayServiceXMLLineMarkerProvider"/>
+		<codeInsight.lineMarkerProvider language="JAVA" implementationClass="com.liferay.ide.idea.language.service.LiferayServiceJavaImplLineMarkerProvider"/>
 		<standardResourceProvider implementation="com.liferay.ide.idea.language.LiferayDefinitionsResourceProvider"/>
 		<xml.schemaProvider implementation="com.liferay.ide.idea.language.LiferayXmlSchemaProvider" />
 		<psi.referenceContributor implementation="com.liferay.ide.idea.language.LiferayXmlFileReferenceContributor"/>
@@ -178,5 +182,6 @@
 		<annotator language="Manifest" implementationClass="com.liferay.ide.idea.bnd.OsgiManifestHighlightingAnnotator"/>
 		<manifest.parser.provider implementation="com.liferay.ide.idea.bnd.completion.header.OsgiManifestHeaderParsers"/>
 		<codeInsight.unresolvedReferenceQuickFixProvider implementation="com.liferay.ide.idea.extensions.GradleDependencyQuickFixProvider"/>
+		<inspectionToolProvider implementation="com.liferay.ide.idea.language.service.LiferayServiceXMLInspectionToolProvider"/>
 	</extensions>
 </idea-plugin>

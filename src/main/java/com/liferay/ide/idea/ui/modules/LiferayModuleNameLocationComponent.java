@@ -301,8 +301,8 @@ public class LiferayModuleNameLocationComponent {
 			String templateType = liferayModuleBuilder.getType();
 
 			if ("theme".equals(templateType) || "layout-template".equals(templateType) ||
-				"spring-mvc-portlet".equals(templateType) ||
-				"war-hook".equals(templateType) || "war-mvc-portlet".equals(templateType)) {
+				"spring-mvc-portlet".equals(templateType) || "war-hook".equals(templateType) ||
+				"war-mvc-portlet".equals(templateType)) {
 
 				targetFolder = "wars";
 			}

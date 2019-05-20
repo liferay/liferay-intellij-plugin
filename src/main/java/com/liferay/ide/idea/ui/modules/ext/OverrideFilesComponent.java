@@ -249,7 +249,7 @@ public class OverrideFilesComponent {
 						//noinspection deprecation
 						setForeground(UIUtil.getListSelectionForeground());
 					}
-					else if (value instanceof EntryDescription && !((EntryDescription)value).isValid()) {
+					else if ((value instanceof EntryDescription) && !((EntryDescription)value).isValid()) {
 						setForeground(JBColor.RED);
 					}
 

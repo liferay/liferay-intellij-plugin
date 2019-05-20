@@ -56,7 +56,7 @@ public class LiferayTaglibResourceBundleReferenceContributor extends PsiReferenc
 			});
 
 		XmlUtil.registerXmlAttributeValueReferenceProvider(
-			registrar, attributeNames.toArray(new String[attributeNames.size()]), new LiferayTaglibFilter(), true,
+			registrar, attributeNames.toArray(new String[0]), new LiferayTaglibFilter(), true,
 			new LiferayTaglibResourceBundleReferenceProvider(true));
 	}
 

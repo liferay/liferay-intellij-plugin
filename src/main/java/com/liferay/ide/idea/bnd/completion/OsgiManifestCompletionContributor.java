@@ -49,9 +49,7 @@ public class OsgiManifestCompletionContributor extends CompletionContributor {
 	}
 
 	private static ElementPattern<PsiElement> _directive(String name) {
-		PsiElementPattern.Capture<PsiElement> element = psiElement(
-				ManifestTokenType.HEADER_VALUE_PART
-		);
+		PsiElementPattern.Capture<PsiElement> element = psiElement(ManifestTokenType.HEADER_VALUE_PART);
 
 		PsiElementPattern.Capture<Directive> directiveElement = psiElement(Directive.class);
 

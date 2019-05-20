@@ -149,7 +149,7 @@ public class PortalWildFlyBundle extends AbstractPortalBundle {
 			Collections.addAll(jarFiles, jars);
 		}
 
-		return jarFiles.toArray(new File[jarFiles.size()]);
+		return jarFiles.toArray(new File[0]);
 	}
 
 }

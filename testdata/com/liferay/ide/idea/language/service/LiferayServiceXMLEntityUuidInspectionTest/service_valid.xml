@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.1.0//EN"
+        "http://www.liferay.com/dtd/liferay-service-builder_7_1_0.dtd">
+
+<service-builder auto-import-default-references="false" mvcc-enabled="true" package-path="com.liferay.portal">
+    <namespace>Portal</namespace>
+
+    <entity name="MyModel" uuid="true">
+        <column name="myModelId" type="long" primary="true" />
+    </entity>
+</service-builder>

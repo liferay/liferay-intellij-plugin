@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.ide.idea.language;
+package com.liferay.ide.idea.language.service;
 
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider;

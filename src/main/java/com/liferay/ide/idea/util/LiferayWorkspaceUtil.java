@@ -183,7 +183,8 @@ public class LiferayWorkspaceUtil {
 				libraryData.add((LibraryData)child.getData());
 			}
 
-			libraryData.sort(Comparator.comparing(LibraryData::getArtifactId, Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER)));
+			libraryData.sort(
+				Comparator.comparing(LibraryData::getArtifactId, Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER)));
 
 			return libraryData;
 		}

@@ -110,9 +110,11 @@ public class LiferayJspDebuggerSourceFinderAdapterTest extends LightCodeInsightF
 
 		@Override
 		public void configureModule(
-			@NotNull Module module, @NotNull ModifiableRootModel model, @NotNull ContentEntry contentEntry) {
+			@NotNull Module module, @NotNull ModifiableRootModel modifiableRootModel,
+			@NotNull ContentEntry contentEntry) {
 
-			LanguageLevelModuleExtension extension = model.getModuleExtension(LanguageLevelModuleExtension.class);
+			LanguageLevelModuleExtension extension = modifiableRootModel.getModuleExtension(
+				LanguageLevelModuleExtension.class);
 
 			if (extension != null) {
 				extension.setLanguageLevel(LanguageLevel.JDK_1_8);
@@ -122,14 +124,17 @@ public class LiferayJspDebuggerSourceFinderAdapterTest extends LightCodeInsightF
 
 			Sdk jdk = javaAwareProjectJdkTable.getInternalJdk();
 
-			model.setSdk(jdk);
+			modifiableRootModel.setSdk(jdk);
 
-			final String testDataPath = PathUtil.toSystemIndependentName(new File(_TEST_DATA_PATH).getAbsolutePath());
+			File testDataDir = new File(_TEST_DATA_PATH);
+
+			final String testDataPath = PathUtil.toSystemIndependentName(testDataDir.getAbsolutePath());
 
 			VfsRootAccess.allowRootAccess(testDataPath);
 
 			PsiTestUtil.addLibrary(
-				module, model, "com.liferay:com.liferay.login.web", testDataPath, "com.liferay.login.web.jar");
+				module, modifiableRootModel, "com.liferay:com.liferay.login.web", testDataPath,
+				"com.liferay.login.web.jar");
 		}
 
 	};

@@ -44,7 +44,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Dominik Marks
  */
-public class LiferayTaglibJavascriptLanguageInjector implements MultiHostInjector, JSTargetedInjector {
+public class LiferayTaglibJavascriptLanguageInjector implements JSTargetedInjector, MultiHostInjector {
 
 	@NotNull
 	@Override
@@ -161,9 +161,7 @@ public class LiferayTaglibJavascriptLanguageInjector implements MultiHostInjecto
 					if ("validator".equals(localName)) {
 						String attributeValue = xmlTag.getAttributeValue("name");
 
-						if  ("custom".equals(attributeValue) ||
-							"required".equals(attributeValue)) {
-
+						if ("custom".equals(attributeValue) || "required".equals(attributeValue)) {
 							prefixWrapper = "(";
 							suffixWrapper = ")();";
 						}

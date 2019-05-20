@@ -59,9 +59,10 @@ public class LiferayTaglibClassNameReferenceContributorTest extends LightCodeIns
 
 		@Override
 		public void configureModule(
-			@NotNull Module module, @NotNull ModifiableRootModel model, @NotNull ContentEntry contentEntry) {
+			@NotNull Module module, @NotNull ModifiableRootModel modifiableRootModel,
+			@NotNull ContentEntry contentEntry) {
 
-			LanguageLevelModuleExtension languageLevelModuleExtension = model.getModuleExtension(
+			LanguageLevelModuleExtension languageLevelModuleExtension = modifiableRootModel.getModuleExtension(
 				LanguageLevelModuleExtension.class);
 
 			if (languageLevelModuleExtension != null) {
@@ -72,7 +73,7 @@ public class LiferayTaglibClassNameReferenceContributorTest extends LightCodeIns
 
 			Sdk jdk = javaAwareProjectJdkTableImpl.getInternalJdk();
 
-			model.setSdk(jdk);
+			modifiableRootModel.setSdk(jdk);
 		}
 
 	};

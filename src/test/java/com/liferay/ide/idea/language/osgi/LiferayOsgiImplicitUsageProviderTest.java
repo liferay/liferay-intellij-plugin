@@ -76,7 +76,9 @@ public class LiferayOsgiImplicitUsageProviderTest extends LightCodeInsightFixtur
 				extension.setLanguageLevel(LanguageLevel.JDK_1_8);
 			}
 
-			final String testDataPath = PathUtil.toSystemIndependentName(new File(_TEST_DATA_PATH).getAbsolutePath());
+			File testDataDir = new File(_TEST_DATA_PATH);
+
+			final String testDataPath = PathUtil.toSystemIndependentName(testDataDir.getAbsolutePath());
 
 			VfsRootAccess.allowRootAccess(testDataPath);
 

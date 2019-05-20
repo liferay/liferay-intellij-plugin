@@ -112,8 +112,7 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 		).map(
 			PsiNameValuePair::getValue
 		).filter(
-			value -> (value instanceof PsiClassObjectAccessExpression) ||
-			 (value instanceof PsiArrayInitializerMemberValue)
+			value -> value instanceof PsiArrayInitializerMemberValue || value instanceof PsiClassObjectAccessExpression
 		).forEach(
 			value -> {
 				if (value instanceof PsiArrayInitializerMemberValue) {
@@ -206,7 +205,6 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 	@SuppressWarnings("serial")
 	private static Map<String, String[][]> _componentProperties = new HashMap<String, String[][]>() {
 		{
-
 			put(
 				"com.liferay.adaptive.media.handler.AMRequestHandler",
 				new String[][] {{"adaptive.media.handler.pattern", "String"}});
@@ -223,25 +221,25 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 
 			put(
 				"com.liferay.adaptive.media.image.scaler.AMImageScaler",
-				new String[][] {{"mime.type", "String"}, {"service.ranking", "Integer"}, });
+				new String[][] {{"mime.type", "String"}, {"service.ranking", "Integer"}});
 
 			// https://dev.liferay.com/de/develop/tutorials/-/knowledge_base/7-0/customizing-the-product-menu
 
 			put(
 				"com.liferay.application.list.PanelApp",
-				new String[][] {{"panel.app.order", "Integer"}, {"panel.category.key", "String"}, });
+				new String[][] {{"panel.app.order", "Integer"}, {"panel.category.key", "String"}});
 
 			// https://dev.liferay.com/de/develop/tutorials/-/knowledge_base/7-0/customizing-the-product-menu
 
 			put(
 				"com.liferay.application.list.PanelCategory",
-				new String[][] {{"panel.category.key", "String"}, {"panel.category.order", "Integer"}, });
+				new String[][] {{"panel.category.key", "String"}, {"panel.category.order", "Integer"}});
 
 			// https://dev.liferay.com/de/develop/tutorials/-/knowledge_base/7-0/rendering-an-asset
 
 			put(
 				"com.liferay.asset.kernel.model.AssetRendererFactory",
-				new String[][] {{"javax.portlet.name", "String"}, });
+				new String[][] {{"javax.portlet.name", "String"}});
 
 			put(
 				"com.liferay.asset.kernel.util.AssetEntryQueryProcessor",
@@ -249,7 +247,7 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 
 			put(
 				"com.liferay.asset.kernel.validator.AssetEntryValidator",
-				new String[][] {{"model.class.name", "String"}, });
+				new String[][] {{"model.class.name", "String"}});
 
 			put(
 				"com.liferay.asset.kernel.validator.AssetEntryValidatorExclusionRule",
@@ -281,11 +279,9 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 
 			put(
 				"com.liferay.dynamic.data.mapping.render.DDMFormFieldRenderer",
-				new String[][] {{"ddm.form.field.type.name", "String"}, });
+				new String[][] {{"ddm.form.field.type.name", "String"}});
 
-			put(
-				"com.liferay.dynamic.data.mapping.util.DDMDisplay",
-				new String[][] {{"javax.portlet.name", "String"}, });
+			put("com.liferay.dynamic.data.mapping.util.DDMDisplay", new String[][] {{"javax.portlet.name", "String"}});
 
 			put(
 				"com.liferay.dynamic.data.mapping.util.DDMStructurePermissionSupport",
@@ -303,29 +299,29 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 
 			put(
 				"com.liferay.expando.kernel.model.CustomAttributesDisplay",
-				new String[][] {{"javax.portlet.name", "String"}, });
+				new String[][] {{"javax.portlet.name", "String"}});
 
 			put(
 				"com.liferay.exportimport.content.processor.ExportImportContentProcessor",
-				new String[][] {{"model.class.name", "String"}, });
+				new String[][] {{"model.class.name", "String"}});
 
 			put(
 				"com.liferay.exportimport.kernel.controller.ExportImportController",
-				new String[][] {{"model.class.name", "String"}, });
+				new String[][] {{"model.class.name", "String"}});
 
 			// https://dev.liferay.com/de/develop/tutorials/-/knowledge_base/7-0/data-handlers
 
 			put(
 				"com.liferay.exportimport.kernel.lar.PortletDataHandler",
-				new String[][] {{"javax.portlet.name", "String"}, });
+				new String[][] {{"javax.portlet.name", "String"}});
 
 			put(
 				"com.liferay.exportimport.kernel.lar.StagedModelDataHandler",
-				new String[][] {{"javax.portlet.name", "String"}, });
+				new String[][] {{"javax.portlet.name", "String"}});
 
 			put(
 				"com.liferay.exportimport.portlet.preferences.processor.ExportImportPortletPreferencesProcessor",
-				new String[][] {{"javax.portlet.name", "String"}, });
+				new String[][] {{"javax.portlet.name", "String"}});
 
 			put(
 				"com.liferay.exportimport.resources.importer.portlet.preferences.PortletPreferencesTranslator",
@@ -345,13 +341,11 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 
 			put(
 				"com.liferay.frontend.taglib.form.navigator.context.FormNavigatorContextProvider",
-				new String[][] {{"formNavigatorId", "String"}, });
+				new String[][] {{"formNavigatorId", "String"}});
 
 			// https://dev.liferay.com/de/develop/tutorials/-/knowledge_base/7-0/creating-custom-item-selector-views
 
-			put(
-				"com.liferay.item.selector.ItemSelectorView",
-				new String[][] {{"item.selector.view.order", "Integer"}, });
+			put("com.liferay.item.selector.ItemSelectorView", new String[][] {{"item.selector.view.order", "Integer"}});
 
 			put(
 				"com.liferay.knowledge.base.web.internal.selector.KBArticleSelector",
@@ -365,7 +359,7 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 
 			put(
 				"com.liferay.portal.deploy.hot.CustomJspBag",
-				new String[][] {{"context.id", "String"}, {"context.name", "String"}, });
+				new String[][] {{"context.id", "String"}, {"context.name", "String"}});
 
 			put(
 				"com.liferay.portal.editor.configuration.EditorOptionsProvider",
@@ -376,15 +370,15 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 
 			put(
 				"com.liferay.portal.kernel.atom.AtomCollectionAdapter",
-				new String[][] {{"model.class.name", "String"}, });
+				new String[][] {{"model.class.name", "String"}});
 
 			put(
 				"com.liferay.portal.kernel.backgroundtask.BackgroundTaskExecutor",
-				new String[][] {{"background.task.executor.class.name", "String"}, });
+				new String[][] {{"background.task.executor.class.name", "String"}});
 
 			put(
 				"com.liferay.portal.kernel.cache.configurator.PortalCacheConfiguratorSettings",
-				new String[][] {{"portal.cache.manager.name", "String"}, });
+				new String[][] {{"portal.cache.manager.name", "String"}});
 
 			put("com.liferay.portal.kernel.captcha.Captcha", new String[][] {{"captcha.engine.impl", "String"}});
 
@@ -397,21 +391,19 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 					{"service.ranking", "Integer"}
 				});
 
-			put("com.liferay.portal.kernel.events.LifecycleAction", new String[][] {{"key", "String"}, });
+			put("com.liferay.portal.kernel.events.LifecycleAction", new String[][] {{"key", "String"}});
 
-			put("com.liferay.portal.kernel.messaging.Destination", new String[][] {{"destination.name", "String"}, });
+			put("com.liferay.portal.kernel.messaging.Destination", new String[][] {{"destination.name", "String"}});
 
-			put(
-				"com.liferay.portal.kernel.messaging.MessageListener",
-				new String[][] {{"destination.name", "String"}, });
+			put("com.liferay.portal.kernel.messaging.MessageListener", new String[][] {{"destination.name", "String"}});
 
-			put("com.liferay.portal.kernel.model.ModelListener", new String[][] {{"service.ranking", "Integer"}, });
+			put("com.liferay.portal.kernel.model.ModelListener", new String[][] {{"service.ranking", "Integer"}});
 
-			put("com.liferay.portal.kernel.model.LayoutTypeController", new String[][] {{"layout.type", "String"}, });
+			put("com.liferay.portal.kernel.model.LayoutTypeController", new String[][] {{"layout.type", "String"}});
 
 			put(
 				"com.liferay.portal.kernel.notifications.UserNotificationDefinition",
-				new String[][] {{"javax.portlet.name", "String"}, });
+				new String[][] {{"javax.portlet.name", "String"}});
 
 			put(
 				"com.liferay.portal.kernel.notifications.UserNotificationHandler",
@@ -421,7 +413,7 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 
 			put(
 				"com.liferay.portal.kernel.portlet.AddPortletProvider",
-				new String[][] {{"model.class.name", "String"}, {"service.ranking", "Integer"}, });
+				new String[][] {{"model.class.name", "String"}, {"service.ranking", "Integer"}});
 
 			put(
 				"com.liferay.portal.kernel.portlet.BrowsePortletProvider",
@@ -437,7 +429,7 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 
 			put(
 				"com.liferay.portal.kernel.portlet.EditPortletProvider",
-				new String[][] {{"model.class.name", "String"}, {"service.ranking", "Integer"}, });
+				new String[][] {{"model.class.name", "String"}, {"service.ranking", "Integer"}});
 
 			// https://dev.liferay.com/de/develop/tutorials/-/knowledge_base/7-0/making-urls-friendlier
 
@@ -457,7 +449,7 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 
 			put(
 				"com.liferay.portal.kernel.portlet.PortletLayoutListener",
-				new String[][] {{"javax.portlet.name", "String"}, });
+				new String[][] {{"javax.portlet.name", "String"}});
 
 			put(
 				"com.liferay.portal.kernel.portlet.PreviewPortletProvider",
@@ -467,7 +459,7 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 
 			put(
 				"com.liferay.portal.kernel.portlet.ViewPortletProvider",
-				new String[][] {{"model.class.name", "String"}, {"service.ranking", "Integer"}, });
+				new String[][] {{"model.class.name", "String"}, {"service.ranking", "Integer"}});
 
 			// https://dev.liferay.com/de/develop/tutorials/-/knowledge_base/7-0/mvc-action-command
 
@@ -491,15 +483,13 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 
 			put(
 				"com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon",
-				new String[][] {{"javax.portlet.name", "String"}, {"path", "String"}, });
+				new String[][] {{"javax.portlet.name", "String"}, {"path", "String"}});
 
 			put(
 				"com.liferay.portal.kernel.portlet.toolbar.contributor.PortletToolbarContributor",
-				new String[][] {{"javax.portlet.name", "String"}, {"mvc.path", "String"}, });
+				new String[][] {{"javax.portlet.name", "String"}, {"mvc.path", "String"}});
 
-			put(
-				"com.liferay.portal.kernel.poller.PollerProcessor",
-				new String[][] {{"javax.portlet.name", "String"}, });
+			put("com.liferay.portal.kernel.poller.PollerProcessor", new String[][] {{"javax.portlet.name", "String"}});
 
 			put(
 				"com.liferay.portal.kernel.repository.RepositoryFactory",
@@ -507,7 +497,7 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 
 			put(
 				"com.liferay.portal.kernel.scheduler.messaging.SchedulerEventMessageListener",
-				new String[][] {{"destination.name", "String"}, });
+				new String[][] {{"destination.name", "String"}});
 
 			put("com.liferay.portal.kernel.search.Indexer", new String[][] {{"index.on.startup", "boolean"}});
 
@@ -515,19 +505,19 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 
 			put(
 				"com.liferay.portal.kernel.search.IndexerPostProcessor",
-				new String[][] {{"indexer.class.name", "String"}, });
+				new String[][] {{"indexer.class.name", "String"}});
 
 			// https://dev.liferay.com/de/develop/tutorials/-/knowledge_base/7-0/introduction-to-liferay-search
 
-			put("com.liferay.portal.kernel.search.IndexSearcher", new String[][] {{"search.engine.impl", "String"}, });
+			put("com.liferay.portal.kernel.search.IndexSearcher", new String[][] {{"search.engine.impl", "String"}});
 
 			// https://dev.liferay.com/de/develop/tutorials/-/knowledge_base/7-0/introduction-to-liferay-search
 
-			put("com.liferay.portal.kernel.search.IndexWriter", new String[][] {{"search.engine.impl", "String"}, });
+			put("com.liferay.portal.kernel.search.IndexWriter", new String[][] {{"search.engine.impl", "String"}});
 
 			// https://dev.liferay.com/de/develop/tutorials/-/knowledge_base/7-0/introduction-to-liferay-search
 
-			put("com.liferay.portal.kernel.search.hits.HitsProcessor", new String[][] {{"sort.order", "int"}, });
+			put("com.liferay.portal.kernel.search.hits.HitsProcessor", new String[][] {{"sort.order", "int"}});
 
 			// https://dev.liferay.com/de/develop/tutorials/-/knowledge_base/7-0/introduction-to-liferay-search
 
@@ -537,21 +527,21 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 
 			// https://dev.liferay.com/de/develop/tutorials/-/knowledge_base/7-0/password-based-authentication-pipelines
 
-			put("com.liferay.portal.kernel.security.auth.Authenticator", new String[][] {{"key", "String"}, });
+			put("com.liferay.portal.kernel.security.auth.Authenticator", new String[][] {{"key", "String"}});
 
 			put("com.liferay.portal.kernel.security.auth.AuthFailure", new String[][] {{"key", "String"}});
 
 			put(
 				"com.liferay.portal.kernel.security.permission.BaseModelPermissionChecker",
-				new String[][] {{"model.class.name", "String"}, });
+				new String[][] {{"model.class.name", "String"}});
 
 			put(
 				"com.liferay.portal.kernel.security.permission.PermissionUpdateHandler",
-				new String[][] {{"model.class.name", "String"}, });
+				new String[][] {{"model.class.name", "String"}});
 
 			put(
 				"com.liferay.portal.kernel.security.permission.ResourcePermissionChecker",
-				new String[][] {{"resource.name", "String"}, });
+				new String[][] {{"resource.name", "String"}});
 
 			put(
 				"com.liferay.portal.kernel.servlet.taglib.DynamicInclude",
@@ -565,45 +555,43 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 
 			put(
 				"com.liferay.portal.kernel.servlet.taglib.ui.FormNavigatorCategory",
-				new String[][] {{"form.navigator.category.order", "Integer"}, });
+				new String[][] {{"form.navigator.category.order", "Integer"}});
 
 			// https://dev.liferay.com/de/develop/tutorials/-/knowledge_base/7-0/form-navigator
 
 			put(
 				"com.liferay.portal.kernel.servlet.taglib.ui.FormNavigatorEntry",
-				new String[][] {{"form.navigator.entry.order", "Integer"}, {"service.ranking", "Integer"}, });
+				new String[][] {{"form.navigator.entry.order", "Integer"}, {"service.ranking", "Integer"}});
 
 			put(
 				"com.liferay.portal.kernel.social.SocialActivityManager",
-				new String[][] {{"model.class.name", "String"}, });
+				new String[][] {{"model.class.name", "String"}});
 
-			put("com.liferay.portal.kernel.struts.StrutsAction", new String[][] {{"path", "String"}, });
+			put("com.liferay.portal.kernel.struts.StrutsAction", new String[][] {{"path", "String"}});
 
-			put("com.liferay.portal.kernel.struts.StrutsPortletAction", new String[][] {{"path", "String"}, });
+			put("com.liferay.portal.kernel.struts.StrutsPortletAction", new String[][] {{"path", "String"}});
 
 			put("com.liferay.portal.kernel.template.TemplateContextContributor", new String[][] {{"type", "String"}});
 
 			put(
 				"com.liferay.portal.kernel.template.TemplateHandler",
-				new String[][] {{"javax.portlet.name", "String"}, });
+				new String[][] {{"javax.portlet.name", "String"}});
 
 			put(
 				"com.liferay.portal.kernel.templateparser.TransformerListener",
-				new String[][] {{"javax.portlet.name", "String"}, });
+				new String[][] {{"javax.portlet.name", "String"}});
 
-			put("com.liferay.portal.kernel.trash.TrashHandler", new String[][] {{"model.class.name", "String"}, });
+			put("com.liferay.portal.kernel.trash.TrashHandler", new String[][] {{"model.class.name", "String"}});
 
 			put("com.liferay.portal.kernel.workflow.WorkflowEngineManager", new String[][] {{"proxy.bean", "boolean"}});
 
 			// https://dev.liferay.com/de/develop/tutorials/-/knowledge_base/7-0/liferays-workflow-framework
 
-			put(
-				"com.liferay.portal.kernel.workflow.WorkflowHandler",
-				new String[][] {{"model.class.name", "String"}, });
+			put("com.liferay.portal.kernel.workflow.WorkflowHandler", new String[][] {{"model.class.name", "String"}});
 
 			put(
 				"com.liferay.portal.kernel.upgrade.UpgradeStep",
-				new String[][] {{"upgrade.bundle.symbolic.name", "String"}, });
+				new String[][] {{"upgrade.bundle.symbolic.name", "String"}});
 
 			put(
 				"com.liferay.portal.kernel.util.ResourceBundleLoader",
@@ -611,9 +599,9 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 
 			put(
 				"com.liferay.portal.kernel.webdav.WebDAVStorage",
-				new String[][] {{"javax.portlet.name", "String"}, {"webdav.storage.token", "String"}, });
+				new String[][] {{"javax.portlet.name", "String"}, {"webdav.storage.token", "String"}});
 
-			put("com.liferay.portal.language.LanguageResources", new String[][] {{"language.id", "String"}, });
+			put("com.liferay.portal.language.LanguageResources", new String[][] {{"language.id", "String"}});
 
 			put(
 				"com.liferay.portal.output.stream.container.OutputStreamContainerFactory",
@@ -621,17 +609,17 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 
 			put(
 				"com.liferay.portal.search.analysis.FieldQueryBuilderFactory",
-				new String[][] {{"description.fields", "String"}, {"title.fields", "String"}, });
+				new String[][] {{"description.fields", "String"}, {"title.fields", "String"}});
 
 			put(
 				"com.liferay.portal.search.buffer.IndexerRequestBufferExecutor",
-				new String[][] {{"buffered.execution.mode", "String"}, });
+				new String[][] {{"buffered.execution.mode", "String"}});
 
 			// https://dev.liferay.com/de/develop/tutorials/-/knowledge_base/7-0/customizing-liferay-search
 
 			put(
 				"com.liferay.portal.search.buffer.IndexerRequestBufferOverflowHandler",
-				new String[][] {{"mode", "String"}, });
+				new String[][] {{"mode", "String"}});
 
 			put(
 				"com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnection",
@@ -639,7 +627,7 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 
 			put(
 				"com.liferay.portal.security.ldap.configuration.ConfigurationProvider",
-				new String[][] {{"factoryPid", "String"}, });
+				new String[][] {{"factoryPid", "String"}});
 
 			put(
 				"com.liferay.portal.security.sso.openid.OpenIdProviderRegistry",
@@ -649,15 +637,15 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 
 			put("com.liferay.portal.struts.FindActionHelper", new String[][] {{"model.class.name", "String"}});
 
-			put("com.liferay.portal.template.TemplateResourceParser", new String[][] {{"lang.type", "String"}, });
+			put("com.liferay.portal.template.TemplateResourceParser", new String[][] {{"lang.type", "String"}});
 
-			put("com.liferay.portal.template.TemplateManager", new String[][] {{"language.type", "String"}, });
+			put("com.liferay.portal.template.TemplateManager", new String[][] {{"language.type", "String"}});
 
-			put("com.liferay.portal.verify.VerifyProcess", new String[][] {{"verify.process.name", "String"}, });
+			put("com.liferay.portal.verify.VerifyProcess", new String[][] {{"verify.process.name", "String"}});
 
 			put(
 				"com.liferay.portal.workflow.kaleo.definition.parser.NodeValidator",
-				new String[][] {{"node.type", "String"}, });
+				new String[][] {{"node.type", "String"}});
 
 			put(
 				"com.liferay.portal.workflow.kaleo.runtime.assignment.TaskAssignmentSelector",
@@ -665,7 +653,7 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 
 			put(
 				"com.liferay.portal.workflow.kaleo.runtime.notification.NotificationSender",
-				new String[][] {{"fromName", "String"}, {"notification.type", "String"}, });
+				new String[][] {{"fromName", "String"}, {"notification.type", "String"}});
 
 			put(
 				"com.liferay.portal.workflow.kaleo.runtime.notification.recipient.NotificationRecipientBuilder",
@@ -690,11 +678,11 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 
 			put(
 				"com.liferay.social.kernel.model.SocialActivityInterpreter",
-				new String[][] {{"javax.portlet.name", "String"}, });
+				new String[][] {{"javax.portlet.name", "String"}});
 
 			put(
 				"com.liferay.social.kernel.model.SocialRequestInterpreter",
-				new String[][] {{"javax.portlet.name", "String"}, });
+				new String[][] {{"javax.portlet.name", "String"}});
 
 			put(
 				"com.liferay.sync.internal.jsonws.SyncDLObject",
@@ -702,9 +690,7 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 					{"json.web.service.context.name", "String"}, {"json.web.service.context.path", "String"}
 				});
 
-			put(
-				"com.liferay.wiki.importer.WikiImporter",
-				new String[][] {{"importer", "String"}, {"page", "String"}, });
+			put("com.liferay.wiki.importer.WikiImporter", new String[][] {{"importer", "String"}, {"page", "String"}});
 
 			//OSGi default commands
 			put(
@@ -716,11 +702,11 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 
 			// https://dev.liferay.com/de/develop/tutorials/-/knowledge_base/7-0/overriding-language-keys
 
-			put("java.util.ResourceBundle", new String[][] {{"language.id", "String"}, });
+			put("java.util.ResourceBundle", new String[][] {{"language.id", "String"}});
 
 			put(
 				"javax.management.DynamicMBean",
-				new String[][] {{"jmx.objectname", "String"}, {"jmx.objectname.cache.key", "String"}, });
+				new String[][] {{"jmx.objectname", "String"}, {"jmx.objectname.cache.key", "String"}});
 
 			put(
 				"javax.portlet.Portlet",
@@ -813,7 +799,7 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 
 			// https://dev.liferay.com/de/develop/tutorials/-/knowledge_base/7-0/liferay-websocket-whiteboard
 
-			put("javax.websocket.Endpoint", new String[][] {{"org.osgi.http.websocket.endpoint.path", "String"}, });
+			put("javax.websocket.Endpoint", new String[][] {{"org.osgi.http.websocket.endpoint.path", "String"}});
 
 			//OSGi http whiteboard specification, see https://osgi.org/download/r6/osgi.cmpn-6.0.0.pdf
 			put(

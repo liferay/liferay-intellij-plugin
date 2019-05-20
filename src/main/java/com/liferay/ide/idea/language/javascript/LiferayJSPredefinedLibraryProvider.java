@@ -130,8 +130,9 @@ public class LiferayJSPredefinedLibraryProvider extends JSPredefinedLibraryProvi
 		return stream.filter(
 			libraryData -> "com.liferay".equals(libraryData.getGroupId())
 		).filter(
-			libraryData -> ("com.liferay.frontend.js.web".equals(libraryData.getArtifactId())) ||
-			 ("com.liferay.frontend.js.aui.web".equals(libraryData.getArtifactId()))
+			libraryData ->
+				"com.liferay.frontend.js.web".equals(libraryData.getArtifactId()) ||
+				"com.liferay.frontend.js.aui.web".equals(libraryData.getArtifactId())
 		).map(
 			LiferayJSPredefinedLibraryProvider::_getJavascriptFilesFromLibraryData
 		).flatMap(

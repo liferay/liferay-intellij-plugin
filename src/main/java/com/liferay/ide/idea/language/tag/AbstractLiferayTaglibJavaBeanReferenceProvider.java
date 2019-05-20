@@ -54,7 +54,7 @@ public abstract class AbstractLiferayTaglibJavaBeanReferenceProvider extends Psi
 			}
 		}
 
-		return psiReferences.toArray(new PsiReference[psiReferences.size()]);
+		return psiReferences.toArray(new PsiReference[0]);
 	}
 
 	@Nullable

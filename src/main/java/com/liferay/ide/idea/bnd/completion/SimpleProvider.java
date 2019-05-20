@@ -42,8 +42,7 @@ public class SimpleProvider extends CompletionProvider<CompletionParameters> {
 					item
 				).withCaseSensitivity(
 					false
-				)
-			);
+				));
 		}
 	}
 

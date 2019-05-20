@@ -53,17 +53,18 @@ public class LiferayTaglibSearchContainerJavaBeanReferenceContributorTest extend
 
 	@Override
 	protected String getTestDataPath() {
-		return
-			"testdata/com/liferay/ide/idea/language/tag/LiferayTaglibSearchContainerJavaBeanReferenceContributorTest";
+		return "testdata/com/liferay/ide/idea/language/tag" +
+			"/LiferayTaglibSearchContainerJavaBeanReferenceContributorTest";
 	}
 
 	private static final LightProjectDescriptor _lightProjectDescriptor = new DefaultLightProjectDescriptor() {
 
 		@Override
 		public void configureModule(
-			@NotNull Module module, @NotNull ModifiableRootModel model, @NotNull ContentEntry contentEntry) {
+			@NotNull Module module, @NotNull ModifiableRootModel modifiableRootModel,
+			@NotNull ContentEntry contentEntry) {
 
-			LanguageLevelModuleExtension languageLevelModuleExtension = model.getModuleExtension(
+			LanguageLevelModuleExtension languageLevelModuleExtension = modifiableRootModel.getModuleExtension(
 				LanguageLevelModuleExtension.class);
 
 			if (languageLevelModuleExtension != null) {
@@ -74,7 +75,7 @@ public class LiferayTaglibSearchContainerJavaBeanReferenceContributorTest extend
 
 			Sdk jdk = instanceEx.getInternalJdk();
 
-			model.setSdk(jdk);
+			modifiableRootModel.setSdk(jdk);
 		}
 
 		@Override
