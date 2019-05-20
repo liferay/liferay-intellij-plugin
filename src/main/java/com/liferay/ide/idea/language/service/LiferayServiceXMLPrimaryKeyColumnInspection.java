@@ -39,7 +39,7 @@ public class LiferayServiceXMLPrimaryKeyColumnInspection extends XmlSuppressable
 
 	@NotNull
 	@Override
-	public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean onTheFly) {
+	public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder problemsHolder, boolean onTheFly) {
 		return new XmlElementVisitor() {
 
 			@Override
@@ -59,13 +59,13 @@ public class LiferayServiceXMLPrimaryKeyColumnInspection extends XmlSuppressable
 
 									String entityName = null;
 
-									XmlTag entityTag = PsiTreeUtil.getParentOfType(xmlTag, XmlTag.class);
+									XmlTag entityXmlTag = PsiTreeUtil.getParentOfType(xmlTag, XmlTag.class);
 
-									if (entityTag != null) {
-										entityName = entityTag.getAttributeValue("name");
+									if (entityXmlTag != null) {
+										entityName = entityXmlTag.getAttributeValue("name");
 									}
 
-									holder.registerProblem(
+									problemsHolder.registerProblem(
 										value,
 										"Primary Key " + columnName +
 											((entityName != null) ? " of entity " + entityName : "") +

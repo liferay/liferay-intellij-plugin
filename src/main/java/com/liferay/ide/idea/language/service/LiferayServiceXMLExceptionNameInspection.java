@@ -42,7 +42,7 @@ public class LiferayServiceXMLExceptionNameInspection extends XmlSuppressableIns
 
 	@NotNull
 	@Override
-	public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean onTheFly) {
+	public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder problemsHolder, boolean onTheFly) {
 		return new XmlElementVisitor() {
 
 			@Override
@@ -51,7 +51,7 @@ public class LiferayServiceXMLExceptionNameInspection extends XmlSuppressableIns
 					String text = xmlText.getText();
 
 					if ((text != null) && text.endsWith("Exception")) {
-						holder.registerProblem(
+						problemsHolder.registerProblem(
 							xmlText, "Do not add Exception at the end of the name",
 							ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new RemoveExceptionSuffixFix());
 					}
@@ -96,17 +96,17 @@ public class LiferayServiceXMLExceptionNameInspection extends XmlSuppressableIns
 
 		@Override
 		public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
-			PsiElement element = descriptor.getPsiElement();
+			PsiElement psiElement = descriptor.getPsiElement();
 
-			PsiFile containingFile = element.getContainingFile();
+			PsiFile containingPsiFile = psiElement.getContainingFile();
 
-			XmlText xmlText = (XmlText)element;
+			XmlText xmlText = (XmlText)psiElement;
 
-			TextRange range = element.getTextRange();
+			TextRange textRange = psiElement.getTextRange();
 
 			PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(project);
 
-			Document document = psiDocumentManager.getDocument(containingFile);
+			Document document = psiDocumentManager.getDocument(containingPsiFile);
 
 			psiDocumentManager.doPostponedOperationsAndUnblockDocument(document);
 
@@ -114,7 +114,7 @@ public class LiferayServiceXMLExceptionNameInspection extends XmlSuppressableIns
 
 			String newText = oldText.substring(0, oldText.length() - "Exception".length());
 
-			document.replaceString(range.getStartOffset(), range.getEndOffset(), newText);
+			document.replaceString(textRange.getStartOffset(), textRange.getEndOffset(), newText);
 
 			psiDocumentManager.commitDocument(document);
 		}

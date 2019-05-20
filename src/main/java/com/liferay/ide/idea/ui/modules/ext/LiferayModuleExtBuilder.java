@@ -92,19 +92,19 @@ public class LiferayModuleExtBuilder extends ModuleBuilder {
 	}
 
 	@Override
-	public void setupRootModel(ModifiableRootModel rootModel) {
+	public void setupRootModel(ModifiableRootModel modifiableRootModel) {
 		VirtualFile virtualFile = _createAndGetContentEntry();
-		Project project = rootModel.getProject();
+		Project project = modifiableRootModel.getProject();
 
 		_createProject(virtualFile, project);
 
-		rootModel.addContentEntry(virtualFile);
+		modifiableRootModel.addContentEntry(virtualFile);
 
 		if (myJdk != null) {
-			rootModel.setSdk(myJdk);
+			modifiableRootModel.setSdk(myJdk);
 		}
 		else {
-			rootModel.inheritSdk();
+			modifiableRootModel.inheritSdk();
 		}
 
 		virtualFile.refresh(true, true);

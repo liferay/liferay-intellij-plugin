@@ -37,7 +37,7 @@ public class LiferayServiceXMLNamespaceInspection extends XmlSuppressableInspect
 
 	@NotNull
 	@Override
-	public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean onTheFly) {
+	public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder problemsHolder, boolean onTheFly) {
 		return new XmlElementVisitor() {
 
 			@Override
@@ -49,7 +49,7 @@ public class LiferayServiceXMLNamespaceInspection extends XmlSuppressableInspect
 						Matcher matcher = _validNamespaceExpression.matcher(text);
 
 						if (!matcher.matches()) {
-							holder.registerProblem(
+							problemsHolder.registerProblem(
 								xmlText, "Namespace is not valid", ProblemHighlightType.GENERIC_ERROR_OR_WARNING);
 						}
 					}

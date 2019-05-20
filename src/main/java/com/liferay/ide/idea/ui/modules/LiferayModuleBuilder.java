@@ -105,8 +105,8 @@ public class LiferayModuleBuilder extends ModuleBuilder {
 	}
 
 	@Override
-	public void setupRootModel(ModifiableRootModel rootModel) {
-		Project project = rootModel.getProject();
+	public void setupRootModel(ModifiableRootModel modifiableRootModel) {
+		Project project = modifiableRootModel.getProject();
 
 		ProjectType liferayProjectType = LiferayProjectTypeService.getProjectType(project);
 
@@ -168,13 +168,13 @@ public class LiferayModuleBuilder extends ModuleBuilder {
 
 		BladeCLI.execute(sb.toString());
 
-		rootModel.addContentEntry(moduleDir);
+		modifiableRootModel.addContentEntry(moduleDir);
 
 		if (myJdk != null) {
-			rootModel.setSdk(myJdk);
+			modifiableRootModel.setSdk(myJdk);
 		}
 		else {
-			rootModel.inheritSdk();
+			modifiableRootModel.inheritSdk();
 		}
 
 		_refreshProject(project, mavenModule);

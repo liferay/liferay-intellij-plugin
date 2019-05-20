@@ -245,9 +245,9 @@ public class LiferayProjectTypeStep extends ModuleWizardStep implements Disposab
 		_configurationUpdater = new ModuleBuilder.ModuleConfigurationUpdater() {
 
 			@Override
-			public void update(@NotNull Module module, @NotNull ModifiableRootModel rootModel) {
+			public void update(@NotNull Module module, @NotNull ModifiableRootModel modifiableRootModel) {
 				if (_isFrameworksMode()) {
-					_frameworksPanel.addSupport(module, rootModel);
+					_frameworksPanel.addSupport(module, modifiableRootModel);
 				}
 			}
 

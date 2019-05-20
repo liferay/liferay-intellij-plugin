@@ -38,7 +38,7 @@ public class LiferayServiceXMLEntityUuidInspection extends XmlSuppressableInspec
 
 	@NotNull
 	@Override
-	public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean onTheFloy) {
+	public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder problemsHolder, boolean onTheFloy) {
 		return new XmlElementVisitor() {
 
 			@Override
@@ -50,13 +50,13 @@ public class LiferayServiceXMLEntityUuidInspection extends XmlSuppressableInspec
 						XmlTag xmlTag = PsiTreeUtil.getParentOfType(value, XmlTag.class);
 
 						if (xmlTag != null) {
-							XmlTag[] childrenOfType = PsiTreeUtil.getChildrenOfType(xmlTag, XmlTag.class);
+							XmlTag[] childXmlTags = PsiTreeUtil.getChildrenOfType(xmlTag, XmlTag.class);
 
 							boolean hasPrimaryColumn = false;
 
-							if (childrenOfType != null) {
+							if (childXmlTags != null) {
 								hasPrimaryColumn = Arrays.stream(
-									childrenOfType
+									childXmlTags
 								).filter(
 									child -> "column".equals(child.getName())
 								).map(
@@ -69,7 +69,7 @@ public class LiferayServiceXMLEntityUuidInspection extends XmlSuppressableInspec
 							if (!hasPrimaryColumn) {
 								String entityName = xmlTag.getAttributeValue("name");
 
-								holder.registerProblem(
+								problemsHolder.registerProblem(
 									value,
 									"Unable to create entity " + entityName + " with a UUID without a primary key",
 									ProblemHighlightType.GENERIC_ERROR_OR_WARNING);

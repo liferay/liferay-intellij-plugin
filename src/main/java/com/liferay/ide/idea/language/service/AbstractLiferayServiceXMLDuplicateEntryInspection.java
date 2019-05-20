@@ -48,7 +48,7 @@ public abstract class AbstractLiferayServiceXMLDuplicateEntryInspection extends 
 
 	@NotNull
 	@Override
-	public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean onTheFly) {
+	public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder problemsHolder, boolean onTheFly) {
 		return new XmlElementVisitor() {
 
 			@Override
@@ -63,14 +63,14 @@ public abstract class AbstractLiferayServiceXMLDuplicateEntryInspection extends 
 							XmlTag xmlTag = PsiTreeUtil.getParentOfType(xmlAttribute, XmlTag.class);
 
 							if (xmlTag != null) {
-								XmlTag parentTag = PsiTreeUtil.getParentOfType(xmlTag, XmlTag.class);
+								XmlTag parentXmlTag = PsiTreeUtil.getParentOfType(xmlTag, XmlTag.class);
 
-								if (parentTag != null) {
+								if (parentXmlTag != null) {
 									List<XmlTag> xmlTags = _getXmlTagsWithAttributeValue(
-										parentTag, xmlTag.getLocalName(), xmlAttribute.getName(), text);
+										parentXmlTag, xmlTag.getLocalName(), xmlAttribute.getName(), text);
 
 									if (xmlTags.size() > 1) {
-										holder.registerProblem(
+										problemsHolder.registerProblem(
 											xmlAttributeValue, "Duplicate entry",
 											ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new RemoveXmlTagFix());
 									}
@@ -95,7 +95,7 @@ public abstract class AbstractLiferayServiceXMLDuplicateEntryInspection extends 
 							List<XmlTag> xmlTags = _getXmlTagsWithText(parentTag, xmlTag.getLocalName(), text);
 
 							if (xmlTags.size() > 1) {
-								holder.registerProblem(
+								problemsHolder.registerProblem(
 									xmlText, "Duplicate entry", ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
 									new RemoveXmlTagFix());
 							}
@@ -168,32 +168,32 @@ public abstract class AbstractLiferayServiceXMLDuplicateEntryInspection extends 
 	private static class RemoveXmlTagFix implements LocalQuickFix {
 
 		@Override
-		public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
-			PsiElement element = descriptor.getPsiElement();
+		public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor problemDescriptor) {
+			PsiElement psiElement = problemDescriptor.getPsiElement();
 
-			PsiFile containingFile = element.getContainingFile();
+			PsiFile containingFile = psiElement.getContainingFile();
 
-			XmlTag xmlTag = PsiTreeUtil.getParentOfType(element, XmlTag.class);
+			XmlTag xmlTag = PsiTreeUtil.getParentOfType(psiElement, XmlTag.class);
 
 			if (xmlTag != null) {
-				XmlText spacerText = PsiTreeUtil.getPrevSiblingOfType(xmlTag, XmlText.class);
-				XmlTag parentTag = PsiTreeUtil.getParentOfType(xmlTag, XmlTag.class);
+				XmlTag parentXmlTag = PsiTreeUtil.getParentOfType(xmlTag, XmlTag.class);
+				XmlText spacerXmlText = PsiTreeUtil.getPrevSiblingOfType(xmlTag, XmlText.class);
 
-				if (parentTag != null) {
+				if (parentXmlTag != null) {
 					WriteCommandAction.Builder writeCommandActionBuilder = WriteCommandAction.writeCommandAction(
 						project, containingFile);
 
 					writeCommandActionBuilder.run(
 						() -> {
-							parentTag.getNode(
+							parentXmlTag.getNode(
 							).removeChild(
 								xmlTag.getNode()
 							);
 
-							if (spacerText != null) {
-								parentTag.getNode(
+							if (spacerXmlText != null) {
+								parentXmlTag.getNode(
 								).removeChild(
-									spacerText.getNode()
+									spacerXmlText.getNode()
 								);
 							}
 						});
