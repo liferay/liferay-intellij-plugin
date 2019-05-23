@@ -77,6 +77,10 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 
 		JComboBox targetPlatformComboBox = new ComboBox();
 
+		for (String targetPlatformVersion : WorkspaceConstants.TARGET_PLATFORM_VERSIONS_7_2) {
+			targetPlatformComboBox.addItem(targetPlatformVersion);
+		}
+
 		for (String targetPlatformVersion : WorkspaceConstants.TARGET_PLATFORM_VERSIONS_7_1) {
 			targetPlatformComboBox.addItem(targetPlatformVersion);
 		}
@@ -103,6 +107,9 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 				}
 				else if (selected.startsWith("7.1")) {
 					targetPlatformComboBox.setSelectedItem(WorkspaceConstants.TARGET_PLATFORM_VERSIONS_7_1[0]);
+				}
+				else if (selected.startsWith("7.2")) {
+					targetPlatformComboBox.setSelectedItem(WorkspaceConstants.TARGET_PLATFORM_VERSIONS_7_2[0]);
 				}
 			});
 
