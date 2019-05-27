@@ -12,17 +12,21 @@
  * details.
  */
 
-package com.liferay.ide.idea.util;
+package com.liferay.ide.idea.language.tag;
+
+import com.intellij.codeInspection.InspectionToolProvider;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Dominik Marks
  */
-public class LiferayInspectionsConstants {
+public class LiferayTaglibInspectionToolProvider implements InspectionToolProvider {
 
-	public static final String JSP_GROUP_NAME = "JSP";
-
-	public static final String LIFERAY_GROUP_NAME = "Liferay";
-
-	public static final String SERVICE_XML_GROUP_NAME = "service.xml";
+	@NotNull
+	@Override
+	public Class[] getInspectionClasses() {
+		return new Class<?>[] {LiferayTaglibStrictQuoteEscapingInspection.class};
+	}
 
 }
