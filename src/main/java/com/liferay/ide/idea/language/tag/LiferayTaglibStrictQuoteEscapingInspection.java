@@ -66,9 +66,9 @@ public class LiferayTaglibStrictQuoteEscapingInspection extends XmlSuppressableI
 						XmlTag xmlTag = PsiTreeUtil.getParentOfType(xmlAttribute, XmlTag.class);
 
 						if (xmlTag != null) {
-							XmlElementDescriptor descriptor = xmlTag.getDescriptor();
+							XmlElementDescriptor xmlElementDescriptor = xmlTag.getDescriptor();
 
-							if (descriptor instanceof CustomTagDescriptorBase) {
+							if (xmlElementDescriptor instanceof CustomTagDescriptorBase) {
 								JspExpression[] jspExpressions = PsiTreeUtil.getChildrenOfType(
 									valueElement, JspExpression.class);
 
@@ -161,18 +161,18 @@ public class LiferayTaglibStrictQuoteEscapingInspection extends XmlSuppressableI
 
 		@Override
 		public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor problemDescriptor) {
-			PsiElement element = problemDescriptor.getPsiElement();
+			PsiElement psiElement = problemDescriptor.getPsiElement();
 
-			JspFile jsp = JspPsiUtil.getJspFile(element);
+			JspFile jspFile = JspPsiUtil.getJspFile(psiElement);
 
-			if (jsp != null) {
-				XmlAttributeValue xmlAttributeValue = (XmlAttributeValue)element;
+			if (jspFile != null) {
+				XmlAttributeValue xmlAttributeValue = (XmlAttributeValue)psiElement;
 
-				TextRange textRange = element.getTextRange();
+				TextRange textRange = psiElement.getTextRange();
 
 				PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(project);
 
-				Document document = psiDocumentManager.getDocument(jsp);
+				Document document = psiDocumentManager.getDocument(jspFile);
 
 				if (document != null) {
 					psiDocumentManager.doPostponedOperationsAndUnblockDocument(document);
