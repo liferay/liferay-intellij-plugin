@@ -26,7 +26,9 @@ public class LiferayTaglibInspectionToolProvider implements InspectionToolProvid
 	@NotNull
 	@Override
 	public Class[] getInspectionClasses() {
-		return new Class<?>[] {LiferayTaglibStrictQuoteEscapingInspection.class};
+		return new Class<?>[] {
+			LiferayTaglibStrictQuoteEscapingInspection.class, LiferayTaglibStringConcatInspection.class
+		};
 	}
 
 }
