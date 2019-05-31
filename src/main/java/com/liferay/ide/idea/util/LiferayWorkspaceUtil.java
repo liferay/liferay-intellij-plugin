@@ -100,7 +100,7 @@ public class LiferayWorkspaceUtil {
 			return null;
 		}
 
-		VirtualFile settingsVirtualFile = projectRoot.findFileByRelativePath("/.blade/settings.properties");
+		VirtualFile settingsVirtualFile = projectRoot.findFileByRelativePath("/.blade.properties");
 
 		if (settingsVirtualFile != null) {
 			Properties props = new Properties();
