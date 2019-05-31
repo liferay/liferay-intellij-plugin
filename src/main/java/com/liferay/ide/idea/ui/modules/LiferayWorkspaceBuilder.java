@@ -35,7 +35,9 @@ import java.io.File;
 
 import java.util.Objects;
 
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -47,6 +49,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Terry Jia
  * @author Joye Luo
  */
+@SuppressWarnings("rawtypes")
 public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 
 	public LiferayWorkspaceBuilder(String liferayProjectType) {
@@ -66,6 +69,7 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 
 	@Nullable
 	@Override
+	@SuppressWarnings("unchecked")
 	public ModuleWizardStep modifySettingsStep(@NotNull SettingsStep settingsStep) {
 		JComboBox liferayVersionComboBox = new ComboBox();
 
@@ -113,6 +117,29 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 				}
 			});
 
+		JCheckBox indexSourcesCheckBox = new JCheckBox();
+
+		JLabel customLabel = new JLabel();
+
+		indexSourcesCheckBox.addActionListener(
+			e -> {
+				_indexSources = indexSourcesCheckBox.isSelected();
+
+				if (_indexSources) {
+					customLabel.setText(
+						"This will cause all of the BOM artifacts jars and their java sources to be indexed by " +
+							"IntelliJ. Note: this process can slow down your project's synchronization.");
+				}
+				else {
+					customLabel.setText("");
+				}
+			});
+
+		if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_GRADLE_WORKSPACE)) {
+			settingsStep.addSettingsField("Index Sources:", indexSourcesCheckBox);
+			settingsStep.addSettingsField("", customLabel);
+		}
+
 		return new SdkSettingsStep(
 			settingsStep, this,
 			new Condition<SdkTypeId>() {
@@ -155,6 +182,7 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 					new File(project.getBasePath(), "gradle.properties"));
 
 				config.setProperty(WorkspaceConstants.DEFAULT_TARGET_PLATFORM_VERSION_PROPERTY, _targetPlatform);
+				config.setProperty(WorkspaceConstants.DEFAULT_TARGET_PLATFORM_INDEX_SOURCES_PROPERTY, _indexSources);
 
 				config.save();
 			}
@@ -163,8 +191,9 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 		}
 	}
 
+	private boolean _indexSources = false;
 	private String _liferayProjectType;
 	private String _liferayVersion = WorkspaceConstants.LIFERAY_VERSIONS[0];
-	private String _targetPlatform = WorkspaceConstants.TARGET_PLATFORM_VERSIONS_7_1[0];
+	private String _targetPlatform = WorkspaceConstants.TARGET_PLATFORM_VERSIONS_7_2[0];
 
 }

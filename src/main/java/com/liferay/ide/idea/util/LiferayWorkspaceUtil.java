@@ -60,6 +60,30 @@ public class LiferayWorkspaceUtil {
 		return result;
 	}
 
+	public static boolean getIndexSources(Project project) {
+		String result = "false";
+
+		VirtualFile workspaceVirtualFile = getWorkspaceVirtualFile(project);
+
+		if (workspaceVirtualFile != null) {
+			VirtualFile gradlePropertiesVirtualFile = workspaceVirtualFile.findFileByRelativePath("/gradle.properties");
+
+			if (gradlePropertiesVirtualFile != null) {
+				Properties properties = new Properties();
+
+				try {
+					properties.load(gradlePropertiesVirtualFile.getInputStream());
+
+					result = properties.getProperty(WorkspaceConstants.DEFAULT_TARGET_PLATFORM_INDEX_SOURCES_PROPERTY);
+				}
+				catch (IOException ioe) {
+				}
+			}
+		}
+
+		return Boolean.parseBoolean(result);
+	}
+
 	@Nullable
 	public static String getLiferayVersion(Project project) {
 		PropertiesComponent propertiesComponent = PropertiesComponent.getInstance(project);
