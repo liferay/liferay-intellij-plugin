@@ -65,6 +65,16 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 
 		_overrideFilesPanel.setProject(_project);
 
+		boolean indexSources = LiferayWorkspaceUtil.getIndexSources(_project);
+
+		if (indexSources) {
+			_indexSourcesLabel.setText("");
+		}
+		else {
+			_indexSourcesLabel.setText(
+				"This dialog only works well when the property \"target.platform.index.sources\" is set to true");
+		}
+
 		_moduleNameHintLabel.setFont(UIUtil.getLabelFont(UIUtil.FontSize.SMALL));
 
 		// customize the presentation of a artifact
@@ -209,6 +219,7 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 			});
 	}
 
+	private JLabel _indexSourcesLabel;
 	private LiferayModuleExtBuilder _liferayModuleExtBuilder;
 	private JPanel _mainPanel;
 	private JLabel _moduleNameHintLabel;
