@@ -49,6 +49,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Terry Jia
  * @author Joye Luo
  */
+@SuppressWarnings("rawtypes")
 public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 
 	public LiferayWorkspaceBuilder(String liferayProjectType) {
@@ -68,6 +69,7 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 
 	@Nullable
 	@Override
+	@SuppressWarnings("unchecked")
 	public ModuleWizardStep modifySettingsStep(@NotNull SettingsStep settingsStep) {
 		JComboBox liferayVersionComboBox = new ComboBox();
 
@@ -126,7 +128,7 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 				if (_indexSources) {
 					customLabel.setText(
 						"This will cause all of the BOM artifacts jars and their java sources to be indexed by " +
-							"IntelliJ. Note: this process can slow down your IDE's project synchornization.");
+							"IntelliJ. Note: this process can slow down your project's synchronization.");
 				}
 				else {
 					customLabel.setText("");

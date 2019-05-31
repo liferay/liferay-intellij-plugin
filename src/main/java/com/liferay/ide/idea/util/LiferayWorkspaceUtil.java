@@ -63,18 +63,18 @@ public class LiferayWorkspaceUtil {
 	public static boolean getIndexSources(Project project) {
 		String result = "false";
 
-		VirtualFile projectRoot = getWorkspaceVirtualFile(project);
+		VirtualFile workspaceVirtualFile = getWorkspaceVirtualFile(project);
 
-		if (projectRoot != null) {
-			VirtualFile gradlePropertiesVirtualFile = projectRoot.findFileByRelativePath("/gradle.properties");
+		if (workspaceVirtualFile != null) {
+			VirtualFile gradlePropertiesVirtualFile = workspaceVirtualFile.findFileByRelativePath("/gradle.properties");
 
 			if (gradlePropertiesVirtualFile != null) {
-				Properties props = new Properties();
+				Properties properties = new Properties();
 
 				try {
-					props.load(gradlePropertiesVirtualFile.getInputStream());
+					properties.load(gradlePropertiesVirtualFile.getInputStream());
 
-					result = props.getProperty(WorkspaceConstants.DEFAULT_TARGET_PLATFORM_INDEX_SOURCES_PROPERTY);
+					result = properties.getProperty(WorkspaceConstants.DEFAULT_TARGET_PLATFORM_INDEX_SOURCES_PROPERTY);
 				}
 				catch (IOException ioe) {
 				}

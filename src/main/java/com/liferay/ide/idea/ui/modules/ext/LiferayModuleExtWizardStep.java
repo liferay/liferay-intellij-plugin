@@ -72,7 +72,7 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 		}
 		else {
 			_indexSourcesLabel.setText(
-				"This dialog only works well when the property \"target.platform.index.sources\" is set to true");
+				"This feature only works when the property \"target.platform.index.sources\" is set to true.");
 		}
 
 		_moduleNameHintLabel.setFont(UIUtil.getLabelFont(UIUtil.FontSize.SMALL));
