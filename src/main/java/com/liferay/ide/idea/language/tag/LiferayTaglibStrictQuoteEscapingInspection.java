@@ -88,18 +88,16 @@ public class LiferayTaglibStrictQuoteEscapingInspection extends XmlSuppressableI
 							jspExpression -> PsiTreeUtil.getChildrenOfType(jspExpression, JspXmlText.class)
 						).filter(
 							Objects::nonNull
+						).flatMap(
+							Arrays::stream
+						).map(
+							CompositeElement::getText
+						).filter(
+							LiferayTaglibStrictQuoteEscapingInspection::_containsUnescapedQuotes
 						).forEach(
-							jspXmlTexts -> Arrays.stream(
-								jspXmlTexts
-							).map(
-								CompositeElement::getText
-							).filter(
-								LiferayTaglibStrictQuoteEscapingInspection::_containsUnescapedQuotes
-							).forEach(
-								text -> problemsHolder.registerProblem(
-									valueElement, _PROBLEM_DESCRIPTION, ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
-									new UseSingleQuotesFix())
-							)
+							text -> problemsHolder.registerProblem(
+								xmlAttributeValue, _PROBLEM_DESCRIPTION, ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
+								new UseSingleQuotesFix())
 						);
 					}
 				}
