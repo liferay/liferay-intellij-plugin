@@ -40,9 +40,9 @@ public class LiferayTaglibStringConcatInspectionTest extends LightCodeInsightFix
 		myFixture.configureByFiles("view.jsp", "liferay-aui.tld");
 		myFixture.checkHighlighting();
 
-		List<IntentionAction> allQuickFixes = myFixture.getAllQuickFixes();
+		List<IntentionAction> allQuickFixeIntentionActions = myFixture.getAllQuickFixes();
 
-		for (IntentionAction quickFix : allQuickFixes) {
+		for (IntentionAction quickFix : allQuickFixeIntentionActions) {
 			if ("Wrap in JSP expression".equals(quickFix.getFamilyName())) {
 				myFixture.launchAction(quickFix);
 			}

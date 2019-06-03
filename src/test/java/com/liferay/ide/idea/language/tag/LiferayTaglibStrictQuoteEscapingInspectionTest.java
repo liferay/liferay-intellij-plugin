@@ -40,11 +40,11 @@ public class LiferayTaglibStrictQuoteEscapingInspectionTest extends LightCodeIns
 		myFixture.configureByFiles("view.jsp", "liferay-ui.tld");
 		myFixture.checkHighlighting();
 
-		List<IntentionAction> allQuickFixes = myFixture.getAllQuickFixes();
+		List<IntentionAction> allQuickFixeIntentionActions = myFixture.getAllQuickFixes();
 
-		for (IntentionAction quickFix : allQuickFixes) {
-			if ("Use single quotes".equals(quickFix.getFamilyName())) {
-				myFixture.launchAction(quickFix);
+		for (IntentionAction quickFixIntentionAction : allQuickFixeIntentionActions) {
+			if ("Use single quotes".equals(quickFixIntentionAction.getFamilyName())) {
+				myFixture.launchAction(quickFixIntentionAction);
 			}
 		}
 

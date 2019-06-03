@@ -200,9 +200,9 @@ public class LiferayTaglibStringConcatInspection extends XmlSuppressableInspecti
 
 			boolean firstChild = true;
 
-			for (PsiElement child : xmlAttributeValue.getChildren()) {
-				if (child instanceof XmlToken) {
-					XmlToken xmlToken = (XmlToken)child;
+			for (PsiElement childPsiElement : xmlAttributeValue.getChildren()) {
+				if (childPsiElement instanceof XmlToken) {
+					XmlToken xmlToken = (XmlToken)childPsiElement;
 
 					if (XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN.equals(xmlToken.getTokenType())) {
 						String text = xmlToken.getText();
@@ -222,8 +222,8 @@ public class LiferayTaglibStringConcatInspection extends XmlSuppressableInspecti
 						firstChild = false;
 					}
 				}
-				else if (child instanceof JspExpression) {
-					JspExpression jspExpression = (JspExpression)child;
+				else if (childPsiElement instanceof JspExpression) {
+					JspExpression jspExpression = (JspExpression)childPsiElement;
 
 					JspXmlText jspXmlText = PsiTreeUtil.getChildOfType(jspExpression, JspXmlText.class);
 
