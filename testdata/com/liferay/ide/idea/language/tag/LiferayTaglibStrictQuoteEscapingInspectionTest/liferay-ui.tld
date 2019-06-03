@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+
+<taglib
+	version="2.1"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+>
+	<description>Provides the Liferay UI component tags, prefixed with <![CDATA[<code>liferay-ui:</code>]]>.</description>
+	<tlib-version>1.0</tlib-version>
+	<short-name>liferay-ui</short-name>
+	<uri>http://liferay.com/tld/ui</uri>
+	<tag>
+		<description>Creates a message to display to the user.</description>
+		<name>message</name>
+		<tag-class>com.liferay.taglib.ui.MessageTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<description>Arguments for the language key, if the language key is configured to recieve arguments.</description>
+			<name>arguments</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Whether to escape the language key value so that it is safe to use in HTML.</description>
+			<name>escape</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<name>escapeAttribute</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description>The name of a language key from which to derive the message to be displayed.</description>
+			<name>key</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Whether to translate the language key value into the user's language. The default value is <![CDATA[<code>true</code>]]>.</description>
+			<name>localizeKey</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description>Whether to translate the arguments into the user's language. The default value is <![CDATA[<code>true</code>]]>.</description>
+			<name>translateArguments</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<name>unicode</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+	</tag>
+</taglib>

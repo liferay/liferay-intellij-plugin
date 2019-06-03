@@ -1,0 +1,312 @@
+<?xml version="1.0"?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
+	<description><![CDATA[Provides the AUI component tags, prefixed with <code>aui:</code>.]]></description>
+	<tlib-version>1.0</tlib-version>
+	<short-name>aui</short-name>
+	<uri>http://liferay.com/tld/aui</uri>
+	<tag>
+		<description><![CDATA[Creates a configurable input component.]]></description>
+		<name>input</name>
+		<tag-class>com.liferay.taglib.aui.InputTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<description><![CDATA[Whether to focus on the input component by default.]]></description>
+			<name>autoFocus</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Whether to autosize the input component.]]></description>
+			<name>autoSize</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[A bean to associate with the input component.]]></description>
+			<name>bean</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.Object</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Whether to reload the page when the value of the input changes. The default value is <code>false</code>.]]></description>
+			<name>changesContext</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Whether to select the input. Note that this attribute is only enabled when <code>type</code> is <code>radio</code> or <code>checkbox</code>.]]></description>
+			<name>checked</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The primary key for the instance of the class. The default value is <code>0</code>.]]></description>
+			<name>classPK</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>long</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The primary key for the class type. The default value is <code>-1</code>.]]></description>
+			<name>classTypePK</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>long</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[A CSS class for styling the component.]]></description>
+			<name>cssClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Miscellaneous data to be stored via a map. For example, the <code>HashMap&lt;"class-name", foo&gt;</code> would render as the attribute <code>data-class-name = foo;</code>.]]></description>
+			<name>data</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.Object</type>
+		</attribute>
+		<attribute>
+			<name>dateTogglerCheckboxLabel</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The default language ID for the component.]]></description>
+			<name>defaultLanguageId</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Whether the component is disabled. The default value is <code>false</code>.]]></description>
+			<name>disabled</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<name>field</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[A variable name to refer to the <code>field</code> of the component.]]></description>
+			<name>fieldParam</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Whether the input component should be the first element of the form.]]></description>
+			<name>first</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[A name for the form.]]></description>
+			<name>formName</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Text to display as a help tooltip on mouse over of the component's help icon.]]></description>
+			<name>helpMessage</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[A CSS class for styling the help message text. The default value is <code>input-group-addon</code>.]]></description>
+			<name>helpTextCssClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[An ID for the component instance.]]></description>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Whether to ignore the value saved from the request object. The default value is <code>false</code>.]]></description>
+			<name>ignoreRequestValue</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Whether to align the input's field with the next element in the form. The default value is <code>false</code>.]]></description>
+			<name>inlineField</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The input label's text alignment. Possible values are <code>right</code> and <code>left</code>.]]></description>
+			<name>inlineLabel</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[A label for the input component. If not assigned a value, the label is automatically taken from the <code>name</code> attribute's value.]]></description>
+			<name>label</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>languageId</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Whether the component should be the last element of the form.]]></description>
+			<name>last</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Whether to translate the component's text features into the user's language. The default value is <code>false</code>.]]></description>
+			<name>localized</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Whether to translate the label's text into the user's language. The default value is <code>true</code>.]]></description>
+			<name>localizeLabel</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The maximum value for the input if its <code>type</code> is <code>number</code> or <code>range</code>. Note that the max value is inclusive if the input's <code>type</code> is <code>range</code>.]]></description>
+			<name>max</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.Object</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The minimum value for the input if its <code>type</code> is <code>number</code> or <code>range</code>. Note that the min value is inclusive if the input's <code>type</code> is <code>range</code>.]]></description>
+			<name>min</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.Object</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[A class for the bean object.]]></description>
+			<name>model</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.Class</type>
+		</attribute>
+		<attribute>
+			<name>multiple</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[A name for the component. If the name contains <code>--</code>, the generated name will be the substring following the <code>--</code>, excluding the last two characters and any prefixes. For example, the pattern <code>prefix--customName--</code> would result in the name <code>customName</code>. If the <code>id</code> is not provided and the <code>type</code> is given, the name is used as the <code>id</code>.]]></description>
+			<name>name</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[A function to be called when the input's value changes.]]></description>
+			<name>onChange</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[A function to be called on a user clicking the input.]]></description>
+			<name>onClick</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Placeholder text for the input's field.]]></description>
+			<name>placeholder</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Text to display before the input.]]></description>
+			<name>prefix</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Whether to mark the input as required.]]></description>
+			<name>required</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Whether to make the input's field resizeable, if the input is of type <code>textarea</code>.]]></description>
+			<name>resizable</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Whether to show the input's required label, if an input value is required.]]></description>
+			<name>showRequiredLabel</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Text to display after the input.]]></description>
+			<name>suffix</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[A title for the input.]]></description>
+			<name>title</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The input's type. Possible values are <code>text</code>, <code>hidden</code>, <code>assetCategories</code>, <code>assetTags</code>, <code>textarea</code>, <code>timeZone</code>, <code>password</code>, <code>checkbox</code>, <code>radio</code>, <code>submit</code>, <code>button</code>, <code>color</code>, <code>email</code>, <code>number</code>, <code>range</code>, <code>resource</code>, <code>url</code>, and an empty value. If an empty value or no value is set, the input's type is obtained automatically from the input component's bean.]]></description>
+			<name>type</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Whether to use the default portlet namespace, to avoid name conflicts. The default value is <code>true</code>.]]></description>
+			<name>useNamespace</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[A value for the input.]]></description>
+			<name>value</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.lang.Object</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Whether to wrap the input component in a <code>div</code>, that can be styled. The default value is <code>false</code>. If the <code>wrapperCssClass</code> attribute is configured, the value is set automatically to <code>true</code>.]]></description>
+			<name>wrappedField</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[A CSS class for styling the <code>div</code> that wraps the input component.]]></description>
+			<name>wrapperCssClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
+	</tag>
+</taglib>
