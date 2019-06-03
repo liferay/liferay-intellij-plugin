@@ -59,13 +59,13 @@ public class LiferayTaglibStrictQuoteEscapingInspection extends XmlSuppressableI
 
 			@Override
 			public void visitXmlAttribute(XmlAttribute xmlAttribute) {
-				XmlAttributeValue valueElement = xmlAttribute.getValueElement();
+				XmlAttributeValue xmlAttributeValue = xmlAttribute.getValueElement();
 
-				if (valueElement == null) {
+				if (xmlAttributeValue == null) {
 					return;
 				}
 
-				if (_isDoubleQuoted(valueElement.getText())) {
+				if (_isDoubleQuoted(xmlAttributeValue.getText())) {
 					XmlTag xmlTag = PsiTreeUtil.getParentOfType(xmlAttribute, XmlTag.class);
 
 					if (xmlTag == null) {
@@ -76,7 +76,7 @@ public class LiferayTaglibStrictQuoteEscapingInspection extends XmlSuppressableI
 
 					if (xmlElementDescriptor instanceof CustomTagDescriptorBase) {
 						JspExpression[] jspExpressions = PsiTreeUtil.getChildrenOfType(
-							valueElement, JspExpression.class);
+							xmlAttributeValue, JspExpression.class);
 
 						if (jspExpressions == null) {
 							return;
