@@ -64,24 +64,27 @@ public class LiferayTaglibStringConcatInspection extends XmlSuppressableInspecti
 
 			@Override
 			public void visitXmlAttribute(XmlAttribute xmlAttribute) {
-				if (xmlAttribute.getValueElement() != null) {
-					XmlTag xmlTag = PsiTreeUtil.getParentOfType(xmlAttribute, XmlTag.class);
+				if (xmlAttribute.getValueElement() == null) {
+					return;
+				}
 
-					if (xmlTag != null) {
-						XmlElementDescriptor xmlElementDescriptor = xmlTag.getDescriptor();
+				XmlTag xmlTag = PsiTreeUtil.getParentOfType(xmlAttribute, XmlTag.class);
 
-						if (xmlElementDescriptor instanceof CustomTagDescriptorBase) {
-							CustomTagDescriptorBase customTagDescriptorBase =
-								(CustomTagDescriptorBase)xmlElementDescriptor;
+				if (xmlTag == null) {
+					return;
+				}
 
-							if (_isRuntimeExpressionAttribute(customTagDescriptorBase, xmlAttribute.getName())) {
-								if (_containsTextAndJspExpressions(xmlAttribute.getValueElement())) {
-									problemsHolder.registerProblem(
-										xmlAttribute.getValueElement(),
-										"JSP expessions and string values cannot be concatenated inside the attribute",
-										ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new WrapInJSpExpression());
-								}
-							}
+				XmlElementDescriptor xmlElementDescriptor = xmlTag.getDescriptor();
+
+				if (xmlElementDescriptor instanceof CustomTagDescriptorBase) {
+					CustomTagDescriptorBase customTagDescriptorBase = (CustomTagDescriptorBase)xmlElementDescriptor;
+
+					if (_isRuntimeExpressionAttribute(customTagDescriptorBase, xmlAttribute.getName())) {
+						if (_containsTextAndJspExpressions(xmlAttribute.getValueElement())) {
+							problemsHolder.registerProblem(
+								xmlAttribute.getValueElement(),
+								"JSP expessions and string values cannot be concatenated inside the attribute",
+								ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new WrapInJSpExpression());
 						}
 					}
 				}
@@ -173,77 +176,80 @@ public class LiferayTaglibStringConcatInspection extends XmlSuppressableInspecti
 
 			JspFile jspFile = JspPsiUtil.getJspFile(psiElement);
 
-			if (jspFile != null) {
-				XmlAttributeValue xmlAttributeValue = (XmlAttributeValue)psiElement;
+			if (jspFile == null) {
+				return;
+			}
 
-				TextRange textRange = psiElement.getTextRange();
+			XmlAttributeValue xmlAttributeValue = (XmlAttributeValue)psiElement;
 
-				PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(project);
+			TextRange textRange = psiElement.getTextRange();
 
-				Document document = psiDocumentManager.getDocument(jspFile);
+			PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(project);
 
-				if (document != null) {
-					psiDocumentManager.doPostponedOperationsAndUnblockDocument(document);
+			Document document = psiDocumentManager.getDocument(jspFile);
 
-					StringBuilder stringBuilder = new StringBuilder();
+			if (document == null) {
+				return;
+			}
 
-					stringBuilder.append("'<%=");
+			psiDocumentManager.doPostponedOperationsAndUnblockDocument(document);
 
-					boolean firstChild = true;
+			StringBuilder stringBuilder = new StringBuilder();
 
-					for (PsiElement child : xmlAttributeValue.getChildren()) {
-						if (child instanceof XmlToken) {
-							XmlToken xmlToken = (XmlToken)child;
+			stringBuilder.append("'<%=");
 
-							if (XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN.equals(xmlToken.getTokenType())) {
-								String text = xmlToken.getText();
+			boolean firstChild = true;
 
-								if (!firstChild) {
-									stringBuilder.append(" + ");
-								}
+			for (PsiElement child : xmlAttributeValue.getChildren()) {
+				if (child instanceof XmlToken) {
+					XmlToken xmlToken = (XmlToken)child;
 
-								stringBuilder.append(
-									"\""
-								).append(
-									text
-								).append(
-									"\""
-								);
+					if (XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN.equals(xmlToken.getTokenType())) {
+						String text = xmlToken.getText();
 
-								firstChild = false;
-							}
+						if (!firstChild) {
+							stringBuilder.append(" + ");
 						}
-						else if (child instanceof JspExpression) {
-							JspExpression jspExpression = (JspExpression)child;
 
-							JspXmlText jspXmlText = PsiTreeUtil.getChildOfType(jspExpression, JspXmlText.class);
+						stringBuilder.append(
+							"\""
+						).append(
+							text
+						).append(
+							"\""
+						);
 
-							if (jspXmlText != null) {
-								if (!firstChild) {
-									stringBuilder.append(" + ");
-								}
-
-								stringBuilder.append(
-									"("
-								).append(
-									jspXmlText.getText()
-								).append(
-									")"
-								);
-
-								firstChild = false;
-							}
-						}
+						firstChild = false;
 					}
+				}
+				else if (child instanceof JspExpression) {
+					JspExpression jspExpression = (JspExpression)child;
 
-					stringBuilder.append("%>'");
+					JspXmlText jspXmlText = PsiTreeUtil.getChildOfType(jspExpression, JspXmlText.class);
 
-					document.replaceString(
-						textRange.getStartOffset(), textRange.getEndOffset(), stringBuilder.toString());
+					if (jspXmlText != null) {
+						if (!firstChild) {
+							stringBuilder.append(" + ");
+						}
 
-					psiDocumentManager.commitDocument(document);
+						stringBuilder.append(
+							"("
+						).append(
+							jspXmlText.getText()
+						).append(
+							")"
+						);
+
+						firstChild = false;
+					}
 				}
 			}
+
+			stringBuilder.append("%>'");
+
+			document.replaceString(textRange.getStartOffset(), textRange.getEndOffset(), stringBuilder.toString());
+
+			psiDocumentManager.commitDocument(document);
 		}
 
 		@Nls(capitalization = Nls.Capitalization.Sentence)
