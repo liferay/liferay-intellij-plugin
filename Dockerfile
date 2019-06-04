@@ -6,4 +6,4 @@ COPY . /src
 
 WORKDIR /src
 
-CMD ["./gradlew", "clean", "publishPlugin"]
+CMD ["./gradlew", "clean", "test", "publishPlugin"]
