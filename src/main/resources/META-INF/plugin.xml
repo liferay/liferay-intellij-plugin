@@ -37,6 +37,7 @@
 				<li>INTELLIJ-71 add option of index sources on new Liferay Workspace wizard</li>
 				<li>INTELLIJ-68 better support for service builder xml editor(community contribution)</li>
 				<li>INTELLIJ-70 better support for jsd editor(community contribution)</li>
+				<li>Updated embedded blade cli to 3.7.0</li>
 			</ul>
 			<li>1.4.0</li>
 			<ul>
