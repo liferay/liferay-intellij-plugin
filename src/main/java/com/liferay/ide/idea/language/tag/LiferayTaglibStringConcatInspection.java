@@ -137,16 +137,16 @@ public class LiferayTaglibStringConcatInspection extends XmlSuppressableInspecti
 	}
 
 	private static boolean _isRuntimeExpressionAttribute(XmlElementDescriptor xmlElementDescriptor, String name) {
-		XmlTag declaration = (XmlTag)xmlElementDescriptor.getDeclaration();
+		XmlTag declarationXmlTag = (XmlTag)xmlElementDescriptor.getDeclaration();
 
-		if (declaration != null) {
-			XmlTag[] attributes = declaration.findSubTags("attribute");
+		if (declarationXmlTag != null) {
+			XmlTag[] attributeXmlTags = declarationXmlTag.findSubTags("attribute");
 
-			for (XmlTag attribute : attributes) {
-				String attributeName = attribute.getSubTagText("name");
+			for (XmlTag attributeXmlTag : attributeXmlTags) {
+				String attributeName = attributeXmlTag.getSubTagText("name");
 
 				if (name.equals(attributeName)) {
-					String rtexprvalue = attribute.getSubTagText("rtexprvalue");
+					String rtexprvalue = attributeXmlTag.getSubTagText("rtexprvalue");
 
 					return "true".equals(rtexprvalue);
 				}
