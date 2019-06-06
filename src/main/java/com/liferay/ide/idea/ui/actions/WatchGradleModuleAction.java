@@ -83,6 +83,14 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
 		}
 		catch (IOException ioe) {
 		}
+
+		File file = new File(projectDir.getCanonicalPath());
+
+		File installedBundleIdFile = new File(file, "build/installedBundleId");
+
+		if (installedBundleIdFile.exists()) {
+			installedBundleIdFile.delete();
+		}
 	}
 
 	@Override
