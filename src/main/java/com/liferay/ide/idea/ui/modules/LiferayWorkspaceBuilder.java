@@ -79,6 +79,14 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 
 		settingsStep.addSettingsField("Liferay version:", liferayVersionComboBox);
 
+		JCheckBox enableTargetPlatformCheckBox = new JCheckBox();
+
+		enableTargetPlatformCheckBox.setSelected(_enableTargetPlatform);
+
+		if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_GRADLE_WORKSPACE)) {
+			settingsStep.addSettingsField("Enable target platform:", enableTargetPlatformCheckBox);
+		}
+
 		JComboBox targetPlatformComboBox = new ComboBox();
 
 		for (String targetPlatformVersion : WorkspaceConstants.TARGET_PLATFORM_VERSIONS_7_2) {
@@ -135,6 +143,14 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 				}
 			});
 
+		enableTargetPlatformCheckBox.addActionListener(
+			e -> {
+				_enableTargetPlatform = enableTargetPlatformCheckBox.isSelected();
+
+				targetPlatformComboBox.setEnabled(_enableTargetPlatform);
+				indexSourcesCheckBox.setEnabled(_enableTargetPlatform);
+			});
+
 		if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_GRADLE_WORKSPACE)) {
 			settingsStep.addSettingsField("Index Sources:", indexSourcesCheckBox);
 			settingsStep.addSettingsField("", customLabel);
@@ -176,7 +192,7 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 
 		BladeCLI.execute(sb.toString());
 
-		if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_GRADLE_WORKSPACE)) {
+		if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_GRADLE_WORKSPACE) && _enableTargetPlatform) {
 			try {
 				PropertiesConfiguration config = new PropertiesConfiguration(
 					new File(project.getBasePath(), "gradle.properties"));
@@ -191,6 +207,7 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 		}
 	}
 
+	private boolean _enableTargetPlatform = true;
 	private boolean _indexSources = false;
 	private String _liferayProjectType;
 	private String _liferayVersion = WorkspaceConstants.LIFERAY_VERSIONS[0];

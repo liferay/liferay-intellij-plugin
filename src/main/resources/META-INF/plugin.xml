@@ -31,6 +31,10 @@
 	</p>
 	<p>
 		<ul>
+			<li>1.5.1</li>
+			<ul>
+				<li>INTELLIJ-72 add option of enable target platform on new Liferay Workspace wizard</li>
+			</ul>
 			<li>1.5.0</li>
 			<ul>
 				<li>INTELLIJ-69 add support for Liferay Portal CE and DXP 7.2</li>
