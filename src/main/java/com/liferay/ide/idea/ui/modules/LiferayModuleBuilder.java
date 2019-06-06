@@ -120,6 +120,9 @@ public class LiferayModuleBuilder extends ModuleBuilder {
 		sb.append("-d \"");
 		sb.append(moduleParentDir.getPath());
 		sb.append("\" ");
+		sb.append("--base \"");
+		sb.append(project.getProjectFilePath());
+		sb.append("\" ");
 
 		String typeId = liferayProjectType.getId();
 		boolean mavenModule = false;
