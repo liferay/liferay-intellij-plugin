@@ -19,8 +19,6 @@ import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.codeInspection.XmlSuppressableInspectionTool;
-import com.intellij.jsp.impl.CustomTagDescriptorBase;
-import com.intellij.jsp.impl.CustomTagDescriptorBaseImpl;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
@@ -42,12 +40,7 @@ import com.intellij.xml.XmlElementDescriptor;
 
 import com.liferay.ide.idea.util.LiferayInspectionsConstants;
 
-import java.lang.reflect.Field;
-
 import java.util.Arrays;
-import java.util.List;
-
-import javax.servlet.jsp.tagext.TagAttributeInfo;
 
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -76,10 +69,8 @@ public class LiferayTaglibStringConcatInspection extends XmlSuppressableInspecti
 
 				XmlElementDescriptor xmlElementDescriptor = xmlTag.getDescriptor();
 
-				if (xmlElementDescriptor instanceof CustomTagDescriptorBase) {
-					CustomTagDescriptorBase customTagDescriptorBase = (CustomTagDescriptorBase)xmlElementDescriptor;
-
-					if (_isRuntimeExpressionAttribute(customTagDescriptorBase, xmlAttribute.getName())) {
+				if (xmlElementDescriptor != null) {
+					if (_isRuntimeExpressionAttribute(xmlElementDescriptor, xmlAttribute.getName())) {
 						if (_containsTextAndJspExpressions(xmlAttribute.getValueElement())) {
 							problemsHolder.registerProblem(
 								xmlAttribute.getValueElement(),
@@ -145,24 +136,21 @@ public class LiferayTaglibStringConcatInspection extends XmlSuppressableInspecti
 		return false;
 	}
 
-	@SuppressWarnings("unchecked")
-	private static boolean _isRuntimeExpressionAttribute(CustomTagDescriptorBase customTagDescriptorBase, String name) {
-		try {
-			Field myTLDAttributesField = CustomTagDescriptorBaseImpl.class.getDeclaredField("myTLDAttributes");
+	private static boolean _isRuntimeExpressionAttribute(XmlElementDescriptor xmlElementDescriptor, String name) {
+		XmlTag declaration = (XmlTag)xmlElementDescriptor.getDeclaration();
 
-			myTLDAttributesField.setAccessible(true);
+		if (declaration != null) {
+			XmlTag[] attributes = declaration.findSubTags("attribute");
 
-			List<TagAttributeInfo> tagAttributeInfos = (List<TagAttributeInfo>)myTLDAttributesField.get(
-				customTagDescriptorBase);
+			for (XmlTag attribute : attributes) {
+				String attributeName = attribute.getSubTagText("name");
 
-			for (TagAttributeInfo tagAttributeInfo : tagAttributeInfos) {
-				if (name.equals(tagAttributeInfo.getName())) {
-					return tagAttributeInfo.canBeRequestTime();
+				if (name.equals(attributeName)) {
+					String rtexprvalue = attribute.getSubTagText("rtexprvalue");
+
+					return "true".equals(rtexprvalue);
 				}
 			}
-		}
-		catch (IllegalAccessException | NoSuchFieldException e) {
-			e.printStackTrace();
 		}
 
 		return false;
