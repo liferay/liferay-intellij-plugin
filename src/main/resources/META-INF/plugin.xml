@@ -34,13 +34,16 @@
 			<li>1.5.1</li>
 			<ul>
 				<li>INTELLIJ-72 add option of enable target platform on new Liferay Workspace wizard</li>
+				<li>INTELLIJ-63 bug fix for project dependencies</li>
+				<li>INTELLIJ-66 bug fix for watch feature</li>
+				<li>INTELLIJ-63 bug fix for INTELLIJ-70(community contribution)</li>
 			</ul>
 			<li>1.5.0</li>
 			<ul>
 				<li>INTELLIJ-69 add support for Liferay Portal CE and DXP 7.2</li>
 				<li>INTELLIJ-71 add option of index sources on new Liferay Workspace wizard</li>
 				<li>INTELLIJ-68 better support for service builder xml editor(community contribution)</li>
-				<li>INTELLIJ-70 better support for jsd editor(community contribution)</li>
+				<li>INTELLIJ-70 better support for jsp editor(community contribution)</li>
 				<li>Updated embedded blade cli to 3.7.0</li>
 			</ul>
 			<li>1.4.0</li>
