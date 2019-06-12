@@ -30,13 +30,12 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.XmlElementVisitor;
 import com.intellij.psi.impl.source.jsp.jspXml.JspExpression;
-import com.intellij.psi.impl.source.jsp.jspXml.JspXmlText;
-import com.intellij.psi.impl.source.tree.CompositeElement;
 import com.intellij.psi.jsp.JspFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
+import com.intellij.psi.xml.XmlText;
 import com.intellij.xml.XmlElementDescriptor;
 
 import com.liferay.ide.idea.util.LiferayInspectionsConstants;
@@ -85,13 +84,13 @@ public class LiferayTaglibStrictQuoteEscapingInspection extends XmlSuppressableI
 						Arrays.stream(
 							jspExpressions
 						).map(
-							jspExpression -> PsiTreeUtil.getChildrenOfType(jspExpression, JspXmlText.class)
+							jspExpression -> PsiTreeUtil.getChildrenOfType(jspExpression, XmlText.class)
 						).filter(
 							Objects::nonNull
 						).flatMap(
 							Arrays::stream
 						).map(
-							CompositeElement::getText
+							XmlText::getText
 						).filter(
 							LiferayTaglibStrictQuoteEscapingInspection::_containsUnescapedQuotes
 						).forEach(

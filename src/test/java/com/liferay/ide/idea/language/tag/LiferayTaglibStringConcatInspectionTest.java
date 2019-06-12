@@ -52,6 +52,11 @@ public class LiferayTaglibStringConcatInspectionTest extends LightCodeInsightFix
 		myFixture.checkResultByFile("view_fixed.jsp");
 	}
 
+	public void testValidStringConcat() {
+		myFixture.configureByFiles("view_fixed.jsp", "liferay-aui.tld");
+		myFixture.checkHighlighting();
+	}
+
 	@NotNull
 	@Override
 	protected LightProjectDescriptor getProjectDescriptor() {
