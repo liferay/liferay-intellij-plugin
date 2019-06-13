@@ -14,6 +14,5 @@ jobs:
   - task: PublishTestResults@2
     inputs:
       testResultsFormat: 'JUnit'
-      testResultsFiles: |-
-        */build/test-results/test/TEST-*.xml
+      testResultsFiles: build/test-results/test/TEST-*.xml
     condition: succeededOrFailed()
