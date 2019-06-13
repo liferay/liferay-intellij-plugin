@@ -1,0 +1,5 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="com.intellij">
+        <inspectionToolProvider implementation="com.liferay.ide.idea.language.tag.LiferayTaglibInspectionToolProvider"/>
+    </extensions>
+</idea-plugin>

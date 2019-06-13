@@ -52,6 +52,11 @@ public class LiferayTaglibStrictQuoteEscapingInspectionTest extends LightCodeIns
 		myFixture.checkResultByFile("view_fixed.jsp");
 	}
 
+	public void testValidStrictQuoteEscaping() {
+		myFixture.configureByFiles("view_fixed.jsp", "liferay-ui.tld");
+		myFixture.checkHighlighting();
+	}
+
 	@NotNull
 	@Override
 	protected LightProjectDescriptor getProjectDescriptor() {
