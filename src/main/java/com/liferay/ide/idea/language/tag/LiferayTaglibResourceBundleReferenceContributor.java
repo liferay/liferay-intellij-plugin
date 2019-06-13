@@ -22,7 +22,7 @@ import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.xml.util.XmlUtil;
 
-import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -46,10 +46,10 @@ public class LiferayTaglibResourceBundleReferenceContributor extends PsiReferenc
 
 		_taglibAttributes.forEach(
 			(key, value) -> {
-				Stream<SimpleImmutableEntry<String, String>> stream = value.stream();
+				Stream<AbstractMap.SimpleImmutableEntry<String, String>> stream = value.stream();
 
 				stream.map(
-					SimpleImmutableEntry::getValue
+					AbstractMap.SimpleImmutableEntry::getValue
 				).forEach(
 					attributeNames::add
 				);
@@ -61,147 +61,168 @@ public class LiferayTaglibResourceBundleReferenceContributor extends PsiReferenc
 	}
 
 	@SuppressWarnings("serial")
-	private static Map<String, Collection<SimpleImmutableEntry<String, String>>> _taglibAttributes =
-		new HashMap<String, Collection<SimpleImmutableEntry<String, String>>>() {
+	private static Map<String, Collection<AbstractMap.SimpleImmutableEntry<String, String>>> _taglibAttributes =
+		new HashMap<String, Collection<AbstractMap.SimpleImmutableEntry<String, String>>>() {
 			{
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_ASSET,
 					Arrays.asList(
-						new SimpleImmutableEntry<>("asset-addon-entry-selector", "title"),
-						new SimpleImmutableEntry<>("asset-metadata", "metadataField"),
-						new SimpleImmutableEntry<>("asset-tags-summary", "message")));
+						new AbstractMap.SimpleImmutableEntry<>("asset-addon-entry-selector", "title"),
+						new AbstractMap.SimpleImmutableEntry<>("asset-metadata", "metadataField"),
+						new AbstractMap.SimpleImmutableEntry<>("asset-tags-summary", "message")));
 
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI,
 					Arrays.asList(
-						new SimpleImmutableEntry<>("a", "title"), new SimpleImmutableEntry<>("a", "label"),
-						new SimpleImmutableEntry<>("button", "value"),
-						new SimpleImmutableEntry<>("field-wrapper", "helpMessage"),
-						new SimpleImmutableEntry<>("field-wrapper", "label"),
-						new SimpleImmutableEntry<>("fieldset", "helpMessage"),
-						new SimpleImmutableEntry<>("fieldset", "label"), new SimpleImmutableEntry<>("icon", "label"),
-						new SimpleImmutableEntry<>("input", "helpMessage"),
-						new SimpleImmutableEntry<>("input", "label"), new SimpleImmutableEntry<>("input", "labelOff"),
-						new SimpleImmutableEntry<>("input", "labelOn"), new SimpleImmutableEntry<>("input", "title"),
-						new SimpleImmutableEntry<>("input", "placeholder"),
-						new SimpleImmutableEntry<>("input", "prefix"), new SimpleImmutableEntry<>("input", "suffix"),
-						new SimpleImmutableEntry<>("nav-bar", "selectedItemName"),
-						new SimpleImmutableEntry<>("nav-item", "label"),
-						new SimpleImmutableEntry<>("nav-item", "title"), new SimpleImmutableEntry<>("option", "label"),
-						new SimpleImmutableEntry<>("panel", "label"), new SimpleImmutableEntry<>("select", "label"),
-						new SimpleImmutableEntry<>("select", "helpMessage"),
-						new SimpleImmutableEntry<>("select", "prefix"), new SimpleImmutableEntry<>("select", "suffix"),
-						new SimpleImmutableEntry<>("select", "title"),
-						new SimpleImmutableEntry<>("validator", "errorMessage"),
-						new SimpleImmutableEntry<>("workflow-status", "helpMessage"),
-						new SimpleImmutableEntry<>("workflow-status", "statusMessage")));
+						new AbstractMap.SimpleImmutableEntry<>("a", "title"),
+						new AbstractMap.SimpleImmutableEntry<>("a", "label"),
+						new AbstractMap.SimpleImmutableEntry<>("button", "value"),
+						new AbstractMap.SimpleImmutableEntry<>("field-wrapper", "helpMessage"),
+						new AbstractMap.SimpleImmutableEntry<>("field-wrapper", "label"),
+						new AbstractMap.SimpleImmutableEntry<>("fieldset", "helpMessage"),
+						new AbstractMap.SimpleImmutableEntry<>("fieldset", "label"),
+						new AbstractMap.SimpleImmutableEntry<>("icon", "label"),
+						new AbstractMap.SimpleImmutableEntry<>("input", "helpMessage"),
+						new AbstractMap.SimpleImmutableEntry<>("input", "label"),
+						new AbstractMap.SimpleImmutableEntry<>("input", "labelOff"),
+						new AbstractMap.SimpleImmutableEntry<>("input", "labelOn"),
+						new AbstractMap.SimpleImmutableEntry<>("input", "title"),
+						new AbstractMap.SimpleImmutableEntry<>("input", "placeholder"),
+						new AbstractMap.SimpleImmutableEntry<>("input", "prefix"),
+						new AbstractMap.SimpleImmutableEntry<>("input", "suffix"),
+						new AbstractMap.SimpleImmutableEntry<>("nav-bar", "selectedItemName"),
+						new AbstractMap.SimpleImmutableEntry<>("nav-item", "label"),
+						new AbstractMap.SimpleImmutableEntry<>("nav-item", "title"),
+						new AbstractMap.SimpleImmutableEntry<>("option", "label"),
+						new AbstractMap.SimpleImmutableEntry<>("panel", "label"),
+						new AbstractMap.SimpleImmutableEntry<>("select", "label"),
+						new AbstractMap.SimpleImmutableEntry<>("select", "helpMessage"),
+						new AbstractMap.SimpleImmutableEntry<>("select", "prefix"),
+						new AbstractMap.SimpleImmutableEntry<>("select", "suffix"),
+						new AbstractMap.SimpleImmutableEntry<>("select", "title"),
+						new AbstractMap.SimpleImmutableEntry<>("validator", "errorMessage"),
+						new AbstractMap.SimpleImmutableEntry<>("workflow-status", "helpMessage"),
+						new AbstractMap.SimpleImmutableEntry<>("workflow-status", "statusMessage")));
 
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI_OLD,
 					Arrays.asList(
-						new SimpleImmutableEntry<>("a", "title"), new SimpleImmutableEntry<>("a", "label"),
-						new SimpleImmutableEntry<>("button", "value"),
-						new SimpleImmutableEntry<>("field-wrapper", "helpMessage"),
-						new SimpleImmutableEntry<>("field-wrapper", "label"),
-						new SimpleImmutableEntry<>("fieldset", "helpMessage"),
-						new SimpleImmutableEntry<>("fieldset", "label"), new SimpleImmutableEntry<>("icon", "label"),
-						new SimpleImmutableEntry<>("input", "helpMessage"),
-						new SimpleImmutableEntry<>("input", "label"), new SimpleImmutableEntry<>("input", "labelOff"),
-						new SimpleImmutableEntry<>("input", "labelOn"), new SimpleImmutableEntry<>("input", "title"),
-						new SimpleImmutableEntry<>("input", "placeholder"),
-						new SimpleImmutableEntry<>("input", "prefix"), new SimpleImmutableEntry<>("input", "suffix"),
-						new SimpleImmutableEntry<>("nav-bar", "selectedItemName"),
-						new SimpleImmutableEntry<>("nav-item", "label"),
-						new SimpleImmutableEntry<>("nav-item", "title"), new SimpleImmutableEntry<>("option", "label"),
-						new SimpleImmutableEntry<>("panel", "label"), new SimpleImmutableEntry<>("select", "label"),
-						new SimpleImmutableEntry<>("select", "helpMessage"),
-						new SimpleImmutableEntry<>("select", "prefix"), new SimpleImmutableEntry<>("select", "suffix"),
-						new SimpleImmutableEntry<>("select", "title"),
-						new SimpleImmutableEntry<>("validator", "errorMessage"),
-						new SimpleImmutableEntry<>("workflow-status", "helpMessage"),
-						new SimpleImmutableEntry<>("workflow-status", "statusMessage")));
+						new AbstractMap.SimpleImmutableEntry<>("a", "title"),
+						new AbstractMap.SimpleImmutableEntry<>("a", "label"),
+						new AbstractMap.SimpleImmutableEntry<>("button", "value"),
+						new AbstractMap.SimpleImmutableEntry<>("field-wrapper", "helpMessage"),
+						new AbstractMap.SimpleImmutableEntry<>("field-wrapper", "label"),
+						new AbstractMap.SimpleImmutableEntry<>("fieldset", "helpMessage"),
+						new AbstractMap.SimpleImmutableEntry<>("fieldset", "label"),
+						new AbstractMap.SimpleImmutableEntry<>("icon", "label"),
+						new AbstractMap.SimpleImmutableEntry<>("input", "helpMessage"),
+						new AbstractMap.SimpleImmutableEntry<>("input", "label"),
+						new AbstractMap.SimpleImmutableEntry<>("input", "labelOff"),
+						new AbstractMap.SimpleImmutableEntry<>("input", "labelOn"),
+						new AbstractMap.SimpleImmutableEntry<>("input", "title"),
+						new AbstractMap.SimpleImmutableEntry<>("input", "placeholder"),
+						new AbstractMap.SimpleImmutableEntry<>("input", "prefix"),
+						new AbstractMap.SimpleImmutableEntry<>("input", "suffix"),
+						new AbstractMap.SimpleImmutableEntry<>("nav-bar", "selectedItemName"),
+						new AbstractMap.SimpleImmutableEntry<>("nav-item", "label"),
+						new AbstractMap.SimpleImmutableEntry<>("nav-item", "title"),
+						new AbstractMap.SimpleImmutableEntry<>("option", "label"),
+						new AbstractMap.SimpleImmutableEntry<>("panel", "label"),
+						new AbstractMap.SimpleImmutableEntry<>("select", "label"),
+						new AbstractMap.SimpleImmutableEntry<>("select", "helpMessage"),
+						new AbstractMap.SimpleImmutableEntry<>("select", "prefix"),
+						new AbstractMap.SimpleImmutableEntry<>("select", "suffix"),
+						new AbstractMap.SimpleImmutableEntry<>("select", "title"),
+						new AbstractMap.SimpleImmutableEntry<>("validator", "errorMessage"),
+						new AbstractMap.SimpleImmutableEntry<>("workflow-status", "helpMessage"),
+						new AbstractMap.SimpleImmutableEntry<>("workflow-status", "statusMessage")));
 
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_DDM,
-					Arrays.asList(new SimpleImmutableEntry<>("template-selector", "label")));
+					Arrays.asList(new AbstractMap.SimpleImmutableEntry<>("template-selector", "label")));
 
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_EXPANDO,
-					Arrays.asList(new SimpleImmutableEntry<>("custom-attribute", "name")));
+					Arrays.asList(new AbstractMap.SimpleImmutableEntry<>("custom-attribute", "name")));
 
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_FRONTEND,
 					Arrays.asList(
-						new SimpleImmutableEntry<>("email-notification-settings", "bodyLabel"),
-						new SimpleImmutableEntry<>("email-notification-settings", "helpMessage"),
-						new SimpleImmutableEntry<>("management-bar-button", "label"),
-						new SimpleImmutableEntry<>("management-bar-filter", "label")));
+						new AbstractMap.SimpleImmutableEntry<>("email-notification-settings", "bodyLabel"),
+						new AbstractMap.SimpleImmutableEntry<>("email-notification-settings", "helpMessage"),
+						new AbstractMap.SimpleImmutableEntry<>("management-bar-button", "label"),
+						new AbstractMap.SimpleImmutableEntry<>("management-bar-filter", "label")));
 
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_SITE,
-					Arrays.asList(new SimpleImmutableEntry<>("site-browser", "emptyResultsMessage")));
+					Arrays.asList(new AbstractMap.SimpleImmutableEntry<>("site-browser", "emptyResultsMessage")));
 
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_STAGING,
 					Arrays.asList(
-						new SimpleImmutableEntry<>("checkbox", "description"),
-						new SimpleImmutableEntry<>("checkbox", "label"),
-						new SimpleImmutableEntry<>("checkbox", "popover"),
-						new SimpleImmutableEntry<>("checkbox", "suggestion"),
-						new SimpleImmutableEntry<>("checkbox", "warning"),
-						new SimpleImmutableEntry<>("popover", "text"), new SimpleImmutableEntry<>("popover", "title"),
-						new SimpleImmutableEntry<>("process-date", "labelKey"),
-						new SimpleImmutableEntry<>("process-list", "emptyResultsMessage"),
-						new SimpleImmutableEntry<>("radio", "description"),
-						new SimpleImmutableEntry<>("radio", "label"), new SimpleImmutableEntry<>("radio", "popover")));
+						new AbstractMap.SimpleImmutableEntry<>("checkbox", "description"),
+						new AbstractMap.SimpleImmutableEntry<>("checkbox", "label"),
+						new AbstractMap.SimpleImmutableEntry<>("checkbox", "popover"),
+						new AbstractMap.SimpleImmutableEntry<>("checkbox", "suggestion"),
+						new AbstractMap.SimpleImmutableEntry<>("checkbox", "warning"),
+						new AbstractMap.SimpleImmutableEntry<>("popover", "text"),
+						new AbstractMap.SimpleImmutableEntry<>("popover", "title"),
+						new AbstractMap.SimpleImmutableEntry<>("process-date", "labelKey"),
+						new AbstractMap.SimpleImmutableEntry<>("process-list", "emptyResultsMessage"),
+						new AbstractMap.SimpleImmutableEntry<>("radio", "description"),
+						new AbstractMap.SimpleImmutableEntry<>("radio", "label"),
+						new AbstractMap.SimpleImmutableEntry<>("radio", "popover")));
 
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_TRASH,
 					Arrays.asList(
-						new SimpleImmutableEntry<>("empty", "confirmMessage"),
-						new SimpleImmutableEntry<>("empty", "emptyMessage"),
-						new SimpleImmutableEntry<>("empty", "infoMessage")));
+						new AbstractMap.SimpleImmutableEntry<>("empty", "confirmMessage"),
+						new AbstractMap.SimpleImmutableEntry<>("empty", "emptyMessage"),
+						new AbstractMap.SimpleImmutableEntry<>("empty", "infoMessage")));
 
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_UI,
 					Arrays.asList(
-						new SimpleImmutableEntry<>("app-view-search-entry", "containerType"),
-						new SimpleImmutableEntry<>("alert", "message"),
-						new SimpleImmutableEntry<>("asset-addon-entry-selector", "title"),
-						new SimpleImmutableEntry<>("asset-metadata", "metadataField"),
-						new SimpleImmutableEntry<>("asset-tags-summary", "message"),
-						new SimpleImmutableEntry<>("custom-attribute", "name"),
-						new SimpleImmutableEntry<>("diff-html", "infoMessage"),
-						new SimpleImmutableEntry<>("drop-here-info", "message"),
-						new SimpleImmutableEntry<>("empty-result-message", "message"),
-						new SimpleImmutableEntry<>("error", "message"),
-						new SimpleImmutableEntry<>("form-navigator", "categoryLabels"),
-						new SimpleImmutableEntry<>("form-navigator", "categorySectionLabels"),
-						new SimpleImmutableEntry<>("header", "backLabel"),
-						new SimpleImmutableEntry<>("header", "title"), new SimpleImmutableEntry<>("icon", "message"),
-						new SimpleImmutableEntry<>("icon-delete", "confirmation"),
-						new SimpleImmutableEntry<>("icon-delete", "message"),
-						new SimpleImmutableEntry<>("icon-help", "message"),
-						new SimpleImmutableEntry<>("icon-menu", "message"),
-						new SimpleImmutableEntry<>("input-field", "placeholder"),
-						new SimpleImmutableEntry<>("input-localized", "helpMessaage"),
-						new SimpleImmutableEntry<>("input-localized", "placeholder"),
-						new SimpleImmutableEntry<>("input-resource", "title"),
-						new SimpleImmutableEntry<>("input-move-boxes", "leftTitle"),
-						new SimpleImmutableEntry<>("input-move-boxes", "rightTitle"),
-						new SimpleImmutableEntry<>("input-resource", "title"),
-						new SimpleImmutableEntry<>("message", "key"),
-						new SimpleImmutableEntry<>("panel", "helpMessage"),
-						new SimpleImmutableEntry<>("panel", "title"), new SimpleImmutableEntry<>("progress", "message"),
-						new SimpleImmutableEntry<>("quick-access-entry", "label"),
-						new SimpleImmutableEntry<>("search-container", "emptyResultsMessage"),
-						new SimpleImmutableEntry<>("search-container", "headerNames"),
-						new SimpleImmutableEntry<>("search-container-column-button", "name"),
-						new SimpleImmutableEntry<>("search-container-column-date", "name"),
-						new SimpleImmutableEntry<>("search-container-column-text", "name"),
-						new SimpleImmutableEntry<>("search-toggle", "buttonLabel"),
-						new SimpleImmutableEntry<>("success", "message"), new SimpleImmutableEntry<>("tabs", "names"),
-						new SimpleImmutableEntry<>("upload-progress", "message")));
+						new AbstractMap.SimpleImmutableEntry<>("app-view-search-entry", "containerType"),
+						new AbstractMap.SimpleImmutableEntry<>("alert", "message"),
+						new AbstractMap.SimpleImmutableEntry<>("asset-addon-entry-selector", "title"),
+						new AbstractMap.SimpleImmutableEntry<>("asset-metadata", "metadataField"),
+						new AbstractMap.SimpleImmutableEntry<>("asset-tags-summary", "message"),
+						new AbstractMap.SimpleImmutableEntry<>("custom-attribute", "name"),
+						new AbstractMap.SimpleImmutableEntry<>("diff-html", "infoMessage"),
+						new AbstractMap.SimpleImmutableEntry<>("drop-here-info", "message"),
+						new AbstractMap.SimpleImmutableEntry<>("empty-result-message", "message"),
+						new AbstractMap.SimpleImmutableEntry<>("error", "message"),
+						new AbstractMap.SimpleImmutableEntry<>("form-navigator", "categoryLabels"),
+						new AbstractMap.SimpleImmutableEntry<>("form-navigator", "categorySectionLabels"),
+						new AbstractMap.SimpleImmutableEntry<>("header", "backLabel"),
+						new AbstractMap.SimpleImmutableEntry<>("header", "title"),
+						new AbstractMap.SimpleImmutableEntry<>("icon", "message"),
+						new AbstractMap.SimpleImmutableEntry<>("icon-delete", "confirmation"),
+						new AbstractMap.SimpleImmutableEntry<>("icon-delete", "message"),
+						new AbstractMap.SimpleImmutableEntry<>("icon-help", "message"),
+						new AbstractMap.SimpleImmutableEntry<>("icon-menu", "message"),
+						new AbstractMap.SimpleImmutableEntry<>("input-field", "placeholder"),
+						new AbstractMap.SimpleImmutableEntry<>("input-localized", "helpMessaage"),
+						new AbstractMap.SimpleImmutableEntry<>("input-localized", "placeholder"),
+						new AbstractMap.SimpleImmutableEntry<>("input-resource", "title"),
+						new AbstractMap.SimpleImmutableEntry<>("input-move-boxes", "leftTitle"),
+						new AbstractMap.SimpleImmutableEntry<>("input-move-boxes", "rightTitle"),
+						new AbstractMap.SimpleImmutableEntry<>("input-resource", "title"),
+						new AbstractMap.SimpleImmutableEntry<>("message", "key"),
+						new AbstractMap.SimpleImmutableEntry<>("panel", "helpMessage"),
+						new AbstractMap.SimpleImmutableEntry<>("panel", "title"),
+						new AbstractMap.SimpleImmutableEntry<>("progress", "message"),
+						new AbstractMap.SimpleImmutableEntry<>("quick-access-entry", "label"),
+						new AbstractMap.SimpleImmutableEntry<>("search-container", "emptyResultsMessage"),
+						new AbstractMap.SimpleImmutableEntry<>("search-container", "headerNames"),
+						new AbstractMap.SimpleImmutableEntry<>("search-container-column-button", "name"),
+						new AbstractMap.SimpleImmutableEntry<>("search-container-column-date", "name"),
+						new AbstractMap.SimpleImmutableEntry<>("search-container-column-text", "name"),
+						new AbstractMap.SimpleImmutableEntry<>("search-toggle", "buttonLabel"),
+						new AbstractMap.SimpleImmutableEntry<>("success", "message"),
+						new AbstractMap.SimpleImmutableEntry<>("tabs", "names"),
+						new AbstractMap.SimpleImmutableEntry<>("upload-progress", "message")));
 			}
 		};
 
@@ -225,9 +246,10 @@ public class LiferayTaglibResourceBundleReferenceContributor extends PsiReferenc
 						String attributeLocalName = xmlAttribute.getLocalName();
 						String tagLocalName = xmlTag.getLocalName();
 
-						Collection<SimpleImmutableEntry<String, String>> entries = _taglibAttributes.get(namespace);
+						Collection<AbstractMap.SimpleImmutableEntry<String, String>> entries = _taglibAttributes.get(
+							namespace);
 
-						Stream<SimpleImmutableEntry<String, String>> stream = entries.stream();
+						Stream<AbstractMap.SimpleImmutableEntry<String, String>> stream = entries.stream();
 
 						boolean anyMatch = stream.anyMatch(
 							entry -> {

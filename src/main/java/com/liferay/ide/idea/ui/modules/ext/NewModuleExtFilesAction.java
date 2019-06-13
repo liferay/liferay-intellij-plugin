@@ -40,6 +40,7 @@ import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
 import java.io.IOException;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -87,7 +88,7 @@ public class NewModuleExtFilesAction extends AnAction implements DumbAware {
 
 		for (VirtualFile contentRoot : moduleRootManager.getContentRoots()) {
 			for (VirtualFile child : contentRoot.getChildren()) {
-				if ("build.gradle".equals(child.getName()) && child.exists()) {
+				if (Objects.equals("build.gradle", child.getName()) && child.exists()) {
 					_gradleVirtualFile = child;
 					presentation.setEnabledAndVisible(true);
 

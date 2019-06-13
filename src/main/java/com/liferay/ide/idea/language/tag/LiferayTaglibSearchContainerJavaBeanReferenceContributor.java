@@ -16,7 +16,7 @@ package com.liferay.ide.idea.language.tag;
 
 import com.intellij.psi.PsiReferenceProvider;
 
-import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -39,25 +39,25 @@ public class LiferayTaglibSearchContainerJavaBeanReferenceContributor
 	}
 
 	@Override
-	protected Map<String, Collection<SimpleImmutableEntry<String, String>>> getTaglibAttributesMap() {
+	protected Map<String, Collection<AbstractMap.SimpleImmutableEntry<String, String>>> getTaglibAttributesMap() {
 		return _taglibAttributes;
 	}
 
 	@SuppressWarnings("serial")
-	private static Map<String, Collection<SimpleImmutableEntry<String, String>>> _taglibAttributes =
-		new HashMap<String, Collection<SimpleImmutableEntry<String, String>>>() {
+	private static Map<String, Collection<AbstractMap.SimpleImmutableEntry<String, String>>> _taglibAttributes =
+		new HashMap<String, Collection<AbstractMap.SimpleImmutableEntry<String, String>>>() {
 			{
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_UI,
 					Arrays.asList(
-						new SimpleImmutableEntry<>("search-container-column-text", "property"),
-						new SimpleImmutableEntry<>("search-container-column-text", "name"),
-						new SimpleImmutableEntry<>("search-container-column-text", "orderableProperty"),
-						new SimpleImmutableEntry<>("search-container-column-date", "property"),
-						new SimpleImmutableEntry<>("search-container-column-status", "property"),
-						new SimpleImmutableEntry<>("search-container-column-user", "property"),
-						new SimpleImmutableEntry<>("search-container-row", "keyProperty"),
-						new SimpleImmutableEntry<>("search-container-row", "rowIdProperty")));
+						new AbstractMap.SimpleImmutableEntry<>("search-container-column-text", "property"),
+						new AbstractMap.SimpleImmutableEntry<>("search-container-column-text", "name"),
+						new AbstractMap.SimpleImmutableEntry<>("search-container-column-text", "orderableProperty"),
+						new AbstractMap.SimpleImmutableEntry<>("search-container-column-date", "property"),
+						new AbstractMap.SimpleImmutableEntry<>("search-container-column-status", "property"),
+						new AbstractMap.SimpleImmutableEntry<>("search-container-column-user", "property"),
+						new AbstractMap.SimpleImmutableEntry<>("search-container-row", "keyProperty"),
+						new AbstractMap.SimpleImmutableEntry<>("search-container-row", "rowIdProperty")));
 			}
 		};
 

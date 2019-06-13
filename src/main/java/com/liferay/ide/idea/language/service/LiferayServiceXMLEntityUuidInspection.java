@@ -26,6 +26,7 @@ import com.intellij.psi.xml.XmlTag;
 import com.liferay.ide.idea.util.LiferayInspectionsConstants;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -46,7 +47,7 @@ public class LiferayServiceXMLEntityUuidInspection extends XmlSuppressableInspec
 				if (LiferayServiceXMLUtil.isEntityUuidAttribute(value)) {
 					String text = value.getValue();
 
-					if ("true".equals(text)) {
+					if (Objects.equals("true", text)) {
 						XmlTag xmlTag = PsiTreeUtil.getParentOfType(value, XmlTag.class);
 
 						if (xmlTag != null) {
@@ -58,7 +59,7 @@ public class LiferayServiceXMLEntityUuidInspection extends XmlSuppressableInspec
 								hasPrimaryColumn = Arrays.stream(
 									childXmlTags
 								).filter(
-									child -> "column".equals(child.getName())
+									child -> Objects.equals("column", child.getName())
 								).map(
 									primary -> primary.getAttributeValue("primary")
 								).anyMatch(

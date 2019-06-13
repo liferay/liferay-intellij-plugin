@@ -62,7 +62,11 @@ public class ComponentPropertiesPsiElementPatternCapture {
 						pair -> {
 							String name = pair.getName();
 
-							return name.equals("property");
+							if (name != null) {
+								return Objects.equals(name, "property");
+							}
+
+							return false;
 						}
 					).map(
 						pair -> PsiTreeUtil.getParentOfType(pair, PsiAnnotation.class)
@@ -70,10 +74,9 @@ public class ComponentPropertiesPsiElementPatternCapture {
 						Objects::nonNull
 					).map(
 						PsiAnnotation::getQualifiedName
-					).filter(
-						qualifiedName -> "org.osgi.service.component.annotations.Component".equals(qualifiedName)
-					).findFirst(
-					).isPresent();
+					).anyMatch(
+						"org.osgi.service.component.annotations.Component"::equals
+					);
 				}
 
 			});

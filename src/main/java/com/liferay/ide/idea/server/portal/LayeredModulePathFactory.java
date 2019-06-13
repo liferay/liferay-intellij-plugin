@@ -31,6 +31,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 
 /**
@@ -298,19 +299,12 @@ public class LayeredModulePathFactory {
 			_layersPath = _DEFAULT_LAYERS_PATH;
 			_addOnsPath = _DEFAULT_ADD_ONS_PATH;
 
-			boolean excludeBase = false;
-
 			String layersProp = (String)properties.get("layers");
 
 			layersProp = layersProp.trim();
 
-			if ((layersProp == null) || (layersProp.length() == 0)) {
-				if (excludeBase) {
-					_layers = Collections.emptyList();
-				}
-				else {
-					_layers = Collections.singletonList("base");
-				}
+			if (layersProp.length() == 0) {
+				_layers = Collections.singletonList("base");
 			}
 			else {
 				String[] layerNames = layersProp.split(",");
@@ -318,14 +312,14 @@ public class LayeredModulePathFactory {
 				boolean hasBase = false;
 
 				for (String layerName : layerNames) {
-					if ("base".equals(layerName)) {
+					if (Objects.equals("base", layerName)) {
 						hasBase = true;
 					}
 
 					_layers.add(layerName);
 				}
 
-				if (!hasBase && !excludeBase) {
+				if (!hasBase) {
 					_layers.add("base");
 				}
 			}

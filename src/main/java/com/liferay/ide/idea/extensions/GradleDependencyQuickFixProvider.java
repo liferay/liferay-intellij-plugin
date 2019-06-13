@@ -71,10 +71,6 @@ public class GradleDependencyQuickFixProvider extends UnresolvedReferenceQuickFi
 
 		PsiElement psiElement = psiJavaCodeReferenceElement.getElement();
 
-		TextRange textRange = psiJavaCodeReferenceElement.getRangeInElement();
-
-		String shortReferenceName = textRange.substring(psiElement.getText());
-
 		Project project = psiElement.getProject();
 
 		PsiFile containingPsiFile = psiElement.getContainingFile();
@@ -98,6 +94,10 @@ public class GradleDependencyQuickFixProvider extends UnresolvedReferenceQuickFi
 		if (currentModule == null) {
 			return;
 		}
+
+		TextRange textRange = psiJavaCodeReferenceElement.getRangeInElement();
+
+		String shortReferenceName = textRange.substring(psiElement.getText());
 
 		PsiShortNamesCache psiShortNamesCache = PsiShortNamesCache.getInstance(project);
 
@@ -206,7 +206,9 @@ public class GradleDependencyQuickFixProvider extends UnresolvedReferenceQuickFi
 			qualifiedName = psiJavaCodeReferenceElement.getQualifiedName();
 		}
 		else if (containingFile instanceof PsiJavaFile) {
-			PsiImportList psiImports = ((PsiJavaFile)containingFile).getImportList();
+			PsiJavaFile psiJavaFile = (PsiJavaFile)containingFile;
+
+			PsiImportList psiImports = psiJavaFile.getImportList();
 
 			if (psiImports != null) {
 				PsiImportStatementBase psiImportStatementBase = psiImports.findSingleImportStatement(

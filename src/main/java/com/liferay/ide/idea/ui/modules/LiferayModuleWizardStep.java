@@ -27,6 +27,8 @@ import com.liferay.ide.idea.util.BladeCLI;
 import com.liferay.ide.idea.util.CoreUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
 
+import java.util.Objects;
+
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -65,7 +67,9 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 
 				String type = lastPathComponent.toString();
 
-				if ("theme-contributor".equals(type) || "theme".equals(type) || "layout-template".equals(type)) {
+				if (Objects.equals("theme-contributor", type) || Objects.equals("theme", type) ||
+					Objects.equals("layout-template", type)) {
+
 					_packageName.setEditable(false);
 					_packageName.setEnabled(false);
 					_className.setEditable(false);
@@ -73,7 +77,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 					_servcieName.setEnabled(false);
 					_servcieName.setEditable(false);
 				}
-				else if ("service-builder".equals(type)) {
+				else if (Objects.equals("service-builder", type)) {
 					_packageName.setEditable(true);
 					_packageName.setEnabled(true);
 					_className.setEditable(false);
@@ -81,7 +85,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 					_servcieName.setEnabled(false);
 					_servcieName.setEditable(false);
 				}
-				else if ("service".equals(type)) {
+				else if (Objects.equals("service", type)) {
 					_packageName.setEditable(true);
 					_packageName.setEnabled(true);
 					_className.setEditable(true);
@@ -89,7 +93,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 					_servcieName.setEnabled(true);
 					_servcieName.setEditable(true);
 				}
-				else if ("service-wrapper".equals(type)) {
+				else if (Objects.equals("service-wrapper", type)) {
 					_packageName.setEditable(true);
 					_packageName.setEnabled(true);
 					_className.setEditable(true);
@@ -116,8 +120,8 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 		String liferayVersion = LiferayWorkspaceUtil.getLiferayVersion(_project);
 
 		for (String type : BladeCLI.getProjectTemplates()) {
-			if ("fragment".equals(type) || "modules-ext".equals(type) ||
-				("7.0".equals(liferayVersion) && "social-bookmark".equals(type))) {
+			if (Objects.equals("fragment", type) || Objects.equals("modules-ext", type) ||
+				(Objects.equals("7.0", liferayVersion) && Objects.equals("social-bookmark", type))) {
 
 				continue;
 			}
@@ -161,9 +165,8 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 		if (selectedType != null) {
 			return selectedType.toString();
 		}
-		else {
-			return null;
-		}
+
+		return null;
 	}
 
 	public String getServiceName() {

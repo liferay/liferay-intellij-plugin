@@ -27,6 +27,7 @@ import com.liferay.ide.idea.util.LiferayInspectionsConstants;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -47,7 +48,7 @@ public class LiferayServiceXMLPrimaryKeyColumnInspection extends XmlSuppressable
 				if (LiferayServiceXMLUtil.isColumnPrimaryAttribute(value)) {
 					String text = value.getValue();
 
-					if ("true".equals(text)) {
+					if (Objects.equals("true", text)) {
 						XmlTag xmlTag = PsiTreeUtil.getParentOfType(value, XmlTag.class);
 
 						if (xmlTag != null) {

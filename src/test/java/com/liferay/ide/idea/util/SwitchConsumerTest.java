@@ -14,8 +14,6 @@
 
 package com.liferay.ide.idea.util;
 
-import com.liferay.ide.idea.util.SwitchConsumer.SwitchConsumerBuilder;
-
 import java.util.stream.Stream;
 
 import org.junit.Assert;
@@ -31,7 +29,7 @@ public class SwitchConsumerTest {
 	public void testSwitchConsumerBuilder() throws Exception {
 		StringBuilder output = new StringBuilder();
 
-		SwitchConsumerBuilder<String> switch_ = SwitchConsumer.newBuilder();
+		SwitchConsumer.SwitchConsumerBuilder<String> switch_ = SwitchConsumer.newBuilder();
 
 		SwitchConsumer<String> switchConsumer = switch_.addCase(
 			s -> s.equals("foo"), s -> output.append("case1 " + s + "\n")

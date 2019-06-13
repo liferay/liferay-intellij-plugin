@@ -53,11 +53,11 @@ public class EntryDescription {
 	}
 
 	public Icon getIconFor() {
-		Icon icon = AllIcons.FileTypes.Unknown;
-
 		if (_virtualFile.isDirectory()) {
 			return AllIcons.Nodes.Folder;
 		}
+
+		Icon icon = AllIcons.FileTypes.Unknown;
 
 		String fileExtension = _virtualFile.getExtension();
 

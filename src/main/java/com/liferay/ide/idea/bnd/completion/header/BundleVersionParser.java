@@ -43,7 +43,9 @@ public class BundleVersionParser extends StandardHeaderParser {
 				new Version(value.getUnwrappedText());
 			}
 			catch (IllegalArgumentException iae) {
-				TextRange range = ((HeaderValuePart)value).getHighlightingRange();
+				HeaderValuePart headerValuePart = (HeaderValuePart)value;
+
+				TextRange range = headerValuePart.getHighlightingRange();
 
 				annotationHolder.createErrorAnnotation(range, iae.getMessage());
 

@@ -39,25 +39,25 @@ public class LiferayServiceXMLUtil {
 		).map(
 			xmlAttribute -> (XmlAttribute)xmlAttribute
 		).filter(
-			xmlAttribute -> "name".equals(xmlAttribute.getLocalName())
+			xmlAttribute -> Objects.equals("name", xmlAttribute.getLocalName())
 		).map(
 			XmlAttribute::getParent
 		).filter(
 			Objects::nonNull
 		).filter(
-			parentTag -> "column".equals(parentTag.getLocalName())
+			parentTag -> Objects.equals("column", parentTag.getLocalName())
 		).map(
 			XmlTagChild::getParentTag
 		).filter(
 			Objects::nonNull
 		).filter(
-			grandParentTag -> "entity".equals(grandParentTag.getLocalName())
+			grandParentTag -> Objects.equals("entity", grandParentTag.getLocalName())
 		).map(
 			XmlTagChild::getParentTag
 		).filter(
 			Objects::nonNull
 		).anyMatch(
-			grandParentTag -> "service-builder".equals(grandParentTag.getLocalName())
+			grandParentTag -> Objects.equals("service-builder", grandParentTag.getLocalName())
 		);
 	}
 
@@ -71,25 +71,25 @@ public class LiferayServiceXMLUtil {
 		).map(
 			xmlAttribute -> (XmlAttribute)xmlAttribute
 		).filter(
-			xmlAttribute -> "primary".equals(xmlAttribute.getLocalName())
+			xmlAttribute -> Objects.equals("primary", xmlAttribute.getLocalName())
 		).map(
 			XmlAttribute::getParent
 		).filter(
 			Objects::nonNull
 		).filter(
-			parentTag -> "column".equals(parentTag.getLocalName())
+			parentTag -> Objects.equals("column", parentTag.getLocalName())
 		).map(
 			XmlTagChild::getParentTag
 		).filter(
 			Objects::nonNull
 		).filter(
-			grandParentTag -> "entity".equals(grandParentTag.getLocalName())
+			grandParentTag -> Objects.equals("entity", grandParentTag.getLocalName())
 		).map(
 			XmlTagChild::getParentTag
 		).filter(
 			Objects::nonNull
 		).anyMatch(
-			grandParentTag -> "service-builder".equals(grandParentTag.getLocalName())
+			grandParentTag -> Objects.equals("service-builder", grandParentTag.getLocalName())
 		);
 	}
 
@@ -103,19 +103,19 @@ public class LiferayServiceXMLUtil {
 		).map(
 			xmlAttribute -> (XmlAttribute)xmlAttribute
 		).filter(
-			xmlAttribute -> "name".equals(xmlAttribute.getLocalName())
+			xmlAttribute -> Objects.equals("name", xmlAttribute.getLocalName())
 		).map(
 			XmlAttribute::getParent
 		).filter(
 			Objects::nonNull
 		).filter(
-			parentTag -> "entity".equals(parentTag.getLocalName())
+			parentTag -> Objects.equals("entity", parentTag.getLocalName())
 		).map(
 			XmlTagChild::getParentTag
 		).filter(
 			Objects::nonNull
 		).anyMatch(
-			grandParentTag -> "service-builder".equals(grandParentTag.getLocalName())
+			grandParentTag -> Objects.equals("service-builder", grandParentTag.getLocalName())
 		);
 	}
 
@@ -129,19 +129,19 @@ public class LiferayServiceXMLUtil {
 		).map(
 			xmlAttribute -> (XmlAttribute)xmlAttribute
 		).filter(
-			xmlAttribute -> "uuid".equals(xmlAttribute.getLocalName())
+			xmlAttribute -> Objects.equals("uuid", xmlAttribute.getLocalName())
 		).map(
 			XmlAttribute::getParent
 		).filter(
 			Objects::nonNull
 		).filter(
-			parentTag -> "entity".equals(parentTag.getLocalName())
+			parentTag -> Objects.equals("entity", parentTag.getLocalName())
 		).map(
 			XmlTagChild::getParentTag
 		).filter(
 			Objects::nonNull
 		).anyMatch(
-			grandParentTag -> "service-builder".equals(grandParentTag.getLocalName())
+			grandParentTag -> Objects.equals("service-builder", grandParentTag.getLocalName())
 		);
 	}
 
@@ -153,51 +153,19 @@ public class LiferayServiceXMLUtil {
 		).filter(
 			Objects::nonNull
 		).filter(
-			parentTag -> "exception".equals(parentTag.getLocalName())
+			parentTag -> Objects.equals("exception", parentTag.getLocalName())
 		).map(
 			XmlTagChild::getParentTag
 		).filter(
 			Objects::nonNull
 		).filter(
-			grandParentTag -> "exceptions".equals(grandParentTag.getLocalName())
-		).map(
-			XmlTagChild::getParentTag
-		).filter(
-			Objects::nonNull
-		).anyMatch(
-			grandParentTag -> "service-builder".equals(grandParentTag.getLocalName())
-		);
-	}
-
-	public static boolean isFinderNameAttribute(@NotNull XmlAttributeValue xmlAttributeValue) {
-		return Stream.of(
-			xmlAttributeValue
-		).map(
-			XmlAttributeValue::getParent
-		).filter(
-			parent -> parent instanceof XmlAttribute
-		).map(
-			xmlAttribute -> (XmlAttribute)xmlAttribute
-		).filter(
-			xmlAttribute -> "name".equals(xmlAttribute.getLocalName())
-		).map(
-			XmlAttribute::getParent
-		).filter(
-			Objects::nonNull
-		).filter(
-			parentTag -> "finder".equals(parentTag.getLocalName())
-		).map(
-			XmlTagChild::getParentTag
-		).filter(
-			Objects::nonNull
-		).filter(
-			grandParentTag -> "entity".equals(grandParentTag.getLocalName())
+			grandParentTag -> Objects.equals("exceptions", grandParentTag.getLocalName())
 		).map(
 			XmlTagChild::getParentTag
 		).filter(
 			Objects::nonNull
 		).anyMatch(
-			grandParentTag -> "service-builder".equals(grandParentTag.getLocalName())
+			grandParentTag -> Objects.equals("service-builder", grandParentTag.getLocalName())
 		);
 	}
 
@@ -209,13 +177,45 @@ public class LiferayServiceXMLUtil {
 		).filter(
 			Objects::nonNull
 		).filter(
-			parentTag -> "namespace".equals(parentTag.getLocalName())
+			parentTag -> Objects.equals("namespace", parentTag.getLocalName())
 		).map(
 			XmlTagChild::getParentTag
 		).filter(
 			Objects::nonNull
 		).anyMatch(
-			grandParentTag -> "service-builder".equals(grandParentTag.getLocalName())
+			grandParentTag -> Objects.equals("service-builder", grandParentTag.getLocalName())
+		);
+	}
+
+	protected static boolean isFinderNameAttribute(@NotNull XmlAttributeValue xmlAttributeValue) {
+		return Stream.of(
+			xmlAttributeValue
+		).map(
+			XmlAttributeValue::getParent
+		).filter(
+			parent -> parent instanceof XmlAttribute
+		).map(
+			xmlAttribute -> (XmlAttribute)xmlAttribute
+		).filter(
+			xmlAttribute -> Objects.equals("name", xmlAttribute.getLocalName())
+		).map(
+			XmlAttribute::getParent
+		).filter(
+			Objects::nonNull
+		).filter(
+			parentTag -> Objects.equals("finder", parentTag.getLocalName())
+		).map(
+			XmlTagChild::getParentTag
+		).filter(
+			Objects::nonNull
+		).filter(
+			grandParentTag -> Objects.equals("entity", grandParentTag.getLocalName())
+		).map(
+			XmlTagChild::getParentTag
+		).filter(
+			Objects::nonNull
+		).anyMatch(
+			grandParentTag -> Objects.equals("service-builder", grandParentTag.getLocalName())
 		);
 	}
 

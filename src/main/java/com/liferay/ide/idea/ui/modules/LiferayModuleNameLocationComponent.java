@@ -34,6 +34,8 @@ import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
 
 import java.io.File;
 
+import java.util.Objects;
+
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
@@ -259,19 +261,18 @@ public class LiferayModuleNameLocationComponent {
 		if (wizardContext.isCreatingNewProject()) {
 			return namePathComponent.getPath();
 		}
-		else {
-			Project project = wizardContext.getProject();
 
-			assert project != null;
+		Project project = wizardContext.getProject();
 
-			VirtualFile baseDir = LiferayWorkspaceUtil.getWorkspaceVirtualFile(project);
+		assert project != null;
 
-			if (baseDir != null) {
-				return baseDir.getPath();
-			}
+		VirtualFile baseDir = LiferayWorkspaceUtil.getWorkspaceVirtualFile(project);
 
-			return "";
+		if (baseDir != null) {
+			return baseDir.getPath();
 		}
+
+		return "";
 	}
 
 	private String _getModuleContentRoot() {
@@ -300,9 +301,9 @@ public class LiferayModuleNameLocationComponent {
 		if (liferayModuleBuilder != null) {
 			String templateType = liferayModuleBuilder.getType();
 
-			if ("theme".equals(templateType) || "layout-template".equals(templateType) ||
-				"spring-mvc-portlet".equals(templateType) || "war-hook".equals(templateType) ||
-				"war-mvc-portlet".equals(templateType)) {
+			if (Objects.equals("theme", templateType) || Objects.equals("layout-template", templateType) ||
+				Objects.equals("spring-mvc-portlet", templateType) || Objects.equals("war-hook", templateType) ||
+				Objects.equals("war-mvc-portlet", templateType)) {
 
 				targetFolder = "wars";
 			}

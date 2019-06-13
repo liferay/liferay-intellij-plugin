@@ -25,6 +25,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.jetbrains.plugins.gradle.settings.GradleExtensionsSettings;
 import org.jetbrains.plugins.gradle.settings.GradleProjectSettings;
@@ -63,7 +64,7 @@ public class GradleUtil {
 					call -> {
 						GrExpression grExpression = call.getInvokedExpression();
 
-						return "dependencies".equals(grExpression.getText());
+						return Objects.equals("dependencies", grExpression.getText());
 					});
 
 				if (dependenciesBlock == null) {
@@ -117,8 +118,8 @@ public class GradleUtil {
 		}
 
 		for (GradleExtensionsSettings.GradleTask gradleTask : gradleExtensionsData.tasks) {
-			if ("watch".equals(gradleTask.name) &&
-				"com.liferay.gradle.plugins.tasks.WatchTask".equals(gradleTask.typeFqn)) {
+			if (Objects.equals("watch", gradleTask.name) &&
+				Objects.equals("com.liferay.gradle.plugins.tasks.WatchTask", gradleTask.typeFqn)) {
 
 				return true;
 			}

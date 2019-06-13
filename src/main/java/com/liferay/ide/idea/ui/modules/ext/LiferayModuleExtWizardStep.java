@@ -33,6 +33,7 @@ import java.awt.event.KeyEvent;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import javax.swing.ComboBoxEditor;
 import javax.swing.JComboBox;
@@ -101,7 +102,9 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 				@Override
 				public void setItem(Object item) {
 					if (item instanceof LibraryData) {
-						String text = ((LibraryData)item).getArtifactId();
+						LibraryData libraryData = (LibraryData)item;
+
+						String text = libraryData.getArtifactId();
 
 						if (!text.equals(editor.getText())) {
 							editor.setText(text);
@@ -119,7 +122,9 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 					Object item = event.getItem();
 
 					if (item instanceof LibraryData) {
-						_originalModuleVersionField.setText(((LibraryData)item).getVersion());
+						LibraryData libraryData = (LibraryData)item;
+
+						_originalModuleVersionField.setText(libraryData.getVersion());
 					}
 				}
 			});
@@ -213,7 +218,7 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 
 		_targetPlatformArtifacts.forEach(
 			artifact -> {
-				if ("com.liferay".equals(artifact.getGroupId())) {
+				if (Objects.equals("com.liferay", artifact.getGroupId())) {
 					_originalModuleNameComboBox.addItem(artifact);
 				}
 			});

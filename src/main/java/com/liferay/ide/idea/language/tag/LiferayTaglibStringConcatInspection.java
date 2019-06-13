@@ -41,6 +41,7 @@ import com.intellij.xml.XmlElementDescriptor;
 import com.liferay.ide.idea.util.LiferayInspectionsConstants;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -148,7 +149,7 @@ public class LiferayTaglibStringConcatInspection extends XmlSuppressableInspecti
 				if (name.equals(attributeName)) {
 					String rtexprvalue = attributeXmlTag.getSubTagText("rtexprvalue");
 
-					return "true".equals(rtexprvalue);
+					return Objects.equals("true", rtexprvalue);
 				}
 			}
 		}
@@ -168,10 +169,6 @@ public class LiferayTaglibStringConcatInspection extends XmlSuppressableInspecti
 				return;
 			}
 
-			XmlAttributeValue xmlAttributeValue = (XmlAttributeValue)psiElement;
-
-			TextRange textRange = psiElement.getTextRange();
-
 			PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(project);
 
 			Document document = psiDocumentManager.getDocument(jspFile);
@@ -187,6 +184,8 @@ public class LiferayTaglibStringConcatInspection extends XmlSuppressableInspecti
 			stringBuilder.append("'<%=");
 
 			boolean firstChild = true;
+
+			XmlAttributeValue xmlAttributeValue = (XmlAttributeValue)psiElement;
 
 			for (PsiElement childPsiElement : xmlAttributeValue.getChildren()) {
 				if (childPsiElement instanceof XmlToken) {
@@ -234,6 +233,8 @@ public class LiferayTaglibStringConcatInspection extends XmlSuppressableInspecti
 			}
 
 			stringBuilder.append("%>'");
+
+			TextRange textRange = psiElement.getTextRange();
 
 			document.replaceString(textRange.getStartOffset(), textRange.getEndOffset(), stringBuilder.toString());
 

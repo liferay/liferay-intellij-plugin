@@ -37,7 +37,6 @@ public class DeployGradleModuleAction extends AbstractLiferayGradleTaskAction {
 	@Override
 	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
 		Project project = anActionEvent.getProject();
-		VirtualFile virtualFile = getVirtualFile(anActionEvent);
 
 		VirtualFile baseDir = LiferayWorkspaceUtil.getWorkspaceVirtualFile(project);
 
@@ -46,6 +45,8 @@ public class DeployGradleModuleAction extends AbstractLiferayGradleTaskAction {
 		}
 
 		VirtualFile gradleFile = baseDir.findChild("build.gradle");
+
+		VirtualFile virtualFile = getVirtualFile(anActionEvent);
 
 		if ((virtualFile != null) && (gradleFile != null) &&
 			ProjectRootsUtil.isModuleContentRoot(virtualFile, project) && !baseDir.equals(virtualFile) &&

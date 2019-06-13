@@ -42,7 +42,9 @@ public class OsgiManifestHighlightingAnnotator implements Annotator {
 			PsiElement parentPsiElement = psiElement.getParent();
 
 			if (parentPsiElement instanceof AssignmentExpression) {
-				HeaderValuePart nameElement = ((AssignmentExpression)parentPsiElement).getNameElement();
+				AssignmentExpression assignmentExpression = (AssignmentExpression)parentPsiElement;
+
+				HeaderValuePart nameElement = assignmentExpression.getNameElement();
 
 				if (parentPsiElement instanceof Attribute) {
 					if (psiElement == nameElement) {
@@ -63,7 +65,9 @@ public class OsgiManifestHighlightingAnnotator implements Annotator {
 			}
 		}
 		else if (psiElement instanceof ManifestToken) {
-			ManifestTokenType type = ((ManifestToken)psiElement).getTokenType();
+			ManifestToken manifestToken = (ManifestToken)psiElement;
+
+			ManifestTokenType type = manifestToken.getTokenType();
 
 			if ((psiElement.getParent() instanceof Attribute) && (type == ManifestTokenType.EQUALS)) {
 				_annotate(psiElement, OsgiManifestColorsAndFonts.ATTRIBUTE_ASSIGNMENT_KEY, annotationHolder);

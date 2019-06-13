@@ -28,6 +28,7 @@ import com.intellij.testFramework.fixtures.DefaultLightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -43,7 +44,7 @@ public class LiferayTaglibStrictQuoteEscapingInspectionTest extends LightCodeIns
 		List<IntentionAction> allQuickFixeIntentionActions = myFixture.getAllQuickFixes();
 
 		for (IntentionAction quickFixIntentionAction : allQuickFixeIntentionActions) {
-			if ("Use single quotes".equals(quickFixIntentionAction.getFamilyName())) {
+			if (Objects.equals("Use single quotes", quickFixIntentionAction.getFamilyName())) {
 				myFixture.launchAction(quickFixIntentionAction);
 			}
 		}

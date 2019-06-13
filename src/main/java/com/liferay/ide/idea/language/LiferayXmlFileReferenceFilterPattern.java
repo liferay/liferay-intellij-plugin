@@ -23,7 +23,7 @@ import com.intellij.psi.xml.XmlElement;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.psi.xml.XmlText;
 
-import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -82,12 +82,12 @@ public class LiferayXmlFileReferenceFilterPattern extends FilterPattern {
 
 								String attributeLocalName = xmlAttribute.getLocalName();
 
-								SimpleImmutableEntry<String, String> pair = new SimpleImmutableEntry<>(
-									localName, attributeLocalName);
+								AbstractMap.SimpleImmutableEntry<String, String> pair =
+									new AbstractMap.SimpleImmutableEntry<>(localName, attributeLocalName);
 
 								if (_attributesMap.containsKey(namespace)) {
-									Collection<SimpleImmutableEntry<String, String>> pairs = _attributesMap.get(
-										namespace);
+									Collection<AbstractMap.SimpleImmutableEntry<String, String>> pairs =
+										_attributesMap.get(namespace);
 
 									if (pairs.contains(pair)) {
 										return true;
@@ -110,7 +110,8 @@ public class LiferayXmlFileReferenceFilterPattern extends FilterPattern {
 		};
 	}
 
-	private static final Map<String, Collection<SimpleImmutableEntry<String, String>>> _attributesMap = new HashMap<>();
+	private static final Map<String, Collection<AbstractMap.SimpleImmutableEntry<String, String>>> _attributesMap =
+		new HashMap<>();
 
 	private static final Map<String, Collection<String>> _tagsMap = new HashMap<String, Collection<String>>() {
 		{
@@ -152,7 +153,7 @@ public class LiferayXmlFileReferenceFilterPattern extends FilterPattern {
 					"footer-portlet-javascript", "icon", "user-notification-definitions"));
 			_attributesMap.put(
 				LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_RESOURCE_ACTION_MAPPING_7_0_0,
-				Arrays.asList(new SimpleImmutableEntry<>("resource", "file")));
+				Arrays.asList(new AbstractMap.SimpleImmutableEntry<>("resource", "file")));
 			_attributesMap.put(
 				LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_RESOURCE_ACTION_MAPPING_7_1_0,
 				_attributesMap.get(
@@ -160,7 +161,7 @@ public class LiferayXmlFileReferenceFilterPattern extends FilterPattern {
 
 			_attributesMap.put(
 				LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_SERVICE_BUILDER_7_0_0,
-				Arrays.asList(new SimpleImmutableEntry<>("service-builder-import", "file")));
+				Arrays.asList(new AbstractMap.SimpleImmutableEntry<>("service-builder-import", "file")));
 			_attributesMap.put(
 				LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_SERVICE_BUILDER_7_1_0,
 				_attributesMap.get(LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_SERVICE_BUILDER_7_0_0));

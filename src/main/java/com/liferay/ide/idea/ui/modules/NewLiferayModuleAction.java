@@ -102,7 +102,9 @@ public class NewLiferayModuleAction extends AnAction implements DumbAware {
 		ModifiableModuleModel model = moduleManager.getModifiableModel();
 
 		if (builder instanceof ModuleBuilder) {
-			module = ((ModuleBuilder)builder).commitModule(project, model);
+			ModuleBuilder moduleBuilder = (ModuleBuilder)builder;
+
+			module = moduleBuilder.commitModule(project, model);
 		}
 		else {
 			List<Module> modules = builder.commit(project, model, new DefaultModulesProvider(project));

@@ -16,7 +16,6 @@ package com.liferay.ide.idea.util;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -44,11 +43,11 @@ public class SwitchConsumer<T> implements Consumer<T> {
 
 	@Override
 	public void accept(T t) {
-		Set<Entry<Predicate<T>, Consumer<T>>> set = _cases.entrySet();
+		Set<Map.Entry<Predicate<T>, Consumer<T>>> set = _cases.entrySet();
 
-		Stream<Entry<Predicate<T>, Consumer<T>>> stream = set.stream();
+		Stream<Map.Entry<Predicate<T>, Consumer<T>>> stream = set.stream();
 
-		Optional<Entry<Predicate<T>, Consumer<T>>> matchingCase = stream.filter(
+		Optional<Map.Entry<Predicate<T>, Consumer<T>>> matchingCase = stream.filter(
 			e -> {
 				Predicate<T> predicate = e.getKey();
 
@@ -57,7 +56,7 @@ public class SwitchConsumer<T> implements Consumer<T> {
 		).findFirst();
 
 		if (matchingCase.isPresent()) {
-			Entry<Predicate<T>, Consumer<T>> value = matchingCase.get();
+			Map.Entry<Predicate<T>, Consumer<T>> value = matchingCase.get();
 
 			Consumer<T> consumer = value.getValue();
 

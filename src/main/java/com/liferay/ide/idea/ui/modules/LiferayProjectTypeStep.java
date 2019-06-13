@@ -204,7 +204,9 @@ public class LiferayProjectTypeStep extends ModuleWizardStep implements Disposab
 
 			@Override
 			protected String getElementText(Object element) {
-				return ((TemplatesGroup)element).getName();
+				TemplatesGroup templatesGroup = (TemplatesGroup)element;
+
+				return templatesGroup.getName();
 			}
 
 		};
@@ -609,7 +611,10 @@ public class LiferayProjectTypeStep extends ModuleWizardStep implements Disposab
 	}
 
 	private void _showCard(String card) {
-		((CardLayout)_optionsPanel.getLayout()).show(_optionsPanel, card);
+		CardLayout cardLayout = (CardLayout)_optionsPanel.getLayout();
+
+		cardLayout.show(_optionsPanel, card);
+
 		_currentCard = card;
 	}
 
