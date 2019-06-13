@@ -15,5 +15,5 @@ jobs:
     inputs:
       testResultsFormat: 'JUnit'
       testResultsFiles: |-
-        */build/test-results/etest/TEST-*.xml
+        */build/test-results/test/TEST-*.xml
     condition: succeededOrFailed()
