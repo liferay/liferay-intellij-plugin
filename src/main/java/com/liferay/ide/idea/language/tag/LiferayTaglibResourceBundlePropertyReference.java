@@ -50,11 +50,19 @@ public class LiferayTaglibResourceBundlePropertyReference extends PropertyRefere
 			).filter(
 				result -> result instanceof PsiElementResolveResult
 			).map(
-				result -> ((PsiElementResolveResult)result).getElement()
+				result -> {
+					PsiElementResolveResult psiElementResolveResult = (PsiElementResolveResult)result;
+
+					return psiElementResolveResult.getElement();
+				}
 			).filter(
 				psiElement -> psiElement instanceof IProperty
 			).map(
-				psiElement -> ((IProperty)psiElement).getPropertiesFile()
+				psiElement -> {
+					IProperty property = (IProperty)psiElement;
+
+					return property.getPropertiesFile();
+				}
 			).anyMatch(
 				LiferayTaglibResourceBundlePropertyReference::_isLanguageFile
 			)

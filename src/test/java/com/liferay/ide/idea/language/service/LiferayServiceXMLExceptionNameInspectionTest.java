@@ -18,6 +18,7 @@ import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Dominik Marks
@@ -32,7 +33,7 @@ public class LiferayServiceXMLExceptionNameInspectionTest extends LightCodeInsig
 		List<IntentionAction> allQuickFixes = myFixture.getAllQuickFixes();
 
 		for (IntentionAction quickFix : allQuickFixes) {
-			if ("Remove Exception suffix".equals(quickFix.getFamilyName())) {
+			if (Objects.equals("Remove Exception suffix", quickFix.getFamilyName())) {
 				myFixture.launchAction(quickFix);
 			}
 		}

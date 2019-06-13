@@ -24,7 +24,7 @@ import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.xml.util.XmlUtil;
 
-import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -59,194 +59,200 @@ public class LiferayTaglibCSSClassAttributeReferenceContributor extends PsiRefer
 		"wrapperCssClass");
 
 	@SuppressWarnings("serial")
-	private static Map<String, Collection<SimpleImmutableEntry<String, String>>> _taglibAttributes =
-		new HashMap<String, Collection<SimpleImmutableEntry<String, String>>>() {
+	private static Map<String, Collection<AbstractMap.SimpleImmutableEntry<String, String>>> _taglibAttributes =
+		new HashMap<String, Collection<AbstractMap.SimpleImmutableEntry<String, String>>>() {
 			{
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_ADAPTIVE_MEDIA_IMAGE,
-					Arrays.asList(new SimpleImmutableEntry<>("img", "class")));
+					Arrays.asList(new AbstractMap.SimpleImmutableEntry<>("img", "class")));
 
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI,
 					Arrays.asList(
-						new SimpleImmutableEntry<>("a", "cssClass"), new SimpleImmutableEntry<>("a", "iconCssClass"),
-						new SimpleImmutableEntry<>("alert", "cssClass"),
-						new SimpleImmutableEntry<>("button", "cssClass"),
-						new SimpleImmutableEntry<>("button-row", "cssClass"),
-						new SimpleImmutableEntry<>("col", "cssClass"),
-						new SimpleImmutableEntry<>("container", "cssClass"),
-						new SimpleImmutableEntry<>("field-wrapper", "cssClass"),
-						new SimpleImmutableEntry<>("fieldset", "cssClass"),
-						new SimpleImmutableEntry<>("form", "cssClass"), new SimpleImmutableEntry<>("icon", "cssClass"),
-						new SimpleImmutableEntry<>("input", "cssClass"),
-						new SimpleImmutableEntry<>("input", "helpTextCssClass"),
-						new SimpleImmutableEntry<>("input", "wrapperCssClass"),
-						new SimpleImmutableEntry<>("nav", "cssClass"),
-						new SimpleImmutableEntry<>("nav-bar", "cssClass"),
-						new SimpleImmutableEntry<>("nav-bar-search", "cssClass"),
-						new SimpleImmutableEntry<>("nav-item", "anchorCssClass"),
-						new SimpleImmutableEntry<>("nav-item", "cssClass"),
-						new SimpleImmutableEntry<>("nav-item", "iconCssClass"),
-						new SimpleImmutableEntry<>("option", "cssClass"), new SimpleImmutableEntry<>("row", "cssClass"),
-						new SimpleImmutableEntry<>("select", "cssClass"),
-						new SimpleImmutableEntry<>("select", "wrapperCssClass")));
+						new AbstractMap.SimpleImmutableEntry<>("a", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("a", "iconCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("alert", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("button", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("button-row", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("col", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("container", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("field-wrapper", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("fieldset", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("form", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("icon", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("input", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("input", "helpTextCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("input", "wrapperCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("nav", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("nav-bar", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("nav-bar-search", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("nav-item", "anchorCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("nav-item", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("nav-item", "iconCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("option", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("row", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("select", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("select", "wrapperCssClass")));
 
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI_OLD,
 					Arrays.asList(
-						new SimpleImmutableEntry<>("a", "cssClass"), new SimpleImmutableEntry<>("a", "iconCssClass"),
-						new SimpleImmutableEntry<>("alert", "cssClass"),
-						new SimpleImmutableEntry<>("button", "cssClass"),
-						new SimpleImmutableEntry<>("button-row", "cssClass"),
-						new SimpleImmutableEntry<>("col", "cssClass"),
-						new SimpleImmutableEntry<>("container", "cssClass"),
-						new SimpleImmutableEntry<>("field-wrapper", "cssClass"),
-						new SimpleImmutableEntry<>("fieldset", "cssClass"),
-						new SimpleImmutableEntry<>("form", "cssClass"), new SimpleImmutableEntry<>("icon", "cssClass"),
-						new SimpleImmutableEntry<>("input", "cssClass"),
-						new SimpleImmutableEntry<>("input", "helpTextCssClass"),
-						new SimpleImmutableEntry<>("input", "wrapperCssClass"),
-						new SimpleImmutableEntry<>("nav", "cssClass"),
-						new SimpleImmutableEntry<>("nav-bar", "cssClass"),
-						new SimpleImmutableEntry<>("nav-bar-search", "cssClass"),
-						new SimpleImmutableEntry<>("nav-item", "anchorCssClass"),
-						new SimpleImmutableEntry<>("nav-item", "cssClass"),
-						new SimpleImmutableEntry<>("nav-item", "iconCssClass"),
-						new SimpleImmutableEntry<>("option", "cssClass"), new SimpleImmutableEntry<>("row", "cssClass"),
-						new SimpleImmutableEntry<>("select", "cssClass"),
-						new SimpleImmutableEntry<>("select", "wrapperCssClass")));
+						new AbstractMap.SimpleImmutableEntry<>("a", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("a", "iconCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("alert", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("button", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("button-row", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("col", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("container", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("field-wrapper", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("fieldset", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("form", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("icon", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("input", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("input", "helpTextCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("input", "wrapperCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("nav", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("nav-bar", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("nav-bar-search", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("nav-item", "anchorCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("nav-item", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("nav-item", "iconCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("option", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("row", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("select", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("select", "wrapperCssClass")));
 
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_CLAY,
 					Arrays.asList(
-						new SimpleImmutableEntry<>("alert", "elementClasses"),
-						new SimpleImmutableEntry<>("badge", "elementClasses"),
-						new SimpleImmutableEntry<>("button", "elementClasses"),
-						new SimpleImmutableEntry<>("button", "icon"),
-						new SimpleImmutableEntry<>("checkbox", "elementClasses"),
-						new SimpleImmutableEntry<>("dropdown-actions", "elementClasses"),
-						new SimpleImmutableEntry<>("dropdown-actions", "triggerCssClasses"),
-						new SimpleImmutableEntry<>("dropdown-menu", "elementClasses"),
-						new SimpleImmutableEntry<>("dropdown-menu", "icon"),
-						new SimpleImmutableEntry<>("dropdown-menu", "triggerCssClasses"),
-						new SimpleImmutableEntry<>("file-card", "elementClasses"),
-						new SimpleImmutableEntry<>("file-card", "icon"),
-						new SimpleImmutableEntry<>("horizontal-card", "elementClasses"),
-						new SimpleImmutableEntry<>("horizontal-card", "icon"),
-						new SimpleImmutableEntry<>("icon", "elementClasses"),
-						new SimpleImmutableEntry<>("icon", "symbol"),
-						new SimpleImmutableEntry<>("image-card", "elementClasses"),
-						new SimpleImmutableEntry<>("image-card", "icon"),
-						new SimpleImmutableEntry<>("label", "elementClasses"),
-						new SimpleImmutableEntry<>("link", "elementClasses"),
-						new SimpleImmutableEntry<>("link", "icon"),
-						new SimpleImmutableEntry<>("management-toolbar", "elementClasses"),
-						new SimpleImmutableEntry<>("navigation-bar", "elementClasses"),
-						new SimpleImmutableEntry<>("progressbar", "elementClasses"),
-						new SimpleImmutableEntry<>("radio", "elementClasses"),
-						new SimpleImmutableEntry<>("select", "elementClasses"),
-						new SimpleImmutableEntry<>("sticker", "elementClasses"),
-						new SimpleImmutableEntry<>("sticker", "icon"),
-						new SimpleImmutableEntry<>("stripe", "elementClasses"),
-						new SimpleImmutableEntry<>("user-card", "elementClasses"),
-						new SimpleImmutableEntry<>("user-card", "icon")));
+						new AbstractMap.SimpleImmutableEntry<>("alert", "elementClasses"),
+						new AbstractMap.SimpleImmutableEntry<>("badge", "elementClasses"),
+						new AbstractMap.SimpleImmutableEntry<>("button", "elementClasses"),
+						new AbstractMap.SimpleImmutableEntry<>("button", "icon"),
+						new AbstractMap.SimpleImmutableEntry<>("checkbox", "elementClasses"),
+						new AbstractMap.SimpleImmutableEntry<>("dropdown-actions", "elementClasses"),
+						new AbstractMap.SimpleImmutableEntry<>("dropdown-actions", "triggerCssClasses"),
+						new AbstractMap.SimpleImmutableEntry<>("dropdown-menu", "elementClasses"),
+						new AbstractMap.SimpleImmutableEntry<>("dropdown-menu", "icon"),
+						new AbstractMap.SimpleImmutableEntry<>("dropdown-menu", "triggerCssClasses"),
+						new AbstractMap.SimpleImmutableEntry<>("file-card", "elementClasses"),
+						new AbstractMap.SimpleImmutableEntry<>("file-card", "icon"),
+						new AbstractMap.SimpleImmutableEntry<>("horizontal-card", "elementClasses"),
+						new AbstractMap.SimpleImmutableEntry<>("horizontal-card", "icon"),
+						new AbstractMap.SimpleImmutableEntry<>("icon", "elementClasses"),
+						new AbstractMap.SimpleImmutableEntry<>("icon", "symbol"),
+						new AbstractMap.SimpleImmutableEntry<>("image-card", "elementClasses"),
+						new AbstractMap.SimpleImmutableEntry<>("image-card", "icon"),
+						new AbstractMap.SimpleImmutableEntry<>("label", "elementClasses"),
+						new AbstractMap.SimpleImmutableEntry<>("link", "elementClasses"),
+						new AbstractMap.SimpleImmutableEntry<>("link", "icon"),
+						new AbstractMap.SimpleImmutableEntry<>("management-toolbar", "elementClasses"),
+						new AbstractMap.SimpleImmutableEntry<>("navigation-bar", "elementClasses"),
+						new AbstractMap.SimpleImmutableEntry<>("progressbar", "elementClasses"),
+						new AbstractMap.SimpleImmutableEntry<>("radio", "elementClasses"),
+						new AbstractMap.SimpleImmutableEntry<>("select", "elementClasses"),
+						new AbstractMap.SimpleImmutableEntry<>("sticker", "elementClasses"),
+						new AbstractMap.SimpleImmutableEntry<>("sticker", "icon"),
+						new AbstractMap.SimpleImmutableEntry<>("stripe", "elementClasses"),
+						new AbstractMap.SimpleImmutableEntry<>("user-card", "elementClasses"),
+						new AbstractMap.SimpleImmutableEntry<>("user-card", "icon")));
 
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_DDM,
-					Arrays.asList(new SimpleImmutableEntry<>("template-selector", "icon")));
+					Arrays.asList(new AbstractMap.SimpleImmutableEntry<>("template-selector", "icon")));
 
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_EDITOR,
-					Arrays.asList(new SimpleImmutableEntry<>("editor", "cssClass")));
+					Arrays.asList(new AbstractMap.SimpleImmutableEntry<>("editor", "cssClass")));
 
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_FRONTEND,
 					Arrays.asList(
-						new SimpleImmutableEntry<>("horizontal-card", "checkboxCSSClass"),
-						new SimpleImmutableEntry<>("horizontal-card", "cssClass"),
-						new SimpleImmutableEntry<>("icon-vertical-card", "checkboxCSSClass"),
-						new SimpleImmutableEntry<>("icon-vertical-card", "cssClass"),
-						new SimpleImmutableEntry<>("image-card", "cssClass"),
-						new SimpleImmutableEntry<>("image-card", "imageCssClass"),
-						new SimpleImmutableEntry<>("info-bar-button", "cssClass"),
-						new SimpleImmutableEntry<>("info-bar-button", "iconCssClass"),
-						new SimpleImmutableEntry<>("info-bar-sidenav-toggler-button", "cssClass"),
-						new SimpleImmutableEntry<>("info-bar-sidenav-toggler-button", "iconCssClass"),
-						new SimpleImmutableEntry<>("management-bar-button", "cssClass"),
-						new SimpleImmutableEntry<>("management-bar-button", "iconCssClass"),
-						new SimpleImmutableEntry<>("management-bar-sidenav-toggler-button", "cssClass"),
-						new SimpleImmutableEntry<>("management-bar-sidenav-toggler-button", "iconCssClass"),
-						new SimpleImmutableEntry<>("translation-manager", "cssClass"),
-						new SimpleImmutableEntry<>("user-vertical-card", "checkboxCSSClass"),
-						new SimpleImmutableEntry<>("user-vertical-card", "cssClass"),
-						new SimpleImmutableEntry<>("vertical-card", "checkboxCSSClass"),
-						new SimpleImmutableEntry<>("vertical-card", "cssClass"),
-						new SimpleImmutableEntry<>("vertical-card", "imageCSSClass"),
-						new SimpleImmutableEntry<>("vertical-card-small-image", "cssClass")));
+						new AbstractMap.SimpleImmutableEntry<>("horizontal-card", "checkboxCSSClass"),
+						new AbstractMap.SimpleImmutableEntry<>("horizontal-card", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("icon-vertical-card", "checkboxCSSClass"),
+						new AbstractMap.SimpleImmutableEntry<>("icon-vertical-card", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("image-card", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("image-card", "imageCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("info-bar-button", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("info-bar-button", "iconCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("info-bar-sidenav-toggler-button", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("info-bar-sidenav-toggler-button", "iconCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("management-bar-button", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("management-bar-button", "iconCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("management-bar-sidenav-toggler-button", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("management-bar-sidenav-toggler-button", "iconCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("translation-manager", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("user-vertical-card", "checkboxCSSClass"),
+						new AbstractMap.SimpleImmutableEntry<>("user-vertical-card", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("vertical-card", "checkboxCSSClass"),
+						new AbstractMap.SimpleImmutableEntry<>("vertical-card", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("vertical-card", "imageCSSClass"),
+						new AbstractMap.SimpleImmutableEntry<>("vertical-card-small-image", "cssClass")));
 
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_ITEM_SELECTOR,
-					Arrays.asList(new SimpleImmutableEntry<>("image-selector", "draggableImage")));
+					Arrays.asList(new AbstractMap.SimpleImmutableEntry<>("image-selector", "draggableImage")));
 
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_STAGING,
 					Arrays.asList(
-						new SimpleImmutableEntry<>("menu", "cssClass"),
-						new SimpleImmutableEntry<>("permissions", "descriptionCSSClass"),
-						new SimpleImmutableEntry<>("permissions", "labelCSSClass"),
-						new SimpleImmutableEntry<>("process-message-task-details", "linkClass"),
-						new SimpleImmutableEntry<>("process-status", "linkClass"),
-						new SimpleImmutableEntry<>("status", "cssClass")));
+						new AbstractMap.SimpleImmutableEntry<>("menu", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("permissions", "descriptionCSSClass"),
+						new AbstractMap.SimpleImmutableEntry<>("permissions", "labelCSSClass"),
+						new AbstractMap.SimpleImmutableEntry<>("process-message-task-details", "linkClass"),
+						new AbstractMap.SimpleImmutableEntry<>("process-status", "linkClass"),
+						new AbstractMap.SimpleImmutableEntry<>("status", "cssClass")));
 
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_UI,
 					Arrays.asList(
-						new SimpleImmutableEntry<>("alert", "cssClass"),
-						new SimpleImmutableEntry<>("app-view-entry", "cssClass"),
-						new SimpleImmutableEntry<>("app-view-entry", "iconCssClass"),
-						new SimpleImmutableEntry<>("app-view-search-entry", "iconCssClass"),
-						new SimpleImmutableEntry<>("empty-result-message", "cssClass"),
-						new SimpleImmutableEntry<>("header", "cssClass"),
-						new SimpleImmutableEntry<>("icon", "cssClass"),
-						new SimpleImmutableEntry<>("icon", "iconCssClass"),
-						new SimpleImmutableEntry<>("icon", "linkCssClass"),
-						new SimpleImmutableEntry<>("icon-delete", "cssClass"),
-						new SimpleImmutableEntry<>("icon-delete", "linkCssClass"),
-						new SimpleImmutableEntry<>("icon-menu", "cssClass"),
-						new SimpleImmutableEntry<>("icon-menu", "triggerCssClass"),
-						new SimpleImmutableEntry<>("input-checkbox", "cssClass"),
-						new SimpleImmutableEntry<>("input-date", "cssClass"),
-						new SimpleImmutableEntry<>("input-editor", "cssClass"),
-						new SimpleImmutableEntry<>("input-field", "cssClass"),
-						new SimpleImmutableEntry<>("input-localized", "cssClass"),
-						new SimpleImmutableEntry<>("input-move-boxes", "cssClass"),
-						new SimpleImmutableEntry<>("input-repeat", "cssClass"),
-						new SimpleImmutableEntry<>("input-resource", "cssClass"),
-						new SimpleImmutableEntry<>("input-search", "cssClass"),
-						new SimpleImmutableEntry<>("input-select", "cssClass"),
-						new SimpleImmutableEntry<>("input-textarea", "cssClass"),
-						new SimpleImmutableEntry<>("input-time", "cssClass"),
-						new SimpleImmutableEntry<>("input-time-zone", "cssClass"),
-						new SimpleImmutableEntry<>("my-sites", "cssClass"),
-						new SimpleImmutableEntry<>("panel", "cssClass"),
-						new SimpleImmutableEntry<>("panel", "iconCssClass"),
-						new SimpleImmutableEntry<>("panel-container", "cssClass"),
-						new SimpleImmutableEntry<>("search-container", "cssClass"),
-						new SimpleImmutableEntry<>("search-container", "emptyResultsMessageCssClass"),
-						new SimpleImmutableEntry<>("search-container-column-button", "cssClass"),
-						new SimpleImmutableEntry<>("search-container-column-date", "cssClass"),
-						new SimpleImmutableEntry<>("search-container-column-icon", "cssClass"),
-						new SimpleImmutableEntry<>("search-container-column-image", "cssClass"),
-						new SimpleImmutableEntry<>("search-container-column-jsp", "cssClass"),
-						new SimpleImmutableEntry<>("search-container-column-status", "cssClass"),
-						new SimpleImmutableEntry<>("search-container-column-text", "cssClass"),
-						new SimpleImmutableEntry<>("search-container-column-user", "cssClass"),
-						new SimpleImmutableEntry<>("search-container-row", "cssClass"),
-						new SimpleImmutableEntry<>("tabs", "cssClass"),
-						new SimpleImmutableEntry<>("user-display", "imageCssClass"),
-						new SimpleImmutableEntry<>("user-display", "userIconCssClass"),
-						new SimpleImmutableEntry<>("user-portrait", "cssClass"),
-						new SimpleImmutableEntry<>("user-portrait", "imageCssClass")));
+						new AbstractMap.SimpleImmutableEntry<>("alert", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("app-view-entry", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("app-view-entry", "iconCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("app-view-search-entry", "iconCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("empty-result-message", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("header", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("icon", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("icon", "iconCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("icon", "linkCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("icon-delete", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("icon-delete", "linkCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("icon-menu", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("icon-menu", "triggerCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("input-checkbox", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("input-date", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("input-editor", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("input-field", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("input-localized", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("input-move-boxes", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("input-repeat", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("input-resource", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("input-search", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("input-select", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("input-textarea", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("input-time", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("input-time-zone", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("my-sites", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("panel", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("panel", "iconCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("panel-container", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("search-container", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("search-container", "emptyResultsMessageCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("search-container-column-button", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("search-container-column-date", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("search-container-column-icon", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("search-container-column-image", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("search-container-column-jsp", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("search-container-column-status", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("search-container-column-text", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("search-container-column-user", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("search-container-row", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("tabs", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("user-display", "imageCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("user-display", "userIconCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("user-portrait", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("user-portrait", "imageCssClass")));
 			}
 		};
 
@@ -267,9 +273,10 @@ public class LiferayTaglibCSSClassAttributeReferenceContributor extends PsiRefer
 				String xmlAttributeLocalName = xmlAttribute.getLocalName();
 
 				if (_taglibAttributes.containsKey(namespace)) {
-					Collection<SimpleImmutableEntry<String, String>> attributes = _taglibAttributes.get(namespace);
+					Collection<AbstractMap.SimpleImmutableEntry<String, String>> attributes = _taglibAttributes.get(
+						namespace);
 
-					Stream<SimpleImmutableEntry<String, String>> attributesStream = attributes.stream();
+					Stream<AbstractMap.SimpleImmutableEntry<String, String>> attributesStream = attributes.stream();
 
 					boolean anyMatch = attributesStream.anyMatch(
 						attribute -> {

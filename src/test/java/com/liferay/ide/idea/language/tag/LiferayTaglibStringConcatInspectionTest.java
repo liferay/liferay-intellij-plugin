@@ -28,6 +28,7 @@ import com.intellij.testFramework.fixtures.DefaultLightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -43,7 +44,7 @@ public class LiferayTaglibStringConcatInspectionTest extends LightCodeInsightFix
 		List<IntentionAction> allQuickFixeIntentionActions = myFixture.getAllQuickFixes();
 
 		for (IntentionAction quickFix : allQuickFixeIntentionActions) {
-			if ("Wrap in JSP expression".equals(quickFix.getFamilyName())) {
+			if (Objects.equals("Wrap in JSP expression", quickFix.getFamilyName())) {
 				myFixture.launchAction(quickFix);
 			}
 		}

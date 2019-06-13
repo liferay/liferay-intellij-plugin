@@ -23,7 +23,7 @@ import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlTag;
 import com.intellij.xml.util.XmlUtil;
 
-import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -45,7 +45,8 @@ public abstract class AbstractLiferayTaglibReferenceContributor extends PsiRefer
 
 	protected abstract PsiReferenceProvider getPsiReferenceProvider();
 
-	protected abstract Map<String, Collection<SimpleImmutableEntry<String, String>>> getTaglibAttributesMap();
+	protected abstract Map<String, Collection<AbstractMap.SimpleImmutableEntry<String, String>>>
+		getTaglibAttributesMap();
 
 	protected boolean isSuitableXmlAttribute(XmlAttribute xmlAttribute) {
 		XmlTag xmlTag = xmlAttribute.getParent();
@@ -55,13 +56,14 @@ public abstract class AbstractLiferayTaglibReferenceContributor extends PsiRefer
 			String localName = xmlTag.getLocalName();
 			String attributeName = xmlAttribute.getLocalName();
 
-			Map<String, Collection<SimpleImmutableEntry<String, String>>> taglibAttributesMap =
+			Map<String, Collection<AbstractMap.SimpleImmutableEntry<String, String>>> taglibAttributesMap =
 				getTaglibAttributesMap();
 
 			if (taglibAttributesMap.containsKey(namespace)) {
-				Collection<SimpleImmutableEntry<String, String>> entries = taglibAttributesMap.get(namespace);
+				Collection<AbstractMap.SimpleImmutableEntry<String, String>> entries = taglibAttributesMap.get(
+					namespace);
 
-				Stream<SimpleImmutableEntry<String, String>> entriesStream = entries.stream();
+				Stream<AbstractMap.SimpleImmutableEntry<String, String>> entriesStream = entries.stream();
 
 				return entriesStream.anyMatch(
 					entry -> {

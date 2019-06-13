@@ -84,9 +84,6 @@ public class OverrideFilesComponent {
 
 		application.executeOnPooledThread(
 			() -> {
-				Path sourcePath = Paths.get(moduleRootVirtualFile.getPath(), "src/main/java/");
-				Path resourcesPath = Paths.get(moduleRootVirtualFile.getPath(), "src/main/resources/");
-
 				List<String> relativePaths = new ArrayList<>(listModel.getSize());
 				Enumeration<EntryDescription> elements = listModel.elements();
 
@@ -100,6 +97,9 @@ public class OverrideFilesComponent {
 					return;
 				}
 
+				Path sourcePath = Paths.get(moduleRootVirtualFile.getPath(), "src/main/java/");
+				Path resourcesPath = Paths.get(moduleRootVirtualFile.getPath(), "src/main/resources/");
+
 				try {
 					ZipUtil.unzip(
 						new File(_sourceJar), sourcePath.toFile(),
@@ -110,13 +110,11 @@ public class OverrideFilesComponent {
 								if (path.startsWith("com/")) {
 									return Pair.create(true, sourcePath.toFile());
 								}
-								else {
-									return Pair.create(true, resourcesPath.toFile());
-								}
+
+								return Pair.create(true, resourcesPath.toFile());
 							}
-							else {
-								return Pair.create(false, null);
-							}
+
+							return Pair.create(false, null);
 						});
 				}
 				catch (IOException ioe) {
@@ -185,7 +183,7 @@ public class OverrideFilesComponent {
 
 	}
 
-	private void _doAdd() {
+	private void _add() {
 		try {
 			_sourceJar = _getSourceJar();
 		}
@@ -217,12 +215,6 @@ public class OverrideFilesComponent {
 				}));
 	}
 
-	private void _doRemove() {
-		int[] selected = _jbList.getSelectedIndices();
-
-		ListUtil.removeIndices(_jbList, selected);
-	}
-
 	private String _getSourceJar() throws ConfigurationException {
 		LibraryData libraryData = function.get();
 
@@ -247,20 +239,29 @@ public class OverrideFilesComponent {
 
 					if (selected) {
 						//noinspection deprecation
+
 						setForeground(UIUtil.getListSelectionForeground());
 					}
-					else if ((value instanceof EntryDescription) && !((EntryDescription)value).isValid()) {
-						setForeground(JBColor.RED);
+					else if (value instanceof EntryDescription) {
+						EntryDescription entryDescription = (EntryDescription)value;
+
+						if (!entryDescription.isValid()) {
+							setForeground(JBColor.RED);
+						}
 					}
 
-					setIcon(((EntryDescription)value).getIconFor());
+					EntryDescription entryDescription = (EntryDescription)value;
+
+					setIcon(entryDescription.getIconFor());
 
 					return this;
 				}
 
 				private String _getItemText(Object value) {
 					if (value instanceof EntryDescription) {
-						return ((EntryDescription)value).getPresentableUrl();
+						EntryDescription entryDescription = (EntryDescription)value;
+
+						return entryDescription.getPresentableUrl();
 					}
 
 					return "UNKNOWN OBJECT";
@@ -271,10 +272,16 @@ public class OverrideFilesComponent {
 		ToolbarDecorator toolbarDecorator = ToolbarDecorator.createDecorator(_jbList);
 
 		toolbarDecorator.disableUpDownActions();
-		toolbarDecorator.setAddAction(action -> _doAdd());
-		toolbarDecorator.setRemoveAction(action -> _doRemove());
+		toolbarDecorator.setAddAction(action -> _add());
+		toolbarDecorator.setRemoveAction(action -> _remove());
 
 		_sourcePanel.add(toolbarDecorator.createPanel());
+	}
+
+	private void _remove() {
+		int[] selected = _jbList.getSelectedIndices();
+
+		ListUtil.removeIndices(_jbList, selected);
 	}
 
 	private static final Logger _logger = Logger.getInstance(LiferayModuleExtBuilder.class);

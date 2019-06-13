@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -128,11 +129,11 @@ public class LiferayJSPredefinedLibraryProvider extends JSPredefinedLibraryProvi
 		Stream<LibraryData> stream = targetPlatformArtifacts.stream();
 
 		return stream.filter(
-			libraryData -> "com.liferay".equals(libraryData.getGroupId())
+			libraryData -> Objects.equals("com.liferay", libraryData.getGroupId())
 		).filter(
 			libraryData ->
-				"com.liferay.frontend.js.web".equals(libraryData.getArtifactId()) ||
-				"com.liferay.frontend.js.aui.web".equals(libraryData.getArtifactId())
+				Objects.equals("com.liferay.frontend.js.web", libraryData.getArtifactId()) ||
+				Objects.equals("com.liferay.frontend.js.aui.web", libraryData.getArtifactId())
 		).map(
 			LiferayJSPredefinedLibraryProvider::_getJavascriptFilesFromLibraryData
 		).flatMap(
@@ -159,7 +160,7 @@ public class LiferayJSPredefinedLibraryProvider extends JSPredefinedLibraryProvi
 
 					String extension = virtualFile.getExtension();
 
-					if ("js".equals(extension)) {
+					if (Objects.equals("js", extension)) {
 						virtualFiles.add(virtualFile);
 					}
 

@@ -19,6 +19,7 @@ import com.google.common.collect.MultimapBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import org.codehaus.groovy.ast.CodeVisitorSupport;
 import org.codehaus.groovy.ast.expr.ArgumentListExpression;
@@ -43,7 +44,7 @@ public class FindAllDependenciesVisitor extends CodeVisitorSupport {
 	 */
 	@Override
 	public void visitArgumentlistExpression(ArgumentListExpression expression) {
-		if ("".equals(_configurationName)) {
+		if (Objects.equals("", _configurationName)) {
 			super.visitArgumentlistExpression(expression);
 		}
 		else {
@@ -77,7 +78,7 @@ public class FindAllDependenciesVisitor extends CodeVisitorSupport {
 	 */
 	@Override
 	public void visitMapExpression(MapExpression expression) {
-		if ("".equals(_configurationName)) {
+		if (Objects.equals("", _configurationName)) {
 			super.visitMapExpression(expression);
 		}
 		else {
@@ -99,13 +100,13 @@ public class FindAllDependenciesVisitor extends CodeVisitorSupport {
 
 	@Override
 	public void visitMethodCallExpression(MethodCallExpression call) {
-		if ("dependencies".equals(call.getMethodAsString())) {
+		if (Objects.equals("dependencies", call.getMethodAsString())) {
 			_dependenciesClosure = true;
 			super.visitMethodCallExpression(call);
 
 			_dependenciesClosure = false;
 		}
-		else if ("buildscript".equals(call.getMethodAsString())) {
+		else if (Objects.equals("buildscript", call.getMethodAsString())) {
 			super.visitMethodCallExpression(call);
 		}
 		else if (_dependenciesClosure && _dependencyStatement) {

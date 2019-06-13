@@ -55,9 +55,8 @@ public class PortalWildFlyBundleFactory extends AbstractPortalBundleFactory {
 			if ((versions != null) && (versions.startsWith("10.") || versions.startsWith("11."))) {
 				return true;
 			}
-			else {
-				return false;
-			}
+
+			return false;
 		}
 
 		return false;

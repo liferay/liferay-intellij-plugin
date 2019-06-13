@@ -46,11 +46,12 @@ public class ProjectViewWatchDecorator implements ProjectViewNodeDecorator {
 	@SuppressWarnings("rawtypes")
 	public void decorate(ProjectViewNode node, PresentationData data) {
 		Project project = node.getProject();
-		final VirtualFile virtualFile = node.getVirtualFile();
 
 		if (project == null) {
 			return;
 		}
+
+		VirtualFile virtualFile = node.getVirtualFile();
 
 		if (virtualFile == null) {
 			return;

@@ -161,9 +161,8 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 					if ((values != null) && !values.isEmpty()) {
 						return StringUtil.join(values, entry1 -> "--" + longOptionName + ' ' + entry1, " ");
 					}
-					else {
-						return "--" + longOptionName;
-					}
+
+					return "--" + longOptionName;
 				},
 				" ");
 

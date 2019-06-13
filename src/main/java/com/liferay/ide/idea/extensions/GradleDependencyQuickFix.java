@@ -113,7 +113,9 @@ public class GradleDependencyQuickFix implements HighPriorityAction, Iconable, I
 
 	@Override
 	public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile psiFile) {
-		if (!project.isDisposed() && !_module.isDisposed() && !((LibraryEx)_library).isDisposed()) {
+		LibraryEx libraryEx = (LibraryEx)_library;
+
+		if (!project.isDisposed() && !_module.isDisposed() && !libraryEx.isDisposed()) {
 			return true;
 		}
 

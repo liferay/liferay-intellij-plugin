@@ -18,6 +18,7 @@ import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Dominik Marks
@@ -32,7 +33,7 @@ public class LiferayServiceXMLDuplicateColumnInspectionTest extends LightCodeIns
 		List<IntentionAction> allQuickFixes = myFixture.getAllQuickFixes();
 
 		for (IntentionAction quickFix : allQuickFixes) {
-			if ("Remove entry".equals(quickFix.getFamilyName())) {
+			if (Objects.equals("Remove entry", quickFix.getFamilyName())) {
 				myFixture.launchAction(quickFix);
 
 				break;

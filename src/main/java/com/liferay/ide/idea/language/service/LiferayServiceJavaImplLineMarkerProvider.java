@@ -31,6 +31,7 @@ import com.intellij.psi.xml.XmlTag;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -51,7 +52,7 @@ public class LiferayServiceJavaImplLineMarkerProvider extends RelatedItemLineMar
 				String name = psiClass.getName();
 				PsiJavaFile psiJavaFile = (PsiJavaFile)psiClass.getContainingFile();
 
-				if (psiJavaFile != null) {
+				if ((psiJavaFile != null) && (name != null)) {
 					String packageName = psiJavaFile.getPackageName();
 
 					if (name.endsWith("Impl") && packageName.endsWith(".model.impl")) {
@@ -72,7 +73,11 @@ public class LiferayServiceJavaImplLineMarkerProvider extends RelatedItemLineMar
 								if (xmlFile.isValid()) {
 									XmlTag rootXmlTag = xmlFile.getRootTag();
 
-									if ("service-builder".equals(rootXmlTag.getLocalName())) {
+									if (rootXmlTag == null) {
+										continue;
+									}
+
+									if (Objects.equals("service-builder", rootXmlTag.getLocalName())) {
 										String packagePath = rootXmlTag.getAttributeValue("package-path");
 
 										if (packagePath != null) {

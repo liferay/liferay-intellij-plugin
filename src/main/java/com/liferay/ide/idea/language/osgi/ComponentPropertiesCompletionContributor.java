@@ -107,7 +107,7 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 			pair -> {
 				String name = pair.getName();
 
-				return "service".equals(name);
+				return Objects.equals("service", name);
 			}
 		).map(
 			PsiNameValuePair::getValue
@@ -154,7 +154,7 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 
 				@Override
 				protected void addCompletions(
-					@NotNull CompletionParameters parameters, ProcessingContext context,
+					@NotNull CompletionParameters parameters, @NotNull ProcessingContext context,
 					@NotNull CompletionResultSet result) {
 
 					List<String> serviceClassNames = _getServiceClassNames(parameters.getOriginalPosition());

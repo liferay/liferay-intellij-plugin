@@ -16,7 +16,7 @@ package com.liferay.ide.idea.language.tag;
 
 import com.intellij.psi.PsiReferenceProvider;
 
-import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -38,23 +38,25 @@ public class LiferayTaglibModelContextJavaBeanReferenceContributor extends Abstr
 	}
 
 	@Override
-	protected Map<String, Collection<SimpleImmutableEntry<String, String>>> getTaglibAttributesMap() {
+	protected Map<String, Collection<AbstractMap.SimpleImmutableEntry<String, String>>> getTaglibAttributesMap() {
 		return _taglibAttributes;
 	}
 
 	@SuppressWarnings("serial")
-	private static Map<String, Collection<SimpleImmutableEntry<String, String>>> _taglibAttributes =
-		new HashMap<String, Collection<SimpleImmutableEntry<String, String>>>() {
+	private static Map<String, Collection<AbstractMap.SimpleImmutableEntry<String, String>>> _taglibAttributes =
+		new HashMap<String, Collection<AbstractMap.SimpleImmutableEntry<String, String>>>() {
 			{
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI,
 					Arrays.asList(
-						new SimpleImmutableEntry<>("input", "field"), new SimpleImmutableEntry<>("input", "name"),
-						new SimpleImmutableEntry<>("select", "field"), new SimpleImmutableEntry<>("select", "name")));
+						new AbstractMap.SimpleImmutableEntry<>("input", "field"),
+						new AbstractMap.SimpleImmutableEntry<>("input", "name"),
+						new AbstractMap.SimpleImmutableEntry<>("select", "field"),
+						new AbstractMap.SimpleImmutableEntry<>("select", "name")));
 
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_UI,
-					Arrays.asList(new SimpleImmutableEntry<>("input-field", "field")));
+					Arrays.asList(new AbstractMap.SimpleImmutableEntry<>("input-field", "field")));
 			}
 		};
 

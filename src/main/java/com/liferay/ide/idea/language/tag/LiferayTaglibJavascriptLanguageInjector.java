@@ -28,7 +28,7 @@ import com.intellij.psi.xml.XmlText;
 import com.intellij.psi.xml.XmlToken;
 import com.intellij.psi.xml.XmlTokenType;
 
-import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -64,16 +64,18 @@ public class LiferayTaglibJavascriptLanguageInjector implements JSTargetedInject
 			xmlTag = (XmlTag)psiElement;
 		}
 		else {
-			xmlTag = ((XmlAttribute)psiElement).getParent();
+			XmlAttribute xmlAttribute = (XmlAttribute)psiElement;
+
+			xmlTag = xmlAttribute.getParent();
 		}
 
 		String localName = xmlTag.getLocalName();
 		String namespace = xmlTag.getNamespace();
 
 		if (_taglibAttributes.containsKey(namespace)) {
-			Collection<SimpleImmutableEntry<String, String>> attributes = _taglibAttributes.get(namespace);
+			Collection<AbstractMap.SimpleImmutableEntry<String, String>> attributes = _taglibAttributes.get(namespace);
 
-			Stream<SimpleImmutableEntry<String, String>> stream = attributes.stream();
+			Stream<AbstractMap.SimpleImmutableEntry<String, String>> stream = attributes.stream();
 
 			if (psiElement instanceof XmlTag) {
 				stream.filter(
@@ -83,7 +85,7 @@ public class LiferayTaglibJavascriptLanguageInjector implements JSTargetedInject
 						return key.equals(localName);
 					}
 				).filter(
-					attribute -> "".equals(attribute.getValue())
+					attribute -> Objects.equals("", attribute.getValue())
 				).forEach(
 					attribute -> _injectIntoBody(multiHostRegistrar, (XmlTag)psiElement)
 				);
@@ -158,10 +160,10 @@ public class LiferayTaglibJavascriptLanguageInjector implements JSTargetedInject
 				String localName = xmlTag.getLocalName();
 
 				if (LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI.equals(namespace)) {
-					if ("validator".equals(localName)) {
+					if (Objects.equals("validator", localName)) {
 						String attributeValue = xmlTag.getAttributeValue("name");
 
-						if ("custom".equals(attributeValue) || "required".equals(attributeValue)) {
+						if (Objects.equals("custom", attributeValue) || Objects.equals("required", attributeValue)) {
 							prefixWrapper = "(";
 							suffixWrapper = ")();";
 						}
@@ -192,41 +194,49 @@ public class LiferayTaglibJavascriptLanguageInjector implements JSTargetedInject
 	}
 
 	@SuppressWarnings("serial")
-	private static Map<String, Collection<SimpleImmutableEntry<String, String>>> _taglibAttributes =
-		new HashMap<String, Collection<SimpleImmutableEntry<String, String>>>() {
+	private static Map<String, Collection<AbstractMap.SimpleImmutableEntry<String, String>>> _taglibAttributes =
+		new HashMap<String, Collection<AbstractMap.SimpleImmutableEntry<String, String>>>() {
 			{
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI,
 					Arrays.asList(
-						new SimpleImmutableEntry<>("a", "onClick"), new SimpleImmutableEntry<>("button", "onClick"),
-						new SimpleImmutableEntry<>("form", "onSubmit"), new SimpleImmutableEntry<>("input", "onChange"),
-						new SimpleImmutableEntry<>("input", "onClick"), new SimpleImmutableEntry<>("script", ""),
-						new SimpleImmutableEntry<>("select", "onChange"),
-						new SimpleImmutableEntry<>("select", "onClick"), new SimpleImmutableEntry<>("validator", "")));
+						new AbstractMap.SimpleImmutableEntry<>("a", "onClick"),
+						new AbstractMap.SimpleImmutableEntry<>("button", "onClick"),
+						new AbstractMap.SimpleImmutableEntry<>("form", "onSubmit"),
+						new AbstractMap.SimpleImmutableEntry<>("input", "onChange"),
+						new AbstractMap.SimpleImmutableEntry<>("input", "onClick"),
+						new AbstractMap.SimpleImmutableEntry<>("script", ""),
+						new AbstractMap.SimpleImmutableEntry<>("select", "onChange"),
+						new AbstractMap.SimpleImmutableEntry<>("select", "onClick"),
+						new AbstractMap.SimpleImmutableEntry<>("validator", "")));
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI_OLD,
 					Arrays.asList(
-						new SimpleImmutableEntry<>("a", "onClick"), new SimpleImmutableEntry<>("button", "onClick"),
-						new SimpleImmutableEntry<>("form", "onSubmit"), new SimpleImmutableEntry<>("input", "onChange"),
-						new SimpleImmutableEntry<>("input", "onClick"), new SimpleImmutableEntry<>("script", ""),
-						new SimpleImmutableEntry<>("select", "onChange"),
-						new SimpleImmutableEntry<>("select", "onClick"), new SimpleImmutableEntry<>("validator", "")));
+						new AbstractMap.SimpleImmutableEntry<>("a", "onClick"),
+						new AbstractMap.SimpleImmutableEntry<>("button", "onClick"),
+						new AbstractMap.SimpleImmutableEntry<>("form", "onSubmit"),
+						new AbstractMap.SimpleImmutableEntry<>("input", "onChange"),
+						new AbstractMap.SimpleImmutableEntry<>("input", "onClick"),
+						new AbstractMap.SimpleImmutableEntry<>("script", ""),
+						new AbstractMap.SimpleImmutableEntry<>("select", "onChange"),
+						new AbstractMap.SimpleImmutableEntry<>("select", "onClick"),
+						new AbstractMap.SimpleImmutableEntry<>("validator", "")));
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_FRONTEND,
 					Arrays.asList(
-						new SimpleImmutableEntry<>("edit-form", "onSubmit"),
-						new SimpleImmutableEntry<>("icon-vertical-card", "onClick"),
-						new SimpleImmutableEntry<>("vertical-card", "onClick")));
+						new AbstractMap.SimpleImmutableEntry<>("edit-form", "onSubmit"),
+						new AbstractMap.SimpleImmutableEntry<>("icon-vertical-card", "onClick"),
+						new AbstractMap.SimpleImmutableEntry<>("vertical-card", "onClick")));
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_UI,
 					Arrays.asList(
-						new SimpleImmutableEntry<>("icon", "onClick"),
-						new SimpleImmutableEntry<>("input-checkbox", "onClick"),
-						new SimpleImmutableEntry<>("input-move-boxes", "leftOnChange"),
-						new SimpleImmutableEntry<>("input-move-boxes", "rightOnChange"),
-						new SimpleImmutableEntry<>("page-iterator", "jsCall"),
-						new SimpleImmutableEntry<>("quick-access-entry", "onClick"),
-						new SimpleImmutableEntry<>("tabs", "onClick")));
+						new AbstractMap.SimpleImmutableEntry<>("icon", "onClick"),
+						new AbstractMap.SimpleImmutableEntry<>("input-checkbox", "onClick"),
+						new AbstractMap.SimpleImmutableEntry<>("input-move-boxes", "leftOnChange"),
+						new AbstractMap.SimpleImmutableEntry<>("input-move-boxes", "rightOnChange"),
+						new AbstractMap.SimpleImmutableEntry<>("page-iterator", "jsCall"),
+						new AbstractMap.SimpleImmutableEntry<>("quick-access-entry", "onClick"),
+						new AbstractMap.SimpleImmutableEntry<>("tabs", "onClick")));
 			}
 		};
 

@@ -33,7 +33,7 @@ You must have one Liferay Workspace Project to do the following steps:
 1. Right click on the root of your Liferay Workspace Project
 2. Click Liferay > InitBundle
 3. Then the gradle will run *initBundle* task
-4. It will take several minutes to download the latest Liferay Server from remote if you don’t have the local cache
+4. It will take several minutes to download the latest Liferay Server from remote if you don't have the local cache
 5. Click *Edit configruration...* on the right top corner
 6. Click the plus icon
 7. Choose *Liferay Server*

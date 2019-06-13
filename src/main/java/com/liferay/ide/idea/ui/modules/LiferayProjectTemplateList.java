@@ -122,7 +122,9 @@ public class LiferayProjectTemplateList extends JPanel {
 		String templateName = propertiesComponent.getValue(_PROJECT_WIZARD_TEMPLATE);
 
 		if ((templateName != null) && (_templateList.getModel() instanceof CollectionListModel)) {
-			List<ProjectTemplate> list = ((CollectionListModel<ProjectTemplate>)_templateList.getModel()).toList();
+			CollectionListModel collectionListModel = (CollectionListModel<ProjectTemplate>)_templateList.getModel();
+
+			List<ProjectTemplate> list = collectionListModel.toList();
 
 			ProjectTemplate template = ContainerUtil.find(list, template1 -> templateName.equals(template1.getName()));
 

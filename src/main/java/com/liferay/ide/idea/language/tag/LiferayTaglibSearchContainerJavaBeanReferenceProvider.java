@@ -18,6 +18,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlTag;
 
+import java.util.Objects;
+
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -39,9 +41,7 @@ public class LiferayTaglibSearchContainerJavaBeanReferenceProvider
 					String localName = xmlTag.getLocalName();
 
 					if (LiferayTaglibs.TAGLIB_URI_LIFERAY_UI.equals(namespace)) {
-						if ("search-container-row".equals(localName)) {
-							return true;
-						}
+						return Objects.equals("search-container-row", localName);
 					}
 				}
 

@@ -55,9 +55,8 @@ public class IntellijUtil {
 				if (index == -1) {
 					return virtualFile;
 				}
-				else {
-					return getChild(virtualFile, name.substring(index + 1));
-				}
+
+				return getChild(virtualFile, name.substring(index + 1));
 			}
 		}
 
