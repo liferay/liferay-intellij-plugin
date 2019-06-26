@@ -21,15 +21,6 @@ public class WorkspaceConstants {
 
 	public static final String BLADE_LIFERAY_VERSION_FIELD = "liferay.version.default";
 
-	public static final String BUNDLE_URL_CE_7_0 =
-		"https://releases-cdn.liferay.com/portal/7.0.6-ga7/liferay-ce-portal-tomcat-7.0-ga7-20180507111753223.zip";
-
-	public static final String BUNDLE_URL_CE_7_1 =
-		"https://releases-cdn.liferay.com/portal/7.1.0-ga1/liferay-ce-portal-tomcat-7.1.0-ga1-20180703012531655.zip";
-
-	public static final String BUNDLE_URL_CE_7_2 =
-		"https://releases.liferay.com/portal/7.2.0-rc2/liferay-ce-portal-tomcat-7.2.0-rc2-20190503192513771.tar.gz";
-
 	public static final String DEFAULT_BUNDLE_ARTIFACT_NAME = "portal-tomcat-bundle";
 
 	public static final String DEFAULT_BUNDLE_ARTIFACT_NAME_PROPERTY = "liferay.workspace.bundle.artifact.name";
