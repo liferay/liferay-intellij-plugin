@@ -37,6 +37,7 @@
 				<li>INTELLIJ-63 bug fix for project dependencies</li>
 				<li>INTELLIJ-66 bug fix for watch feature</li>
 				<li>INTELLIJ-63 bug fix for INTELLIJ-70(community contribution)</li>
+				<li>Updated embedded blade cli to 3.7.3</li>
 			</ul>
 			<li>1.5.0</li>
 			<ul>
