@@ -23,6 +23,8 @@ import com.intellij.javaee.StandardResourceProvider;
  */
 public class LiferayDefinitionsResourceProvider implements StandardResourceProvider {
 
+	public static final String XML_NAMESPACE_JCP_PORTLET_APP_3_0 = "http://xmlns.jcp.org/xml/ns/portlet";
+
 	public static final String XML_NAMESPACE_LIFERAY_DISPLAY_7_0_0 =
 		"http://www.liferay.com/dtd/liferay-display_7_0_0.dtd";
 
@@ -197,6 +199,9 @@ public class LiferayDefinitionsResourceProvider implements StandardResourceProvi
 			LiferayDefinitionsResourceProvider.class);
 		resourceRegistrar.addStdResource(
 			XML_NAMESPACE_SUN_PORTLET_APP_2_0, "/definitions/xsd/portlet-app_2_0.xsd",
+			LiferayDefinitionsResourceProvider.class);
+		resourceRegistrar.addStdResource(
+			XML_NAMESPACE_JCP_PORTLET_APP_3_0, "/definitions/xsd/portlet-app_3_0.xsd",
 			LiferayDefinitionsResourceProvider.class);
 	}
 
