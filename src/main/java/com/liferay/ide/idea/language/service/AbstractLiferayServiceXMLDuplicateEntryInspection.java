@@ -138,10 +138,8 @@ public abstract class AbstractLiferayServiceXMLDuplicateEntryInspection extends 
 			if (localName.equals(xmlTag.getLocalName())) {
 				XmlAttribute attribute = xmlTag.getAttribute(attributeName);
 
-				if (attribute != null) {
-					if (attributeValue.equals(attribute.getValue())) {
-						result.add(xmlTag);
-					}
+				if ((attribute != null) && attributeValue.equals(attribute.getValue())) {
+					result.add(xmlTag);
 				}
 			}
 		}

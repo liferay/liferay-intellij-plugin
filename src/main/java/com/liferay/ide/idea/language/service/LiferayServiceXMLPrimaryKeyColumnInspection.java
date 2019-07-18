@@ -54,25 +54,23 @@ public class LiferayServiceXMLPrimaryKeyColumnInspection extends XmlSuppressable
 						if (xmlTag != null) {
 							String type = xmlTag.getAttributeValue("type");
 
-							if (type != null) {
-								if (!_validPrimaryKeyTypes.contains(type)) {
-									String columnName = xmlTag.getAttributeValue("name");
+							if ((type != null) && !_validPrimaryKeyTypes.contains(type)) {
+								String columnName = xmlTag.getAttributeValue("name");
 
-									String entityName = null;
+								String entityName = null;
 
-									XmlTag entityXmlTag = PsiTreeUtil.getParentOfType(xmlTag, XmlTag.class);
+								XmlTag entityXmlTag = PsiTreeUtil.getParentOfType(xmlTag, XmlTag.class);
 
-									if (entityXmlTag != null) {
-										entityName = entityXmlTag.getAttributeValue("name");
-									}
-
-									problemsHolder.registerProblem(
-										value,
-										"Primary Key " + columnName +
-											((entityName != null) ? " of entity " + entityName : "") +
-												" must be an int, long or String",
-										ProblemHighlightType.GENERIC_ERROR_OR_WARNING);
+								if (entityXmlTag != null) {
+									entityName = entityXmlTag.getAttributeValue("name");
 								}
+
+								problemsHolder.registerProblem(
+									value,
+									"Primary Key " + columnName +
+										((entityName != null) ? " of entity " + entityName : "") +
+											" must be an int, long or String",
+									ProblemHighlightType.GENERIC_ERROR_OR_WARNING);
 							}
 						}
 					}

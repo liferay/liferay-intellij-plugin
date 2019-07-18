@@ -156,20 +156,17 @@ public class LiferayTaglibJavascriptLanguageInjector implements JSTargetedInject
 				String prefixWrapper = null;
 				String suffixWrapper = null;
 
-				String namespace = xmlTag.getNamespace();
-				String localName = xmlTag.getLocalName();
+				if (LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI.equals(xmlTag.getNamespace()) &&
+					Objects.equals("validator", xmlTag.getLocalName())) {
 
-				if (LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI.equals(namespace)) {
-					if (Objects.equals("validator", localName)) {
-						String attributeValue = xmlTag.getAttributeValue("name");
+					String attributeValue = xmlTag.getAttributeValue("name");
 
-						if (Objects.equals("custom", attributeValue) || Objects.equals("required", attributeValue)) {
-							prefixWrapper = "(";
-							suffixWrapper = ")();";
-						}
-						else {
-							return;
-						}
+					if (Objects.equals("custom", attributeValue) || Objects.equals("required", attributeValue)) {
+						prefixWrapper = "(";
+						suffixWrapper = ")();";
+					}
+					else {
+						return;
 					}
 				}
 

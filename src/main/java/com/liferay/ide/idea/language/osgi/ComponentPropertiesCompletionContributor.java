@@ -104,11 +104,7 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 		).flatMap(
 			Stream::of
 		).filter(
-			pair -> {
-				String name = pair.getName();
-
-				return Objects.equals("service", name);
-			}
+			pair -> Objects.equals("service", pair.getName())
 		).map(
 			PsiNameValuePair::getValue
 		).filter(

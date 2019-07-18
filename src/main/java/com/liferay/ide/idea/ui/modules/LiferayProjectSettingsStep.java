@@ -215,10 +215,10 @@ public class LiferayProjectSettingsStep extends ModuleWizardStep implements Sett
 
 	@Override
 	public boolean validate() throws ConfigurationException {
-		if (_context.isCreatingNewProject()) {
-			if (!_namePathComponent.validateNameAndPath(_context, _formatPanel.isDefault())) {
-				return false;
-			}
+		if (_context.isCreatingNewProject() &&
+			!_namePathComponent.validateNameAndPath(_context, _formatPanel.isDefault())) {
+
+			return false;
 		}
 
 		if (!_moduleNameLocationComponent.validate()) {

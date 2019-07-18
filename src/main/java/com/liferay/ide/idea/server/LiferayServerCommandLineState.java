@@ -70,9 +70,8 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 
 		String bundleLocation = liferayServerConfiguration.getBundleLocation();
 
-		String bundleType = liferayServerConfiguration.getBundleType();
-
-		PortalBundleFactory bundleFactory = ServerUtil.getPortalBundleFactory(bundleType);
+		PortalBundleFactory bundleFactory = ServerUtil.getPortalBundleFactory(
+			liferayServerConfiguration.getBundleType());
 
 		Path bundlePath = bundleFactory.canCreateFromPath(Paths.get(bundleLocation));
 
@@ -84,19 +83,16 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 
 		ParametersList programParametersList = javaParameters.getProgramParametersList();
 
-		String[] runtimeStartProgArgs = portalBundle.getRuntimeStartProgArgs();
-
 		Stream.of(
-			runtimeStartProgArgs
+			portalBundle.getRuntimeStartProgArgs()
 		).forEach(
 			programParametersList::add
 		);
 
 		PathsList classPath = javaParameters.getClassPath();
-		Path[] runtimeClasspath = portalBundle.getRuntimeClasspath();
 
 		Stream.of(
-			runtimeClasspath
+			portalBundle.getRuntimeClasspath()
 		).map(
 			Path::toFile
 		).forEach(
@@ -129,9 +125,7 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 	}
 
 	private void _configureDeveloperMode(LiferayServerConfiguration configuration) throws Exception {
-		String bundleLocation = configuration.getBundleLocation();
-
-		File portalExtPropertiesFile = new File(bundleLocation, "portal-ext.properties");
+		File portalExtPropertiesFile = new File(configuration.getBundleLocation(), "portal-ext.properties");
 
 		if (configuration.getDeveloperMode()) {
 			if (!portalExtPropertiesFile.exists()) {

@@ -40,8 +40,8 @@ import com.intellij.xml.XmlElementDescriptor;
 
 import com.liferay.ide.idea.util.LiferayInspectionsConstants;
 
-import java.util.Arrays;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -70,15 +70,14 @@ public class LiferayTaglibStringConcatInspection extends XmlSuppressableInspecti
 
 				XmlElementDescriptor xmlElementDescriptor = xmlTag.getDescriptor();
 
-				if (xmlElementDescriptor != null) {
-					if (_isRuntimeExpressionAttribute(xmlElementDescriptor, xmlAttribute.getName())) {
-						if (_containsTextAndJspExpressions(xmlAttribute.getValueElement())) {
-							problemsHolder.registerProblem(
-								xmlAttribute.getValueElement(),
-								"JSP expessions and string values cannot be concatenated inside the attribute",
-								ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new WrapInJSpExpression());
-						}
-					}
+				if ((xmlElementDescriptor != null) &&
+					_isRuntimeExpressionAttribute(xmlElementDescriptor, xmlAttribute.getName()) &&
+					_containsTextAndJspExpressions(xmlAttribute.getValueElement())) {
+
+					problemsHolder.registerProblem(
+						xmlAttribute.getValueElement(),
+						"JSP expessions and string values cannot be concatenated inside the attribute",
+						ProblemHighlightType.GENERIC_ERROR_OR_WARNING, new WrapInJSpExpression());
 				}
 			}
 
@@ -121,7 +120,7 @@ public class LiferayTaglibStringConcatInspection extends XmlSuppressableInspecti
 		XmlToken[] xmlTokens = PsiTreeUtil.getChildrenOfType(xmlAttributeValue, XmlToken.class);
 
 		if (xmlTokens != null) {
-			hasValueToken = Arrays.stream(
+			hasValueToken = Stream.of(
 				xmlTokens
 			).anyMatch(
 				xmlToken -> XmlTokenType.XML_ATTRIBUTE_VALUE_TOKEN.equals(xmlToken.getTokenType())
