@@ -57,13 +57,10 @@ public class LiferayTaglibModelContextJavaBeanReferenceProvider extends Abstract
 			if (siblingPsiElement instanceof XmlTag) {
 				XmlTag xmlTag = (XmlTag)siblingPsiElement;
 
-				String namespace = xmlTag.getNamespace();
-				String localName = xmlTag.getLocalName();
+				if (classNameElementNamespace.equals(xmlTag.getNamespace()) &&
+					classNameElementLocalName.equals(xmlTag.getLocalName())) {
 
-				if (classNameElementNamespace.equals(namespace)) {
-					if (classNameElementLocalName.equals(localName)) {
-						return siblingPsiElement;
-					}
+					return siblingPsiElement;
 				}
 			}
 

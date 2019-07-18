@@ -25,8 +25,8 @@ import com.intellij.psi.xml.XmlTag;
 
 import com.liferay.ide.idea.util.LiferayInspectionsConstants;
 
-import java.util.Arrays;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -56,7 +56,7 @@ public class LiferayServiceXMLEntityUuidInspection extends XmlSuppressableInspec
 							boolean hasPrimaryColumn = false;
 
 							if (childXmlTags != null) {
-								hasPrimaryColumn = Arrays.stream(
+								hasPrimaryColumn = Stream.of(
 									childXmlTags
 								).filter(
 									child -> Objects.equals("column", child.getName())

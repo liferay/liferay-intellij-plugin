@@ -19,7 +19,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.project.Project;
 
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -32,9 +31,7 @@ public class LiferayActionGroup extends DefaultActionGroup {
 	public void update(AnActionEvent event) {
 		Presentation presentation = event.getPresentation();
 
-		Project project = event.getProject();
-
-		DumbService dumbService = DumbService.getInstance(project);
+		DumbService dumbService = DumbService.getInstance(event.getProject());
 
 		if (dumbService.isDumb()) {
 			presentation.setEnabled(false);

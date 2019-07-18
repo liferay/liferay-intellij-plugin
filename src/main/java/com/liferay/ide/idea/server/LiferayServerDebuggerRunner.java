@@ -27,7 +27,6 @@ import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.externalSystem.service.execution.ExternalSystemProcessHandler;
-import com.intellij.openapi.project.Project;
 
 import java.util.stream.Stream;
 
@@ -88,14 +87,11 @@ public class LiferayServerDebuggerRunner extends GenericDebuggerRunner {
 
 					@Override
 					public void processWillTerminate(@NotNull ProcessEvent event, boolean willBeDestroyed) {
-						Project project = executionEnvironment.getProject();
-
-						ExecutionManager executionManager = ExecutionManager.getInstance(project);
-
-						ProcessHandler[] runningProcesses = executionManager.getRunningProcesses();
+						ExecutionManager executionManager = ExecutionManager.getInstance(
+							executionEnvironment.getProject());
 
 						Stream.of(
-							runningProcesses
+							executionManager.getRunningProcesses()
 						).filter(
 							process -> !process.equals(event.getProcessHandler())
 						).filter(

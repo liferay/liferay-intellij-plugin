@@ -23,7 +23,6 @@ import com.intellij.javaee.facet.JavaeeFacet;
 import com.intellij.javaee.facet.JavaeeFacetUtil;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.util.Computable;
@@ -76,9 +75,7 @@ public class LiferayJspDebuggerPositionManager extends JSR45PositionManager<Java
 	private void _checkSourcePositionFileType(final SourcePosition sourcePosition) throws NoDataException {
 		PsiFile psiFile = sourcePosition.getFile();
 
-		FileType fileType = psiFile.getFileType();
-
-		if (!getAcceptedFileTypes().contains(fileType)) {
+		if (!getAcceptedFileTypes().contains(psiFile.getFileType())) {
 			throw NoDataException.INSTANCE;
 		}
 	}

@@ -116,9 +116,7 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 
 	@Override
 	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
-		Project project = anActionEvent.getProject();
-
-		VirtualFile baseDir = LiferayWorkspaceUtil.getWorkspaceVirtualFile(project);
+		VirtualFile baseDir = LiferayWorkspaceUtil.getWorkspaceVirtualFile(anActionEvent.getProject());
 
 		if (baseDir == null) {
 			return false;

@@ -42,6 +42,7 @@ import com.liferay.ide.idea.util.LiferayInspectionsConstants;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -81,7 +82,7 @@ public class LiferayTaglibStrictQuoteEscapingInspection extends XmlSuppressableI
 							return;
 						}
 
-						Arrays.stream(
+						Stream.of(
 							jspExpressions
 						).map(
 							jspExpression -> PsiTreeUtil.getChildrenOfType(jspExpression, XmlText.class)
@@ -139,10 +140,8 @@ public class LiferayTaglibStrictQuoteEscapingInspection extends XmlSuppressableI
 		for (int i = 0; i < text.length(); i++) {
 			char c = text.charAt(i);
 
-			if (c == '\"') {
-				if ((i == 0) || (text.charAt(i - 1) != '\\')) {
-					return true;
-				}
+			if ((c == '\"') && ((i == 0) || (text.charAt(i - 1) != '\\'))) {
+				return true;
 			}
 		}
 

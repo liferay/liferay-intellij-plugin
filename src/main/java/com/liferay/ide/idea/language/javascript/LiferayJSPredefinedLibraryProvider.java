@@ -104,10 +104,10 @@ public class LiferayJSPredefinedLibraryProvider extends JSPredefinedLibraryProvi
 
 					boolean filesChanged = true;
 
-					if (oldSourceFiles.size() == javascriptFiles.size()) {
-						if (oldSourceFiles.containsAll(javascriptFiles)) {
-							filesChanged = false;
-						}
+					if ((oldSourceFiles.size() == javascriptFiles.size()) &&
+						oldSourceFiles.containsAll(javascriptFiles)) {
+
+						filesChanged = false;
 					}
 
 					if (filesChanged) {
@@ -158,9 +158,7 @@ public class LiferayJSPredefinedLibraryProvider extends JSPredefinedLibraryProvi
 						return true;
 					}
 
-					String extension = virtualFile.getExtension();
-
-					if (Objects.equals("js", extension)) {
+					if (Objects.equals("js", virtualFile.getExtension())) {
 						virtualFiles.add(virtualFile);
 					}
 

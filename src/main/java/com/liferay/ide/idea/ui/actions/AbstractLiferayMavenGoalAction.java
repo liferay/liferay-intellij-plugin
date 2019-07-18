@@ -28,7 +28,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 
 import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
 
-import java.util.Collection;
 import java.util.List;
 
 import javax.swing.Icon;
@@ -74,11 +73,9 @@ public abstract class AbstractLiferayMavenGoalAction extends AbstractLiferayActi
 
 		MavenExplicitProfiles explicitProfiles = mavenProjectsManager.getExplicitProfiles();
 
-		Collection<String> enabledProfiles = explicitProfiles.getEnabledProfiles();
-		Collection<String> disabledProfiles = explicitProfiles.getDisabledProfiles();
-
 		MavenRunnerParameters params = new MavenRunnerParameters(
-			true, projectDir, pomFile.getName(), goals, enabledProfiles, disabledProfiles);
+			true, projectDir, pomFile.getName(), goals, explicitProfiles.getEnabledProfiles(),
+			explicitProfiles.getDisabledProfiles());
 
 		RunnerAndConfigurationSettings configuration = MavenRunConfigurationType.createRunnerAndConfigurationSettings(
 			null, null, params, project);
@@ -98,9 +95,7 @@ public abstract class AbstractLiferayMavenGoalAction extends AbstractLiferayActi
 
 	@Override
 	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
-		Project project = anActionEvent.getProject();
-
-		if (LiferayWorkspaceUtil.isValidMavenWorkspaceLocation(project)) {
+		if (LiferayWorkspaceUtil.isValidMavenWorkspaceLocation(anActionEvent.getProject())) {
 			return true;
 		}
 

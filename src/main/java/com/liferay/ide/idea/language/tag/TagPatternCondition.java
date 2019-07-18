@@ -58,9 +58,8 @@ public class TagPatternCondition extends PatternCondition<PsiElement> {
 
 			if (tag != null) {
 				String tagName = tag.getLocalName();
-				String namespace = tag.getNamespace();
 
-				if (tagName.equals(_name) && _uri.equals(namespace)) {
+				if (tagName.equals(_name) && _uri.equals(tag.getNamespace())) {
 					return true;
 				}
 			}
