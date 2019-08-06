@@ -89,9 +89,7 @@ public class LiferayJspDebuggerSourceFinderAdapter implements SourcesFinder<Java
 				VirtualFile[] virtualFiles = library.getFiles(OrderRootType.CLASSES);
 
 				for (VirtualFile virtualFile : virtualFiles) {
-					VirtualFile jarRoot = IntellijUtil.getJarRoot(virtualFile);
-
-					_addJspFiles(relPath, project, sourceFiles, jarRoot);
+					_addJspFiles(relPath, project, sourceFiles, IntellijUtil.getJarRoot(virtualFile));
 				}
 
 				return true;
@@ -117,11 +115,7 @@ public class LiferayJspDebuggerSourceFinderAdapter implements SourcesFinder<Java
 		).filter(
 			Objects::nonNull
 		).forEach(
-			rootVirtualFile -> {
-				VirtualFile jarRoot = IntellijUtil.getJarRoot(rootVirtualFile);
-
-				_addJspFiles(relPath, project, sourceFiles, jarRoot);
-			}
+			rootVirtualFile -> _addJspFiles(relPath, project, sourceFiles, IntellijUtil.getJarRoot(rootVirtualFile))
 		);
 
 		return sourceFiles;
