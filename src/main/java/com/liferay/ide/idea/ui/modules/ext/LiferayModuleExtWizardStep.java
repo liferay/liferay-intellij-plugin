@@ -66,9 +66,7 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 
 		_overrideFilesPanel.setProject(_project);
 
-		boolean indexSources = LiferayWorkspaceUtil.getIndexSources(_project);
-
-		if (indexSources) {
+		if (LiferayWorkspaceUtil.getIndexSources(_project)) {
 			_indexSourcesLabel.setText("");
 		}
 		else {

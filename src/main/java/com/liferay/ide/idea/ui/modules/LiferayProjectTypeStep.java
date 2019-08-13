@@ -122,10 +122,8 @@ public class LiferayProjectTypeStep extends ModuleWizardStep implements Disposab
 
 					Icon icon = factory.getGroupIcon(group);
 
-					String parentGroup = factory.getParentGroup(group);
-
 					TemplatesGroup templatesGroup = new TemplatesGroup(
-						group, null, icon, factory.getGroupWeight(group), parentGroup, group, null);
+						group, null, icon, factory.getGroupWeight(group), factory.getParentGroup(group), group, null);
 
 					groups.putValues(templatesGroup, Arrays.asList(pair.getValue()));
 				}
