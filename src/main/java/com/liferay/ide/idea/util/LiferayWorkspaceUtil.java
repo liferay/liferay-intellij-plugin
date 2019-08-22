@@ -22,20 +22,33 @@ import com.intellij.openapi.externalSystem.model.project.LibraryData;
 import com.intellij.openapi.externalSystem.model.project.ProjectData;
 import com.intellij.openapi.externalSystem.service.project.ProjectDataManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.projectRoots.impl.JavaHomeFinder;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.StringReader;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.gradle.tooling.BuildLauncher;
+import org.gradle.tooling.GradleConnector;
+import org.gradle.tooling.ProjectConnection;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -216,6 +229,74 @@ public class LiferayWorkspaceUtil {
 		return Collections.emptyList();
 	}
 
+	public static List<String> getTargetPlatformDependencies(Project project) {
+		String targetPlatformVersion = getTargetPlatformVersion(project);
+
+		List<String> targetPlatformDependencyList = _targetPlatformDependenciesMap.get(targetPlatformVersion);
+
+		if ((targetPlatformDependencyList != null) && !targetPlatformDependencyList.isEmpty()) {
+			return targetPlatformDependencyList;
+		}
+
+		GradleConnector gradleConnector = GradleConnector.newConnector();
+
+		File file = new File(project.getBasePath());
+
+		gradleConnector = gradleConnector.forProjectDirectory(file);
+
+		ProjectConnection projectConnection = gradleConnector.connect();
+
+		BuildLauncher build = projectConnection.newBuild();
+
+		OutputStream outputStream = new ByteArrayOutputStream();
+
+		List<String> paths = JavaHomeFinder.suggestHomePaths();
+
+		build = build.setJavaHome(new File(paths.get(0)));
+
+		build = build.forTasks("dependencyManagement");
+
+		build = build.setStandardOutput(outputStream);
+
+		build.run();
+
+		String output = outputStream.toString();
+
+		List<String> list = new ArrayList<>();
+
+		if (!output.equals("")) {
+			BufferedReader bufferedReader = new BufferedReader(new StringReader(output));
+
+			String line;
+
+			try {
+				boolean start = false;
+
+				while ((line = bufferedReader.readLine()) != null) {
+					if (Objects.equals("compileOnly - Dependency management for the compileOnly configuration", line)) {
+						start = true;
+
+						continue;
+					}
+
+					if (start) {
+						if (StringUtil.equals(line.trim(), "")) {
+							break;
+						}
+
+						list.add(line.trim());
+					}
+				}
+			}
+			catch (IOException ioe) {
+			}
+		}
+
+		_targetPlatformDependenciesMap.put(targetPlatformVersion, list);
+
+		return list;
+	}
+
 	@Nullable
 	public static String getTargetPlatformVersion(Project project) {
 		String location = project.getBasePath();
@@ -338,5 +419,6 @@ public class LiferayWorkspaceUtil {
 
 	private static final Pattern _patternWorkspacePlugin = Pattern.compile(
 		".*apply.*plugin.*:.*[\'\"]com\\.liferay\\.workspace[\'\"].*", Pattern.MULTILINE | Pattern.DOTALL);
+	private static Map<String, List<String>> _targetPlatformDependenciesMap = new HashMap<>();
 
 }
