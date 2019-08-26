@@ -16,24 +16,17 @@ package com.liferay.ide.idea.ui.modules.ext;
 
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
-import com.intellij.openapi.externalSystem.model.project.LibraryData;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.ColoredListCellRenderer;
-import com.intellij.ui.SimpleTextAttributes;
 import com.intellij.util.ui.UIUtil;
 
-import com.liferay.ide.idea.ui.compoments.FixedSizeRefreshButton;
 import com.liferay.ide.idea.util.CoreUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
 
 import java.awt.event.ItemEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import javax.swing.ComboBoxEditor;
 import javax.swing.JComboBox;
@@ -48,46 +41,27 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Charles Wu
+ * @author Terry Jia
  */
 public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 
-	@SuppressWarnings("serial")
 	public LiferayModuleExtWizardStep(WizardContext wizardContext, LiferayModuleExtBuilder liferayModuleExtBuilder) {
 		_project = wizardContext.getProject();
 		_liferayModuleExtBuilder = liferayModuleExtBuilder;
-
-		_overrideFilesPanel.prepareRefreshButton(_refreshButton, false, () -> _insertOriginalModuleNames(true));
-
-		_overrideFilesPanel.function = () -> {
-			validate();
-
-			return _getSelectedArtifact();
-		};
-
-		_overrideFilesPanel.setProject(_project);
-
-		if (LiferayWorkspaceUtil.getIndexSources(_project)) {
-			_indexSourcesLabel.setText("");
-		}
-		else {
-			_indexSourcesLabel.setText(
-				"This feature only works when the property \"target.platform.index.sources\" is set to true.");
-		}
 
 		_moduleNameHintLabel.setFont(UIUtil.getLabelFont(UIUtil.FontSize.SMALL));
 
 		// customize the presentation of a artifact
 
 		_originalModuleNameComboBox.setRenderer(
-			new ColoredListCellRenderer<LibraryData>() {
+			new ColoredListCellRenderer<String>() {
 
 				@Override
 				protected void customizeCellRenderer(
-					@NotNull JList<? extends LibraryData> list, LibraryData value, int index, boolean selected,
+					@NotNull JList<? extends String> list, String value, int index, boolean selected,
 					boolean hasFocus) {
 
-					append(value.getArtifactId());
-					append("  " + value.getVersion(), SimpleTextAttributes.GRAYED_ATTRIBUTES);
+					append(value);
 				}
 
 			});
@@ -99,15 +73,9 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 
 				@Override
 				public void setItem(Object item) {
-					if (item instanceof LibraryData) {
-						LibraryData libraryData = (LibraryData)item;
+					String text = (String)item;
 
-						String text = libraryData.getArtifactId();
-
-						if (!text.equals(editor.getText())) {
-							editor.setText(text);
-						}
-					}
+					editor.setText(text);
 				}
 
 			});
@@ -119,37 +87,19 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 				if (event.getStateChange() == ItemEvent.SELECTED) {
 					Object item = event.getItem();
 
-					if (item instanceof LibraryData) {
-						LibraryData libraryData = (LibraryData)item;
+					String dependency = (String)item;
 
-						_originalModuleVersionField.setText(libraryData.getVersion());
-					}
+					String[] s = dependency.split(" ");
+
+					_originalModuleVersionField.setText(s[1]);
 				}
 			});
 
-		KeyAdapter keyAdapter = new KeyAdapter() {
-
-			@Override
-			public void keyTyped(KeyEvent e) {
-				//reset the selected source files when input changed
-
-				_overrideFilesPanel.listModel.clear();
-			}
-
-		};
-
-		JTextField textField = (JTextField)_getEditor().getEditorComponent();
-
-		textField.addKeyListener(keyAdapter);
-
-		if (LiferayWorkspaceUtil.getTargetPlatformVersion(_project) != null) {
-			_insertOriginalModuleNames(false);
+		if ((_project != null) && (LiferayWorkspaceUtil.getTargetPlatformVersion(_project) != null)) {
+			_insertOriginalModuleNames();
 
 			_originalModuleNameComboBox.setMaximumRowCount(12);
 			_originalModuleVersionField.setEnabled(false);
-		}
-		else {
-			_originalModuleVersionField.addKeyListener(keyAdapter);
 		}
 	}
 
@@ -162,7 +112,6 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 	public void updateDataModel() {
 		_liferayModuleExtBuilder.setOriginalModuleName(_getOriginalModuleName());
 		_liferayModuleExtBuilder.setOriginalModuleVersion(_originalModuleVersionField.getText());
-		_liferayModuleExtBuilder.setOverrideFilesPanel(_overrideFilesPanel);
 	}
 
 	@Override
@@ -188,49 +137,32 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 	private String _getOriginalModuleName() {
 		Object item = _getEditor().getItem();
 
-		return item.toString();
+		String s = (String)item;
+
+		int i1 = s.indexOf(":");
+		int i2 = s.indexOf(" ");
+
+		return s.substring(i1 + 1, i2);
 	}
 
-	private LibraryData _getSelectedArtifact() {
-		String originalModuleName = _getOriginalModuleName();
+	private void _insertOriginalModuleNames() {
+		List<String> targetPlatformArtifacts = LiferayWorkspaceUtil.getTargetPlatformDependencies(_project);
 
-		for (LibraryData libraryData : _targetPlatformArtifacts) {
-			if (originalModuleName.equals(libraryData.getArtifactId())) {
-				return libraryData;
-			}
-		}
+		targetPlatformArtifacts.forEach(
+			line -> {
+				String[] s = line.split(":");
 
-		return null;
-	}
-
-	private void _insertOriginalModuleNames(boolean clear) {
-		_targetPlatformArtifacts = LiferayWorkspaceUtil.getTargetPlatformArtifacts(_project);
-
-		if (clear) {
-			try {
-				_originalModuleNameComboBox.removeAllItems();
-			}
-			catch (NullPointerException npe) {
-			}
-		}
-
-		_targetPlatformArtifacts.forEach(
-			artifact -> {
-				if (Objects.equals("com.liferay", artifact.getGroupId())) {
-					_originalModuleNameComboBox.addItem(artifact);
+				if (s[0].equals("com.liferay")) {
+					_originalModuleNameComboBox.addItem(line);
 				}
 			});
 	}
 
-	private JLabel _indexSourcesLabel;
 	private LiferayModuleExtBuilder _liferayModuleExtBuilder;
 	private JPanel _mainPanel;
 	private JLabel _moduleNameHintLabel;
-	private JComboBox<LibraryData> _originalModuleNameComboBox;
+	private JComboBox<String> _originalModuleNameComboBox;
 	private JTextField _originalModuleVersionField;
-	private OverrideFilesComponent _overrideFilesPanel;
 	private final Project _project;
-	private FixedSizeRefreshButton _refreshButton;
-	private List<LibraryData> _targetPlatformArtifacts = Collections.emptyList();
 
 }
