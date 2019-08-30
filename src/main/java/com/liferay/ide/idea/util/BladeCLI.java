@@ -49,7 +49,7 @@ public class BladeCLI {
 
 		boolean needToCopy = true;
 
-		File temp = new File(properties.getProperty("user.home"), ".liferay-ide");
+		File temp = new File(properties.getProperty("user.home"), ".liferay-intellij-plugin");
 
 		File bladeJar = new File(temp, "blade.jar");
 
