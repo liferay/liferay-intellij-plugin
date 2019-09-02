@@ -45,45 +45,10 @@ public class BladeCLI {
 		javaTask.setFork(true);
 		javaTask.setFailonerror(true);
 
-		Properties properties = System.getProperties();
-
-		boolean needToCopy = true;
-
-		File temp = new File(properties.getProperty("user.home"), ".liferay-intellij-plugin");
-
-		File bladeJar = new File(temp, "blade.jar");
-
-		ClassLoader bladeClassLoader = BladeCLI.class.getClassLoader();
-
-		URL url = bladeClassLoader.getResource("/libs/blade.jar");
-
-		try (InputStream in = bladeClassLoader.getResourceAsStream("/libs/blade.jar")) {
-			JarURLConnection jarURLConnection = (JarURLConnection)url.openConnection();
-
-			JarEntry jarEntry = jarURLConnection.getJarEntry();
-
-			Long bladeJarTimestamp = jarEntry.getTime();
-
-			if (bladeJar.exists()) {
-				Long destTimestamp = bladeJar.lastModified();
-
-				if (destTimestamp < bladeJarTimestamp) {
-					bladeJar.delete();
-				}
-				else {
-					needToCopy = false;
-				}
-			}
-
-			if (needToCopy) {
-				FileUtil.writeFile(bladeJar, in);
-				bladeJar.setLastModified(bladeJarTimestamp);
-			}
-		}
-		catch (IOException ioe) {
-		}
+		File bladeJar = getBladeJar();
 
 		javaTask.setJar(bladeJar);
+
 		javaTask.setArgs(args);
 
 		DefaultLogger logger = new DefaultLogger();
@@ -125,6 +90,48 @@ public class BladeCLI {
 		}
 
 		return lines.toArray(new String[0]);
+	}
+
+	public static File getBladeJar() {
+		Properties properties = System.getProperties();
+
+		File temp = new File(properties.getProperty("user.home"), ".liferay-intellij-plugin");
+
+		File bladeJar = new File(temp, "blade.jar");
+
+		boolean needToCopy = true;
+
+		ClassLoader bladeClassLoader = BladeCLI.class.getClassLoader();
+
+		URL url = bladeClassLoader.getResource("/libs/blade.jar");
+
+		try (InputStream in = bladeClassLoader.getResourceAsStream("/libs/blade.jar")) {
+			JarURLConnection jarURLConnection = (JarURLConnection)url.openConnection();
+
+			JarEntry jarEntry = jarURLConnection.getJarEntry();
+
+			Long bladeJarTimestamp = jarEntry.getTime();
+
+			if (bladeJar.exists()) {
+				Long destTimestamp = bladeJar.lastModified();
+
+				if (destTimestamp < bladeJarTimestamp) {
+					bladeJar.delete();
+				}
+				else {
+					needToCopy = false;
+				}
+			}
+
+			if (needToCopy) {
+				FileUtil.writeFile(bladeJar, in);
+				bladeJar.setLastModified(bladeJarTimestamp);
+			}
+		}
+		catch (IOException ioe) {
+		}
+
+		return bladeJar;
 	}
 
 	public static synchronized String[] getProjectTemplates() {
