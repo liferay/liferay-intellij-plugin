@@ -93,6 +93,22 @@ public class LiferayTaglibClassNameReferenceContributor extends AbstractLiferayT
 		new HashMap<String, Collection<AbstractMap.SimpleImmutableEntry<String, String>>>() {
 			{
 				put(
+					LiferayTaglibs.TAGLIB_URI_LIFERAY_ASSET,
+					Arrays.asList(
+						new AbstractMap.SimpleImmutableEntry<>("asset-categories-available", "className"),
+						new AbstractMap.SimpleImmutableEntry<>("asset-categories-selector", "className"),
+						new AbstractMap.SimpleImmutableEntry<>("asset-categories-summary", "className"),
+						new AbstractMap.SimpleImmutableEntry<>("asset-display", "className"),
+						new AbstractMap.SimpleImmutableEntry<>("asset-entry-usages", "className"),
+						new AbstractMap.SimpleImmutableEntry<>("asset-links", "className"),
+						new AbstractMap.SimpleImmutableEntry<>("asset-metadata", "className"),
+						new AbstractMap.SimpleImmutableEntry<>("asset-tags-available", "className"),
+						new AbstractMap.SimpleImmutableEntry<>("asset-tags-selector", "className"),
+						new AbstractMap.SimpleImmutableEntry<>("asset-tags-summary", "className"),
+						new AbstractMap.SimpleImmutableEntry<>("asset-view-usages", "className"),
+						new AbstractMap.SimpleImmutableEntry<>("input-asset-links", "className")));
+
+				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI,
 					Arrays.asList(
 						new AbstractMap.SimpleImmutableEntry<>("model-context", "model"),
@@ -101,11 +117,21 @@ public class LiferayTaglibClassNameReferenceContributor extends AbstractLiferayT
 						new AbstractMap.SimpleImmutableEntry<>("workflow-status", "model")));
 
 				put(
+					LiferayTaglibs.TAGLIB_URI_LIFERAY_COMMENT,
+					Arrays.asList(new AbstractMap.SimpleImmutableEntry<>("discussion", "className")));
+
+				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_EXPANDO,
 					Arrays.asList(
 						new AbstractMap.SimpleImmutableEntry<>("custom-attribute", "className"),
 						new AbstractMap.SimpleImmutableEntry<>("custom-attribute-list", "className"),
 						new AbstractMap.SimpleImmutableEntry<>("custom-attributes-available", "className")));
+
+				put(
+					LiferayTaglibs.TAGLIB_URI_LIFERAY_EXPORT_IMPORT_CHANGESET,
+					Arrays.asList(
+						new AbstractMap.SimpleImmutableEntry<>("export-entity", "className"),
+						new AbstractMap.SimpleImmutableEntry<>("publish-entity-menu-item", "className")));
 
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_FLAGS,
@@ -118,6 +144,10 @@ public class LiferayTaglibClassNameReferenceContributor extends AbstractLiferayT
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_SECURITY,
 					Arrays.asList(new AbstractMap.SimpleImmutableEntry<>("permissionsURL", "modelResource")));
+
+				put(
+					LiferayTaglibs.TAGLIB_URI_LIFERAY_SHARING,
+					Arrays.asList(new AbstractMap.SimpleImmutableEntry<>("button", "className")));
 
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_UI,

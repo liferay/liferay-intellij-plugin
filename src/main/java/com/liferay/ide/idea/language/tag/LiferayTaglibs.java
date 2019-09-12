@@ -29,6 +29,8 @@ public class LiferayTaglibs {
 
 	public static final String TAGLIB_URI_LIFERAY_CLAY = "http://liferay.com/tld/clay";
 
+	public static final String TAGLIB_URI_LIFERAY_COMMENT = "http://liferay.com/tld/comment";
+
 	public static final String TAGLIB_URI_LIFERAY_DDM = "http://liferay.com/tld/ddm";
 
 	public static final String TAGLIB_URI_LIFERAY_DOCUMENT_LIBRARY = "http://liferay.com/tld/document-library";
@@ -36,6 +38,9 @@ public class LiferayTaglibs {
 	public static final String TAGLIB_URI_LIFERAY_EDITOR = "http://liferay.com/tld/editor";
 
 	public static final String TAGLIB_URI_LIFERAY_EXPANDO = "http://liferay.com/tld/expando";
+
+	public static final String TAGLIB_URI_LIFERAY_EXPORT_IMPORT_CHANGESET =
+		"http://liferay.com/tld/export-import-changeset";
 
 	public static final String TAGLIB_URI_LIFERAY_FLAGS = "http://liferay.com/tld/flags";
 
@@ -50,6 +55,8 @@ public class LiferayTaglibs {
 	public static final String TAGLIB_URI_LIFERAY_PRODUCT_NAVIGATION = "http://liferay.com/tld/product-navigation";
 
 	public static final String TAGLIB_URI_LIFERAY_SECURITY = "http://liferay.com/tld/security";
+
+	public static final String TAGLIB_URI_LIFERAY_SHARING = "http://liferay.com/tld/sharing";
 
 	public static final String TAGLIB_URI_LIFERAY_SITE = "http://liferay.com/tld/site";
 
