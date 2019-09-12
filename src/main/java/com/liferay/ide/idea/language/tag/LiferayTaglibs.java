@@ -31,6 +31,8 @@ public class LiferayTaglibs {
 
 	public static final String TAGLIB_URI_LIFERAY_DDM = "http://liferay.com/tld/ddm";
 
+	public static final String TAGLIB_URI_LIFERAY_DOCUMENT_LIBRARY = "http://liferay.com/tld/document-library";
+
 	public static final String TAGLIB_URI_LIFERAY_EDITOR = "http://liferay.com/tld/editor";
 
 	public static final String TAGLIB_URI_LIFERAY_EXPANDO = "http://liferay.com/tld/expando";
@@ -40,6 +42,8 @@ public class LiferayTaglibs {
 	public static final String TAGLIB_URI_LIFERAY_FRONTEND = "http://liferay.com/tld/frontend";
 
 	public static final String TAGLIB_URI_LIFERAY_ITEM_SELECTOR = "http://liferay.com/tld/item-selector";
+
+	public static final String TAGLIB_URI_LIFERAY_JOURNAL = "http://liferay.com/tld/journal";
 
 	public static final String TAGLIB_URI_LIFERAY_PORTLET = "http://liferay.com/tld/portlet";
 
