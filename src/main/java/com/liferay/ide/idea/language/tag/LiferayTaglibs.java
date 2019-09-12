@@ -47,6 +47,8 @@ public class LiferayTaglibs {
 
 	public static final String TAGLIB_URI_LIFERAY_PORTLET = "http://liferay.com/tld/portlet";
 
+	public static final String TAGLIB_URI_LIFERAY_PRODUCT_NAVIGATION = "http://liferay.com/tld/product-navigation";
+
 	public static final String TAGLIB_URI_LIFERAY_SECURITY = "http://liferay.com/tld/security";
 
 	public static final String TAGLIB_URI_LIFERAY_SITE = "http://liferay.com/tld/site";
