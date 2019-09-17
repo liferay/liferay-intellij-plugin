@@ -148,10 +148,22 @@ public class LiferayTaglibResourceBundleReferenceContributor extends PsiReferenc
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_FRONTEND,
 					Arrays.asList(
+						new AbstractMap.SimpleImmutableEntry<>("add-menu-item", "title"),
 						new AbstractMap.SimpleImmutableEntry<>("email-notification-settings", "bodyLabel"),
 						new AbstractMap.SimpleImmutableEntry<>("email-notification-settings", "helpMessage"),
+						new AbstractMap.SimpleImmutableEntry<>("fieldset", "helpMessage"),
+						new AbstractMap.SimpleImmutableEntry<>("fieldset", "label"),
 						new AbstractMap.SimpleImmutableEntry<>("management-bar-button", "label"),
 						new AbstractMap.SimpleImmutableEntry<>("management-bar-filter", "label")));
+
+				put(
+					LiferayTaglibs.TAGLIB_URI_LIFERAY_ITEM_SELECTOR,
+					Arrays.asList(
+						new AbstractMap.SimpleImmutableEntry<>("repository-entry-browser", "emptyResultsMessage")));
+
+				put(
+					LiferayTaglibs.TAGLIB_URI_LIFERAY_PRODUCT_NAVIGATION,
+					Arrays.asList(new AbstractMap.SimpleImmutableEntry<>("personal-menu", "label")));
 
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_SITE,
@@ -165,6 +177,7 @@ public class LiferayTaglibResourceBundleReferenceContributor extends PsiReferenc
 						new AbstractMap.SimpleImmutableEntry<>("checkbox", "popover"),
 						new AbstractMap.SimpleImmutableEntry<>("checkbox", "suggestion"),
 						new AbstractMap.SimpleImmutableEntry<>("checkbox", "warning"),
+						new AbstractMap.SimpleImmutableEntry<>("configuration-header", "label"),
 						new AbstractMap.SimpleImmutableEntry<>("popover", "text"),
 						new AbstractMap.SimpleImmutableEntry<>("popover", "title"),
 						new AbstractMap.SimpleImmutableEntry<>("process-date", "labelKey"),
@@ -202,6 +215,8 @@ public class LiferayTaglibResourceBundleReferenceContributor extends PsiReferenc
 						new AbstractMap.SimpleImmutableEntry<>("icon-delete", "message"),
 						new AbstractMap.SimpleImmutableEntry<>("icon-help", "message"),
 						new AbstractMap.SimpleImmutableEntry<>("icon-menu", "message"),
+						new AbstractMap.SimpleImmutableEntry<>("icon-menu", "triggerLabel"),
+						new AbstractMap.SimpleImmutableEntry<>("input-date", "dateTogglerCheckboxLabel"),
 						new AbstractMap.SimpleImmutableEntry<>("input-field", "placeholder"),
 						new AbstractMap.SimpleImmutableEntry<>("input-localized", "helpMessaage"),
 						new AbstractMap.SimpleImmutableEntry<>("input-localized", "placeholder"),

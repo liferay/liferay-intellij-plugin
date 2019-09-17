@@ -222,6 +222,7 @@ public class LiferayTaglibJavascriptLanguageInjector implements JSTargetedInject
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_FRONTEND,
 					Arrays.asList(
 						new AbstractMap.SimpleImmutableEntry<>("edit-form", "onSubmit"),
+						new AbstractMap.SimpleImmutableEntry<>("html-vertical-card", "onClick"),
 						new AbstractMap.SimpleImmutableEntry<>("icon-vertical-card", "onClick"),
 						new AbstractMap.SimpleImmutableEntry<>("vertical-card", "onClick")));
 				put(

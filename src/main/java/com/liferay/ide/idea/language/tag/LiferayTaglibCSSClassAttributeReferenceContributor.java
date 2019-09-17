@@ -53,10 +53,11 @@ public class LiferayTaglibCSSClassAttributeReferenceContributor extends PsiRefer
 	}
 
 	private static final List<String> _attributeNames = Arrays.asList(
-		"anchorCssClass", "checkboxCSSClass", "class", "cssClass", "descriptionCSSClass", "draggableImage",
-		"elementClasses", "emptyResultsMessageCssClass", "helpTextCssClass", "icon", "iconCssClass", "imageCssClass",
-		"imageCSSClass", "labelCSSClass", "linkCssClass", "linkClass", "symbol", "triggerCssClass", "userIconCssClass",
-		"wrapperCssClass");
+		"anchorCssClass", "bodyClasses", "cardCssClass", "checkboxCSSClass", "class", "containerCssClass",
+		"containerWrapperCssClass", "cssClass", "descriptionCSSClass", "draggableImage", "elementClasses",
+		"emptyResultsMessageCssClass", "fieldSetCssClass", "headerClasses", "helpTextCssClass", "icon", "iconCssClass",
+		"imageCssClass", "imageCSSClass", "labelCSSClass", "linkCssClass", "linkClass", "menubarCssClass",
+		"navCssClass", "searchResultCssClass", "symbol", "triggerCssClass", "userIconCssClass", "wrapperCssClass");
 
 	@SuppressWarnings("serial")
 	private static Map<String, Collection<AbstractMap.SimpleImmutableEntry<String, String>>> _taglibAttributes =
@@ -162,14 +163,30 @@ public class LiferayTaglibCSSClassAttributeReferenceContributor extends PsiRefer
 					Arrays.asList(new AbstractMap.SimpleImmutableEntry<>("template-selector", "icon")));
 
 				put(
+					LiferayTaglibs.TAGLIB_URI_LIFERAY_DOCUMENT_LIBRARY,
+					Arrays.asList(new AbstractMap.SimpleImmutableEntry<>("mime-type-sticker", "cssClass")));
+
+				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_EDITOR,
 					Arrays.asList(new AbstractMap.SimpleImmutableEntry<>("editor", "cssClass")));
 
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_FRONTEND,
 					Arrays.asList(
+						new AbstractMap.SimpleImmutableEntry<>("add-menu-item", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("contextual-sidebar", "bodyClasses"),
+						new AbstractMap.SimpleImmutableEntry<>("contextual-sidebar", "elementClasses"),
+						new AbstractMap.SimpleImmutableEntry<>("contextual-sidebar", "headerClasses"),
+						new AbstractMap.SimpleImmutableEntry<>("edit-form", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("fieldset", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("form-navigator", "fieldSetCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("horizontal-card", "cardCssClass"),
 						new AbstractMap.SimpleImmutableEntry<>("horizontal-card", "checkboxCSSClass"),
 						new AbstractMap.SimpleImmutableEntry<>("horizontal-card", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("html-vertical-card", "cardCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("html-vertical-card", "checkboxCSSClass"),
+						new AbstractMap.SimpleImmutableEntry<>("html-vertical-card", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("icon-vertical-card", "cardCssClass"),
 						new AbstractMap.SimpleImmutableEntry<>("icon-vertical-card", "checkboxCSSClass"),
 						new AbstractMap.SimpleImmutableEntry<>("icon-vertical-card", "cssClass"),
 						new AbstractMap.SimpleImmutableEntry<>("image-card", "cssClass"),
@@ -182,9 +199,15 @@ public class LiferayTaglibCSSClassAttributeReferenceContributor extends PsiRefer
 						new AbstractMap.SimpleImmutableEntry<>("management-bar-button", "iconCssClass"),
 						new AbstractMap.SimpleImmutableEntry<>("management-bar-sidenav-toggler-button", "cssClass"),
 						new AbstractMap.SimpleImmutableEntry<>("management-bar-sidenav-toggler-button", "iconCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("screen-navigation", "containerCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("screen-navigation", "containerWrapperCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("screen-navigation", "menubarCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("screen-navigation", "navCssClass"),
 						new AbstractMap.SimpleImmutableEntry<>("translation-manager", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("user-vertical-card", "cardCssClass"),
 						new AbstractMap.SimpleImmutableEntry<>("user-vertical-card", "checkboxCSSClass"),
 						new AbstractMap.SimpleImmutableEntry<>("user-vertical-card", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("vertical-card", "cardCssClass"),
 						new AbstractMap.SimpleImmutableEntry<>("vertical-card", "checkboxCSSClass"),
 						new AbstractMap.SimpleImmutableEntry<>("vertical-card", "cssClass"),
 						new AbstractMap.SimpleImmutableEntry<>("vertical-card", "imageCSSClass"),
@@ -193,6 +216,12 @@ public class LiferayTaglibCSSClassAttributeReferenceContributor extends PsiRefer
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_ITEM_SELECTOR,
 					Arrays.asList(new AbstractMap.SimpleImmutableEntry<>("image-selector", "draggableImage")));
+
+				put(
+					LiferayTaglibs.TAGLIB_URI_LIFERAY_JOURNAL,
+					Arrays.asList(
+						new AbstractMap.SimpleImmutableEntry<>("journal-article", "wrapperCssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("journal-article-display", "wrapperCssClass")));
 
 				put(
 					LiferayTaglibs.TAGLIB_URI_LIFERAY_STAGING,
@@ -248,6 +277,7 @@ public class LiferayTaglibCSSClassAttributeReferenceContributor extends PsiRefer
 						new AbstractMap.SimpleImmutableEntry<>("search-container-column-text", "cssClass"),
 						new AbstractMap.SimpleImmutableEntry<>("search-container-column-user", "cssClass"),
 						new AbstractMap.SimpleImmutableEntry<>("search-container-row", "cssClass"),
+						new AbstractMap.SimpleImmutableEntry<>("search-iterator", "searchResultCssClass"),
 						new AbstractMap.SimpleImmutableEntry<>("tabs", "cssClass"),
 						new AbstractMap.SimpleImmutableEntry<>("user-display", "imageCssClass"),
 						new AbstractMap.SimpleImmutableEntry<>("user-display", "userIconCssClass"),
