@@ -14,6 +14,9 @@
 
 package com.liferay.ide.idea.ui.modules;
 
+import aQute.bnd.version.Version;
+import aQute.bnd.version.VersionRange;
+
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
@@ -25,9 +28,23 @@ import com.intellij.ui.treeStructure.Tree;
 
 import com.liferay.ide.idea.util.BladeCLI;
 import com.liferay.ide.idea.util.CoreUtil;
+import com.liferay.ide.idea.util.FileUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -39,6 +56,8 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import org.apache.commons.io.IOUtils;
+
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -47,6 +66,8 @@ import org.jetbrains.annotations.Nullable;
 public class LiferayModuleWizardStep extends ModuleWizardStep {
 
 	public LiferayModuleWizardStep(LiferayModuleBuilder builder, Project project) {
+		_loadSupportedVersionRanges();
+
 		_builder = builder;
 		_project = project;
 		_typesTree = new Tree();
@@ -204,6 +225,34 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 		String classNameValue = getClassName();
 		PsiDirectoryFactory psiDirectoryFactory = PsiDirectoryFactory.getInstance(workspaceProject);
 		PsiNameHelper psiNameHelper = PsiNameHelper.getInstance(workspaceProject);
+		String liferayVersion = LiferayWorkspaceUtil.getLiferayVersion(_project);
+
+		String type = getSelectedType();
+
+		String projectTemplateName = type.replaceAll("-", ".");
+
+		VersionRange versionRange = _projectTemplateVersionRangeMap.get(projectTemplateName);
+
+		boolean npm = type.startsWith("npm");
+
+		if (versionRange != null) {
+			boolean include = versionRange.includes(new Version(liferayVersion));
+
+			if (!include) {
+				if (npm) {
+					throw new ConfigurationException(
+						"NPM portlet project templates generated from this tool are not supported for specified " +
+							"Liferay version. See LPS-97950 for full details.",
+						validationTitle);
+				}
+
+				throw new ConfigurationException(
+					"Specified Liferay version is invaild. Must be in range " + versionRange, validationTitle);
+			}
+		}
+		else {
+			throw new ConfigurationException("Unable to get supported Liferay version", validationTitle);
+		}
 
 		if (!CoreUtil.isNullOrEmpty(packageNameValue) && !psiDirectoryFactory.isValidPackageName(packageNameValue)) {
 			throw new ConfigurationException(packageNameValue + " is not a valid package name", validationTitle);
@@ -215,6 +264,78 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 
 		return true;
 	}
+
+	private void _loadSupportedVersionRanges() {
+		File bladeJar = BladeCLI.getBladeJar();
+
+		if (bladeJar != null) {
+			try (ZipFile zipFile = new ZipFile(bladeJar)) {
+				Enumeration<? extends ZipEntry> entries = zipFile.entries();
+
+				while (entries.hasMoreElements()) {
+					ZipEntry entry = entries.nextElement();
+
+					String entryName = entry.getName();
+
+					if (entryName.endsWith(".jar") && entryName.startsWith("com.liferay.project.templates.")) {
+						try (InputStream in = zipFile.getInputStream(entry)) {
+							Path tempDirectory = Files.createTempDirectory("template-directory-for-blade");
+
+							File stateFile = tempDirectory.toFile();
+
+							File tempFile = new File(stateFile, entryName);
+
+							FileUtil.writeFile(tempFile, in);
+
+							try (ZipFile tempZipFile = new ZipFile(tempFile)) {
+								Enumeration<? extends ZipEntry> tempEntries = tempZipFile.entries();
+
+								while (tempEntries.hasMoreElements()) {
+									ZipEntry tempEntry = tempEntries.nextElement();
+
+									String tempEntryName = tempEntry.getName();
+
+									if (tempEntryName.equals("META-INF/MANIFEST.MF")) {
+										try (InputStream manifestInput = tempZipFile.getInputStream(tempEntry)) {
+											List<String> lines = IOUtils.readLines(manifestInput);
+
+											for (String line : lines) {
+												String liferayVersionString = "Liferay-Versions:";
+
+												if (line.startsWith(liferayVersionString)) {
+													String versionRangeValue = line.substring(
+														liferayVersionString.length());
+
+													String projectTemplateName = entryName.substring(
+														"com.liferay.project.templates.".length(),
+														entryName.indexOf("-"));
+
+													_projectTemplateVersionRangeMap.put(
+														projectTemplateName, new VersionRange(versionRangeValue));
+
+													break;
+												}
+											}
+										}
+
+										break;
+									}
+								}
+							}
+
+							tempFile.delete();
+
+							stateFile.delete();
+						}
+					}
+				}
+			}
+			catch (IOException ioe) {
+			}
+		}
+	}
+
+	private static Map<String, VersionRange> _projectTemplateVersionRangeMap = new HashMap<>();
 
 	private LiferayModuleBuilder _builder;
 	private JTextField _className;
