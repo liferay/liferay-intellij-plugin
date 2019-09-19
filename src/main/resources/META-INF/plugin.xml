@@ -31,6 +31,14 @@
 	</p>
 	<p>
 		<ul>
+			<li>1.6.0</li>
+			<ul>
+				<li>INTELLIJ-78 update xml schemas and portlet 3.0 specification</li>
+				<li>INTELLIJ-81 remove requirement for index.source when creating modules ext project</li>
+				<li>INTELLIJ-60 bug fix for copy blade into ./liferay-intellij-olugin folder</li>
+				<li>INTELLIJ-82 update taglib code completions for Liferay 7.1/7.2</li>
+				<li>Updated embedded blade cli to 3.8.0</li>
+			</ul>
 			<li>1.5.1</li>
 			<ul>
 				<li>INTELLIJ-72 add option of enable target platform on new Liferay Workspace wizard</li>
