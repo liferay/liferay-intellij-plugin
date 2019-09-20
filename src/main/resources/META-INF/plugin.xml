@@ -34,9 +34,9 @@
 			<li>1.6.0</li>
 			<ul>
 				<li>INTELLIJ-78 update xml schemas and portlet 3.0 specification</li>
+				<li>INTELLIJ-79 add project template support version validation</li>
 				<li>INTELLIJ-81 remove requirement for index.source when creating modules ext project</li>
-				<li>INTELLIJ-60 bug fix for copy blade into ./liferay-intellij-olugin folder</li>
-				<li>INTELLIJ-82 update taglib code completions for Liferay 7.1/7.2</li>
+				<li>INTELLIJ-82 update taglib code completions for Liferay 7.1/7.2(community contribution)</li>
 				<li>Updated embedded blade cli to 3.8.0</li>
 			</ul>
 			<li>1.5.1</li>
