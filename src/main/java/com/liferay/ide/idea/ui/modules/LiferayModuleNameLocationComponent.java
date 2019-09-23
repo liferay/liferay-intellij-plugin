@@ -289,13 +289,15 @@ public class LiferayModuleNameLocationComponent {
 		AbstractModuleBuilder builder = getModuleBuilder();
 		LiferayModuleBuilder liferayModuleBuilder = null;
 
-		String targetFolder = "modules";
+		Project project = _context.getProject();
+
+		String targetFolder = LiferayWorkspaceUtil.getModulesDir(project);
 
 		if (builder instanceof LiferayModuleBuilder) {
 			liferayModuleBuilder = (LiferayModuleBuilder)builder;
 		}
 		else if (builder instanceof LiferayModuleExtBuilder) {
-			targetFolder = LiferayWorkspaceUtil.getModuleExtDir(_context.getProject());
+			targetFolder = LiferayWorkspaceUtil.getModuleExtDir(project);
 		}
 
 		if (liferayModuleBuilder != null) {
@@ -305,7 +307,10 @@ public class LiferayModuleNameLocationComponent {
 				Objects.equals("spring-mvc-portlet", templateType) || Objects.equals("war-hook", templateType) ||
 				Objects.equals("war-mvc-portlet", templateType)) {
 
-				targetFolder = "wars";
+				targetFolder = LiferayWorkspaceUtil.getWarsDir(project);
+			}
+			else if (Objects.equals("war-core-ext", templateType)) {
+				targetFolder = LiferayWorkspaceUtil.getModuleExtDir(project);
 			}
 		}
 

@@ -195,6 +195,27 @@ public class LiferayWorkspaceUtil {
 		return localFileSystem.findFileByPath(file.getPath());
 	}
 
+	@NotNull
+	public static String getModulesDir(Project project) {
+		String retval = null;
+
+		if (project != null) {
+			String projectLocation = project.getBasePath();
+
+			if (projectLocation != null) {
+				retval = _getGradleProperty(
+					projectLocation, WorkspaceConstants.DEFAULT_MODULES_DIR_PROPERTY,
+					WorkspaceConstants.DEFAULT_MODULES_DIR);
+			}
+		}
+
+		if (CoreUtil.isNullOrEmpty(retval)) {
+			return WorkspaceConstants.DEFAULT_MODULES_DIR;
+		}
+
+		return retval;
+	}
+
 	public static List<LibraryData> getTargetPlatformArtifacts(Project project) {
 		ProjectDataManager projectDataManager = ProjectDataManager.getInstance();
 
@@ -306,6 +327,26 @@ public class LiferayWorkspaceUtil {
 		String location = project.getBasePath();
 
 		return _getGradleProperty(location, WorkspaceConstants.DEFAULT_TARGET_PLATFORM_VERSION_PROPERTY, null);
+	}
+
+	@NotNull
+	public static String getWarsDir(Project project) {
+		String retval = null;
+
+		if (project != null) {
+			String projectLocation = project.getBasePath();
+
+			if (projectLocation != null) {
+				retval = _getGradleProperty(
+					projectLocation, WorkspaceConstants.DEFAULT_WARS_DIR_PROPERTY, WorkspaceConstants.DEFAULT_WARS_DIR);
+			}
+		}
+
+		if (CoreUtil.isNullOrEmpty(retval)) {
+			return WorkspaceConstants.DEFAULT_WARS_DIR;
+		}
+
+		return retval;
 	}
 
 	@Nullable
