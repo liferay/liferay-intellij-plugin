@@ -238,6 +238,12 @@ public class LiferayWorkspaceUtil {
 			return targetPlatformDependencyList;
 		}
 
+		List<String> javaHomePaths = JavaHomeFinder.suggestHomePaths();
+
+		if (javaHomePaths.isEmpty()) {
+			return Collections.emptyList();
+		}
+
 		GradleConnector gradleConnector = GradleConnector.newConnector();
 
 		File file = new File(project.getBasePath());
@@ -250,9 +256,7 @@ public class LiferayWorkspaceUtil {
 
 		OutputStream outputStream = new ByteArrayOutputStream();
 
-		List<String> paths = JavaHomeFinder.suggestHomePaths();
-
-		build = build.setJavaHome(new File(paths.get(0)));
+		build = build.setJavaHome(new File(javaHomePaths.get(0)));
 
 		build = build.forTasks("dependencyManagement");
 
