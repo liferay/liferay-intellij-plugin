@@ -40,7 +40,7 @@ import com.intellij.psi.PsiResolveHelper;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.PsiShortNamesCache;
 
-import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -75,7 +75,7 @@ public class GradleDependencyQuickFixProvider extends UnresolvedReferenceQuickFi
 
 		PsiFile containingPsiFile = psiElement.getContainingFile();
 
-		if (!LiferayWorkspaceUtil.isValidGradleWorkspaceProject(project) || (containingPsiFile == null)) {
+		if (!LiferayWorkspaceSupport.isValidGradleWorkspaceProject(project) || (containingPsiFile == null)) {
 			return;
 		}
 

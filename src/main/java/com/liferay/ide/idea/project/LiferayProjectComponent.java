@@ -36,7 +36,7 @@ import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 
 import com.liferay.ide.idea.util.FileUtil;
-import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -62,7 +62,7 @@ public class LiferayProjectComponent implements ProjectComponent {
 
 			@Override
 			public void moduleAdded(@NotNull Project project, @NotNull Module module) {
-				if (LiferayWorkspaceUtil.isValidWorkspaceLocation(project)) {
+				if (LiferayWorkspaceSupport.isValidWorkspaceLocation(project)) {
 					_addWebRoot(module);
 				}
 			}

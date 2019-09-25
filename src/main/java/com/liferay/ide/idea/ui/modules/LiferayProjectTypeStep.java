@@ -66,7 +66,7 @@ import com.intellij.util.ui.UIUtil;
 
 import com.liferay.ide.idea.ui.modules.ext.LiferayModuleExtBuilder;
 import com.liferay.ide.idea.util.CoreUtil;
-import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import gnu.trove.THashMap;
 
@@ -550,7 +550,7 @@ public class LiferayProjectTypeStep extends ModuleWizardStep implements Disposab
 	private List<TemplatesGroup> _fillTemplatesMap(Project project) {
 		_templatesMap.put(new TemplatesGroup(new LiferayModuleBuilder()), new ArrayList<>());
 
-		if (LiferayWorkspaceUtil.isValidGradleWorkspaceLocation(project.getBasePath())) {
+		if (LiferayWorkspaceSupport.isValidGradleWorkspaceLocation(project.getBasePath())) {
 			_templatesMap.put(new TemplatesGroup(new LiferayModuleExtBuilder()), new ArrayList<>());
 		}
 

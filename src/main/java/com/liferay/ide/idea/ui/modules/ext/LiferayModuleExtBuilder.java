@@ -29,7 +29,7 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import com.liferay.ide.idea.util.BladeCLI;
-import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import icons.LiferayIcons;
 
@@ -44,7 +44,7 @@ import org.jetbrains.plugins.gradle.util.GradleConstants;
  * @author Simon Jiang
  * @author Charles Wu
  */
-public class LiferayModuleExtBuilder extends ModuleBuilder {
+public class LiferayModuleExtBuilder extends ModuleBuilder implements LiferayWorkspaceSupport {
 
 	@Override
 	public String getBuilderId() {
@@ -136,7 +136,7 @@ public class LiferayModuleExtBuilder extends ModuleBuilder {
 		sb.append("-m ");
 		sb.append(_originalModuleName);
 
-		if (LiferayWorkspaceUtil.getTargetPlatformVersion(project) == null) {
+		if (getTargetPlatformVersion(project) == null) {
 			sb.append(" -M ");
 			sb.append(_originalModuleVersion);
 		}

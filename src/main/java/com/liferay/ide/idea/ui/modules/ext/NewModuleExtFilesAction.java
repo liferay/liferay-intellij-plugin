@@ -35,7 +35,7 @@ import com.liferay.ide.idea.core.MessagesBundle;
 import com.liferay.ide.idea.ui.compoments.FixedSizeRefreshButton;
 import com.liferay.ide.idea.util.GradleDependency;
 import com.liferay.ide.idea.util.GradleDependencyUpdater;
-import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import java.io.IOException;
 
@@ -49,7 +49,7 @@ import javax.swing.JTextField;
 /**
  * @author Charles Wu
  */
-public class NewModuleExtFilesAction extends AnAction implements DumbAware {
+public class NewModuleExtFilesAction extends AnAction implements DumbAware, LiferayWorkspaceSupport {
 
 	@Override
 	public void actionPerformed(AnActionEvent anActionEvent) {
@@ -66,7 +66,7 @@ public class NewModuleExtFilesAction extends AnAction implements DumbAware {
 
 		VirtualFile contextVirtualFile = anActionEvent.getData(CommonDataKeys.VIRTUAL_FILE);
 
-		VirtualFile moduleExtDir = LiferayWorkspaceUtil.getModuleExtDirFile(anActionEvent.getProject());
+		VirtualFile moduleExtDir = getModuleExtDirFile(anActionEvent.getProject());
 
 		if ((contextVirtualFile == null) || (moduleExtDir == null)) {
 			return;
@@ -140,7 +140,8 @@ public class NewModuleExtFilesAction extends AnAction implements DumbAware {
 
 		private void _getLibraryData() {
 			try {
-				List<LibraryData> targetPlatformArtifacts = LiferayWorkspaceUtil.getTargetPlatformArtifacts(_project);
+				List<LibraryData> targetPlatformArtifacts = LiferayWorkspaceSupport.getTargetPlatformArtifacts(
+					_project);
 
 				if (targetPlatformArtifacts.isEmpty()) {
 					return;

@@ -26,7 +26,7 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 
-import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import java.util.List;
 
@@ -95,7 +95,7 @@ public abstract class AbstractLiferayMavenGoalAction extends AbstractLiferayActi
 
 	@Override
 	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
-		if (LiferayWorkspaceUtil.isValidMavenWorkspaceLocation(anActionEvent.getProject())) {
+		if (LiferayWorkspaceSupport.isValidMavenWorkspaceLocation(anActionEvent.getProject())) {
 			return true;
 		}
 

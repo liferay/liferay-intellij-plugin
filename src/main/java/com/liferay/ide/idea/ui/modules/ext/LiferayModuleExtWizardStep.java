@@ -22,7 +22,7 @@ import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.util.ui.UIUtil;
 
 import com.liferay.ide.idea.util.CoreUtil;
-import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import java.awt.event.ItemEvent;
 
@@ -43,7 +43,7 @@ import org.jetbrains.annotations.NotNull;
  * @author Charles Wu
  * @author Terry Jia
  */
-public class LiferayModuleExtWizardStep extends ModuleWizardStep {
+public class LiferayModuleExtWizardStep extends ModuleWizardStep implements LiferayWorkspaceSupport {
 
 	public LiferayModuleExtWizardStep(WizardContext wizardContext, LiferayModuleExtBuilder liferayModuleExtBuilder) {
 		_project = wizardContext.getProject();
@@ -95,7 +95,7 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 				}
 			});
 
-		if ((_project != null) && (LiferayWorkspaceUtil.getTargetPlatformVersion(_project) != null)) {
+		if ((_project != null) && (getTargetPlatformVersion(_project) != null)) {
 			_insertOriginalModuleNames();
 
 			_originalModuleNameComboBox.setMaximumRowCount(12);
@@ -121,7 +121,7 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 		if (CoreUtil.isNullOrEmpty(_getOriginalModuleName())) {
 			throw new ConfigurationException("Please input original module name", validationTitle);
 		}
-		else if ((LiferayWorkspaceUtil.getTargetPlatformVersion(_project) == null) &&
+		else if ((getTargetPlatformVersion(_project) == null) &&
 				 CoreUtil.isNullOrEmpty(_originalModuleVersionField.getText())) {
 
 			throw new ConfigurationException("Please input original module version", validationTitle);
@@ -146,7 +146,7 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 	}
 
 	private void _insertOriginalModuleNames() {
-		List<String> targetPlatformArtifacts = LiferayWorkspaceUtil.getTargetPlatformDependencies(_project);
+		List<String> targetPlatformArtifacts = getTargetPlatformDependencies(_project);
 
 		targetPlatformArtifacts.forEach(
 			line -> {

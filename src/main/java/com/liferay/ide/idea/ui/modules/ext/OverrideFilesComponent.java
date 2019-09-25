@@ -42,7 +42,7 @@ import com.intellij.util.ui.UIUtil;
 
 import com.liferay.ide.idea.core.MessagesBundle;
 import com.liferay.ide.idea.ui.compoments.FixedSizeRefreshButton;
-import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 import com.liferay.ide.idea.util.ZipUtil;
 
 import java.awt.Component;
@@ -69,7 +69,7 @@ import org.jetbrains.plugins.gradle.util.GradleConstants;
 /**
  * @author Charles Wu
  */
-public class OverrideFilesComponent {
+public class OverrideFilesComponent implements LiferayWorkspaceSupport {
 
 	public OverrideFilesComponent() {
 		listModel = new DefaultListModel<>();
@@ -132,7 +132,7 @@ public class OverrideFilesComponent {
 			event -> {
 				refreshButton.setEnabled(false);
 
-				if ((LiferayWorkspaceUtil.getTargetPlatformVersion(_project) == null) && !selectingFiles) {
+				if ((getTargetPlatformVersion(_project) == null) && !selectingFiles) {
 					Messages.showMessageDialog(
 						_project, MessagesBundle.message("modules.ext.targetPlatform.mention"), "Warning",
 						Messages.getWarningIcon());

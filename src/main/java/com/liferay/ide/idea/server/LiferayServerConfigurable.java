@@ -31,7 +31,7 @@ import com.intellij.ui.UserActivityWatcher;
 
 import com.liferay.ide.idea.server.portal.PortalBundle;
 import com.liferay.ide.idea.util.FileUtil;
-import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 import com.liferay.ide.idea.util.ServerUtil;
 
 import java.nio.file.Path;
@@ -49,7 +49,8 @@ import org.jetbrains.annotations.Nullable;
  * @author Terry Jia
  * @author Simon Jiang
  */
-public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfiguration> implements PanelWithAnchor {
+public class LiferayServerConfigurable
+	extends SettingsEditor<LiferayServerConfiguration> implements LiferayWorkspaceSupport, PanelWithAnchor {
 
 	public LiferayServerConfigurable(Project project) {
 		ModulesComboBox modulesComboBox = _modules.getComponent();
@@ -132,10 +133,10 @@ public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfi
 
 			String basePath = project.getBasePath();
 
-			Path path = Paths.get(LiferayWorkspaceUtil.getHomeDir(basePath));
+			Path path = Paths.get(getHomeDir(basePath));
 
 			if (!path.isAbsolute()) {
-				path = Paths.get(basePath, LiferayWorkspaceUtil.getHomeDir(basePath));
+				path = Paths.get(basePath, getHomeDir(basePath));
 			}
 
 			_liferayServer.setText(path.toString());

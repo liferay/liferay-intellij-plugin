@@ -29,7 +29,7 @@ import com.intellij.ui.treeStructure.Tree;
 import com.liferay.ide.idea.util.BladeCLI;
 import com.liferay.ide.idea.util.CoreUtil;
 import com.liferay.ide.idea.util.FileUtil;
-import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,7 +63,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Terry Jia
  */
-public class LiferayModuleWizardStep extends ModuleWizardStep {
+public class LiferayModuleWizardStep extends ModuleWizardStep implements LiferayWorkspaceSupport {
 
 	public LiferayModuleWizardStep(LiferayModuleBuilder builder, Project project) {
 		_loadSupportedVersionRanges();
@@ -138,7 +138,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode("root", true);
 
-		String liferayVersion = LiferayWorkspaceUtil.getLiferayVersion(_project);
+		String liferayVersion = getLiferayVersion(_project);
 
 		for (String type : BladeCLI.getProjectTemplates()) {
 			if (Objects.equals("fragment", type) || Objects.equals("modules-ext", type) ||
@@ -225,7 +225,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 		String classNameValue = getClassName();
 		PsiDirectoryFactory psiDirectoryFactory = PsiDirectoryFactory.getInstance(workspaceProject);
 		PsiNameHelper psiNameHelper = PsiNameHelper.getInstance(workspaceProject);
-		String liferayVersion = LiferayWorkspaceUtil.getLiferayVersion(_project);
+		String liferayVersion = getLiferayVersion(_project);
 
 		String type = getSelectedType();
 

@@ -61,121 +61,7 @@ import org.jetbrains.plugins.gradle.util.GradleConstants;
  * @author Terry Jia
  * @author Simon Jiang
  */
-public class LiferayWorkspaceUtil {
-
-	public static String getHomeDir(String location) {
-		String result = _getGradleProperty(
-			location, WorkspaceConstants.HOME_DIR_PROPERTY, WorkspaceConstants.HOME_DIR_DEFAULT);
-
-		if ((result == null) || result.equals("")) {
-			return WorkspaceConstants.HOME_DIR_DEFAULT;
-		}
-
-		return result;
-	}
-
-	public static boolean getIndexSources(Project project) {
-		String result = "false";
-
-		VirtualFile workspaceVirtualFile = getWorkspaceVirtualFile(project);
-
-		if (workspaceVirtualFile != null) {
-			VirtualFile gradlePropertiesVirtualFile = workspaceVirtualFile.findFileByRelativePath("/gradle.properties");
-
-			if (gradlePropertiesVirtualFile != null) {
-				Properties properties = new Properties();
-
-				try {
-					properties.load(gradlePropertiesVirtualFile.getInputStream());
-
-					result = properties.getProperty(WorkspaceConstants.DEFAULT_TARGET_PLATFORM_INDEX_SOURCES_PROPERTY);
-				}
-				catch (IOException ioe) {
-				}
-			}
-		}
-
-		return Boolean.parseBoolean(result);
-	}
-
-	@Nullable
-	public static String getLiferayVersion(Project project) {
-		PropertiesComponent propertiesComponent = PropertiesComponent.getInstance(project);
-
-		String liferayVersion = propertiesComponent.getValue(WorkspaceConstants.WIZARD_LIFERAY_VERSION_FIELD);
-
-		if (liferayVersion != null) {
-			return liferayVersion;
-		}
-
-		VirtualFile projectRoot = getWorkspaceVirtualFile(project);
-
-		if (projectRoot == null) {
-			return null;
-		}
-
-		VirtualFile settingsVirtualFile = projectRoot.findFileByRelativePath("/.blade.properties");
-
-		if (settingsVirtualFile != null) {
-			Properties props = new Properties();
-
-			try {
-				props.load(settingsVirtualFile.getInputStream());
-
-				liferayVersion = props.getProperty(WorkspaceConstants.BLADE_LIFERAY_VERSION_FIELD);
-			}
-			catch (IOException ioe) {
-			}
-		}
-
-		return liferayVersion;
-	}
-
-	@Nullable
-	public static String getMavenProperty(Project project, String key, String defaultValue) {
-		if (!isValidMavenWorkspaceLocation(project)) {
-			return null;
-		}
-
-		MavenProjectsManager mavenProjectsManager = MavenProjectsManager.getInstance(project);
-
-		MavenProject mavenWorkspaceProject = mavenProjectsManager.findContainingProject(
-			getWorkspaceVirtualFile(project));
-
-		if (mavenWorkspaceProject == null) {
-			return defaultValue;
-		}
-
-		Properties properties = mavenWorkspaceProject.getProperties();
-
-		return properties.getProperty(key, defaultValue);
-	}
-
-	@Nullable
-	public static VirtualFile getModuleExtDirFile(Project project) {
-		if (project == null) {
-			return null;
-		}
-
-		String moduleExtDir = getWorkspaceProperty(
-			project, WorkspaceConstants.DEFAULT_EXT_DIR_PROPERTY, WorkspaceConstants.DEFAULT_EXT_DIR);
-
-		File file = new File(moduleExtDir);
-
-		if (!file.isAbsolute()) {
-			String projectBasePath = project.getBasePath();
-
-			if (projectBasePath == null) {
-				return null;
-			}
-
-			file = new File(projectBasePath, moduleExtDir);
-		}
-
-		LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
-
-		return localFileSystem.findFileByPath(file.getPath());
-	}
+public interface LiferayWorkspaceSupport {
 
 	public static List<LibraryData> getTargetPlatformArtifacts(Project project) {
 		ProjectDataManager projectDataManager = ProjectDataManager.getInstance();
@@ -211,10 +97,231 @@ public class LiferayWorkspaceUtil {
 		return Collections.emptyList();
 	}
 
-	public static List<String> getTargetPlatformDependencies(Project project) {
+	@Nullable
+	public static VirtualFile getWorkspaceVirtualFile(@Nullable Project project) {
+		if (project == null) {
+			return null;
+		}
+
+		String projectBasePath = project.getBasePath();
+
+		if (projectBasePath == null) {
+			return null;
+		}
+
+		LocalFileSystem fileSystem = LocalFileSystem.getInstance();
+
+		return fileSystem.findFileByPath(projectBasePath);
+	}
+
+	public static boolean isValidGradleWorkspaceLocation(@Nullable String location) {
+		if (location == null) {
+			return false;
+		}
+
+		File workspaceDir = new File(location);
+
+		File buildGradle = new File(workspaceDir, BUILD_GRADLE_FILE_NAME);
+		File settingsGradle = new File(workspaceDir, SETTINGS_GRADLE_FILE_NAME);
+		File gradleProperties = new File(workspaceDir, GRADLE_PROPERTIES_FILE_NAME);
+
+		if (!(buildGradle.exists() && settingsGradle.exists() && gradleProperties.exists())) {
+			return false;
+		}
+
+		String settingsContent = FileUtil.readContents(settingsGradle, true);
+
+		Matcher matcher = PATTERN_WORKSPACE_PLUGIN.matcher(settingsContent);
+
+		return matcher.matches();
+	}
+
+	public static boolean isValidGradleWorkspaceProject(Project project) {
+		return isValidGradleWorkspaceLocation(project.getBasePath());
+	}
+
+	public static boolean isValidMavenWorkspaceLocation(Project project) {
+		if (project == null) {
+			return false;
+		}
+
+		try {
+			MavenProjectsManager mavenProjectsManager = MavenProjectsManager.getInstance(project);
+
+			if (!mavenProjectsManager.isMavenizedProject()) {
+				return false;
+			}
+
+			VirtualFile workspaceVirtualFile = getWorkspaceVirtualFile(project);
+
+			if (workspaceVirtualFile == null) {
+				return false;
+			}
+
+			MavenProject mavenWorkspaceProject = mavenProjectsManager.findContainingProject(workspaceVirtualFile);
+
+			if (mavenWorkspaceProject == null) {
+				return false;
+			}
+
+			MavenPlugin liferayWorkspacePlugin = mavenWorkspaceProject.findPlugin(
+				"com.liferay", "com.liferay.portal.tools.bundle.support");
+
+			if (liferayWorkspacePlugin != null) {
+				return true;
+			}
+		}
+		catch (Exception e) {
+			return false;
+		}
+
+		return false;
+	}
+
+	public static boolean isValidWorkspaceLocation(Project project) {
+		if ((project != null) &&
+			(isValidGradleWorkspaceLocation(project.getBasePath()) || isValidMavenWorkspaceLocation(project))) {
+
+			return true;
+		}
+
+		return false;
+	}
+
+	public default String getGradleProperty(String projectLocation, String key, String defaultValue) {
+		File gradleProperties = new File(projectLocation, "gradle.properties");
+
+		if (gradleProperties.exists()) {
+			Properties properties = PropertiesUtil.loadProperties(gradleProperties);
+
+			if (properties == null) {
+				return defaultValue;
+			}
+
+			return properties.getProperty(key, defaultValue);
+		}
+
+		return "";
+	}
+
+	public default String getHomeDir(String location) {
+		String result = getGradleProperty(
+			location, WorkspaceConstants.HOME_DIR_PROPERTY, WorkspaceConstants.HOME_DIR_DEFAULT);
+
+		if ((result == null) || result.equals("")) {
+			return WorkspaceConstants.HOME_DIR_DEFAULT;
+		}
+
+		return result;
+	}
+
+	public default boolean getIndexSources(Project project) {
+		String result = "false";
+
+		VirtualFile workspaceVirtualFile = getWorkspaceVirtualFile(project);
+
+		if (workspaceVirtualFile != null) {
+			VirtualFile gradlePropertiesVirtualFile = workspaceVirtualFile.findFileByRelativePath("/gradle.properties");
+
+			if (gradlePropertiesVirtualFile != null) {
+				Properties properties = new Properties();
+
+				try {
+					properties.load(gradlePropertiesVirtualFile.getInputStream());
+
+					result = properties.getProperty(WorkspaceConstants.TARGET_PLATFORM_INDEX_SOURCES_PROPERTY);
+				}
+				catch (IOException ioe) {
+				}
+			}
+		}
+
+		return Boolean.parseBoolean(result);
+	}
+
+	@Nullable
+	public default String getLiferayVersion(Project project) {
+		PropertiesComponent propertiesComponent = PropertiesComponent.getInstance(project);
+
+		String liferayVersion = propertiesComponent.getValue(WorkspaceConstants.WIZARD_LIFERAY_VERSION_FIELD);
+
+		if (liferayVersion != null) {
+			return liferayVersion;
+		}
+
+		VirtualFile projectRoot = getWorkspaceVirtualFile(project);
+
+		if (projectRoot == null) {
+			return null;
+		}
+
+		VirtualFile settingsVirtualFile = projectRoot.findFileByRelativePath("/.blade.properties");
+
+		if (settingsVirtualFile != null) {
+			Properties props = new Properties();
+
+			try {
+				props.load(settingsVirtualFile.getInputStream());
+
+				liferayVersion = props.getProperty(WorkspaceConstants.BLADE_LIFERAY_VERSION_FIELD);
+			}
+			catch (IOException ioe) {
+			}
+		}
+
+		return liferayVersion;
+	}
+
+	@Nullable
+	public default String getMavenProperty(Project project, String key, String defaultValue) {
+		if (!isValidMavenWorkspaceLocation(project)) {
+			return null;
+		}
+
+		MavenProjectsManager mavenProjectsManager = MavenProjectsManager.getInstance(project);
+
+		MavenProject mavenWorkspaceProject = mavenProjectsManager.findContainingProject(
+			getWorkspaceVirtualFile(project));
+
+		if (mavenWorkspaceProject == null) {
+			return defaultValue;
+		}
+
+		Properties properties = mavenWorkspaceProject.getProperties();
+
+		return properties.getProperty(key, defaultValue);
+	}
+
+	@Nullable
+	public default VirtualFile getModuleExtDirFile(Project project) {
+		if (project == null) {
+			return null;
+		}
+
+		String moduleExtDir = getWorkspaceProperty(
+			project, WorkspaceConstants.EXT_DIR_PROPERTY, WorkspaceConstants.EXT_DIR_DEFAULT);
+
+		File file = new File(moduleExtDir);
+
+		if (!file.isAbsolute()) {
+			String projectBasePath = project.getBasePath();
+
+			if (projectBasePath == null) {
+				return null;
+			}
+
+			file = new File(projectBasePath, moduleExtDir);
+		}
+
+		LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
+
+		return localFileSystem.findFileByPath(file.getPath());
+	}
+
+	public default List<String> getTargetPlatformDependencies(Project project) {
 		String targetPlatformVersion = getTargetPlatformVersion(project);
 
-		List<String> targetPlatformDependencyList = _targetPlatformDependenciesMap.get(targetPlatformVersion);
+		List<String> targetPlatformDependencyList = targetPlatformDependenciesMap.get(targetPlatformVersion);
 
 		if ((targetPlatformDependencyList != null) && !targetPlatformDependencyList.isEmpty()) {
 			return targetPlatformDependencyList;
@@ -278,27 +385,27 @@ public class LiferayWorkspaceUtil {
 			}
 		}
 
-		_targetPlatformDependenciesMap.put(targetPlatformVersion, list);
+		targetPlatformDependenciesMap.put(targetPlatformVersion, list);
 
 		return list;
 	}
 
 	@Nullable
-	public static String getTargetPlatformVersion(Project project) {
+	public default String getTargetPlatformVersion(Project project) {
 		String location = project.getBasePath();
 
-		return _getGradleProperty(location, WorkspaceConstants.DEFAULT_TARGET_PLATFORM_VERSION_PROPERTY, null);
+		return getGradleProperty(location, WorkspaceConstants.TARGET_PLATFORM_VERSION_PROPERTY, null);
 	}
 
 	@NotNull
-	public static String getWorkspaceProperty(Project project, String key, String defaultValue) {
+	public default String getWorkspaceProperty(Project project, String key, String defaultValue) {
 		String retval = null;
 
 		if (project != null) {
 			String projectLocation = project.getBasePath();
 
 			if (projectLocation != null) {
-				retval = _getGradleProperty(projectLocation, key, defaultValue);
+				retval = getGradleProperty(projectLocation, key, defaultValue);
 			}
 		}
 
@@ -309,121 +416,15 @@ public class LiferayWorkspaceUtil {
 		return retval;
 	}
 
-	@Nullable
-	public static VirtualFile getWorkspaceVirtualFile(@Nullable Project project) {
-		if (project == null) {
-			return null;
-		}
+	public final String BUILD_GRADLE_FILE_NAME = "build.gradle";
 
-		String projectBasePath = project.getBasePath();
+	public final String GRADLE_PROPERTIES_FILE_NAME = "gradle.properties";
 
-		if (projectBasePath == null) {
-			return null;
-		}
-
-		LocalFileSystem fileSystem = LocalFileSystem.getInstance();
-
-		return fileSystem.findFileByPath(projectBasePath);
-	}
-
-	public static boolean isValidGradleWorkspaceLocation(@Nullable String location) {
-		if (location == null) {
-			return false;
-		}
-
-		File workspaceDir = new File(location);
-
-		File buildGradle = new File(workspaceDir, _BUILD_GRADLE_FILE_NAME);
-		File settingsGradle = new File(workspaceDir, _SETTINGS_GRADLE_FILE_NAME);
-		File gradleProperties = new File(workspaceDir, _GRADLE_PROPERTIES_FILE_NAME);
-
-		if (!(buildGradle.exists() && settingsGradle.exists() && gradleProperties.exists())) {
-			return false;
-		}
-
-		String settingsContent = FileUtil.readContents(settingsGradle, true);
-
-		Matcher matcher = _patternWorkspacePlugin.matcher(settingsContent);
-
-		return matcher.matches();
-	}
-
-	public static boolean isValidGradleWorkspaceProject(Project project) {
-		return isValidGradleWorkspaceLocation(project.getBasePath());
-	}
-
-	public static boolean isValidMavenWorkspaceLocation(Project project) {
-		if (project == null) {
-			return false;
-		}
-
-		try {
-			MavenProjectsManager mavenProjectsManager = MavenProjectsManager.getInstance(project);
-
-			if (!mavenProjectsManager.isMavenizedProject()) {
-				return false;
-			}
-
-			VirtualFile workspaceVirtualFile = getWorkspaceVirtualFile(project);
-
-			if (workspaceVirtualFile == null) {
-				return false;
-			}
-
-			MavenProject mavenWorkspaceProject = mavenProjectsManager.findContainingProject(workspaceVirtualFile);
-
-			if (mavenWorkspaceProject == null) {
-				return false;
-			}
-
-			MavenPlugin liferayWorkspacePlugin = mavenWorkspaceProject.findPlugin(
-				"com.liferay", "com.liferay.portal.tools.bundle.support");
-
-			if (liferayWorkspacePlugin != null) {
-				return true;
-			}
-		}
-		catch (Exception e) {
-			return false;
-		}
-
-		return false;
-	}
-
-	public static boolean isValidWorkspaceLocation(Project project) {
-		if ((project != null) &&
-			(isValidGradleWorkspaceLocation(project.getBasePath()) || isValidMavenWorkspaceLocation(project))) {
-
-			return true;
-		}
-
-		return false;
-	}
-
-	private static String _getGradleProperty(String projectLocation, String key, String defaultValue) {
-		File gradleProperties = new File(projectLocation, "gradle.properties");
-
-		if (gradleProperties.exists()) {
-			Properties properties = PropertiesUtil.loadProperties(gradleProperties);
-
-			if (properties == null) {
-				return defaultValue;
-			}
-
-			return properties.getProperty(key, defaultValue);
-		}
-
-		return "";
-	}
-
-	private static final String _BUILD_GRADLE_FILE_NAME = "build.gradle";
-
-	private static final String _GRADLE_PROPERTIES_FILE_NAME = "gradle.properties";
-
-	private static final String _SETTINGS_GRADLE_FILE_NAME = "settings.gradle";
-
-	private static final Pattern _patternWorkspacePlugin = Pattern.compile(
+	public final Pattern PATTERN_WORKSPACE_PLUGIN = Pattern.compile(
 		".*apply.*plugin.*:.*[\'\"]com\\.liferay\\.workspace[\'\"].*", Pattern.MULTILINE | Pattern.DOTALL);
-	private static Map<String, List<String>> _targetPlatformDependenciesMap = new HashMap<>();
+
+	public final String SETTINGS_GRADLE_FILE_NAME = "settings.gradle";
+
+	public Map<String, List<String>> targetPlatformDependenciesMap = new HashMap<>();
 
 }

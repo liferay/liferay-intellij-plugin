@@ -31,7 +31,7 @@ import com.intellij.psi.PsiFile;
 import com.liferay.ide.idea.core.MessagesBundle;
 import com.liferay.ide.idea.util.GradleUtil;
 import com.liferay.ide.idea.util.IntellijUtil;
-import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import icons.LiferayIcons;
 
@@ -43,7 +43,8 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Charles Wu
  */
-public class GradleDependencyQuickFix implements HighPriorityAction, Iconable, IntentionAction, LocalQuickFix {
+public class GradleDependencyQuickFix
+	implements HighPriorityAction, Iconable, IntentionAction, LiferayWorkspaceSupport, LocalQuickFix {
 
 	public GradleDependencyQuickFix(Module module, Library library) {
 		_module = module;
@@ -101,7 +102,7 @@ public class GradleDependencyQuickFix implements HighPriorityAction, Iconable, I
 		String result = libraryName.split(GradleDependencyQuickFixProvider.GRADLE_LIBRARY_PREFIX)[1];
 
 		try {
-			if (LiferayWorkspaceUtil.getTargetPlatformVersion(project) != null) {
+			if (getTargetPlatformVersion(project) != null) {
 				result = result.substring(0, result.lastIndexOf(":"));
 			}
 		}

@@ -18,7 +18,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 
-import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 import com.liferay.ide.idea.util.ProjectConfigurationUtil;
 import com.liferay.ide.idea.util.WorkspaceConstants;
 
@@ -30,7 +30,7 @@ import java.util.Arrays;
  * @author Joye Luo
  * @author Simon Jiang
  */
-public class InitBundleMavenAction extends AbstractLiferayMavenGoalAction {
+public class InitBundleMavenAction extends AbstractLiferayMavenGoalAction implements LiferayWorkspaceSupport {
 
 	public InitBundleMavenAction() {
 		super("InitBundle", "Run initBundle goal", LiferayIcons.LIFERAY_ICON);
@@ -42,7 +42,7 @@ public class InitBundleMavenAction extends AbstractLiferayMavenGoalAction {
 	protected void handleProcessTerminated(Project project) {
 		super.handleProcessTerminated(project);
 
-		String homeDir = LiferayWorkspaceUtil.getMavenProperty(
+		String homeDir = getMavenProperty(
 			project, WorkspaceConstants.MAVEN_HOME_DIR_PROPERTY, WorkspaceConstants.HOME_DIR_DEFAULT);
 
 		ProjectConfigurationUtil.configExcludedFolder(project, homeDir);
@@ -54,7 +54,7 @@ public class InitBundleMavenAction extends AbstractLiferayMavenGoalAction {
 			VirtualFile rootDir = getVirtualFile(anActionEvent);
 
 			if ((rootDir != null) &&
-				rootDir.equals(LiferayWorkspaceUtil.getWorkspaceVirtualFile(anActionEvent.getProject()))) {
+				rootDir.equals(LiferayWorkspaceSupport.getWorkspaceVirtualFile(anActionEvent.getProject()))) {
 
 				return true;
 			}
