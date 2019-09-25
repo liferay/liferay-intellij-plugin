@@ -151,33 +151,14 @@ public class LiferayWorkspaceUtil {
 		return properties.getProperty(key, defaultValue);
 	}
 
-	@NotNull
-	public static String getModuleExtDir(Project project) {
-		String retval = null;
-
-		if (project != null) {
-			String projectLocation = project.getBasePath();
-
-			if (projectLocation != null) {
-				retval = _getGradleProperty(
-					projectLocation, WorkspaceConstants.DEFAULT_EXT_DIR_PROPERTY, WorkspaceConstants.DEFAULT_EXT_DIR);
-			}
-		}
-
-		if (CoreUtil.isNullOrEmpty(retval)) {
-			return WorkspaceConstants.DEFAULT_EXT_DIR;
-		}
-
-		return retval;
-	}
-
 	@Nullable
 	public static VirtualFile getModuleExtDirFile(Project project) {
 		if (project == null) {
 			return null;
 		}
 
-		String moduleExtDir = getModuleExtDir(project);
+		String moduleExtDir = getWorkspaceProperty(
+			project, WorkspaceConstants.DEFAULT_EXT_DIR_PROPERTY, WorkspaceConstants.DEFAULT_EXT_DIR);
 
 		File file = new File(moduleExtDir);
 
@@ -194,26 +175,6 @@ public class LiferayWorkspaceUtil {
 		LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
 
 		return localFileSystem.findFileByPath(file.getPath());
-	}
-
-	@NotNull
-	public static String getModulesDir(Project project) {
-		String retval = null;
-
-		if (project != null) {
-			String projectLocation = project.getBasePath();
-
-			if (projectLocation != null) {
-				retval = _getGradleProperty(
-					projectLocation, WorkspaceConstants.MODULES_DIR_PROPERTY, WorkspaceConstants.MODULES_DIR_DEFAULT);
-			}
-		}
-
-		if (CoreUtil.isNullOrEmpty(retval)) {
-			return WorkspaceConstants.MODULES_DIR_DEFAULT;
-		}
-
-		return retval;
 	}
 
 	public static List<LibraryData> getTargetPlatformArtifacts(Project project) {
@@ -330,20 +291,19 @@ public class LiferayWorkspaceUtil {
 	}
 
 	@NotNull
-	public static String getWarsDir(Project project) {
+	public static String getWorkspaceProperty(Project project, String key, String defaultValue) {
 		String retval = null;
 
 		if (project != null) {
 			String projectLocation = project.getBasePath();
 
 			if (projectLocation != null) {
-				retval = _getGradleProperty(
-					projectLocation, WorkspaceConstants.DEFAULT_WARS_DIR_PROPERTY, WorkspaceConstants.DEFAULT_WARS_DIR);
+				retval = _getGradleProperty(projectLocation, key, defaultValue);
 			}
 		}
 
 		if (CoreUtil.isNullOrEmpty(retval)) {
-			return WorkspaceConstants.DEFAULT_WARS_DIR;
+			return defaultValue;
 		}
 
 		return retval;

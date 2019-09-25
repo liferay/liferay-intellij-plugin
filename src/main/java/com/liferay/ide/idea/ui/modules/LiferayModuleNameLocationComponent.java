@@ -31,6 +31,7 @@ import com.intellij.ui.DocumentAdapter;
 
 import com.liferay.ide.idea.ui.modules.ext.LiferayModuleExtBuilder;
 import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
+import com.liferay.ide.idea.util.WorkspaceConstants;
 
 import java.io.File;
 
@@ -291,13 +292,15 @@ public class LiferayModuleNameLocationComponent {
 
 		Project project = _context.getProject();
 
-		String targetFolderName = LiferayWorkspaceUtil.getModulesDir(project);
+		String targetFolderName = LiferayWorkspaceUtil.getWorkspaceProperty(
+			project, WorkspaceConstants.MODULES_DIR_PROPERTY, WorkspaceConstants.MODULES_DIR_DEFAULT);
 
 		if (builder instanceof LiferayModuleBuilder) {
 			liferayModuleBuilder = (LiferayModuleBuilder)builder;
 		}
 		else if (builder instanceof LiferayModuleExtBuilder) {
-			targetFolderName = LiferayWorkspaceUtil.getModuleExtDir(project);
+			targetFolderName = LiferayWorkspaceUtil.getWorkspaceProperty(
+				project, WorkspaceConstants.DEFAULT_EXT_DIR_PROPERTY, WorkspaceConstants.DEFAULT_EXT_DIR);
 		}
 
 		if (liferayModuleBuilder != null) {
@@ -307,10 +310,12 @@ public class LiferayModuleNameLocationComponent {
 				Objects.equals("spring-mvc-portlet", templateType) || Objects.equals("war-hook", templateType) ||
 				Objects.equals("war-mvc-portlet", templateType)) {
 
-				targetFolderName = LiferayWorkspaceUtil.getWarsDir(project);
+				targetFolderName = LiferayWorkspaceUtil.getWorkspaceProperty(
+					project, WorkspaceConstants.DEFAULT_WARS_DIR_PROPERTY, WorkspaceConstants.DEFAULT_WARS_DIR);
 			}
 			else if (Objects.equals("war-core-ext", templateType)) {
-				targetFolderName = LiferayWorkspaceUtil.getModuleExtDir(project);
+				targetFolderName = LiferayWorkspaceUtil.getWorkspaceProperty(
+					project, WorkspaceConstants.DEFAULT_EXT_DIR_PROPERTY, WorkspaceConstants.DEFAULT_EXT_DIR);
 			}
 		}
 
