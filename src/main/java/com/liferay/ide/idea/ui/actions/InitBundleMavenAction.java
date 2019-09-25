@@ -43,7 +43,7 @@ public class InitBundleMavenAction extends AbstractLiferayMavenGoalAction {
 		super.handleProcessTerminated(project);
 
 		String homeDir = LiferayWorkspaceUtil.getMavenProperty(
-			project, WorkspaceConstants.MAVEN_HOME_DIR_PROPERTY, WorkspaceConstants.DEFAULT_HOME_DIR);
+			project, WorkspaceConstants.MAVEN_HOME_DIR_PROPERTY, WorkspaceConstants.HOME_DIR_DEFAULT);
 
 		ProjectConfigurationUtil.configExcludedFolder(project, homeDir);
 	}

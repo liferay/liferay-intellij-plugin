@@ -291,13 +291,13 @@ public class LiferayModuleNameLocationComponent {
 
 		Project project = _context.getProject();
 
-		String targetFolder = LiferayWorkspaceUtil.getModulesDir(project);
+		String targetFolderName = LiferayWorkspaceUtil.getModulesDir(project);
 
 		if (builder instanceof LiferayModuleBuilder) {
 			liferayModuleBuilder = (LiferayModuleBuilder)builder;
 		}
 		else if (builder instanceof LiferayModuleExtBuilder) {
-			targetFolder = LiferayWorkspaceUtil.getModuleExtDir(project);
+			targetFolderName = LiferayWorkspaceUtil.getModuleExtDir(project);
 		}
 
 		if (liferayModuleBuilder != null) {
@@ -307,14 +307,14 @@ public class LiferayModuleNameLocationComponent {
 				Objects.equals("spring-mvc-portlet", templateType) || Objects.equals("war-hook", templateType) ||
 				Objects.equals("war-mvc-portlet", templateType)) {
 
-				targetFolder = LiferayWorkspaceUtil.getWarsDir(project);
+				targetFolderName = LiferayWorkspaceUtil.getWarsDir(project);
 			}
 			else if (Objects.equals("war-core-ext", templateType)) {
-				targetFolder = LiferayWorkspaceUtil.getModuleExtDir(project);
+				targetFolderName = LiferayWorkspaceUtil.getModuleExtDir(project);
 			}
 		}
 
-		return targetFolder;
+		return targetFolderName;
 	}
 
 	private void _setImlFileLocation(String path) {

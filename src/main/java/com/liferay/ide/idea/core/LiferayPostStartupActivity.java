@@ -79,7 +79,7 @@ public class LiferayPostStartupActivity implements DumbAware, StartupActivity {
 					moduleProject -> {
 						String homeDir = LiferayWorkspaceUtil.getMavenProperty(
 							moduleProject, WorkspaceConstants.MAVEN_HOME_DIR_PROPERTY,
-							WorkspaceConstants.DEFAULT_HOME_DIR);
+							WorkspaceConstants.HOME_DIR_DEFAULT);
 
 						ProjectConfigurationUtil.configExcludedFolder(moduleProject, homeDir);
 					}

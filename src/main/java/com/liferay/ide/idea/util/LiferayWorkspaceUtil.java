@@ -204,13 +204,12 @@ public class LiferayWorkspaceUtil {
 
 			if (projectLocation != null) {
 				retval = _getGradleProperty(
-					projectLocation, WorkspaceConstants.DEFAULT_MODULES_DIR_PROPERTY,
-					WorkspaceConstants.DEFAULT_MODULES_DIR);
+					projectLocation, WorkspaceConstants.MODULES_DIR_PROPERTY, WorkspaceConstants.MODULES_DIR_DEFAULT);
 			}
 		}
 
 		if (CoreUtil.isNullOrEmpty(retval)) {
-			return WorkspaceConstants.DEFAULT_MODULES_DIR;
+			return WorkspaceConstants.MODULES_DIR_DEFAULT;
 		}
 
 		return retval;

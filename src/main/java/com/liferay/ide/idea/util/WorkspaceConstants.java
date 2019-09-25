@@ -31,14 +31,6 @@ public class WorkspaceConstants {
 
 	public static final String DEFAULT_EXT_DIR_PROPERTY = "liferay.workspace.ext.dir";
 
-	public static final String DEFAULT_HOME_DIR = "bundles";
-
-	public static final String DEFAULT_HOME_DIR_PROPERTY = "liferay.workspace.home.dir";
-
-	public static final String DEFAULT_MODULES_DIR = "modules";
-
-	public static final String DEFAULT_MODULES_DIR_PROPERTY = "liferay.workspace.modules.dir";
-
 	public static final String DEFAULT_PLUGINS_SDK_DIR = "plugins-sdk";
 
 	public static final String DEFAULT_PLUGINS_SDK_DIR_PROPERTY = "liferay.workspace.plugins.sdk.dir";
@@ -55,9 +47,17 @@ public class WorkspaceConstants {
 
 	public static final String DEFAULT_WARS_DIR_PROPERTY = "liferay.workspace.wars.dir";
 
+	public static final String HOME_DIR_DEFAULT = "bundles";
+
+	public static final String HOME_DIR_PROPERTY = "liferay.workspace.home.dir";
+
 	public static final String[] LIFERAY_VERSIONS = {"7.2", "7.1", "7.0"};
 
 	public static final String MAVEN_HOME_DIR_PROPERTY = "liferayHome";
+
+	public static final String MODULES_DIR_DEFAULT = "modules";
+
+	public static final String MODULES_DIR_PROPERTY = "liferay.workspace.modules.dir";
 
 	public static final String[] TARGET_PLATFORM_VERSIONS_7_0 = {"7.0.6"};
 
