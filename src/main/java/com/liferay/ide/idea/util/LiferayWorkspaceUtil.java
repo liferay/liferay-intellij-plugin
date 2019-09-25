@@ -64,10 +64,11 @@ import org.jetbrains.plugins.gradle.util.GradleConstants;
 public class LiferayWorkspaceUtil {
 
 	public static String getHomeDir(String location) {
-		String result = _getGradleProperty(location, "liferay.workspace.home.dir", "bundles");
+		String result = _getGradleProperty(
+			location, WorkspaceConstants.HOME_DIR_PROPERTY, WorkspaceConstants.HOME_DIR_DEFAULT);
 
 		if ((result == null) || result.equals("")) {
-			return "bundles";
+			return WorkspaceConstants.HOME_DIR_DEFAULT;
 		}
 
 		return result;
