@@ -32,7 +32,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.execution.ParametersListUtil;
 
 import com.liferay.ide.idea.util.CoreUtil;
-import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import java.util.HashMap;
 import java.util.List;
@@ -116,7 +116,7 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 
 	@Override
 	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
-		VirtualFile baseDir = LiferayWorkspaceUtil.getWorkspaceVirtualFile(anActionEvent.getProject());
+		VirtualFile baseDir = LiferayWorkspaceSupport.getWorkspaceVirtualFile(anActionEvent.getProject());
 
 		if (baseDir == null) {
 			return false;

@@ -197,8 +197,8 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 				PropertiesConfiguration config = new PropertiesConfiguration(
 					new File(project.getBasePath(), "gradle.properties"));
 
-				config.setProperty(WorkspaceConstants.DEFAULT_TARGET_PLATFORM_VERSION_PROPERTY, _targetPlatform);
-				config.setProperty(WorkspaceConstants.DEFAULT_TARGET_PLATFORM_INDEX_SOURCES_PROPERTY, _indexSources);
+				config.setProperty(WorkspaceConstants.TARGET_PLATFORM_VERSION_PROPERTY, _targetPlatform);
+				config.setProperty(WorkspaceConstants.TARGET_PLATFORM_INDEX_SOURCES_PROPERTY, _indexSources);
 
 				config.save();
 			}

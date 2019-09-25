@@ -24,7 +24,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 
-import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 import com.liferay.ide.idea.util.ProjectConfigurationUtil;
 import com.liferay.ide.idea.util.WorkspaceConstants;
 
@@ -36,11 +36,11 @@ import org.jetbrains.idea.maven.project.MavenImportListener;
 /**
  * @author Simon Jiang
  */
-public class LiferayPostStartupActivity implements DumbAware, StartupActivity {
+public class LiferayPostStartupActivity implements DumbAware, LiferayWorkspaceSupport, StartupActivity {
 
 	@Override
 	public void runActivity(@NotNull Project project) {
-		VirtualFile projectDirVirtualFile = LiferayWorkspaceUtil.getWorkspaceVirtualFile(project);
+		VirtualFile projectDirVirtualFile = LiferayWorkspaceSupport.getWorkspaceVirtualFile(project);
 
 		if (projectDirVirtualFile == null) {
 			return;
@@ -59,7 +59,7 @@ public class LiferayPostStartupActivity implements DumbAware, StartupActivity {
 				ProjectDataImportListener.TOPIC,
 				projectPath -> {
 					if (projectPath.equals(project.getBasePath())) {
-						String homeDir = LiferayWorkspaceUtil.getHomeDir(project.getBasePath());
+						String homeDir = getHomeDir(project.getBasePath());
 
 						ProjectConfigurationUtil.configExcludedFolder(project, homeDir);
 					}
@@ -77,9 +77,9 @@ public class LiferayPostStartupActivity implements DumbAware, StartupActivity {
 				).distinct(
 				).forEach(
 					moduleProject -> {
-						String homeDir = LiferayWorkspaceUtil.getMavenProperty(
+						String homeDir = getMavenProperty(
 							moduleProject, WorkspaceConstants.MAVEN_HOME_DIR_PROPERTY,
-							WorkspaceConstants.DEFAULT_HOME_DIR);
+							WorkspaceConstants.HOME_DIR_DEFAULT);
 
 						ProjectConfigurationUtil.configExcludedFolder(moduleProject, homeDir);
 					}

@@ -16,7 +16,7 @@ package com.liferay.ide.idea.ui.actions;
 
 import com.intellij.openapi.project.Project;
 
-import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 import com.liferay.ide.idea.util.ProjectConfigurationUtil;
 
 import icons.LiferayIcons;
@@ -25,7 +25,7 @@ import icons.LiferayIcons;
  * @author Andy Wu
  * @author Simon Jiang
  */
-public class InitBundleGradleAction extends AbstractLiferayGradleTaskAction {
+public class InitBundleGradleAction extends AbstractLiferayGradleTaskAction implements LiferayWorkspaceSupport {
 
 	public InitBundleGradleAction() {
 		super("InitBundle", "Run initBundle task", LiferayIcons.LIFERAY_ICON, "initBundle");
@@ -35,7 +35,7 @@ public class InitBundleGradleAction extends AbstractLiferayGradleTaskAction {
 	protected void handleProcessTerminated(Project project) {
 		super.handleProcessTerminated(project);
 
-		String homeDir = LiferayWorkspaceUtil.getHomeDir(project.getBasePath());
+		String homeDir = getHomeDir(project.getBasePath());
 
 		ProjectConfigurationUtil.configExcludedFolder(project, homeDir);
 	}

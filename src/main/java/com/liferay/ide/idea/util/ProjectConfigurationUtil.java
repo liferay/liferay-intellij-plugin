@@ -37,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
 public class ProjectConfigurationUtil {
 
 	public static void configExcludedFolder(@NotNull Project project, String directory) {
-		if (!LiferayWorkspaceUtil.isValidWorkspaceLocation(project)) {
+		if (!LiferayWorkspaceSupport.isValidWorkspaceLocation(project)) {
 			return;
 		}
 
@@ -45,7 +45,7 @@ public class ProjectConfigurationUtil {
 			return;
 		}
 
-		VirtualFile projectDir = LiferayWorkspaceUtil.getWorkspaceVirtualFile(project);
+		VirtualFile projectDir = LiferayWorkspaceSupport.getWorkspaceVirtualFile(project);
 
 		if (projectDir == null) {
 			return;

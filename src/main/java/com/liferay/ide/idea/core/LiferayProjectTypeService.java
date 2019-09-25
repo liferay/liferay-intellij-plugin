@@ -21,7 +21,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectType;
 
 import com.liferay.ide.idea.ui.modules.LiferayProjectType;
-import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -49,11 +49,11 @@ public class LiferayProjectTypeService implements PersistentStateComponent<Proje
 			return projectType;
 		}
 
-		if (LiferayWorkspaceUtil.isValidGradleWorkspaceLocation(project.getBasePath())) {
+		if (LiferayWorkspaceSupport.isValidGradleWorkspaceLocation(project.getBasePath())) {
 			return new ProjectType(LiferayProjectType.LIFERAY_GRADLE_WORKSPACE);
 		}
 
-		if (LiferayWorkspaceUtil.isValidMavenWorkspaceLocation(project)) {
+		if (LiferayWorkspaceSupport.isValidMavenWorkspaceLocation(project)) {
 			return new ProjectType(LiferayProjectType.LIFERAY_MAVEN_WORKSPACE);
 		}
 

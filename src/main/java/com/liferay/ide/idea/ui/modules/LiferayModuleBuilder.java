@@ -32,7 +32,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.liferay.ide.idea.core.LiferayProjectTypeService;
 import com.liferay.ide.idea.util.BladeCLI;
 import com.liferay.ide.idea.util.CoreUtil;
-import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 import com.liferay.ide.idea.util.WorkspaceConstants;
 
 import icons.LiferayIcons;
@@ -47,7 +47,7 @@ import org.jetbrains.plugins.gradle.util.GradleConstants;
  * @author Terry Jia
  * @author Simon Jiang
  */
-public class LiferayModuleBuilder extends ModuleBuilder {
+public class LiferayModuleBuilder extends ModuleBuilder implements LiferayWorkspaceSupport {
 
 	@Override
 	public String getBuilderId() {
@@ -134,7 +134,7 @@ public class LiferayModuleBuilder extends ModuleBuilder {
 			mavenModule = true;
 		}
 
-		String liferayVersion = LiferayWorkspaceUtil.getLiferayVersion(project);
+		String liferayVersion = getLiferayVersion(project);
 
 		if (liferayVersion == null) {
 			liferayVersion = WorkspaceConstants.LIFERAY_VERSIONS[0];
@@ -196,7 +196,7 @@ public class LiferayModuleBuilder extends ModuleBuilder {
 	}
 
 	private void _refreshProject(Project project, Boolean mavenModule) {
-		VirtualFile projectDir = LiferayWorkspaceUtil.getWorkspaceVirtualFile(project);
+		VirtualFile projectDir = LiferayWorkspaceSupport.getWorkspaceVirtualFile(project);
 
 		if (projectDir == null) {
 			return;

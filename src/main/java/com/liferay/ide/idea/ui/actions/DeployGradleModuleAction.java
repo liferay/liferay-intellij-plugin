@@ -19,7 +19,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 
-import com.liferay.ide.idea.util.LiferayWorkspaceUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import icons.LiferayIcons;
 
@@ -28,7 +28,7 @@ import java.io.File;
 /**
  * @author Andy Wu
  */
-public class DeployGradleModuleAction extends AbstractLiferayGradleTaskAction {
+public class DeployGradleModuleAction extends AbstractLiferayGradleTaskAction implements LiferayWorkspaceSupport {
 
 	public DeployGradleModuleAction() {
 		super("Deploy", "Run deploy task", LiferayIcons.LIFERAY_ICON, "deploy");
@@ -38,7 +38,7 @@ public class DeployGradleModuleAction extends AbstractLiferayGradleTaskAction {
 	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
 		Project project = anActionEvent.getProject();
 
-		VirtualFile baseDir = LiferayWorkspaceUtil.getWorkspaceVirtualFile(project);
+		VirtualFile baseDir = LiferayWorkspaceSupport.getWorkspaceVirtualFile(project);
 
 		if (baseDir == null) {
 			return false;
@@ -50,7 +50,7 @@ public class DeployGradleModuleAction extends AbstractLiferayGradleTaskAction {
 
 		if ((virtualFile != null) && (gradleFile != null) &&
 			ProjectRootsUtil.isModuleContentRoot(virtualFile, project) && !baseDir.equals(virtualFile) &&
-			new File(LiferayWorkspaceUtil.getHomeDir(project.getBasePath())).exists()) {
+			new File(getHomeDir(project.getBasePath())).exists()) {
 
 			return true;
 		}
