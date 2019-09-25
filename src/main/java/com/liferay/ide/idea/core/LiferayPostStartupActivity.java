@@ -14,6 +14,8 @@
 
 package com.liferay.ide.idea.core;
 
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.externalSystem.service.project.manage.ProjectDataImportListener;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.DumbAware;
@@ -32,6 +34,7 @@ import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.project.MavenImportListener;
+import org.jetbrains.idea.maven.project.MavenProjectsManager;
 
 /**
  * @author Simon Jiang
@@ -58,11 +61,16 @@ public class LiferayPostStartupActivity implements DumbAware, LiferayWorkspaceSu
 			() -> messageBusConnection.subscribe(
 				ProjectDataImportListener.TOPIC,
 				projectPath -> {
-					if (projectPath.equals(project.getBasePath())) {
-						String homeDir = getHomeDir(project.getBasePath());
+					Application application = ApplicationManager.getApplication();
 
-						ProjectConfigurationUtil.configExcludedFolder(project, homeDir);
-					}
+					application.runReadAction(
+						() -> {
+							if (projectPath.equals(project.getBasePath())) {
+								String homeDir = getHomeDir(project.getBasePath());
+
+								ProjectConfigurationUtil.configExcludedFolder(project, homeDir);
+							}
+						});
 				}));
 
 		messageBusConnection.subscribe(
@@ -77,11 +85,20 @@ public class LiferayPostStartupActivity implements DumbAware, LiferayWorkspaceSu
 				).distinct(
 				).forEach(
 					moduleProject -> {
-						String homeDir = getMavenProperty(
-							moduleProject, WorkspaceConstants.MAVEN_HOME_DIR_PROPERTY,
-							WorkspaceConstants.HOME_DIR_DEFAULT);
+						MavenProjectsManager mvnManager = MavenProjectsManager.getInstance(project);
 
-						ProjectConfigurationUtil.configExcludedFolder(moduleProject, homeDir);
+						mvnManager.forceUpdateAllProjectsOrFindAllAvailablePomFiles();
+
+						Application application = ApplicationManager.getApplication();
+
+						application.runReadAction(
+							() -> {
+								String homeDir = getMavenProperty(
+									moduleProject, WorkspaceConstants.MAVEN_HOME_DIR_PROPERTY,
+									WorkspaceConstants.HOME_DIR_DEFAULT);
+
+								ProjectConfigurationUtil.configExcludedFolder(moduleProject, homeDir);
+							});
 					}
 				);
 			});
