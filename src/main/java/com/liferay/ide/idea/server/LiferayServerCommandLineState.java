@@ -125,7 +125,15 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 	}
 
 	private void _configureDeveloperMode(LiferayServerConfiguration configuration) throws Exception {
-		File portalExtPropertiesFile = new File(configuration.getBundleLocation(), "portal-ext.properties");
+		PortalBundleFactory bundleFactory = ServerUtil.getPortalBundleFactory(configuration.getBundleType());
+
+		Path bundlePath = bundleFactory.canCreateFromPath(Paths.get(configuration.getBundleLocation()));
+
+		File file = bundlePath.toFile();
+
+		File parentFile = file.getParentFile();
+
+		File portalExtPropertiesFile = new File(parentFile, "portal-ext.properties");
 
 		if (configuration.getDeveloperMode()) {
 			if (!portalExtPropertiesFile.exists()) {
