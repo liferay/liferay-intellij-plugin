@@ -91,7 +91,9 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep implements Life
 
 					String[] s = dependency.split(" ");
 
-					_originalModuleVersionField.setText(s[1]);
+					if (s.length == 2) {
+						_originalModuleVersionField.setText(s[1]);
+					}
 				}
 			});
 
@@ -142,7 +144,11 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep implements Life
 		int i1 = s.indexOf(":");
 		int i2 = s.indexOf(" ");
 
-		return s.substring(i1 + 1, i2);
+		if ((i1 > -1) && (i2 > -1)) {
+			return s.substring(i1 + 1, i2);
+		}
+
+		return s;
 	}
 
 	private void _insertOriginalModuleNames() {

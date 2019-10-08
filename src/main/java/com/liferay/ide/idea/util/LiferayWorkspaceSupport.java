@@ -34,6 +34,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -329,7 +333,38 @@ public interface LiferayWorkspaceSupport {
 
 		List<String> javaHomePaths = JavaHomeFinder.suggestHomePaths();
 
+		File javaHomeFile = null;
+
 		if (javaHomePaths.isEmpty()) {
+			String pathEnv = System.getenv("PATH");
+
+			String[] paths = pathEnv.split(Pattern.quote(File.pathSeparator));
+
+			for (String pathValue : paths) {
+				Path path = Paths.get(pathValue);
+
+				Path javaPath = path.resolve("java");
+
+				if (Files.exists(javaPath)) {
+					javaHomeFile = javaPath.toFile();
+
+					javaHomeFile = javaHomeFile.getParentFile();
+
+					javaHomeFile = javaHomeFile.getParentFile();
+
+					break;
+				}
+			}
+
+			if (javaHomeFile == null) {
+				javaHomeFile = new File(System.getProperty("java.home"));
+			}
+		}
+		else {
+			javaHomeFile = new File(javaHomePaths.get(0));
+		}
+
+		if (!javaHomeFile.exists()) {
 			return Collections.emptyList();
 		}
 
@@ -345,7 +380,7 @@ public interface LiferayWorkspaceSupport {
 
 		OutputStream outputStream = new ByteArrayOutputStream();
 
-		build = build.setJavaHome(new File(javaHomePaths.get(0)));
+		build = build.setJavaHome(javaHomeFile);
 
 		build = build.forTasks("dependencyManagement");
 
