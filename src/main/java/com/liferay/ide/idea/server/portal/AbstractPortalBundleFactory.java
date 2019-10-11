@@ -27,10 +27,10 @@ import java.nio.file.Paths;
 public abstract class AbstractPortalBundleFactory implements PortalBundleFactory {
 
 	@Override
-	public Path canCreateFromPath(Path location) {
+	public Path findAppServerPath(Path location) {
 		Path retval = null;
 
-		if (detectBundleDir(location) && _detectLiferayHome(FileUtil.pathAppend(location, ".."))) {
+		if (detectAppServerPath(location) && _detectLiferayHome(FileUtil.pathAppend(location, ".."))) {
 			retval = location;
 		}
 		else if (_detectLiferayHome(location)) {
@@ -39,7 +39,7 @@ public abstract class AbstractPortalBundleFactory implements PortalBundleFactory
 			for (File directory : directories) {
 				Path dirPath = Paths.get(directory.getAbsolutePath());
 
-				if (detectBundleDir(dirPath)) {
+				if (detectAppServerPath(dirPath)) {
 					retval = dirPath;
 
 					break;
@@ -50,7 +50,7 @@ public abstract class AbstractPortalBundleFactory implements PortalBundleFactory
 		return retval;
 	}
 
-	protected abstract boolean detectBundleDir(Path path);
+	protected abstract boolean detectAppServerPath(Path path);
 
 	private boolean _detectLiferayHome(Path path) {
 		if (FileUtil.notExists(path)) {

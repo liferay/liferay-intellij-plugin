@@ -163,12 +163,12 @@ public class ServerUtil {
 		return bundles;
 	}
 
-	public static PortalBundle getPortalBundle(Path bundleLocation) {
-		for (PortalBundleFactory factory : _bundleFactories) {
-			Path canCreateFromPath = factory.canCreateFromPath(bundleLocation);
+	public static PortalBundle getPortalBundle(Path bundlePath) {
+		for (PortalBundleFactory portalBundleFactory : _bundleFactories) {
+			Path appServerPath = portalBundleFactory.findAppServerPath(bundlePath);
 
-			if (canCreateFromPath != null) {
-				return factory.create(canCreateFromPath);
+			if (appServerPath != null) {
+				return portalBundleFactory.create(appServerPath);
 			}
 		}
 
@@ -176,9 +176,9 @@ public class ServerUtil {
 	}
 
 	public static PortalBundleFactory getPortalBundleFactory(String bundleType) {
-		for (PortalBundleFactory factory : _bundleFactories) {
-			if (bundleType.equals(factory.getType())) {
-				return factory;
+		for (PortalBundleFactory portalBundleFactory : _bundleFactories) {
+			if (bundleType.equals(portalBundleFactory.getType())) {
+				return portalBundleFactory;
 			}
 		}
 

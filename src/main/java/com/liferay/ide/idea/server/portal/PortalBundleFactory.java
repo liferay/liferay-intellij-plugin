@@ -21,9 +21,9 @@ import java.nio.file.Path;
  */
 public interface PortalBundleFactory {
 
-	public Path canCreateFromPath(Path location);
-
 	public PortalBundle create(Path location);
+
+	public Path findAppServerPath(Path location);
 
 	public String getType();
 
