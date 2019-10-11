@@ -50,9 +50,7 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.gradle.tooling.BuildLauncher;
 import org.gradle.tooling.GradleConnector;
-import org.gradle.tooling.ProjectConnection;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -368,25 +366,22 @@ public interface LiferayWorkspaceSupport {
 			return Collections.emptyList();
 		}
 
-		GradleConnector gradleConnector = GradleConnector.newConnector();
-
 		File file = new File(project.getBasePath());
-
-		gradleConnector = gradleConnector.forProjectDirectory(file);
-
-		ProjectConnection projectConnection = gradleConnector.connect();
-
-		BuildLauncher build = projectConnection.newBuild();
 
 		OutputStream outputStream = new ByteArrayOutputStream();
 
-		build = build.setJavaHome(javaHomeFile);
-
-		build = build.forTasks("dependencyManagement");
-
-		build = build.setStandardOutput(outputStream);
-
-		build.run();
+		GradleConnector.newConnector(
+		).forProjectDirectory(
+			file
+		).connect(
+		).newBuild(
+		).setJavaHome(
+			javaHomeFile
+		).forTasks(
+			"dependencyManagement"
+		).setStandardOutput(
+			outputStream
+		).run();
 
 		String output = outputStream.toString();
 
