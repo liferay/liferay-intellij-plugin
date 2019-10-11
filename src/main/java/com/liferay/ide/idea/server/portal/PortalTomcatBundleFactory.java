@@ -34,7 +34,7 @@ public class PortalTomcatBundleFactory extends AbstractPortalBundleFactory {
 	}
 
 	@Override
-	protected boolean detectBundleDir(Path path) {
+	protected boolean detectAppServerPath(Path path) {
 		if (FileUtil.notExists(path)) {
 			return false;
 		}

@@ -73,13 +73,13 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 		PortalBundleFactory bundleFactory = ServerUtil.getPortalBundleFactory(
 			liferayServerConfiguration.getBundleType());
 
-		Path bundlePath = bundleFactory.canCreateFromPath(Paths.get(bundleLocation));
+		Path appServerPath = bundleFactory.findAppServerPath(Paths.get(bundleLocation));
 
-		if (bundlePath == null) {
+		if (appServerPath == null) {
 			throw new ExecutionException("Liferay bundle location is invalid.  " + bundleLocation);
 		}
 
-		final PortalBundle portalBundle = bundleFactory.create(bundlePath);
+		final PortalBundle portalBundle = bundleFactory.create(appServerPath);
 
 		ParametersList programParametersList = javaParameters.getProgramParametersList();
 
@@ -125,7 +125,13 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 	}
 
 	private void _configureDeveloperMode(LiferayServerConfiguration configuration) throws Exception {
-		File portalExtPropertiesFile = new File(configuration.getBundleLocation(), "portal-ext.properties");
+		PortalBundleFactory bundleFactory = ServerUtil.getPortalBundleFactory(configuration.getBundleType());
+
+		Path appServerPath = bundleFactory.findAppServerPath(Paths.get(configuration.getBundleLocation()));
+
+		File file = appServerPath.toFile();
+
+		File portalExtPropertiesFile = new File(file.getParentFile(), "portal-ext.properties");
 
 		if (configuration.getDeveloperMode()) {
 			if (!portalExtPropertiesFile.exists()) {
@@ -134,15 +140,15 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 
 			PortalPropertiesConfiguration portalPropertiesConfiguration = new PortalPropertiesConfiguration();
 
-			try (InputStream in = Files.newInputStream(portalExtPropertiesFile.toPath())) {
-				portalPropertiesConfiguration.load(in);
+			try (InputStream inputStream = Files.newInputStream(portalExtPropertiesFile.toPath())) {
+				portalPropertiesConfiguration.load(inputStream);
 			}
 
-			String[] p = portalPropertiesConfiguration.getStringArray("include-and-override");
+			String[] properties = portalPropertiesConfiguration.getStringArray("include-and-override");
 
 			boolean existing = false;
 
-			for (String prop : p) {
+			for (String prop : properties) {
 				if (prop.equals("portal-developer.properties")) {
 					existing = true;
 
@@ -159,9 +165,9 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 		else if (portalExtPropertiesFile.exists()) {
 			String contents = FileUtil.readContents(portalExtPropertiesFile, true);
 
-			contents = contents.replace("include-and-override=portal-developer.properties", "");
-
-			FileUtils.write(portalExtPropertiesFile, contents, Charset.defaultCharset());
+			FileUtils.write(
+				portalExtPropertiesFile, contents.replace("include-and-override=portal-developer.properties", ""),
+				Charset.defaultCharset());
 		}
 	}
 
