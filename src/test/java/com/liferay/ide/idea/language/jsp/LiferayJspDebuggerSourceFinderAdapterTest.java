@@ -120,9 +120,9 @@ public class LiferayJspDebuggerSourceFinderAdapterTest extends LightCodeInsightF
 				extension.setLanguageLevel(LanguageLevel.JDK_1_8);
 			}
 
-			JavaAwareProjectJdkTableImpl javaAwareProjectJdkTable = JavaAwareProjectJdkTableImpl.getInstanceEx();
+			JavaAwareProjectJdkTableImpl javaAwareProjectJdkTableImpl = JavaAwareProjectJdkTableImpl.getInstanceEx();
 
-			Sdk jdk = javaAwareProjectJdkTable.getInternalJdk();
+			Sdk jdk = javaAwareProjectJdkTableImpl.getInternalJdk();
 
 			modifiableRootModel.setSdk(jdk);
 

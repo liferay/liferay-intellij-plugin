@@ -89,9 +89,9 @@ public class LiferayTaglibStringConcatInspectionTest extends LightCodeInsightFix
 				languageLevelModuleExtension.setLanguageLevel(LanguageLevel.JDK_1_8);
 			}
 
-			JavaAwareProjectJdkTableImpl instanceEx = JavaAwareProjectJdkTableImpl.getInstanceEx();
+			JavaAwareProjectJdkTableImpl javaAwareProjectJdkTableImpl = JavaAwareProjectJdkTableImpl.getInstanceEx();
 
-			Sdk jdk = instanceEx.getInternalJdk();
+			Sdk jdk = javaAwareProjectJdkTableImpl.getInternalJdk();
 
 			modifiableRootModel.setSdk(jdk);
 		}

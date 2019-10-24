@@ -70,6 +70,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 
 		_builder = builder;
 		_project = project;
+
 		_typesTree = new Tree();
 
 		_typesTree.setModel(new DefaultTreeModel(new DefaultMutableTreeNode()));
