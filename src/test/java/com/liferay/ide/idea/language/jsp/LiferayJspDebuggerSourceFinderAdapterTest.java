@@ -133,8 +133,7 @@ public class LiferayJspDebuggerSourceFinderAdapterTest extends LightCodeInsightF
 			VfsRootAccess.allowRootAccess(testDataPath);
 
 			PsiTestUtil.addLibrary(
-				module, modifiableRootModel, "com.liferay:com.liferay.login.web", testDataPath,
-				"com.liferay.login.web.jar");
+				modifiableRootModel, "com.liferay:com.liferay.login.web", testDataPath, "com.liferay.login.web.jar");
 		}
 
 	};
