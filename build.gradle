@@ -1,5 +1,3 @@
-import org.gradle.internal.jvm.Jvm
-
 buildscript {
 	dependencies {
 		classpath group: "com.gradle", name: "build-scan-plugin", version: "1.16"
@@ -18,8 +16,8 @@ buildscript {
 }
 
 plugins {
-	id "de.undercouch.download" version "3.4.2"
-	id "org.jetbrains.intellij" version "0.4.1"
+	id "de.undercouch.download" version "4.0.0"
+	id "org.jetbrains.intellij" version "0.4.10"
 }
 
 apply plugin: "com.gradle.build-scan"
@@ -64,7 +62,6 @@ checkSourceFormatting {
 }
 
 dependencies {
-	compile files(Jvm.current().toolsJar)
 	compile group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.4.0"
 	compile group: "commons-configuration", name: "commons-configuration", version: "1.10"
 	compile group: "org.apache.ant", name: "ant", version: "1.10.1"
@@ -187,9 +184,9 @@ formatSource {
 }
 
 intellij {
-	plugins "CSS", "DatabaseTools", "gradle", "Groovy", "java-i18n", "JavaEE", "JavaScriptLanguage", "jsp", "junit", "maven", "PersistenceSupport", "properties", "sass"
+	plugins "java", "CSS", "DatabaseTools", "gradle", "Groovy", "java-i18n", "JavaEE", "JavaScriptLanguage", "jsp", "junit", "maven", "PersistenceSupport", "properties", "sass"
 	pluginName "liferay-intellij-plugin"
-	version "IU-2018.3.4"
+	version "IU-2019.2.3"
 }
 
 patchPluginXml {
@@ -214,7 +211,7 @@ repositories {
 }
 
 runIde {
-	jvmArgs "-Xmx2048m"
+	jvmArgs = [ "-Xmx2048m", "--add-exports=java.base/jdk.internal.vm=ALL-UNNAMED" ]
 }
 
 test {

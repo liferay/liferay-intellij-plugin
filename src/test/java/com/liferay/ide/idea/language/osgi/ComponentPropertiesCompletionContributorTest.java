@@ -105,7 +105,7 @@ public class ComponentPropertiesCompletionContributorTest extends LightCodeInsig
 
 			VfsRootAccess.allowRootAccess(testDataPath);
 
-			PsiTestUtil.addLibrary(module, modifiableRootModel, "OSGi", testDataPath, "osgi.jar");
+			PsiTestUtil.addLibrary(modifiableRootModel, "OSGi", testDataPath, "osgi.jar");
 		}
 
 	};

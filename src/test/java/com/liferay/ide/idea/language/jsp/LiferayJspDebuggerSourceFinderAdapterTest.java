@@ -120,9 +120,9 @@ public class LiferayJspDebuggerSourceFinderAdapterTest extends LightCodeInsightF
 				extension.setLanguageLevel(LanguageLevel.JDK_1_8);
 			}
 
-			JavaAwareProjectJdkTableImpl javaAwareProjectJdkTable = JavaAwareProjectJdkTableImpl.getInstanceEx();
+			JavaAwareProjectJdkTableImpl javaAwareProjectJdkTableImpl = JavaAwareProjectJdkTableImpl.getInstanceEx();
 
-			Sdk jdk = javaAwareProjectJdkTable.getInternalJdk();
+			Sdk jdk = javaAwareProjectJdkTableImpl.getInternalJdk();
 
 			modifiableRootModel.setSdk(jdk);
 
@@ -133,8 +133,7 @@ public class LiferayJspDebuggerSourceFinderAdapterTest extends LightCodeInsightF
 			VfsRootAccess.allowRootAccess(testDataPath);
 
 			PsiTestUtil.addLibrary(
-				module, modifiableRootModel, "com.liferay:com.liferay.login.web", testDataPath,
-				"com.liferay.login.web.jar");
+				modifiableRootModel, "com.liferay:com.liferay.login.web", testDataPath, "com.liferay.login.web.jar");
 		}
 
 	};

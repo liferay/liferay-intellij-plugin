@@ -70,6 +70,7 @@ public class LiferayProjectSettingsStep extends ModuleWizardStep implements Sett
 		_context = context;
 
 		_formatPanel = new ProjectFormatPanel();
+
 		_namePathComponent = LiferayNamePathComponent.initNamePathComponent(context);
 
 		_namePathComponent.setShouldBeAbsolute(true);
