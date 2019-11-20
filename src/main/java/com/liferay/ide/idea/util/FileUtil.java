@@ -27,6 +27,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
+import java.net.URL;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -89,6 +91,14 @@ public class FileUtil {
 
 	public static File[] getDirectories(File directory) {
 		return directory.listFiles(file -> file.isDirectory());
+	}
+
+	public static File getFile(URL url) {
+		if (url == null) {
+			return null;
+		}
+
+		return new File(url.getFile());
 	}
 
 	public static Path getPath(String location) {

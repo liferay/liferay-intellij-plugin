@@ -39,8 +39,8 @@ import org.jetbrains.annotations.Nullable;
 public class LiferayServerRunner extends DefaultJavaProgramRunner {
 
 	@Override
-	public boolean canRun(@NotNull String executorId, @NotNull RunProfile profile) {
-		if (DefaultRunExecutor.EXECUTOR_ID.equals(executorId) && (profile instanceof LiferayServerConfiguration)) {
+	public boolean canRun(@NotNull String executorId, @NotNull RunProfile runProfile) {
+		if (DefaultRunExecutor.EXECUTOR_ID.equals(executorId) && (runProfile instanceof LiferayServerConfiguration)) {
 			return true;
 		}
 

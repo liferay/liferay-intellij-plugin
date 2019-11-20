@@ -45,6 +45,8 @@ public class InitBundleMavenAction extends AbstractLiferayMavenGoalAction implem
 			project, WorkspaceConstants.MAVEN_HOME_DIR_PROPERTY, WorkspaceConstants.HOME_DIR_DEFAULT);
 
 		ProjectConfigurationUtil.configExcludedFolder(project, homeDir);
+
+		ProjectConfigurationUtil.handleServerConfiguration(project);
 	}
 
 	@Override

@@ -68,7 +68,9 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction imp
 	}
 
 	@Override
-	protected void afterTask(VirtualFile projectDir) {
+	protected void afterTask(Project project) {
+		VirtualFile projectDir = ProjectUtil.guessProjectDir(project);
+
 		List<Path> bndPaths = _getBndPaths(projectDir);
 
 		if (bndPaths.isEmpty()) {

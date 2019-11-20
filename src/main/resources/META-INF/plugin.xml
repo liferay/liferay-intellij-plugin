@@ -255,6 +255,7 @@
 			<action class="com.liferay.ide.idea.ui.actions.WatchGradleModuleAction" id="WatchLiferayGradleModule"/>
 			<action class="com.liferay.ide.idea.ui.actions.DeployMavenModuleAction" id="DeployLiferayMavenModule"/>
 			<action class="com.liferay.ide.idea.ui.actions.InitBundleGradleAction" id="GradleInitBundle"/>
+			<action class="com.liferay.ide.idea.ui.actions.InitDockerBundleAction" id="InitDockerBundle"/>
 			<action class="com.liferay.ide.idea.ui.actions.InitBundleMavenAction" id="MavenInitBundle"/>
 		</group>
 
@@ -269,8 +270,13 @@
 		<backgroundPostStartupActivity implementation="com.liferay.ide.idea.core.LiferayPostStartupActivity"/>
 		<projectTemplatesFactory implementation="com.liferay.ide.idea.ui.modules.LiferayWorkspaceTemplatesFactory"/>
 		<configurationType implementation="com.liferay.ide.idea.server.LiferayServerConfigurationType"/>
+		<configurationType implementation="com.liferay.ide.idea.server.LiferayDockerServerConfigurationType"/>
 		<programRunner id="Run" implementation="com.liferay.ide.idea.server.LiferayServerRunner"/>
 		<programRunner id="Debug" implementation="com.liferay.ide.idea.server.LiferayServerDebuggerRunner"/>
+		<programRunner id="DockerDebug" implementation="com.liferay.ide.idea.server.LiferayDockerServerDebuggerRunner"/>
+		<programRunner id="DockerRun" implementation="com.liferay.ide.idea.server.LiferayDockerServerRunner"/>
+		<runConfigurationProducer id="LiferayDockerConfigurationProducer" implementation="com.liferay.ide.idea.server.LiferayDockerServerConfigurationProducer"/>
+		<runConfigurationProducer id="LiferayServerConfigurationProducer" implementation="com.liferay.ide.idea.server.LiferayServerConfigurationProducer"/>
 		<projectService serviceImplementation="com.liferay.ide.idea.core.LiferayProjectTypeService"/>
 		<fileType name="bnd file" implementationClass="com.liferay.ide.idea.bnd.BndFileType" fieldName="INSTANCE" language="bnd" extensions="bnd"/>
 		<codeInsight.lineMarkerProvider language="XML" implementationClass="com.liferay.ide.idea.language.service.LiferayServiceXMLLineMarkerProvider"/>
