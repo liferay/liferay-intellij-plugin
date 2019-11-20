@@ -21,19 +21,17 @@ import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.openapi.project.Project;
 
 import com.liferay.ide.idea.core.LiferayIcons;
-
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * @author Terry Jia
+ * @author Simon jiang
  */
-public class LiferayServerConfigurationType extends ConfigurationTypeBase implements ConfigurationType {
+public class LiferayDockerServerConfigurationType extends ConfigurationTypeBase implements ConfigurationType {
 
-	public static String id = "LiferayServerConfiguration";
+	public static String id = "LiferayDockerServerConfiguration";
 
-	public LiferayServerConfigurationType() {
-		super(id, "Liferay Server", "Run or Debug a Liferay Server", LiferayIcons.LIFERAY_ICON);
+	public LiferayDockerServerConfigurationType() {
+		super(id, "Liferay Docker Server", "Run or Debug a Liferay Docker Server", LiferayIcons.LIFERAY_ICON);
 
 		addFactory(
 			new ConfigurationFactory(this) {
@@ -41,14 +39,12 @@ public class LiferayServerConfigurationType extends ConfigurationTypeBase implem
 				@NotNull
 				@Override
 				public RunConfiguration createTemplateConfiguration(@NotNull Project project) {
-					return new LiferayServerConfiguration(project, this, "");
-				}
+					LiferayDockerServerConfiguration dockerServerConfiguration = new LiferayDockerServerConfiguration(
+						project, this, "Liferay Docker");
 
-				@NonNls
-				@NotNull
-				@Override
-				public String getId() {
-					return getName();
+					dockerServerConfiguration.setAllowRunningInParallel(false);
+
+					return dockerServerConfiguration;
 				}
 
 			});

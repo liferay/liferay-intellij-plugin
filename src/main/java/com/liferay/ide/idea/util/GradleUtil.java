@@ -30,6 +30,7 @@ import com.intellij.openapi.externalSystem.service.project.ProjectDataManager;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayUtil;
@@ -37,6 +38,10 @@ import com.intellij.util.containers.ContainerUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+
+import java.net.JarURLConnection;
+import java.net.URL;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -48,6 +53,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.jar.JarEntry;
+
+import org.apache.commons.io.FileUtils;
 
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ModelBuilder;
@@ -170,6 +178,59 @@ public class GradleUtil {
 		return Collections.emptyList();
 	}
 
+	public static <T> T getModel(Class<T> modelClass, VirtualFile virtualFile) throws Exception {
+		T retval = null;
+
+		Path cachePath = Paths.get(System.getProperty("user.home", "") + "/.liferay-ide");
+
+		try {
+			File depsDir = new File(cachePath.toFile(), "deps");
+
+			depsDir.mkdirs();
+
+			String path = depsDir.getAbsolutePath();
+
+			path = path.replaceAll("\\\\", "/");
+
+			_extractJar(depsDir, "gradle-tooling");
+
+			ClassLoader bladeClassLoader = GradleUtil.class.getClassLoader();
+
+			File scriptFile = new File(cachePath.toFile(), "init.gradle");
+
+			try (InputStream input = bladeClassLoader.getResourceAsStream("com/liferay/ide/idea/util/init.gradle")) {
+				String initScriptTemplate = CoreUtil.readStreamToString(input);
+
+				String initScriptContents = initScriptTemplate.replaceFirst("%deps%", path);
+
+				if (FileUtil.notExists(scriptFile)) {
+					scriptFile.createNewFile();
+				}
+
+				FileUtils.writeByteArrayToFile(scriptFile, initScriptContents.getBytes());
+			}
+
+			GradleConnector gradleConnector = GradleConnector.newConnector(
+			).forProjectDirectory(
+					Paths.get(
+							virtualFile.getPath()
+					).toFile()
+			);
+
+			ProjectConnection connection = gradleConnector.connect();
+
+			ModelBuilder<T> model = connection.model(modelClass);
+
+			model.withArguments("--init-script", scriptFile.getAbsolutePath(), "--stacktrace");
+
+			retval = model.get();
+		} catch (Exception e) {
+			throw e;
+		}
+
+		return retval;
+	}
+
 	public static GradleProject getWorkspaceGradleProject(Project project) {
 		Path pathToGradleProject = Paths.get(project.getBasePath());
 
@@ -257,6 +318,44 @@ public class GradleUtil {
 			task -> Objects.deepEquals("com.liferay.gradle.plugins.tasks.WatchTask", task.typeFqn)
 		).findAny(
 		).isPresent();
+	}
+
+	private static void _extractJar(File depsDir, String jarName) throws IOException {
+		String fullFileName = jarName + ".jar";
+
+		File toolingJar = new File(depsDir, fullFileName);
+
+		ClassLoader bladeClassLoader = GradleUtil.class.getClassLoader();
+
+		URL url = bladeClassLoader.getResource("/libs/" + fullFileName);
+
+		boolean needToCopy = true;
+
+		try (InputStream in = bladeClassLoader.getResourceAsStream("/libs/" + fullFileName)) {
+			JarURLConnection jarURLConnection = (JarURLConnection)url.openConnection();
+
+			JarEntry jarEntry = jarURLConnection.getJarEntry();
+
+			Long bladeJarTimestamp = jarEntry.getTime();
+
+			if (toolingJar.exists()) {
+				Long destTimestamp = toolingJar.lastModified();
+
+				if (destTimestamp < bladeJarTimestamp) {
+					toolingJar.delete();
+				}
+				else {
+					needToCopy = false;
+				}
+			}
+
+			if (needToCopy) {
+				FileUtil.writeFile(toolingJar, in);
+				toolingJar.setLastModified(bladeJarTimestamp);
+			}
+		}
+		catch (IOException ioe) {
+		}
 	}
 
 }

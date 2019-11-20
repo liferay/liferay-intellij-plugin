@@ -33,6 +33,11 @@ public class InitBundleGradleAction extends AbstractLiferayGradleTaskAction impl
 	}
 
 	@Override
+	protected void afterTask(Project project) {
+		ProjectConfigurationUtil.handleServerConfiguration(project);
+	}
+
+	@Override
 	protected void handleProcessTerminated(Project project) {
 		super.handleProcessTerminated(project);
 

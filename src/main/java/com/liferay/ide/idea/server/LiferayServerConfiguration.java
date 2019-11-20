@@ -34,6 +34,9 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.options.SettingsEditorGroup;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.io.FileUtil;
@@ -43,7 +46,13 @@ import com.intellij.psi.search.GlobalSearchScopes;
 import com.intellij.util.xmlb.XmlSerializer;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 
+import com.liferay.ide.idea.server.portal.PortalBundle;
 import com.liferay.ide.idea.util.CoreUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
+import com.liferay.ide.idea.util.ServerUtil;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -60,7 +69,8 @@ import org.jetbrains.annotations.Nullable;
  */
 @SuppressWarnings("unchecked")
 public class LiferayServerConfiguration
-	extends LocatableConfigurationBase implements CommonJavaRunConfigurationParameters, SearchScopeProvidingRunProfile {
+	extends LocatableConfigurationBase
+	implements CommonJavaRunConfigurationParameters, LiferayWorkspaceSupport, SearchScopeProvidingRunProfile {
 
 	public LiferayServerConfiguration(Project project, ConfigurationFactory factory, String name) {
 		super(project, factory, name);
@@ -68,6 +78,8 @@ public class LiferayServerConfiguration
 		_javaRunConfigurationModule = new JavaRunConfigurationModule(project, true);
 
 		_liferayServerConfig.vmParameters = "-Xmx2560m";
+
+		_javaRunConfigurationModule.setModuleToAnyFirstIfNotSpecified();
 	}
 
 	@Override
@@ -100,6 +112,38 @@ public class LiferayServerConfiguration
 		clone.setConfigurationModule(configurationModule);
 
 		clone.setEnvs(new LinkedHashMap<>(clone.getEnvs()));
+
+		Module module = getModule();
+
+		if (module != null) {
+			ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(getModule());
+
+			Sdk moduleSdk = moduleRootManager.getSdk();
+
+			if (moduleSdk == null) {
+				ProjectRootManager projectRootInstance = ProjectRootManager.getInstance(getProject());
+
+				moduleSdk = projectRootInstance.getProjectSdk();
+			}
+
+			if (moduleSdk != null) {
+				clone.setAlternativeJrePath(moduleSdk.getHomePath());
+			}
+
+			Project project = getProject();
+
+			String basePath = project.getBasePath();
+
+			Path bundlePath = Paths.get(basePath, getHomeDir(project));
+
+			clone.setBundleLocation(bundlePath.toString());
+
+			PortalBundle portalBundle = ServerUtil.getPortalBundle(bundlePath);
+
+			if (portalBundle != null) {
+				clone.setBundleType(portalBundle.getType());
+			}
+		}
 
 		return clone;
 	}
