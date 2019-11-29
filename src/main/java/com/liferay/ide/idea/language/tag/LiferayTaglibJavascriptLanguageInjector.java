@@ -40,7 +40,7 @@ import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Injects JavaScript language into Liferay specific taglibs (like <aui:script> or <aui:a onClick="">)
+ * Injects JavaScript language into Liferay specific taglibs (like <aui:script/> or <aui:a onClick=""/>)
  *
  * @author Dominik Marks
  */
