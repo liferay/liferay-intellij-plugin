@@ -27,6 +27,7 @@ import java.io.File;
 
 /**
  * @author Andy Wu
+ * @author Simon Jiang
  */
 public class DeployGradleModuleAction extends AbstractLiferayGradleTaskAction implements LiferayWorkspaceSupport {
 
@@ -50,7 +51,7 @@ public class DeployGradleModuleAction extends AbstractLiferayGradleTaskAction im
 
 		if ((virtualFile != null) && (gradleFile != null) &&
 			ProjectRootsUtil.isModuleContentRoot(virtualFile, project) && !baseDir.equals(virtualFile) &&
-			new File(getHomeDir(project.getBasePath())).exists()) {
+			new File(project.getBasePath(), getHomeDir(project.getBasePath())).exists()) {
 
 			return true;
 		}
