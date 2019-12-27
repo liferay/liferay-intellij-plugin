@@ -14,24 +14,21 @@
 
 package com.liferay.ide.idea.ui.modules;
 
-import com.intellij.ide.actions.ImportModuleAction;
-import com.intellij.ide.util.newProjectWizard.AddModuleWizard;
 import com.intellij.ide.util.projectWizard.ModuleBuilderListener;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.projectImport.ProjectImportProvider;
 
-import icons.MavenIcons;
+import icons.OpenapiIcons;
 
 import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.idea.maven.project.MavenImportingSettings;
+import org.jetbrains.idea.maven.project.MavenProjectsManager;
 
 /**
  * @author Joye Luo
+ * @author Simon Jiang
  */
 public class LiferayMavenWorkspaceBuilder extends LiferayWorkspaceBuilder {
 
@@ -43,7 +40,7 @@ public class LiferayMavenWorkspaceBuilder extends LiferayWorkspaceBuilder {
 
 	@Override
 	public Icon getNodeIcon() {
-		return MavenIcons.MavenLogo;
+		return OpenapiIcons.RepositoryLibraryLogo;
 	}
 
 	@Override
@@ -55,32 +52,13 @@ public class LiferayMavenWorkspaceBuilder extends LiferayWorkspaceBuilder {
 
 		@Override
 		public void moduleCreated(@NotNull Module module) {
-			Project project = module.getProject();
-			ProjectImportProvider[] importProviders = ProjectImportProvider.PROJECT_IMPORT_PROVIDER.getExtensions();
+			MavenProjectsManager mvnManager = MavenProjectsManager.getInstance(module.getProject());
 
-			for (ProjectImportProvider importProvider : importProviders) {
-				String importProviderId = importProvider.getId();
+			MavenImportingSettings mavenImportingSettings = mvnManager.getImportingSettings();
 
-				if (importProviderId.equals("Maven")) {
-					AddModuleWizard wizard = new AddModuleWizard(project, project.getBasePath(), importProvider);
+			mavenImportingSettings.setImportAutomatically(true);
 
-					Application application = ApplicationManager.getApplication();
-
-					application.invokeLater(
-						new Runnable() {
-
-							@Override
-							public void run() {
-								if (wizard.showAndGet()) {
-									ImportModuleAction.createFromWizard(project, wizard);
-								}
-							}
-
-						});
-
-					break;
-				}
-			}
+			mvnManager.forceUpdateAllProjectsOrFindAllAvailablePomFiles();
 		}
 
 	}
