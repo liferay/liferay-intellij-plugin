@@ -147,6 +147,11 @@ public class PortalPropertiesConfigurationLayout extends PropertiesConfiguration
 
 		// The list of possible key/value separators
 
+		@Override
+		public String getCurrentSeparator() {
+			return "=";
+		}
+
 		public void writeProperty(String key, Object value, boolean forceSingleLine, boolean wrappedProperty)
 			throws IOException {
 
