@@ -55,7 +55,7 @@ public class WorkspaceConstants {
 
 	public static final String[] TARGET_PLATFORM_VERSIONS_7_1 = {"7.1.3", "7.1.2", "7.1.1", "7.1.0"};
 
-	public static final String[] TARGET_PLATFORM_VERSIONS_7_2 = {"7.2.0"};
+	public static final String[] TARGET_PLATFORM_VERSIONS_7_2 = {"7.2.1", "7.2.0"};
 
 	public static final String THEMES_DIR_DEFAULT = "themes";
 
