@@ -122,13 +122,19 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
 			return false;
 		}
 
-		Module module = ModuleUtil.findModuleForFile(virtualFile, project);
+		String virtualFileToStr = virtualFile.toString();
 
-		if (module == null) {
-			return false;
+		if (virtualFileToStr.contains("/module")) {
+			Module module = ModuleUtil.findModuleForFile(virtualFile, project);
+
+			if (module == null) {
+				return false;
+			}
+
+			return GradleUtil.isWatchableProject(module);
 		}
 
-		return GradleUtil.isWatchableProject(module);
+		return false;
 	}
 
 	@Override
