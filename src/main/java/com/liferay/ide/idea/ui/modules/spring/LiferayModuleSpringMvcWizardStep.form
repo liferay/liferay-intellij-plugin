@@ -32,19 +32,19 @@
           <text value="View Type:"/>
         </properties>
       </component>
-      <component id="6d256" class="javax.swing.JComboBox" binding="_framework">
+      <component id="6d256" class="javax.swing.JComboBox" binding="_frameworkCombo">
         <constraints>
           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
       </component>
-      <component id="1f632" class="javax.swing.JComboBox" binding="_frameworkDependencies">
+      <component id="1f632" class="javax.swing.JComboBox" binding="_frameworkDependenciesCombo">
         <constraints>
           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
       </component>
-      <component id="51717" class="javax.swing.JComboBox" binding="_viewType">
+      <component id="51717" class="javax.swing.JComboBox" binding="_viewTypeCombo">
         <constraints>
           <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>

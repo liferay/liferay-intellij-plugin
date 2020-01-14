@@ -69,7 +69,7 @@ public class LiferayModuleSpringMvcBuilder extends ModuleBuilder implements Life
 
 	@Override
 	public Icon getNodeIcon() {
-		return LiferayIcons.LIFERAY_ICON;
+		return LiferayIcons.SPRING_ICON;
 	}
 
 	@Override

@@ -14,6 +14,9 @@
 
 package com.liferay.ide.idea.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author Terry Jia
  */
@@ -35,7 +38,7 @@ public class WorkspaceConstants {
 
 	public static final String HOME_DIR_PROPERTY = "liferay.workspace.home.dir";
 
-	public static final String[] LIFERAY_VERSIONS = {"7.2", "7.1", "7.0"};
+	public static final String[] LIFERAY_VERSIONS = {"7.0", "7.1", "7.2", "7.3"};
 
 	public static final String MAVEN_HOME_DIR_PROPERTY = "liferayHome";
 
@@ -46,6 +49,12 @@ public class WorkspaceConstants {
 	public static final String PLUGINS_SDK_DIR_DEFAULT = "plugins-sdk";
 
 	public static final String PLUGINS_SDK_DIR_PROPERTY = "liferay.workspace.plugins.sdk.dir";
+
+	public static final String[] SPRING_FRAMEWORK = {"PortletMVC4Spring", "Spring Portlet MVC"};
+
+	public static final String[] SPRING_FRAMEWORK_DEPENDENCIES = {"Embedded", "Provided"};
+
+	public static final String[] SPRING_VIEW_TYPE = {"Jsp", "Thymeleaf"};
 
 	public static final String TARGET_PLATFORM_INDEX_SOURCES_PROPERTY = "target.platform.index.sources";
 
@@ -66,5 +75,37 @@ public class WorkspaceConstants {
 	public static final String WARS_DIR_PROPERTY = "liferay.workspace.wars.dir";
 
 	public static final String WIZARD_LIFERAY_VERSION_FIELD = "selected.liferay.version";
+
+	public static final Map<String, String[]> liferayTargetPlatformVersions = new HashMap<String, String[]>() {
+		{
+			put("7.0", new String[] {"7.0.6"});
+			put("7.1", new String[] {"7.1.3", "7.1.2", "7.1.1", "7.1.0"});
+			put("7.2", new String[] {"7.2.1", "7.2.0"});
+		}
+	};
+	public static final Map<String, String> springDependenciesInjectors = new HashMap<String, String>() {
+		{
+			put("DS", new String("ds"));
+			put("Spring", new String("spring"));
+		}
+	};
+	public static final Map<String, String> springFrameworkDependeices = new HashMap<String, String>() {
+		{
+			put(SPRING_FRAMEWORK_DEPENDENCIES[0], new String("embedded"));
+			put(SPRING_FRAMEWORK_DEPENDENCIES[1], new String("provided"));
+		}
+	};
+	public static final Map<String, String> springFrameworks = new HashMap<String, String>() {
+		{
+			put(SPRING_FRAMEWORK[0], new String("portletmvc4spring"));
+			put(SPRING_FRAMEWORK[1], new String("springportletmvc"));
+		}
+	};
+	public static final Map<String, String> springViewTypes = new HashMap<String, String>() {
+		{
+			put(SPRING_VIEW_TYPE[0], new String("jsp"));
+			put(SPRING_VIEW_TYPE[1], new String("thymeleaf"));
+		}
+	};
 
 }
