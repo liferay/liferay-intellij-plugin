@@ -66,7 +66,7 @@ public class LiferayServerConfiguration
 
 		_javaRunConfigurationModule = new JavaRunConfigurationModule(project, true);
 
-		_liferayServerConfig.vmParameters = "-Xmx1024m";
+		_liferayServerConfig.vmParameters = "-Xmx2560m";
 	}
 
 	@Override
