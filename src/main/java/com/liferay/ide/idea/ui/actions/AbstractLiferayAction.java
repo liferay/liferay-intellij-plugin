@@ -20,6 +20,8 @@ import com.intellij.execution.RunManager;
 import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
+import com.intellij.execution.ui.RunContentDescriptor;
+import com.intellij.execution.ui.RunContentManager;
 import com.intellij.ide.projectView.ProjectView;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -34,8 +36,13 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.content.Content;
+import com.intellij.ui.content.ContentManager;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
+
+import java.util.List;
+import java.util.Objects;
 
 import javax.swing.Icon;
 
@@ -44,6 +51,7 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Simon Jiang
+ * @author Ethan Sun
  */
 public abstract class AbstractLiferayAction extends AnAction {
 
@@ -127,6 +135,33 @@ public abstract class AbstractLiferayAction extends AnAction {
 		else {
 			runManager.setSelectedConfiguration(existingConfigurationSettings);
 		}
+
+		RunContentManager runContentManager = RunContentManager.getInstance(project);
+
+		List<RunContentDescriptor> allDescriptors = runContentManager.getAllDescriptors();
+
+		allDescriptors.forEach(
+			descriptor -> {
+				String displayName = descriptor.getDisplayName();
+
+				ProcessHandler processHandler = descriptor.getProcessHandler();
+
+				boolean processTerminated = processHandler.isProcessTerminated();
+
+				if ((Objects.equals("Gradle." + displayName, existingConfigurationSettings.getUniqueID()) &&
+					 !processTerminated) ||
+					Objects.equals(
+						existingConfigurationSettings.getUniqueID(), "Gradle." + project.getName() + " [watch]")) {
+
+					processHandler.destroyProcess();
+
+					Content content = descriptor.getAttachedContent();
+
+					ContentManager contentManager = content.getManager();
+
+					contentManager.removeContent(descriptor.getAttachedContent(), true);
+				}
+			});
 
 		MessageBus messageBus = project.getMessageBus();
 
