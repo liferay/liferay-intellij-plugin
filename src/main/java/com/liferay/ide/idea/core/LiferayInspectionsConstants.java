@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.ide.idea.util;
+package com.liferay.ide.idea.core;
 
 /**
  * @author Dominik Marks

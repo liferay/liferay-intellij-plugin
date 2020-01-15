@@ -29,7 +29,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.XmlElementVisitor;
 import com.intellij.psi.xml.XmlText;
 
-import com.liferay.ide.idea.util.LiferayInspectionsConstants;
+import com.liferay.ide.idea.core.LiferayInspectionsConstants;
 
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;

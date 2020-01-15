@@ -23,7 +23,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlAttributeValue;
 import com.intellij.psi.xml.XmlTag;
 
-import com.liferay.ide.idea.util.LiferayInspectionsConstants;
+import com.liferay.ide.idea.core.LiferayInspectionsConstants;
 
 import java.util.Arrays;
 import java.util.List;

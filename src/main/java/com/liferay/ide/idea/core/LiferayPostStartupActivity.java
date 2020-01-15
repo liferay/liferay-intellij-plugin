@@ -28,7 +28,6 @@ import com.intellij.util.messages.MessageBusConnection;
 
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 import com.liferay.ide.idea.util.ProjectConfigurationUtil;
-import com.liferay.ide.idea.util.WorkspaceConstants;
 
 import java.util.stream.Stream;
 

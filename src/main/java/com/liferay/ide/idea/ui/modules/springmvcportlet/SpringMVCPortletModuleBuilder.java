@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.ide.idea.ui.modules.spring;
+package com.liferay.ide.idea.ui.modules.springmvcportlet;
 
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
@@ -42,7 +42,7 @@ import org.jetbrains.plugins.gradle.util.GradleConstants;
 /**
  * @author Terry Jia
  */
-public class LiferayModuleSpringMvcBuilder extends ModuleBuilder implements LiferayWorkspaceSupport {
+public class SpringMVCPortletModuleBuilder extends ModuleBuilder implements LiferayWorkspaceSupport {
 
 	@Override
 	public String getBuilderId() {
@@ -53,7 +53,7 @@ public class LiferayModuleSpringMvcBuilder extends ModuleBuilder implements Life
 
 	@Override
 	public ModuleWizardStep getCustomOptionsStep(WizardContext context, Disposable parentDisposable) {
-		return new LiferayModuleSpringMvcWizardStep(context, this);
+		return new SpringMvcPortletModuleWizardStep(context, this);
 	}
 
 	@Override

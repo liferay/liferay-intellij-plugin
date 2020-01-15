@@ -29,10 +29,10 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.DocumentAdapter;
 
+import com.liferay.ide.idea.core.WorkspaceConstants;
 import com.liferay.ide.idea.ui.modules.ext.LiferayModuleExtBuilder;
-import com.liferay.ide.idea.ui.modules.spring.LiferayModuleSpringMvcBuilder;
+import com.liferay.ide.idea.ui.modules.springmvcportlet.SpringMVCPortletModuleBuilder;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
-import com.liferay.ide.idea.util.WorkspaceConstants;
 
 import java.io.File;
 
@@ -303,7 +303,7 @@ public class LiferayModuleNameLocationComponent implements LiferayWorkspaceSuppo
 			targetFolderName = getWorkspaceProperty(
 				project, WorkspaceConstants.EXT_DIR_PROPERTY, WorkspaceConstants.EXT_DIR_DEFAULT);
 		}
-		else if (builder instanceof LiferayModuleSpringMvcBuilder) {
+		else if (builder instanceof SpringMVCPortletModuleBuilder) {
 			targetFolderName = getWorkspaceProperty(
 				project, WorkspaceConstants.WARS_DIR_PROPERTY, WorkspaceConstants.WARS_DIR_DEFAULT);
 		}

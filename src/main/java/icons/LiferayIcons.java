@@ -29,6 +29,6 @@ public class LiferayIcons {
 
 	public static final Icon OSGI_ICON = IconLoader.getIcon("/icons/osgi.png");
 
-	public static final Icon SPRING_ICON = IconLoader.getIcon("/icons/spring.png");
+	public static final Icon SPRING_ICON = IconLoader.getIcon("/icons/portletMVC4Spring_16x16_new.png");
 
 }
