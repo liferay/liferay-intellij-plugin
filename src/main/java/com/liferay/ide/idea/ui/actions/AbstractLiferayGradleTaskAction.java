@@ -70,25 +70,15 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 		return false;
 	}
 
-	protected RunnerAndConfigurationSettings doExecute(AnActionEvent anActionEvent) {
+	@Nullable
+	@Override
+	protected void doExecute(AnActionEvent anActionEvent, RunnerAndConfigurationSettings configuration) {
 		Project project = anActionEvent.getRequiredData(CommonDataKeys.PROJECT);
 
 		final VirtualFile projectDir = getWorkingDirectory(anActionEvent);
 
-		final String workingDirectory = projectDir.getCanonicalPath();
-
-		if (CoreUtil.isNullOrEmpty(workingDirectory)) {
-			return null;
-		}
-
-		ExternalTaskExecutionInfo taskExecutionInfo = _buildTaskExecutionInfo(project, workingDirectory, _taskName);
-
-		if (taskExecutionInfo == null) {
-			return null;
-		}
-
 		ExternalSystemUtil.runTask(
-			taskExecutionInfo.getSettings(), taskExecutionInfo.getExecutorId(), project, GradleConstants.SYSTEM_ID,
+			_taskExecutionInfo.getSettings(), _taskExecutionInfo.getExecutorId(), project, GradleConstants.SYSTEM_ID,
 			new TaskCallback() {
 
 				@Override
@@ -102,16 +92,6 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 
 			},
 			getProgressMode(), true);
-
-		RunnerAndConfigurationSettings configuration =
-			ExternalSystemUtil.createExternalSystemRunnerAndConfigurationSettings(
-				taskExecutionInfo.getSettings(), project, GradleConstants.SYSTEM_ID);
-
-		if (configuration == null) {
-			return null;
-		}
-
-		return configuration;
 	}
 
 	@Override
@@ -129,6 +109,29 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 		}
 
 		return false;
+	}
+
+	@Nullable
+	@Override
+	protected RunnerAndConfigurationSettings processRunnerConifugration(AnActionEvent anActionEvent) {
+		Project project = anActionEvent.getRequiredData(CommonDataKeys.PROJECT);
+
+		final VirtualFile projectDir = getWorkingDirectory(anActionEvent);
+
+		final String workingDirectory = projectDir.getCanonicalPath();
+
+		if (CoreUtil.isNullOrEmpty(workingDirectory)) {
+			return null;
+		}
+
+		_taskExecutionInfo = _buildTaskExecutionInfo(project, workingDirectory, _taskName);
+
+		if (_taskExecutionInfo == null) {
+			return null;
+		}
+
+		return ExternalSystemUtil.createExternalSystemRunnerAndConfigurationSettings(
+			_taskExecutionInfo.getSettings(), project, GradleConstants.SYSTEM_ID);
 	}
 
 	private ExternalTaskExecutionInfo _buildTaskExecutionInfo(
@@ -194,6 +197,7 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 		}
 	}
 
+	private ExternalTaskExecutionInfo _taskExecutionInfo;
 	private final String _taskName;
 
 }

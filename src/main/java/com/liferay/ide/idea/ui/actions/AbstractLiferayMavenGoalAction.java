@@ -51,8 +51,35 @@ public abstract class AbstractLiferayMavenGoalAction extends AbstractLiferayActi
 		super(text, description, icon);
 	}
 
+	@Nullable
 	@Override
-	protected RunnerAndConfigurationSettings doExecute(AnActionEvent anActionEvent) {
+	protected void doExecute(AnActionEvent anActionEvent, RunnerAndConfigurationSettings configuration) {
+		Project project = MavenActionUtil.getProject(anActionEvent.getDataContext());
+
+		ProgramRunner<?> programRunner = DefaultJavaProgramRunner.getInstance();
+
+		Executor executor = DefaultRunExecutor.getRunExecutorInstance();
+
+		try {
+			programRunner.execute(new ExecutionEnvironment(executor, programRunner, configuration, project), null);
+		}
+		catch (ExecutionException ee) {
+			MavenUtil.showError(project, "Failed to execute Maven goal", ee);
+		}
+	}
+
+	@Override
+	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
+		if (LiferayWorkspaceSupport.isValidMavenWorkspaceLocation(anActionEvent.getProject())) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@Nullable
+	@Override
+	protected RunnerAndConfigurationSettings processRunnerConifugration(AnActionEvent anActionEvent) {
 		DataContext dataContext = anActionEvent.getDataContext();
 
 		Project project = MavenActionUtil.getProject(dataContext);
@@ -77,29 +104,7 @@ public abstract class AbstractLiferayMavenGoalAction extends AbstractLiferayActi
 			true, projectDir, pomFile.getName(), goals, explicitProfiles.getEnabledProfiles(),
 			explicitProfiles.getDisabledProfiles());
 
-		RunnerAndConfigurationSettings configuration = MavenRunConfigurationType.createRunnerAndConfigurationSettings(
-			null, null, params, project);
-
-		ProgramRunner<?> programRunner = DefaultJavaProgramRunner.getInstance();
-		Executor executor = DefaultRunExecutor.getRunExecutorInstance();
-
-		try {
-			programRunner.execute(new ExecutionEnvironment(executor, programRunner, configuration, project), null);
-		}
-		catch (ExecutionException ee) {
-			MavenUtil.showError(project, "Failed to execute Maven goal", ee);
-		}
-
-		return configuration;
-	}
-
-	@Override
-	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
-		if (LiferayWorkspaceSupport.isValidMavenWorkspaceLocation(anActionEvent.getProject())) {
-			return true;
-		}
-
-		return false;
+		return MavenRunConfigurationType.createRunnerAndConfigurationSettings(null, null, params, project);
 	}
 
 	protected List<String> goals;

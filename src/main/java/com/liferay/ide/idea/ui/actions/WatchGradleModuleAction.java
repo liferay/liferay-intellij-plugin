@@ -14,12 +14,20 @@
 
 package com.liferay.ide.idea.ui.actions;
 
+import com.intellij.execution.RunnerAndConfigurationSettings;
+import com.intellij.execution.configurations.RunConfiguration;
+import com.intellij.execution.process.ProcessHandler;
+import com.intellij.execution.ui.RunContentDescriptor;
+import com.intellij.execution.ui.RunContentManager;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.content.Content;
+import com.intellij.ui.content.ContentManager;
 
 import com.liferay.ide.idea.server.gogo.GogoTelnetClient;
 import com.liferay.ide.idea.util.GradleUtil;
@@ -39,6 +47,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 
 /**
@@ -120,6 +129,52 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
 		}
 
 		return GradleUtil.isWatchableProject(module);
+	}
+
+	@Override
+	protected RunnerAndConfigurationSettings processRunnerConifugration(AnActionEvent anActionEvent) {
+		final RunnerAndConfigurationSettings runnerAndConfigurationSettings = super.processRunnerConifugration(
+			anActionEvent);
+
+		if (runnerAndConfigurationSettings == null) {
+			return null;
+		}
+
+		Project project = anActionEvent.getRequiredData(CommonDataKeys.PROJECT);
+
+		RunContentManager runContentManager = RunContentManager.getInstance(project);
+
+		List<RunContentDescriptor> allDescriptors = runContentManager.getAllDescriptors();
+
+		RunConfiguration configuration = runnerAndConfigurationSettings.getConfiguration();
+
+		String configurationName = configuration.getName();
+
+		final boolean watchWorkspaceProject = configurationName.equals(project.getName() + " [watch]");
+
+		allDescriptors.forEach(
+			descriptor -> {
+				String displayName = descriptor.getDisplayName();
+
+				ProcessHandler processHandler = descriptor.getProcessHandler();
+
+				boolean processTerminated = processHandler.isProcessTerminated();
+
+				if ((Objects.equals("Gradle." + displayName, runnerAndConfigurationSettings.getUniqueID()) &&
+					 !processTerminated) ||
+					(watchWorkspaceProject && displayName.contains("[watch]"))) {
+
+					processHandler.destroyProcess();
+
+					Content content = descriptor.getAttachedContent();
+
+					ContentManager contentManager = content.getManager();
+
+					contentManager.removeContent(descriptor.getAttachedContent(), true);
+				}
+			});
+
+		return runnerAndConfigurationSettings;
 	}
 
 	private List<Path> _getBndPaths(VirtualFile projectDir) {
