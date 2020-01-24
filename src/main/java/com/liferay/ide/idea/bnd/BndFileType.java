@@ -23,7 +23,6 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.lang.manifest.ManifestLanguage;
 
 /**
  * @author Dominik Marks
@@ -34,7 +33,7 @@ public class BndFileType extends LanguageFileType {
 	public static final LanguageFileType INSTANCE = new BndFileType();
 
 	public BndFileType() {
-		super(ManifestLanguage.INSTANCE);
+		super(BndLanguage.INSTANCE);
 	}
 
 	@Nullable
