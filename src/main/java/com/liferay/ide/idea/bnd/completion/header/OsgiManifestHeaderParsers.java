@@ -18,6 +18,7 @@ import aQute.bnd.osgi.Constants;
 
 import com.intellij.util.containers.ContainerUtil;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
@@ -28,6 +29,8 @@ import org.jetbrains.lang.manifest.header.HeaderParserProvider;
  * @author Charles Wu
  */
 public class OsgiManifestHeaderParsers implements HeaderParserProvider {
+
+	public static final Map<String, OsgiHeaderParser> parsers = new HashMap<>();
 
 	public OsgiManifestHeaderParsers() {
 		_parsers = ContainerUtil.newHashMap();
