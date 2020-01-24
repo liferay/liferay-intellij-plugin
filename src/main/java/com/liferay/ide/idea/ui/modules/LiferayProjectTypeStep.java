@@ -81,6 +81,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -100,7 +101,8 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Terry Jia
  */
-public class LiferayProjectTypeStep extends ModuleWizardStep implements Disposable, SettingsStep {
+public class LiferayProjectTypeStep
+	extends ModuleWizardStep implements Disposable, LiferayWorkspaceSupport, SettingsStep {
 
 	public static final Function<FrameworkSupportNode, String> NODE_STRING_FUNCTION = FrameworkSupportNodeBase::getId;
 
@@ -550,7 +552,9 @@ public class LiferayProjectTypeStep extends ModuleWizardStep implements Disposab
 	private List<TemplatesGroup> _fillTemplatesMap(Project project) {
 		_templatesMap.put(new TemplatesGroup(new LiferayModuleBuilder()), new ArrayList<>());
 
-		if (LiferayWorkspaceSupport.isValidGradleWorkspaceLocation(project.getBasePath())) {
+		if (LiferayWorkspaceSupport.isValidGradleWorkspaceLocation(project.getBasePath()) &&
+			!Objects.equals("7.0", getLiferayVersion(project))) {
+
 			_templatesMap.put(new TemplatesGroup(new LiferayModuleExtBuilder()), new ArrayList<>());
 		}
 

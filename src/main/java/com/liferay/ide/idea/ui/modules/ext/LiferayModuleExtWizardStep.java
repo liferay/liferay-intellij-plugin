@@ -27,6 +27,7 @@ import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 import java.awt.event.ItemEvent;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.swing.ComboBoxEditor;
 import javax.swing.JComboBox;
@@ -127,6 +128,12 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep implements Life
 				 CoreUtil.isNullOrEmpty(_originalModuleVersionField.getText())) {
 
 			throw new ConfigurationException("Please input original module version", validationTitle);
+		}
+
+		if (Objects.equals("7.0", getLiferayVersion(_project))) {
+			throw new ConfigurationException(
+				"Module Ext Projects only work on Liferay Workspace which version is greater than 7.0",
+				validationTitle);
 		}
 
 		return true;
