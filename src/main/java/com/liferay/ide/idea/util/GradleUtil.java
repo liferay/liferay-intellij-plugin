@@ -14,6 +14,9 @@
 
 package com.liferay.ide.idea.util;
 
+import com.intellij.execution.process.ProcessHandler;
+import com.intellij.execution.ui.RunContentDescriptor;
+import com.intellij.execution.ui.RunContentManager;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.externalSystem.importing.ImportSpecBuilder;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
@@ -40,6 +43,7 @@ import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrMethod
 /**
  * @author Terry Jia
  * @author Charles Wu
+ * @author Ethan Sun
  */
 public class GradleUtil {
 
@@ -109,7 +113,23 @@ public class GradleUtil {
 	}
 
 	public static boolean isWatchableProject(Module module) {
-		GradleExtensionsSettings.Settings settings = GradleExtensionsSettings.getInstance(module.getProject());
+		Project project = module.getProject();
+
+		RunContentManager runContentManager = RunContentManager.getInstance(project);
+
+		List<RunContentDescriptor> allDescriptors = runContentManager.getAllDescriptors();
+
+		for (RunContentDescriptor descriptor : allDescriptors) {
+			ProcessHandler processHandler = descriptor.getProcessHandler();
+
+			boolean processTerminated = processHandler.isProcessTerminated();
+
+			if (Objects.equals(project.getName() + " [watch]", descriptor.getDisplayName()) && !processTerminated) {
+				return false;
+			}
+		}
+
+		GradleExtensionsSettings.Settings settings = GradleExtensionsSettings.getInstance(project);
 
 		GradleExtensionsSettings.GradleExtensionsData gradleExtensionsData = settings.getExtensionsFor(module);
 
@@ -117,15 +137,16 @@ public class GradleUtil {
 			return false;
 		}
 
-		for (GradleExtensionsSettings.GradleTask gradleTask : gradleExtensionsData.tasks) {
-			if (Objects.equals("watch", gradleTask.name) &&
-				Objects.equals("com.liferay.gradle.plugins.tasks.WatchTask", gradleTask.typeFqn)) {
-
-				return true;
-			}
-		}
-
-		return false;
+		return gradleExtensionsData.tasksMap.entrySet(
+		).stream(
+		).map(
+			entry -> entry.getValue()
+		).filter(
+			task -> Objects.equals("watch", task.name)
+		).filter(
+			task -> Objects.deepEquals("", task.typeFqn)
+		).findAny(
+		).isPresent();
 	}
 
 }

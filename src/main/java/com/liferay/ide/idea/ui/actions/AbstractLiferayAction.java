@@ -44,6 +44,7 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Simon Jiang
+ * @author Ethan Sun
  */
 public abstract class AbstractLiferayAction extends AnAction {
 
@@ -70,7 +71,8 @@ public abstract class AbstractLiferayAction extends AnAction {
 	}
 
 	@Nullable
-	protected abstract RunnerAndConfigurationSettings doExecute(AnActionEvent anActionEvent);
+	protected abstract void doExecute(
+		AnActionEvent anActionEvent, RunnerAndConfigurationSettings runnerAndConfigurationSettings);
 
 	protected ProgressExecutionMode getProgressMode() {
 		return ProgressExecutionMode.IN_BACKGROUND_ASYNC;
@@ -113,8 +115,11 @@ public abstract class AbstractLiferayAction extends AnAction {
 		return true;
 	}
 
+	@Nullable
+	protected abstract RunnerAndConfigurationSettings processRunnerConfiguration(AnActionEvent anActionEvent);
+
 	private void _perform(AnActionEvent anActionEvent, Project project) {
-		RunnerAndConfigurationSettings runnerAndConfigurationSettings = doExecute(anActionEvent);
+		RunnerAndConfigurationSettings runnerAndConfigurationSettings = processRunnerConfiguration(anActionEvent);
 
 		RunManager runManager = RunManager.getInstance(project);
 
@@ -127,6 +132,8 @@ public abstract class AbstractLiferayAction extends AnAction {
 		else {
 			runManager.setSelectedConfiguration(existingConfigurationSettings);
 		}
+
+		doExecute(anActionEvent, existingConfigurationSettings);
 
 		MessageBus messageBus = project.getMessageBus();
 
