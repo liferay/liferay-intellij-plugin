@@ -33,7 +33,7 @@ import com.intellij.psi.xml.XmlTag;
 import com.intellij.psi.xml.XmlTagValue;
 import com.intellij.psi.xml.XmlText;
 
-import com.liferay.ide.idea.util.LiferayInspectionsConstants;
+import com.liferay.ide.idea.core.LiferayInspectionsConstants;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -12,10 +12,11 @@
  * details.
  */
 
-package com.liferay.ide.idea.util;
+package com.liferay.ide.idea.core;
 
 /**
  * @author Terry Jia
+ * @author Simon Jiang
  */
 public class WorkspaceConstants {
 
@@ -26,6 +27,10 @@ public class WorkspaceConstants {
 	public static final String DEFAULT_BUNDLE_ARTIFACT_NAME = "portal-tomcat-bundle";
 
 	public static final String DEFAULT_BUNDLE_ARTIFACT_NAME_PROPERTY = "liferay.workspace.bundle.artifact.name";
+
+	public static final String DEFAULT_LIFERAY_VERSION = "7.2";
+
+	public static final String DEFAULT_TARGET_PLATFORM_VERSION = "7.2.1";
 
 	public static final String EXT_DIR_DEFAULT = "ext";
 
@@ -51,11 +56,9 @@ public class WorkspaceConstants {
 
 	public static final String TARGET_PLATFORM_VERSION_PROPERTY = "liferay.workspace.target.platform.version";
 
-	public static final String[] TARGET_PLATFORM_VERSIONS_7_0 = {"7.0.6"};
-
-	public static final String[] TARGET_PLATFORM_VERSIONS_7_1 = {"7.1.3", "7.1.2", "7.1.1", "7.1.0"};
-
-	public static final String[] TARGET_PLATFORM_VERSIONS_7_2 = {"7.2.1", "7.2.0"};
+	public static final String[] TARGET_PLATFORM_VERSIONS = {
+		"7.2.1", "7.2.0", "7.1.3", "7.1.2", "7.1.1", "7.1.0", "7.0.6"
+	};
 
 	public static final String THEMES_DIR_DEFAULT = "themes";
 

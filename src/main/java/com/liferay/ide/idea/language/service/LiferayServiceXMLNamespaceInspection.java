@@ -21,7 +21,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.XmlElementVisitor;
 import com.intellij.psi.xml.XmlText;
 
-import com.liferay.ide.idea.util.LiferayInspectionsConstants;
+import com.liferay.ide.idea.core.LiferayInspectionsConstants;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

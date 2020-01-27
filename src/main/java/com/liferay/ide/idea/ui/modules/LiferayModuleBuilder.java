@@ -30,10 +30,10 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import com.liferay.ide.idea.core.LiferayProjectTypeService;
+import com.liferay.ide.idea.core.WorkspaceConstants;
 import com.liferay.ide.idea.util.BladeCLI;
 import com.liferay.ide.idea.util.CoreUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
-import com.liferay.ide.idea.util.WorkspaceConstants;
 
 import icons.LiferayIcons;
 
@@ -137,7 +137,7 @@ public class LiferayModuleBuilder extends ModuleBuilder implements LiferayWorksp
 		String liferayVersion = getLiferayVersion(project);
 
 		if (liferayVersion == null) {
-			liferayVersion = WorkspaceConstants.LIFERAY_VERSIONS[0];
+			liferayVersion = WorkspaceConstants.DEFAULT_LIFERAY_VERSION;
 		}
 
 		sb.append("-v ");

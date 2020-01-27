@@ -14,7 +14,6 @@
 
 package com.liferay.ide.idea.util;
 
-import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.externalSystem.model.DataNode;
 import com.intellij.openapi.externalSystem.model.ExternalProjectInfo;
 import com.intellij.openapi.externalSystem.model.ProjectKeys;
@@ -27,10 +26,13 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 
+import com.liferay.ide.idea.core.WorkspaceConstants;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
 
@@ -243,18 +245,12 @@ public interface LiferayWorkspaceSupport {
 
 	@Nullable
 	public default String getLiferayVersion(Project project) {
-		PropertiesComponent propertiesComponent = PropertiesComponent.getInstance(project);
-
-		String liferayVersion = propertiesComponent.getValue(WorkspaceConstants.WIZARD_LIFERAY_VERSION_FIELD);
-
-		if (liferayVersion != null) {
-			return liferayVersion;
-		}
+		String liferayVersion = WorkspaceConstants.DEFAULT_LIFERAY_VERSION;
 
 		VirtualFile projectRoot = getWorkspaceVirtualFile(project);
 
 		if (projectRoot == null) {
-			return null;
+			return liferayVersion;
 		}
 
 		VirtualFile settingsVirtualFile = projectRoot.findFileByRelativePath("/.blade.properties");
@@ -262,10 +258,11 @@ public interface LiferayWorkspaceSupport {
 		if (settingsVirtualFile != null) {
 			Properties props = new Properties();
 
-			try {
-				props.load(settingsVirtualFile.getInputStream());
+			try (InputStream inputStream = settingsVirtualFile.getInputStream()) {
+				props.load(inputStream);
 
-				liferayVersion = props.getProperty(WorkspaceConstants.BLADE_LIFERAY_VERSION_FIELD);
+				liferayVersion = props.getProperty(
+					WorkspaceConstants.BLADE_LIFERAY_VERSION_FIELD, WorkspaceConstants.DEFAULT_LIFERAY_VERSION);
 			}
 			catch (IOException ioe) {
 			}
