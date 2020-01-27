@@ -221,7 +221,7 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 	private boolean _enableTargetPlatform = true;
 	private boolean _indexSources = false;
 	private String _liferayProjectType;
-	private String _liferayVersion = WorkspaceConstants.LIFERAY_VERSIONS[0];
-	private String _targetPlatform = WorkspaceConstants.TARGET_PLATFORM_VERSIONS[0];
+	private String _liferayVersion = WorkspaceConstants.DEFAULT_LIFERAY_VERSION;
+	private String _targetPlatform = WorkspaceConstants.DEFAULT_TARGET_PLATFORM_VERSION;
 
 }

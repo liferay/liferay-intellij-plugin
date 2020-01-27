@@ -245,7 +245,7 @@ public interface LiferayWorkspaceSupport {
 
 	@Nullable
 	public default String getLiferayVersion(Project project) {
-		String liferayVersion = WorkspaceConstants.LIFERAY_VERSIONS[0];
+		String liferayVersion = WorkspaceConstants.DEFAULT_LIFERAY_VERSION;
 
 		VirtualFile projectRoot = getWorkspaceVirtualFile(project);
 
@@ -262,7 +262,7 @@ public interface LiferayWorkspaceSupport {
 				props.load(inputStream);
 
 				liferayVersion = props.getProperty(
-					WorkspaceConstants.BLADE_LIFERAY_VERSION_FIELD, WorkspaceConstants.LIFERAY_VERSIONS[0]);
+					WorkspaceConstants.BLADE_LIFERAY_VERSION_FIELD, WorkspaceConstants.DEFAULT_LIFERAY_VERSION);
 			}
 			catch (IOException ioe) {
 			}

@@ -137,7 +137,7 @@ public class LiferayModuleBuilder extends ModuleBuilder implements LiferayWorksp
 		String liferayVersion = getLiferayVersion(project);
 
 		if (liferayVersion == null) {
-			liferayVersion = WorkspaceConstants.LIFERAY_VERSIONS[0];
+			liferayVersion = WorkspaceConstants.DEFAULT_LIFERAY_VERSION;
 		}
 
 		sb.append("-v ");
