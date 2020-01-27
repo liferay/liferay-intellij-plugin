@@ -137,15 +137,16 @@ public class GradleUtil {
 			return false;
 		}
 
-		for (GradleExtensionsSettings.GradleTask gradleTask : gradleExtensionsData.tasks) {
-			if (Objects.equals("watch", gradleTask.name) &&
-				Objects.equals("com.liferay.gradle.plugins.tasks.WatchTask", gradleTask.typeFqn)) {
-
-				return true;
-			}
-		}
-
-		return false;
+		return gradleExtensionsData.tasksMap.entrySet(
+		).stream(
+		).map(
+			entry -> entry.getValue()
+		).filter(
+			task -> Objects.equals("watch", task.name)
+		).filter(
+			task -> Objects.deepEquals("", task.typeFqn)
+		).findAny(
+		).isPresent();
 	}
 
 }

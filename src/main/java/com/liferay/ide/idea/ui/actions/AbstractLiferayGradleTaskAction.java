@@ -72,13 +72,16 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 
 	@Nullable
 	@Override
-	protected void doExecute(AnActionEvent anActionEvent, RunnerAndConfigurationSettings configuration) {
+	protected void doExecute(
+		AnActionEvent anActionEvent, RunnerAndConfigurationSettings runnerAndConfigurationSettings) {
+
 		Project project = anActionEvent.getRequiredData(CommonDataKeys.PROJECT);
 
 		final VirtualFile projectDir = getWorkingDirectory(anActionEvent);
 
 		ExternalSystemUtil.runTask(
-			_taskExecutionInfo.getSettings(), _taskExecutionInfo.getExecutorId(), project, GradleConstants.SYSTEM_ID,
+			_externalTaskExecutionInfo.getSettings(), _externalTaskExecutionInfo.getExecutorId(), project,
+			GradleConstants.SYSTEM_ID,
 			new TaskCallback() {
 
 				@Override
@@ -113,7 +116,7 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 
 	@Nullable
 	@Override
-	protected RunnerAndConfigurationSettings processRunnerConifugration(AnActionEvent anActionEvent) {
+	protected RunnerAndConfigurationSettings processRunnerConfiguration(AnActionEvent anActionEvent) {
 		Project project = anActionEvent.getRequiredData(CommonDataKeys.PROJECT);
 
 		final VirtualFile projectDir = getWorkingDirectory(anActionEvent);
@@ -124,14 +127,14 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 			return null;
 		}
 
-		_taskExecutionInfo = _buildTaskExecutionInfo(project, workingDirectory, _taskName);
+		_externalTaskExecutionInfo = _buildTaskExecutionInfo(project, workingDirectory, _taskName);
 
-		if (_taskExecutionInfo == null) {
+		if (_externalTaskExecutionInfo == null) {
 			return null;
 		}
 
 		return ExternalSystemUtil.createExternalSystemRunnerAndConfigurationSettings(
-			_taskExecutionInfo.getSettings(), project, GradleConstants.SYSTEM_ID);
+			_externalTaskExecutionInfo.getSettings(), project, GradleConstants.SYSTEM_ID);
 	}
 
 	private ExternalTaskExecutionInfo _buildTaskExecutionInfo(
@@ -197,7 +200,7 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 		}
 	}
 
-	private ExternalTaskExecutionInfo _taskExecutionInfo;
+	private ExternalTaskExecutionInfo _externalTaskExecutionInfo;
 	private final String _taskName;
 
 }

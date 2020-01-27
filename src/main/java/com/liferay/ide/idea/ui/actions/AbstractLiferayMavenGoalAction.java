@@ -15,7 +15,6 @@
 package com.liferay.ide.idea.ui.actions;
 
 import com.intellij.execution.ExecutionException;
-import com.intellij.execution.Executor;
 import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.executors.DefaultRunExecutor;
 import com.intellij.execution.impl.DefaultJavaProgramRunner;
@@ -53,15 +52,19 @@ public abstract class AbstractLiferayMavenGoalAction extends AbstractLiferayActi
 
 	@Nullable
 	@Override
-	protected void doExecute(AnActionEvent anActionEvent, RunnerAndConfigurationSettings configuration) {
+	protected void doExecute(
+		AnActionEvent anActionEvent, RunnerAndConfigurationSettings runnerAndConfigurationSettings) {
+
 		Project project = MavenActionUtil.getProject(anActionEvent.getDataContext());
 
 		ProgramRunner<?> programRunner = DefaultJavaProgramRunner.getInstance();
 
-		Executor executor = DefaultRunExecutor.getRunExecutorInstance();
-
 		try {
-			programRunner.execute(new ExecutionEnvironment(executor, programRunner, configuration, project), null);
+			programRunner.execute(
+				new ExecutionEnvironment(
+					DefaultRunExecutor.getRunExecutorInstance(), programRunner, runnerAndConfigurationSettings,
+					project),
+				null);
 		}
 		catch (ExecutionException ee) {
 			MavenUtil.showError(project, "Failed to execute Maven goal", ee);
@@ -79,7 +82,7 @@ public abstract class AbstractLiferayMavenGoalAction extends AbstractLiferayActi
 
 	@Nullable
 	@Override
-	protected RunnerAndConfigurationSettings processRunnerConifugration(AnActionEvent anActionEvent) {
+	protected RunnerAndConfigurationSettings processRunnerConfiguration(AnActionEvent anActionEvent) {
 		DataContext dataContext = anActionEvent.getDataContext();
 
 		Project project = MavenActionUtil.getProject(dataContext);

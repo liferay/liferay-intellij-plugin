@@ -132,8 +132,8 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
 	}
 
 	@Override
-	protected RunnerAndConfigurationSettings processRunnerConifugration(AnActionEvent anActionEvent) {
-		final RunnerAndConfigurationSettings runnerAndConfigurationSettings = super.processRunnerConifugration(
+	protected RunnerAndConfigurationSettings processRunnerConfiguration(AnActionEvent anActionEvent) {
+		final RunnerAndConfigurationSettings runnerAndConfigurationSettings = super.processRunnerConfiguration(
 			anActionEvent);
 
 		if (runnerAndConfigurationSettings == null) {

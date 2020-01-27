@@ -71,7 +71,8 @@ public abstract class AbstractLiferayAction extends AnAction {
 	}
 
 	@Nullable
-	protected abstract void doExecute(AnActionEvent anActionEvent, RunnerAndConfigurationSettings configuration);
+	protected abstract void doExecute(
+		AnActionEvent anActionEvent, RunnerAndConfigurationSettings runnerAndConfigurationSettings);
 
 	protected ProgressExecutionMode getProgressMode() {
 		return ProgressExecutionMode.IN_BACKGROUND_ASYNC;
@@ -115,10 +116,10 @@ public abstract class AbstractLiferayAction extends AnAction {
 	}
 
 	@Nullable
-	protected abstract RunnerAndConfigurationSettings processRunnerConifugration(AnActionEvent anActionEvent);
+	protected abstract RunnerAndConfigurationSettings processRunnerConfiguration(AnActionEvent anActionEvent);
 
 	private void _perform(AnActionEvent anActionEvent, Project project) {
-		RunnerAndConfigurationSettings runnerAndConfigurationSettings = processRunnerConifugration(anActionEvent);
+		RunnerAndConfigurationSettings runnerAndConfigurationSettings = processRunnerConfiguration(anActionEvent);
 
 		RunManager runManager = RunManager.getInstance(project);
 
