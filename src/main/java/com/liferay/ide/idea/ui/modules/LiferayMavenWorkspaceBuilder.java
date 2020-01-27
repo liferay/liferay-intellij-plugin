@@ -52,13 +52,13 @@ public class LiferayMavenWorkspaceBuilder extends LiferayWorkspaceBuilder {
 
 		@Override
 		public void moduleCreated(@NotNull Module module) {
-			MavenProjectsManager mvnManager = MavenProjectsManager.getInstance(module.getProject());
+			MavenProjectsManager mavenProjectManager = MavenProjectsManager.getInstance(module.getProject());
 
-			MavenImportingSettings mavenImportingSettings = mvnManager.getImportingSettings();
+			MavenImportingSettings mavenImportingSettings = mavenProjectManager.getImportingSettings();
 
 			mavenImportingSettings.setImportAutomatically(true);
 
-			mvnManager.forceUpdateAllProjectsOrFindAllAvailablePomFiles();
+			mavenProjectManager.forceUpdateAllProjectsOrFindAllAvailablePomFiles();
 		}
 
 	}
