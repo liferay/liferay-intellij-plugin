@@ -16,17 +16,15 @@ package com.liferay.ide.idea.bnd.psi;
 
 import com.intellij.psi.PsiNamedElement;
 
-import org.jetbrains.lang.manifest.psi.HeaderValuePart;
-
 /**
  * @author Charles Wu
  */
 public interface AssignmentExpression extends PsiNamedElement {
 
-	public HeaderValuePart getNameElement();
+	public BndHeaderValuePart getNameElement();
 
 	public String getValue();
 
-	public HeaderValuePart getValueElement();
+	public BndHeaderValuePart getValueElement();
 
 }

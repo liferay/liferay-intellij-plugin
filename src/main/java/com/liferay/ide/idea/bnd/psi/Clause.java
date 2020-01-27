@@ -18,13 +18,11 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.lang.manifest.psi.HeaderValue;
-import org.jetbrains.lang.manifest.psi.HeaderValuePart;
 
 /**
  * @author Charles Wu
  */
-public interface Clause extends HeaderValue {
+public interface Clause extends BndHeaderValue {
 
 	/**
 	 * Returns the attribute with the given name.
@@ -54,6 +52,6 @@ public interface Clause extends HeaderValue {
 	 * Returns the value of this clause.
 	 */
 	@Nullable
-	public HeaderValuePart getValue();
+	public BndHeaderValuePart getValue();
 
 }

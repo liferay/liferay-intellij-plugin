@@ -18,16 +18,18 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.IElementType;
 
+import com.liferay.ide.idea.bnd.BndLanguage;
 import com.liferay.ide.idea.bnd.psi.impl.AttributeImpl;
+import com.liferay.ide.idea.bnd.psi.impl.BndHeaderImpl;
+import com.liferay.ide.idea.bnd.psi.impl.BndHeaderValuePartImpl;
+import com.liferay.ide.idea.bnd.psi.impl.BndSectionImpl;
 import com.liferay.ide.idea.bnd.psi.impl.ClauseImpl;
 import com.liferay.ide.idea.bnd.psi.impl.DirectiveImpl;
-
-import org.jetbrains.lang.manifest.psi.ManifestElementType;
 
 /**
  * @author Charles Wu
  */
-public abstract class OsgiManifestElementType extends ManifestElementType {
+public abstract class OsgiManifestElementType extends IElementType {
 
 	public static final IElementType ATTRIBUTE = new OsgiManifestElementType("ATTRIBUTE") {
 
@@ -56,8 +58,42 @@ public abstract class OsgiManifestElementType extends ManifestElementType {
 
 	};
 
+	public static final IElementType HEADER = new OsgiManifestElementType("HEADER") {
+
+		@Override
+		public PsiElement createPsi(ASTNode node) {
+			return new BndHeaderImpl(node);
+		}
+
+	};
+
+	public static final IElementType HEADER_VALUE_PART = new OsgiManifestElementType("HEADER_VALUE_PART") {
+
+		@Override
+		public PsiElement createPsi(ASTNode node) {
+			return new BndHeaderValuePartImpl(node);
+		}
+
+	};
+
+	public static final IElementType SECTION = new OsgiManifestElementType("SECTION") {
+
+		@Override
+		public PsiElement createPsi(ASTNode node) {
+			return new BndSectionImpl(node);
+		}
+
+	};
+
+	public abstract PsiElement createPsi(ASTNode node);
+
+	@Override
+	public String toString() {
+		return "bnd:" + super.toString();
+	}
+
 	private OsgiManifestElementType(String name) {
-		super(name);
+		super(name, BndLanguage.INSTANCE);
 	}
 
 }
