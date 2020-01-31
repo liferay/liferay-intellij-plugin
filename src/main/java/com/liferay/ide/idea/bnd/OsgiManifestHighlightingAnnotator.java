@@ -22,14 +22,15 @@ import com.intellij.psi.PsiElement;
 
 import com.liferay.ide.idea.bnd.psi.AssignmentExpression;
 import com.liferay.ide.idea.bnd.psi.Attribute;
+import com.liferay.ide.idea.bnd.psi.BndHeader;
+import com.liferay.ide.idea.bnd.psi.BndHeaderValuePart;
+import com.liferay.ide.idea.bnd.psi.BndToken;
+import com.liferay.ide.idea.bnd.psi.BndTokenType;
 import com.liferay.ide.idea.bnd.psi.Clause;
 import com.liferay.ide.idea.bnd.psi.Directive;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.lang.manifest.psi.Header;
 import org.jetbrains.lang.manifest.psi.HeaderValuePart;
-import org.jetbrains.lang.manifest.psi.ManifestToken;
-import org.jetbrains.lang.manifest.psi.ManifestTokenType;
 
 /**
  * @author Charles Wu
@@ -44,7 +45,7 @@ public class OsgiManifestHighlightingAnnotator implements Annotator {
 			if (parentPsiElement instanceof AssignmentExpression) {
 				AssignmentExpression assignmentExpression = (AssignmentExpression)parentPsiElement;
 
-				HeaderValuePart nameElement = assignmentExpression.getNameElement();
+				BndHeaderValuePart nameElement = assignmentExpression.getNameElement();
 
 				if (parentPsiElement instanceof Attribute) {
 					if (psiElement == nameElement) {
@@ -64,23 +65,23 @@ public class OsgiManifestHighlightingAnnotator implements Annotator {
 				}
 			}
 		}
-		else if (psiElement instanceof ManifestToken) {
-			ManifestToken manifestToken = (ManifestToken)psiElement;
+		else if (psiElement instanceof BndToken) {
+			BndToken bndToken = (BndToken)psiElement;
 
-			ManifestTokenType type = manifestToken.getTokenType();
+			BndTokenType type = bndToken.getTokenType();
 
-			if ((psiElement.getParent() instanceof Attribute) && (type == ManifestTokenType.EQUALS)) {
+			if ((psiElement.getParent() instanceof Attribute) && (type == BndTokenType.EQUALS)) {
 				_annotate(psiElement, OsgiManifestColorsAndFonts.ATTRIBUTE_ASSIGNMENT_KEY, annotationHolder);
 			}
 			else if ((psiElement.getParent() instanceof Directive) &&
-					 ((type == ManifestTokenType.COLON) || (type == ManifestTokenType.EQUALS))) {
+					 ((type == BndTokenType.COLON) || (type == BndTokenType.EQUALS))) {
 
 				_annotate(psiElement, OsgiManifestColorsAndFonts.DIRECTIVE_ASSIGNMENT_KEY, annotationHolder);
 			}
-			else if ((psiElement.getParent() instanceof Clause) && (type == ManifestTokenType.SEMICOLON)) {
+			else if ((psiElement.getParent() instanceof Clause) && (type == BndTokenType.SEMICOLON)) {
 				_annotate(psiElement, OsgiManifestColorsAndFonts.PARAMETER_SEPARATOR_KEY, annotationHolder);
 			}
-			else if ((psiElement.getParent() instanceof Header) && (type == ManifestTokenType.COMMA)) {
+			else if ((psiElement.getParent() instanceof BndHeader) && (type == BndTokenType.COMMA)) {
 				_annotate(psiElement, OsgiManifestColorsAndFonts.CLAUSE_SEPARATOR_KEY, annotationHolder);
 			}
 		}
