@@ -29,9 +29,9 @@ import com.liferay.ide.idea.bnd.psi.impl.DirectiveImpl;
 /**
  * @author Charles Wu
  */
-public abstract class OsgiManifestElementType extends IElementType {
+public abstract class BndElementType extends IElementType {
 
-	public static final IElementType ATTRIBUTE = new OsgiManifestElementType("ATTRIBUTE") {
+	public static final IElementType ATTRIBUTE = new BndElementType("ATTRIBUTE") {
 
 		@Override
 		public PsiElement createPsi(ASTNode node) {
@@ -40,7 +40,7 @@ public abstract class OsgiManifestElementType extends IElementType {
 
 	};
 
-	public static final IElementType CLAUSE = new OsgiManifestElementType("CLAUSE") {
+	public static final IElementType CLAUSE = new BndElementType("CLAUSE") {
 
 		@Override
 		public PsiElement createPsi(ASTNode node) {
@@ -49,7 +49,7 @@ public abstract class OsgiManifestElementType extends IElementType {
 
 	};
 
-	public static final IElementType DIRECTIVE = new OsgiManifestElementType("DIRECTIVE") {
+	public static final IElementType DIRECTIVE = new BndElementType("DIRECTIVE") {
 
 		@Override
 		public PsiElement createPsi(ASTNode node) {
@@ -58,7 +58,7 @@ public abstract class OsgiManifestElementType extends IElementType {
 
 	};
 
-	public static final IElementType HEADER = new OsgiManifestElementType("HEADER") {
+	public static final IElementType HEADER = new BndElementType("HEADER") {
 
 		@Override
 		public PsiElement createPsi(ASTNode node) {
@@ -67,7 +67,7 @@ public abstract class OsgiManifestElementType extends IElementType {
 
 	};
 
-	public static final IElementType HEADER_VALUE_PART = new OsgiManifestElementType("HEADER_VALUE_PART") {
+	public static final IElementType HEADER_VALUE_PART = new BndElementType("HEADER_VALUE_PART") {
 
 		@Override
 		public PsiElement createPsi(ASTNode node) {
@@ -76,7 +76,7 @@ public abstract class OsgiManifestElementType extends IElementType {
 
 	};
 
-	public static final IElementType SECTION = new OsgiManifestElementType("SECTION") {
+	public static final IElementType SECTION = new BndElementType("SECTION") {
 
 		@Override
 		public PsiElement createPsi(ASTNode node) {
@@ -92,7 +92,7 @@ public abstract class OsgiManifestElementType extends IElementType {
 		return "bnd:" + super.toString();
 	}
 
-	private OsgiManifestElementType(String name) {
+	private BndElementType(String name) {
 		super(name, BndLanguage.INSTANCE);
 	}
 
