@@ -200,7 +200,7 @@
 		<completion.contributor language="bnd" implementationClass="com.liferay.ide.idea.bnd.completion.BndCompletionContributor"/>
 		<projectViewNodeDecorator implementation="com.liferay.ide.idea.ui.decorator.ProjectViewWatchDecorator"/>
 		<implicitUsageProvider order="last" implementation="com.liferay.ide.idea.language.osgi.LiferayOsgiImplicitUsageProvider" />
-		<!-- <annotator language="Manifest" implementationClass="com.liferay.ide.idea.bnd.OsgiManifestHighlightingAnnotator"/> -->
+		<annotator language="bnd" implementationClass="com.liferay.ide.idea.bnd.BndHighlightingAnnotator"/>
 		<codeInsight.unresolvedReferenceQuickFixProvider implementation="com.liferay.ide.idea.extensions.GradleDependencyQuickFixProvider"/>
 		<inspectionToolProvider implementation="com.liferay.ide.idea.language.service.LiferayServiceXMLInspectionToolProvider"/>
 		<lang.parserDefinition language="bnd" implementationClass="com.liferay.ide.idea.bnd.parser.BndParserDefinition"/>
