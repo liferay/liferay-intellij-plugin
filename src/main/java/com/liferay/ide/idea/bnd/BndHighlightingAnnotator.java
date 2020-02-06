@@ -20,6 +20,8 @@ import com.intellij.lang.annotation.Annotator;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 
+import com.liferay.ide.idea.bnd.parser.BndHeaderParser;
+import com.liferay.ide.idea.bnd.parser.BndHeaderParsers;
 import com.liferay.ide.idea.bnd.psi.AssignmentExpression;
 import com.liferay.ide.idea.bnd.psi.Attribute;
 import com.liferay.ide.idea.bnd.psi.BndHeader;
@@ -30,16 +32,24 @@ import com.liferay.ide.idea.bnd.psi.Clause;
 import com.liferay.ide.idea.bnd.psi.Directive;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.lang.manifest.psi.HeaderValuePart;
 
 /**
  * @author Charles Wu
  */
-public class OsgiManifestHighlightingAnnotator implements Annotator {
+public class BndHighlightingAnnotator implements Annotator {
 
 	@Override
 	public void annotate(@NotNull PsiElement psiElement, @NotNull AnnotationHolder annotationHolder) {
-		if (psiElement instanceof HeaderValuePart) {
+		if (psiElement instanceof BndHeader) {
+			BndHeader bndHeader = (BndHeader)psiElement;
+
+			BndHeaderParser bndHeaderParser = BndHeaderParsers.parsersMap.get(bndHeader.getName());
+
+			if (bndHeaderParser != null) {
+				bndHeaderParser.annotate(bndHeader, annotationHolder);
+			}
+		}
+		else if (psiElement instanceof BndHeaderValuePart) {
 			PsiElement parentPsiElement = psiElement.getParent();
 
 			if (parentPsiElement instanceof AssignmentExpression) {

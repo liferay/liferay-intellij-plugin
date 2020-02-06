@@ -22,12 +22,14 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiTreeUtil;
+
 import com.liferay.ide.idea.bnd.parser.BndHeaderParser;
 import com.liferay.ide.idea.bnd.parser.BndHeaderParsers;
 import com.liferay.ide.idea.bnd.psi.BndHeader;
 import com.liferay.ide.idea.bnd.psi.BndHeaderValuePart;
 import com.liferay.ide.idea.bnd.psi.BndToken;
 import com.liferay.ide.idea.bnd.psi.BndTokenType;
+
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -72,6 +74,7 @@ public class BndHeaderValuePartImpl extends ASTWrapperPsiElement implements BndH
 
 		if (bndHeader != null) {
 			BndHeaderParser bndHeaderParser = BndHeaderParsers.parsersMap.get(bndHeader.getName());
+
 			if (bndHeaderParser != null) {
 				return bndHeaderParser.getReferences(this);
 			}

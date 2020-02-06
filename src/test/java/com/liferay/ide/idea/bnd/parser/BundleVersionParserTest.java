@@ -14,32 +14,26 @@
 
 package com.liferay.ide.idea.bnd.parser;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.intellij.codeInsight.daemon.impl.HighlightInfo;
+import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 
-import org.gradle.internal.impldep.aQute.bnd.osgi.Constants;
+import java.util.List;
 
 /**
  * @author Dominik Marks
  */
-public class BndHeaderParsers {
+public class BundleVersionParserTest extends LightPlatformCodeInsightFixtureTestCase {
 
-	public static final Map<String, BndHeaderParser> parsersMap = new HashMap<String, BndHeaderParser>() {
-		{
-			put(Constants.BUNDLE_VERSION, BundleVersionParser.INSTANCE);
+	public void testBundleVersionHighlighting() {
+		myFixture.configureByText("bnd.bnd", "Bundle-Version: foo.bar\n");
 
-			for (String header : Constants.headers) {
-				if (!containsKey(header)) {
-					put(header, BndHeaderParser.INSTANCE);
-				}
-			}
+		List<HighlightInfo> highlightInfos = myFixture.doHighlighting();
 
-			for (String option : Constants.options) {
-				if (!containsKey(option)) {
-					put(option, BndHeaderParser.INSTANCE);
-				}
-			}
-		}
-	};
+		assertFalse(highlightInfos.isEmpty());
+
+		HighlightInfo highlightInfo = highlightInfos.get(0);
+
+		assertEquals(highlightInfo.getDescription(), "invalid version \"foo.bar\": non-numeric \"foo\"");
+	}
 
 }
