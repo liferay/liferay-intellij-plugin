@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class BundleVersionParserTest extends LightPlatformCodeInsightFixtureTestCase {
 
-	public void testBundleVersionHighlighting() {
+	public void testInvalidBundleVersionHighlighting() {
 		myFixture.configureByText("bnd.bnd", "Bundle-Version: foo.bar\n");
 
 		List<HighlightInfo> highlightInfos = myFixture.doHighlighting();
@@ -34,6 +34,14 @@ public class BundleVersionParserTest extends LightPlatformCodeInsightFixtureTest
 		HighlightInfo highlightInfo = highlightInfos.get(0);
 
 		assertEquals(highlightInfo.getDescription(), "invalid version \"foo.bar\": non-numeric \"foo\"");
+	}
+
+	public void testValidBundleVersionHighlighting() {
+		myFixture.configureByText("bnd.bnd", "Bundle-Version: 1.0.0\n");
+
+		List<HighlightInfo> highlightInfos = myFixture.doHighlighting();
+
+		assertTrue(highlightInfos.isEmpty());
 	}
 
 }
