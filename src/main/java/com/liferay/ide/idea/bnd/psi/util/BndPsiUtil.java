@@ -17,11 +17,22 @@ package com.liferay.ide.idea.bnd.psi.util;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiReference;
+import com.intellij.psi.impl.source.resolve.reference.impl.providers.PackageReferenceSet;
+import com.intellij.psi.impl.source.resolve.reference.impl.providers.PsiPackageReference;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.ProjectScope;
+import com.intellij.util.containers.ContainerUtil;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,6 +62,98 @@ public class BndPsiUtil {
 		JavaPsiFacade javaPsiFacade = JavaPsiFacade.getInstance(project);
 
 		return javaPsiFacade.findClass(BundleActivator.class.getName(), globalSearchScope);
+	}
+
+	@NotNull
+	public static PsiReference[] getPackageReferences(@NotNull PsiElement psiElement) {
+		String packageName = psiElement.getText();
+
+		if (StringUtil.isEmptyOrSpaces(packageName)) {
+			return PsiReference.EMPTY_ARRAY;
+		}
+
+		int offset = 0;
+
+		if (packageName.charAt(0) == '!') {
+			packageName = packageName.substring(1);
+			offset = 1;
+		}
+
+		int size = packageName.length() - 1;
+
+		if (packageName.charAt(size) == '?') {
+			packageName = packageName.substring(0, size);
+		}
+
+		Project project = psiElement.getProject();
+
+		Module module = ModuleUtilCore.findModuleForPsiElement(psiElement);
+
+		GlobalSearchScope scope;
+
+		if (module == null) {
+			scope = ProjectScope.getAllScope(project);
+		}
+		else {
+			scope = module.getModuleWithDependenciesAndLibrariesScope(false);
+		}
+
+		PackageReferenceSet packageReferenceSet = new PackageReferenceSet(packageName, psiElement, offset, scope) {
+
+			@Override
+			public Collection<PsiPackage> resolvePackageName(@Nullable PsiPackage context, String packageName) {
+				if (context == null) {
+					return Collections.emptyList();
+				}
+
+				packageName = packageName.replaceAll("\\s+", "");
+
+				if (packageName.length() > 0) {
+					if (packageName.charAt(0) == '!') {
+						packageName = packageName.substring(1);
+					}
+
+					final String unwrappedPackageName = packageName;
+
+					return ContainerUtil.filter(
+						context.getSubPackages(getResolveScope()),
+						psiPackage -> unwrappedPackageName.equalsIgnoreCase(psiPackage.getName()));
+				}
+
+				return Collections.emptyList();
+			}
+
+		};
+
+		List<PsiPackageReference> psiPackageReferences = packageReferenceSet.getReferences();
+
+		return psiPackageReferences.toArray(new PsiPackageReference[0]);
+	}
+
+	@NotNull
+	public static PsiDirectory[] resolvePackage(@NotNull PsiElement psiElement, @NotNull String packageName) {
+		Project project = psiElement.getProject();
+
+		Module module = ModuleUtilCore.findModuleForPsiElement(psiElement);
+
+		GlobalSearchScope scope;
+
+		if (module == null) {
+			scope = ProjectScope.getAllScope(project);
+		}
+		else {
+			scope = module.getModuleWithDependenciesAndLibrariesScope(false);
+		}
+
+		JavaPsiFacade javaPsiFacade = JavaPsiFacade.getInstance(project);
+
+		PsiPackage psiPackage = javaPsiFacade.findPackage(packageName);
+
+		if (psiPackage == null) {
+			return PsiDirectory.EMPTY_ARRAY;
+		}
+
+		return psiPackage.getDirectories(scope);
 	}
 
 }
