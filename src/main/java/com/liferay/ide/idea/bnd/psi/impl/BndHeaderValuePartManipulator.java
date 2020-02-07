@@ -25,6 +25,7 @@ import com.liferay.ide.idea.bnd.psi.BndFile;
 import com.liferay.ide.idea.bnd.psi.BndHeader;
 import com.liferay.ide.idea.bnd.psi.BndHeaderValue;
 import com.liferay.ide.idea.bnd.psi.BndHeaderValuePart;
+import com.liferay.ide.idea.bnd.psi.Clause;
 
 import java.util.List;
 
@@ -35,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class BndHeaderValuePartManipulator extends AbstractElementManipulator<BndHeaderValuePart> {
 	//TODO add a test: rename a class and check if the class is also renamed in the bnd.bnd file
+	//TODO add a test: rename a package and check if the class is also renamed in the bnd.bnd file
 
 	@Override
 	public BndHeaderValuePart handleContentChange(
@@ -55,7 +57,19 @@ public class BndHeaderValuePartManipulator extends AbstractElementManipulator<Bn
 
 		BndHeaderValue value = bndHeader.getBndHeaderValue();
 
-		return (BndHeaderValuePart)element.replace(value);
+		if (value != null) {
+			BndHeaderValue bndHeaderValueReplacement = (BndHeaderValue)element.replace(value);
+
+			if (bndHeaderValueReplacement instanceof BndHeaderValuePart) {
+				return (BndHeaderValuePart)bndHeaderValueReplacement;
+			}
+
+			Clause clause = (Clause)bndHeaderValueReplacement;
+
+			return clause.getValue();
+		}
+
+		return element;
 	}
 
 }

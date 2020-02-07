@@ -28,6 +28,10 @@ public class BndHeaderParsers {
 		{
 			put(Constants.BUNDLE_ACTIVATOR, BundleActivatorParser.INSTANCE);
 			put(Constants.BUNDLE_VERSION, BundleVersionParser.INSTANCE);
+			put(Constants.PRIVATE_PACKAGE, BasePackageParser.INSTANCE);
+			put(Constants.IGNORE_PACKAGE, BasePackageParser.INSTANCE);
+			put(Constants.IMPORT_PACKAGE, BasePackageParser.INSTANCE);
+			put(Constants.CONDITIONAL_PACKAGE, BasePackageParser.INSTANCE);
 
 			for (String header : Constants.headers) {
 				if (!containsKey(header)) {

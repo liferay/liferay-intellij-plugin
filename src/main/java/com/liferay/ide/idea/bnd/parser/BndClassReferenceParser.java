@@ -104,6 +104,7 @@ public class BndClassReferenceParser extends BndHeaderParser {
 	@NotNull
 	@Override
 	public PsiReference[] getReferences(@NotNull BndHeaderValuePart bndHeaderValuePart) {
+		//TODO add test to resolve reference
 		Module module = ModuleUtilCore.findModuleForPsiElement(bndHeaderValuePart);
 
 		JavaClassReferenceProvider javaClassReferenceProvider;
