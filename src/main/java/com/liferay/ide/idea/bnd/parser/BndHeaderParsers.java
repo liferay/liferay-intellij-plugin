@@ -26,6 +26,7 @@ public class BndHeaderParsers {
 
 	public static final Map<String, BndHeaderParser> parsersMap = new HashMap<String, BndHeaderParser>() {
 		{
+			put(Constants.BUNDLE_ACTIVATOR, BundleActivatorParser.INSTANCE);
 			put(Constants.BUNDLE_VERSION, BundleVersionParser.INSTANCE);
 
 			for (String header : Constants.headers) {

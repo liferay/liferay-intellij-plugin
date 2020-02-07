@@ -204,5 +204,6 @@
 		<codeInsight.unresolvedReferenceQuickFixProvider implementation="com.liferay.ide.idea.extensions.GradleDependencyQuickFixProvider"/>
 		<inspectionToolProvider implementation="com.liferay.ide.idea.language.service.LiferayServiceXMLInspectionToolProvider"/>
 		<lang.parserDefinition language="bnd" implementationClass="com.liferay.ide.idea.bnd.parser.BndParserDefinition"/>
+		<lang.elementManipulator forClass="com.liferay.ide.idea.bnd.psi.BndHeaderValuePart" implementationClass="com.liferay.ide.idea.bnd.psi.impl.BndHeaderValuePartManipulator"/>
 	</extensions>
 </idea-plugin>
