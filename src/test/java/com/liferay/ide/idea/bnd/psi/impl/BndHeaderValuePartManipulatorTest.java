@@ -12,9 +12,8 @@
  * details.
  */
 
-package com.liferay.ide.idea.bnd.parser;
+package com.liferay.ide.idea.bnd.psi.impl;
 
-import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
@@ -23,10 +22,6 @@ import com.intellij.openapi.roots.LanguageLevelModuleExtension;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.vfs.newvfs.impl.VfsRootAccess;
 import com.intellij.pom.java.LanguageLevel;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiPackage;
-import com.intellij.psi.PsiReference;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.DefaultLightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
@@ -34,68 +29,28 @@ import com.intellij.util.PathUtil;
 
 import java.io.File;
 
-import java.util.List;
-
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Dominik Marks
  */
-public class BasePackageParserTest extends LightCodeInsightFixtureTestCase {
+public class BndHeaderValuePartManipulatorTest extends LightCodeInsightFixtureTestCase {
 
-	public void testInvalidImportPackageHighlighting() {
-		myFixture.configureByFiles("invalidImportPackage/bnd.bnd", "com/liferay/test/Foo.java");
+	public void testRenamePackageInsideBnd() {
+		myFixture.configureByFiles("testRenamePackageInsideBnd/bnd.bnd", "com/liferay/test/Foo.java");
 
-		List<HighlightInfo> highlightInfos = myFixture.doHighlighting();
+		myFixture.renameElementAtCaret("renamed");
 
-		assertFalse(highlightInfos.isEmpty());
-
-		HighlightInfo highlightInfo = highlightInfos.get(0);
-
-		assertEquals(highlightInfo.getDescription(), "Cannot resolve package com.liferay.non.existing");
+		myFixture.checkResultByFile("com/liferay/renamed/Foo.java", "com/liferay/test/Foo_Renamed.java", false);
 	}
 
-	public void testResolvePackage() {
-		myFixture.configureByFiles("resolvePackage/bnd.bnd", "com/liferay/test/Foo.java");
+	public void testRenamePackageInsideClass() {
+		myFixture.configureByFiles("com/liferay/test/Bar.java", "testRenamePackageInsideClass/bnd.bnd");
 
-		PsiFile psiFile = myFixture.getFile();
+		myFixture.renameElementAtCaret("renamed");
 
-		PsiElement element = psiFile.findElementAt(myFixture.getCaretOffset());
-
-		PsiElement parentElement = element.getParent();
-
-		PsiReference[] references = parentElement.getReferences();
-
-		assertNotNull(references);
-		assertEquals(references.length, 3);
-
-		PsiElement resolve1 = references[0].resolve();
-		PsiElement resolve2 = references[1].resolve();
-		PsiElement resolve3 = references[2].resolve();
-
-		assertNotNull(resolve1);
-		assertNotNull(resolve2);
-		assertNotNull(resolve3);
-
-		assertInstanceOf(resolve1, PsiPackage.class);
-		assertInstanceOf(resolve2, PsiPackage.class);
-		assertInstanceOf(resolve3, PsiPackage.class);
-
-		PsiPackage package1 = (PsiPackage)resolve1;
-		PsiPackage package2 = (PsiPackage)resolve2;
-		PsiPackage package3 = (PsiPackage)resolve3;
-
-		assertEquals("com", package1.getName());
-		assertEquals("liferay", package2.getName());
-		assertEquals("test", package3.getName());
-	}
-
-	public void testValidImportPackageHighlighting() {
-		myFixture.configureByFiles("validImportPackage/bnd.bnd", "com/liferay/test/Foo.java");
-
-		List<HighlightInfo> highlightInfos = myFixture.doHighlighting();
-
-		assertTrue(highlightInfos.isEmpty());
+		myFixture.checkResultByFile(
+			"testRenamePackageInsideClass/bnd.bnd", "testRenamePackageInsideClass/bnd_renamed.bnd", false);
 	}
 
 	@NotNull
@@ -138,6 +93,7 @@ public class BasePackageParserTest extends LightCodeInsightFixtureTestCase {
 
 	};
 
-	private static final String _TEST_DATA_PATH = "testdata/com/liferay/ide/idea/bnd/parser/BasePackageParserTest";
+	private static final String _TEST_DATA_PATH =
+		"testdata/com/liferay/ide/idea/bnd/psi/impl/BndHeaderValuePartManipulatorTest";
 
 }
