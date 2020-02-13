@@ -40,7 +40,9 @@ import org.jetbrains.lang.manifest.ManifestBundle;
 /**
  * @author Dominik Marks
  */
-public class BndClassReferenceParser extends BndHeaderParser {
+public class ClassReferenceParser extends BndHeaderParser {
+
+	public static final ClassReferenceParser INSTANCE = new ClassReferenceParser();
 
 	@Override
 	public boolean annotate(@NotNull BndHeader bndHeader, @NotNull AnnotationHolder holder) {
@@ -64,7 +66,6 @@ public class BndClassReferenceParser extends BndHeaderParser {
 		String className = valuePart.getUnwrappedText();
 
 		if (StringUtil.isEmptyOrSpaces(className)) {
-			//TODO create a test!
 			holder.createErrorAnnotation(
 				valuePart.getHighlightingRange(), ManifestBundle.message("header.reference.invalid"));
 
@@ -88,7 +89,6 @@ public class BndClassReferenceParser extends BndHeaderParser {
 		PsiClass psiClass = javaPsiFacade.findClass(className, globalSearchScope);
 
 		if (psiClass == null) {
-			//TODO create a test!
 			String message = JavaErrorMessages.message("error.cannot.resolve.class", className);
 
 			Annotation annotation = holder.createErrorAnnotation(valuePart.getHighlightingRange(), message);
@@ -104,7 +104,6 @@ public class BndClassReferenceParser extends BndHeaderParser {
 	@NotNull
 	@Override
 	public PsiReference[] getReferences(@NotNull BndHeaderValuePart bndHeaderValuePart) {
-		//TODO add test to resolve reference
 		Module module = ModuleUtilCore.findModuleForPsiElement(bndHeaderValuePart);
 
 		JavaClassReferenceProvider javaClassReferenceProvider;
@@ -129,8 +128,6 @@ public class BndClassReferenceParser extends BndHeaderParser {
 	protected boolean checkClass(
 		@NotNull BndHeaderValuePart bndHeaderValuePart, @NotNull PsiClass psiClass,
 		@NotNull AnnotationHolder annotationHolder) {
-
-		//TODO implement
 
 		return false;
 	}

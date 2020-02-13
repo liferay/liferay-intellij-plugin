@@ -17,6 +17,7 @@ package com.liferay.ide.idea.bnd.parser;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.liferay.ide.idea.bnd.LiferayBndConstants;
 import org.gradle.internal.impldep.aQute.bnd.osgi.Constants;
 
 /**
@@ -33,6 +34,10 @@ public class BndHeaderParsers {
 			put(Constants.IGNORE_PACKAGE, BasePackageParser.INSTANCE);
 			put(Constants.IMPORT_PACKAGE, BasePackageParser.INSTANCE);
 			put(Constants.PRIVATE_PACKAGE, BasePackageParser.INSTANCE);
+
+			for (String header : LiferayBndConstants.CLASS_REFERENCE_PROPERTIES) {
+				put(header, ClassReferenceParser.INSTANCE);
+			}
 
 			for (String header : Constants.headers) {
 				if (!containsKey(header)) {
