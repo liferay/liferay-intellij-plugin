@@ -156,42 +156,43 @@ public class ExportPackageParser extends BasePackageParser {
 				return BndPsiUtil.getPackageReferences(bndHeaderValuePart);
 			}
 		}
-		else if (isUsesDirectiveAttributeOrDirective(parentPsiElement)) {
-            List<PsiReference> psiReferences = ContainerUtil.newSmartList();
+		else if (_isUsesDirectiveAttributeOrDirective(parentPsiElement)) {
+			List<PsiReference> psiReferences = ContainerUtil.newSmartList();
 
-            ASTNode headerValuePartNode = bndHeaderValuePart.getNode();
+			ASTNode headerValuePartNode = bndHeaderValuePart.getNode();
 
-            ASTNode[] childNodes = headerValuePartNode.getChildren(_tokenSet);
+			ASTNode[] childNodes = headerValuePartNode.getChildren(_tokenSet);
 
-            for (ASTNode childNode : childNodes) {
-                if (childNode instanceof BndToken) {
-                    BndToken bndToken = (BndToken) childNode;
+			for (ASTNode childNode : childNodes) {
+				if (childNode instanceof BndToken) {
+					BndToken bndToken = (BndToken)childNode;
 
-                    ContainerUtil.addAll(psiReferences, BndPsiUtil.getPackageReferences(bndToken));
-                }
-            }
+					ContainerUtil.addAll(psiReferences, BndPsiUtil.getPackageReferences(bndToken));
+				}
+			}
 
-            return psiReferences.toArray(new PsiReference[0]);
-        }
+			return psiReferences.toArray(new PsiReference[0]);
+		}
 
 		return PsiReference.EMPTY_ARRAY;
 	}
 
-    private boolean isUsesDirectiveAttributeOrDirective(PsiElement psiElement) {
-        if (psiElement instanceof Attribute) {
-            Attribute attribute = (Attribute)psiElement;
+	private boolean _isUsesDirectiveAttributeOrDirective(PsiElement psiElement) {
+		if (psiElement instanceof Attribute) {
+			Attribute attribute = (Attribute)psiElement;
 
-            return (Constants.USES_DIRECTIVE.equals(attribute.getName()));
-        }
-        if (psiElement instanceof Directive) {
-            Directive directive = (Directive)psiElement;
+			return Constants.USES_DIRECTIVE.equals(attribute.getName());
+		}
 
-            return (Constants.USES_DIRECTIVE.equals(directive.getName()));
-        }
+		if (psiElement instanceof Directive) {
+			Directive directive = (Directive)psiElement;
 
-        return false;
-    }
+			return Constants.USES_DIRECTIVE.equals(directive.getName());
+		}
 
-    private static final TokenSet _tokenSet = TokenSet.create(BndTokenType.HEADER_VALUE_PART);
+		return false;
+	}
+
+	private static final TokenSet _tokenSet = TokenSet.create(BndTokenType.HEADER_VALUE_PART);
 
 }

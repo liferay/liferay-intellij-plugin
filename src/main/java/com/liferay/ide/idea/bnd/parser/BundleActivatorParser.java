@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author Dominik Marks
  */
-public class BundleActivatorParser extends BndClassReferenceParser {
+public class BundleActivatorParser extends ClassReferenceParser {
 
 	public static final BundleActivatorParser INSTANCE = new BundleActivatorParser();
 
