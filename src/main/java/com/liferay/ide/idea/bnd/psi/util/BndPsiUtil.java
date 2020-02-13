@@ -17,6 +17,7 @@ package com.liferay.ide.idea.bnd.psi.util;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
@@ -43,6 +44,21 @@ import org.osgi.framework.BundleActivator;
  * @author Dominik Marks
  */
 public class BndPsiUtil {
+
+	public static TextRange adjustTextRangeWithoutWhitespaces(TextRange textRange, String text) {
+		int end = textRange.getEndOffset();
+		int start = textRange.getStartOffset();
+
+		while ((end > start) && Character.isWhitespace(text.charAt(end - 1))) {
+			end--;
+		}
+
+		while ((start < end) && Character.isWhitespace(text.charAt(start))) {
+			start++;
+		}
+
+		return new TextRange(start, end);
+	}
 
 	@Nullable
 	public static PsiClass getBundleActivatorClass(@NotNull PsiElement psiElement) {
