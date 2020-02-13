@@ -125,8 +125,6 @@ public class BasePackageParser extends BndHeaderParser {
 	@NotNull
 	@Override
 	public PsiReference[] getReferences(@NotNull BndHeaderValuePart bndHeaderValuePart) {
-		//TODO add test to resolve reference
-
 		if (bndHeaderValuePart.getParent() instanceof Clause) {
 			return BndPsiUtil.getPackageReferences(bndHeaderValuePart);
 		}
