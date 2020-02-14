@@ -17,20 +17,26 @@ package com.liferay.ide.idea.bnd.psi.util;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFileSystemItem;
+import com.intellij.psi.PsiManager;
 import com.intellij.psi.PsiPackage;
 import com.intellij.psi.PsiReference;
+import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.PackageReferenceSet;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.PsiPackageReference;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.ProjectScope;
 import com.intellij.util.containers.ContainerUtil;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -78,6 +84,47 @@ public class BndPsiUtil {
 		JavaPsiFacade javaPsiFacade = JavaPsiFacade.getInstance(project);
 
 		return javaPsiFacade.findClass(BundleActivator.class.getName(), globalSearchScope);
+	}
+
+	@NotNull
+	public static PsiReference[] getFileReferences(@NotNull PsiElement psiElement) {
+		String filePath = psiElement.getText();
+
+		Project project = psiElement.getProject();
+
+		Module module = ModuleUtilCore.findModuleForPsiElement(psiElement);
+
+		if (module != null) {
+			PsiManager psiManager = PsiManager.getInstance(project);
+
+			ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+
+			VirtualFile[] sourceRoots = moduleRootManager.getSourceRoots(false);
+
+			Collection<PsiFileSystemItem> psiDirectories = new ArrayList<>();
+
+			for (VirtualFile sourceRoot : sourceRoots) {
+				PsiDirectory psiDirectory = psiManager.findDirectory(sourceRoot);
+
+				if (psiDirectory != null) {
+					psiDirectories.add(psiDirectory);
+				}
+			}
+
+			FileReferenceSet fileReferenceSet = new FileReferenceSet(filePath, psiElement, 0, null, true) {
+
+				@NotNull
+				@Override
+				public Collection<PsiFileSystemItem> getDefaultContexts() {
+					return psiDirectories;
+				}
+
+			};
+
+			return fileReferenceSet.getAllReferences();
+		}
+
+		return PsiReference.EMPTY_ARRAY;
 	}
 
 	@NotNull

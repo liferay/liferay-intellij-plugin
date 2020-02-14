@@ -36,8 +36,12 @@ public class BndHeaderParsers {
 			put(Constants.IMPORT_PACKAGE, BasePackageParser.INSTANCE);
 			put(Constants.PRIVATE_PACKAGE, BasePackageParser.INSTANCE);
 
-			for (String header : LiferayBndConstants.CLASS_REFERENCE_PROPERTIES) {
+			for (String header : _CLASS_REFERENCE_PROPERTIES) {
 				put(header, ClassReferenceParser.INSTANCE);
+			}
+
+			for (String header : _FILE_REFERENCE_PROPERTIES) {
+				put(header, FileReferenceParser.INSTANCE);
 			}
 
 			for (String header : Constants.headers) {
@@ -52,6 +56,16 @@ public class BndHeaderParsers {
 				}
 			}
 		}
+	};
+
+	private static final String[] _CLASS_REFERENCE_PROPERTIES = {
+		LiferayBndConstants.PLUGIN_BUNDLE, LiferayBndConstants.PLUGIN_JSP, LiferayBndConstants.PLUGIN_NPM,
+		LiferayBndConstants.PLUGIN_RESOURCEBUNDLE, LiferayBndConstants.PLUGIN_SASS, LiferayBndConstants.PLUGIN_SERVICE,
+		LiferayBndConstants.PLUGIN_SPRING, aQute.bnd.osgi.Constants.TESTCASES
+	};
+
+	private static final String[] _FILE_REFERENCE_PROPERTIES = {
+		LiferayBndConstants.LIFERAY_JS_CONFIG, LiferayBndConstants.LIFERAY_CONFIGURATION_PATH
 	};
 
 }

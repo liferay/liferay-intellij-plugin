@@ -14,12 +14,14 @@
 
 package com.liferay.ide.idea.bnd;
 
-import aQute.bnd.osgi.Constants;
-
 /**
  * @author Dominik Marks
  */
 public class LiferayBndConstants {
+
+	public static final String LIFERAY_CONFIGURATION_PATH = "Liferay-Configuration-Path";
+
+	public static final String LIFERAY_JS_CONFIG = "Liferay-JS-Config";
 
 	public static final String PLUGIN_BUNDLE = "-plugin.bundle";
 
@@ -34,10 +36,5 @@ public class LiferayBndConstants {
 	public static final String PLUGIN_SERVICE = "-plugin.service";
 
 	public static final String PLUGIN_SPRING = "-plugin.spring";
-
-	public static final String[] CLASS_REFERENCE_PROPERTIES = {
-			PLUGIN_BUNDLE, PLUGIN_JSP, PLUGIN_NPM, PLUGIN_RESOURCEBUNDLE, PLUGIN_SASS, PLUGIN_SERVICE, PLUGIN_SPRING,
-			Constants.TESTCASES
-	};
 
 }
