@@ -14,6 +14,8 @@
 
 package com.liferay.ide.idea.bnd.parser;
 
+import aQute.bnd.osgi.Constants;
+
 import com.liferay.ide.idea.bnd.LiferayBndConstants;
 
 /**
@@ -24,7 +26,7 @@ public class BndHeaderParsersConstants {
 	public static final String[] CLASS_REFERENCE_PROPERTIES = {
 		LiferayBndConstants.PLUGIN_BUNDLE, LiferayBndConstants.PLUGIN_JSP, LiferayBndConstants.PLUGIN_NPM,
 		LiferayBndConstants.PLUGIN_RESOURCEBUNDLE, LiferayBndConstants.PLUGIN_SASS, LiferayBndConstants.PLUGIN_SERVICE,
-		LiferayBndConstants.PLUGIN_SPRING, aQute.bnd.osgi.Constants.TESTCASES
+		LiferayBndConstants.PLUGIN_SPRING, Constants.TESTCASES
 	};
 
 	public static final String[] DEFAULT_HEADER_PROPERTIES = {
