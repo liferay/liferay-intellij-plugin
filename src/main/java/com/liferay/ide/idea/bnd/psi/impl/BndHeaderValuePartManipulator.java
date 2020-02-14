@@ -35,8 +35,6 @@ import org.jetbrains.annotations.NotNull;
  * @author Dominik Marks
  */
 public class BndHeaderValuePartManipulator extends AbstractElementManipulator<BndHeaderValuePart> {
-	//TODO add a test: rename a class and check if the class is also renamed in the bnd.bnd file
-	//TODO add a test: rename a package and check if the class is also renamed in the bnd.bnd file
 
 	@Override
 	public BndHeaderValuePart handleContentChange(
