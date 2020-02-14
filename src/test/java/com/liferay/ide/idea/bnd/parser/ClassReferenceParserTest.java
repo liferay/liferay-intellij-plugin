@@ -45,6 +45,16 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ClassReferenceParserTest extends LightCodeInsightFixtureTestCase {
 
+	public void testClassReferenceContributor() {
+		myFixture.configureByFiles("classReferenceContributor/bnd.bnd", "com/liferay/test/Foo.java");
+
+		myFixture.complete(CompletionType.BASIC, 1);
+
+		List<String> strings = myFixture.getLookupElementStrings();
+
+		assertTrue(strings.contains("Foo"));
+	}
+
 	public void testInvalidClassReferenceHighlighting() {
 		myFixture.configureByFiles("invalidClassReference/bnd.bnd", "com/liferay/test/Foo.java");
 
@@ -89,14 +99,6 @@ public class ClassReferenceParserTest extends LightCodeInsightFixtureTestCase {
 
 		assertTrue(highlightInfos.isEmpty());
 	}
-
-    public void testClassReferenceContributor() {
-        myFixture.configureByFiles("classReferenceContributor/bnd.bnd", "com/liferay/test/Foo.java");
-
-        myFixture.complete(CompletionType.BASIC, 1);
-        List<String> strings = myFixture.getLookupElementStrings();
-        assertTrue(strings.contains("Foo"));
-    }
 
 	@NotNull
 	@Override

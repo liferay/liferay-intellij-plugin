@@ -14,10 +14,11 @@
 
 package com.liferay.ide.idea.bnd.parser;
 
+import com.liferay.ide.idea.bnd.LiferayBndConstants;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import com.liferay.ide.idea.bnd.LiferayBndConstants;
 import org.gradle.internal.impldep.aQute.bnd.osgi.Constants;
 
 /**
