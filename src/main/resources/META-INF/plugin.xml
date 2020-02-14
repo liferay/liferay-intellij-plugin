@@ -206,5 +206,6 @@
 		<lang.parserDefinition language="bnd" implementationClass="com.liferay.ide.idea.bnd.parser.BndParserDefinition"/>
 		<lang.elementManipulator forClass="com.liferay.ide.idea.bnd.psi.BndHeaderValuePart" implementationClass="com.liferay.ide.idea.bnd.psi.impl.BndHeaderValuePartManipulator"/>
 		<lang.syntaxHighlighterFactory language="bnd" implementationClass="com.liferay.ide.idea.bnd.highlighting.BndSyntaxHighlighterFactory"/>
+		<enterHandlerDelegate implementation="com.liferay.ide.idea.bnd.actions.EnterInBndFileHandler"/>
 	</extensions>
 </idea-plugin>
