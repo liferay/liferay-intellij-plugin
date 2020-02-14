@@ -44,6 +44,10 @@ public class BndHeaderParsers {
 				put(header, FileReferenceParser.INSTANCE);
 			}
 
+			for (String header : _DEFAULT_HEADER_PROPERTIES) {
+				put(header, BndHeaderParser.INSTANCE);
+			}
+
 			for (String header : Constants.headers) {
 				if (!containsKey(header)) {
 					put(header, BndHeaderParser.INSTANCE);
@@ -62,6 +66,14 @@ public class BndHeaderParsers {
 		LiferayBndConstants.PLUGIN_BUNDLE, LiferayBndConstants.PLUGIN_JSP, LiferayBndConstants.PLUGIN_NPM,
 		LiferayBndConstants.PLUGIN_RESOURCEBUNDLE, LiferayBndConstants.PLUGIN_SASS, LiferayBndConstants.PLUGIN_SERVICE,
 		LiferayBndConstants.PLUGIN_SPRING, aQute.bnd.osgi.Constants.TESTCASES
+	};
+
+	private static final String[] _DEFAULT_HEADER_PROPERTIES = {
+		LiferayBndConstants.JSP, LiferayBndConstants.SASS, LiferayBndConstants.LIFERAY_SERVICE_XML,
+		LiferayBndConstants.LIFERAY_RELENG_MODULE_GROUP_DESCRIPTION,
+		LiferayBndConstants.LIFERAY_RELENG_MODULE_GROUP_TITLE, LiferayBndConstants.LIFERAY_REQUIRE_SCHEMA_VERSION,
+		LiferayBndConstants.LIFERAY_SERVICE, LiferayBndConstants.DYNAMIC_IMPORT_PACKAGE,
+		LiferayBndConstants.LIFERAY_MODULES_COMPAT_ADAPTERS
 	};
 
 	private static final String[] _FILE_REFERENCE_PROPERTIES = {
