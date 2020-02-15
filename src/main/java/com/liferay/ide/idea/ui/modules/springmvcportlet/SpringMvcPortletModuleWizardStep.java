@@ -48,8 +48,16 @@ public class SpringMvcPortletModuleWizardStep extends ModuleWizardStep implement
 
 				if (value.equals(SpringMVCPortletProjectConstants.SPRING_FRAMEWORK[0])) {
 					_frameworkDependenciesCombo.removeAllItems();
-					_frameworkDependenciesCombo.addItem(
-						SpringMVCPortletProjectConstants.SPRING_FRAMEWORK_DEPENDENCIES[0]);
+
+					if (liferayVersion.equals(WorkspaceConstants.LIFERAY_VERSIONS[3])) {
+						_addComboItems(
+							SpringMVCPortletProjectConstants.SPRING_FRAMEWORK_DEPENDENCIES,
+							_frameworkDependenciesCombo);
+					}
+					else {
+						_frameworkDependenciesCombo.addItem(
+							SpringMVCPortletProjectConstants.SPRING_FRAMEWORK_DEPENDENCIES[0]);
+					}
 				}
 				else if (value.equals(SpringMVCPortletProjectConstants.SPRING_FRAMEWORK[1])) {
 					_frameworkDependenciesCombo.removeAllItems();

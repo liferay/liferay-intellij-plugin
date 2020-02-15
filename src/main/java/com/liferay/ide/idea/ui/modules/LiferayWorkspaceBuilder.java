@@ -79,7 +79,7 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 			liferayVersionComboBox.addItem(liferayVersion);
 		}
 
-		liferayVersionComboBox.setSelectedIndex(0);
+		liferayVersionComboBox.setSelectedItem(WorkspaceConstants.DEFAULT_LIFERAY_VERSION);
 
 		settingsStep.addSettingsField("Liferay version:", liferayVersionComboBox);
 
