@@ -19,10 +19,43 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
+import org.osgi.framework.Version;
+
 /**
  * @author Terry Jia
  */
 public class CoreUtil {
+
+	public static int compareVersions(Version v1, Version v2) {
+		if (v2 == v1) {
+
+			// quicktest
+
+			return 0;
+		}
+
+		int result = v1.getMajor() - v2.getMajor();
+
+		if (result != 0) {
+			return result;
+		}
+
+		result = v1.getMinor() - v2.getMinor();
+
+		if (result != 0) {
+			return result;
+		}
+
+		result = v1.getMicro() - v2.getMicro();
+
+		if (result != 0) {
+			return result;
+		}
+
+		String s1 = v1.getQualifier();
+
+		return s1.compareTo(v2.getQualifier());
+	}
 
 	public static boolean isNullOrEmpty(Object[] array) {
 		if ((array == null) || (array.length == 0)) {

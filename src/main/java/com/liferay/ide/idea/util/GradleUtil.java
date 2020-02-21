@@ -14,6 +14,8 @@
 
 package com.liferay.ide.idea.util;
 
+import com.google.common.collect.ListMultimap;
+
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.execution.ui.RunContentManager;
@@ -27,8 +29,21 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 
+import java.io.File;
+import java.io.IOException;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+
+import org.gradle.tooling.GradleConnector;
+import org.gradle.tooling.ModelBuilder;
+import org.gradle.tooling.ProjectConnection;
+import org.gradle.tooling.model.GradleProject;
 
 import org.jetbrains.plugins.gradle.settings.GradleExtensionsSettings;
 import org.jetbrains.plugins.gradle.settings.GradleProjectSettings;
@@ -110,6 +125,59 @@ public class GradleUtil {
 				ExternalSystemUtil.refreshProjects(new ImportSpecBuilder(project, GradleConstants.SYSTEM_ID));
 			}
 		}
+	}
+
+	public static GradleProject getWorkspaceGradleProject(Project project) {
+		Path pathToGradleProject = Paths.get(project.getBasePath());
+
+		ProjectConnection projectConnection = GradleConnector.newConnector(
+		).forProjectDirectory(
+			pathToGradleProject.toFile()
+		).connect();
+
+		try {
+			ModelBuilder<GradleProject> modelBuilder = projectConnection.model(GradleProject.class);
+
+			return modelBuilder.get();
+		}
+		finally {
+			projectConnection.close();
+		}
+	}
+
+	public static String getWorkspacePluginVersion(Project project) {
+		File settingsGradleFile = new File(project.getBasePath(), "settings.gradle");
+
+		GradleDependencyUpdater gradleDependencyUpdater = null;
+
+		try {
+			gradleDependencyUpdater = new GradleDependencyUpdater(settingsGradleFile);
+		}
+		catch (IOException ioe) {
+		}
+
+		return Optional.ofNullable(
+			gradleDependencyUpdater
+		).flatMap(
+			updater -> {
+				ListMultimap<String, GradleDependency> dependencies = updater.getAllDependencies();
+
+				List<GradleDependency> artifacts = new ArrayList<>(dependencies.values());
+
+				return artifacts.stream(
+				).filter(
+					artifact -> Objects.equals("com.liferay", artifact.getGroup())
+				).filter(
+					artifact -> Objects.equals("com.liferay.gradle.plugins.workspace", artifact.getName())
+				).filter(
+					artifact -> !CoreUtil.isNullOrEmpty(artifact.getVersion())
+				).map(
+					GradleDependency::getVersion
+				).findFirst();
+			}
+		).orElseGet(
+			() -> "2.2.4"
+		);
 	}
 
 	public static boolean isWatchableProject(Module module) {
