@@ -130,18 +130,15 @@ public class GradleUtil {
 	public static GradleProject getWorkspaceGradleProject(Project project) {
 		Path pathToGradleProject = Paths.get(project.getBasePath());
 
-		ProjectConnection projectConnection = GradleConnector.newConnector(
+		GradleConnector gradleConnector = GradleConnector.newConnector(
 		).forProjectDirectory(
 			pathToGradleProject.toFile()
-		).connect();
+		);
 
-		try {
+		try (ProjectConnection projectConnection = gradleConnector.connect()) {
 			ModelBuilder<GradleProject> modelBuilder = projectConnection.model(GradleProject.class);
 
 			return modelBuilder.get();
-		}
-		finally {
-			projectConnection.close();
 		}
 	}
 
