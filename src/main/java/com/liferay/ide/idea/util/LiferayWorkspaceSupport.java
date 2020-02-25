@@ -47,12 +47,15 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.gradle.tooling.GradleConnector;
+import org.gradle.tooling.model.DomainObjectSet;
+import org.gradle.tooling.model.GradleProject;
+import org.gradle.tooling.model.GradleTask;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -61,9 +64,12 @@ import org.jetbrains.idea.maven.project.MavenProject;
 import org.jetbrains.idea.maven.project.MavenProjectsManager;
 import org.jetbrains.plugins.gradle.util.GradleConstants;
 
+import org.osgi.framework.Version;
+
 /**
  * @author Terry Jia
  * @author Simon Jiang
+ * @author Ethan Sun
  */
 public interface LiferayWorkspaceSupport {
 
@@ -363,52 +369,80 @@ public interface LiferayWorkspaceSupport {
 			return Collections.emptyList();
 		}
 
-		File file = new File(project.getBasePath());
+		GradleProject workspaceGradleProject = GradleUtil.getWorkspaceGradleProject(project);
 
-		OutputStream outputStream = new ByteArrayOutputStream();
+		DomainObjectSet<? extends GradleTask> tasksSet = workspaceGradleProject.getTasks();
 
-		GradleConnector.newConnector(
-		).forProjectDirectory(
-			file
-		).connect(
-		).newBuild(
-		).setJavaHome(
-			javaHomeFile
-		).forTasks(
-			"dependencyManagement"
-		).setStandardOutput(
-			outputStream
-		).run();
+		List<? extends GradleTask> tasksList = tasksSet.getAll();
 
-		String output = outputStream.toString();
+		Optional<? extends GradleTask> dependencyManagementTask = tasksList.stream(
+		).filter(
+			task -> StringUtil.equals("dependencyManagement", task.getName())
+		).filter(
+			task -> workspaceGradleProject.equals(task.getProject())
+		).findAny();
 
 		List<String> list = new ArrayList<>();
 
-		if (!output.equals("")) {
-			BufferedReader bufferedReader = new BufferedReader(new StringReader(output));
+		if (dependencyManagementTask.isPresent()) {
+			File file = new File(project.getBasePath());
 
-			String line;
+			OutputStream outputStream = new ByteArrayOutputStream();
 
-			try {
-				boolean start = false;
+			GradleConnector.newConnector(
+			).forProjectDirectory(
+				file
+			).connect(
+			).newBuild(
+			).setJavaHome(
+				javaHomeFile
+			).addArguments(
+				"--rerun-tasks"
+			).forTasks(
+				"dependencyManagement"
+			).setStandardOutput(
+				outputStream
+			).run();
 
-				while ((line = bufferedReader.readLine()) != null) {
-					if (Objects.equals("compileOnly - Dependency management for the compileOnly configuration", line)) {
-						start = true;
+			String output = outputStream.toString();
 
-						continue;
-					}
+			String taskOutputInfo;
 
-					if (start) {
-						if (StringUtil.equals(line.trim(), "")) {
-							break;
+			if (CoreUtil.compareVersions(
+					new Version(GradleUtil.getWorkspacePluginVersion(project)), new Version("2.2.4")) < 0) {
+
+				taskOutputInfo = "compileOnly - Dependency management for the compileOnly configuration";
+			}
+			else {
+				taskOutputInfo = "> Task :dependencyManagement";
+			}
+
+			if (!CoreUtil.isNullOrEmpty(output) && !output.equals("")) {
+				BufferedReader bufferedReader = new BufferedReader(new StringReader(output));
+
+				String line;
+
+				try {
+					boolean start = false;
+
+					while ((line = bufferedReader.readLine()) != null) {
+						if (taskOutputInfo.equals(line)) {
+							start = true;
+
+							continue;
 						}
 
-						list.add(line.trim());
+						if (start) {
+							if (StringUtil.equals(line.trim(), "")) {
+								break;
+							}
+
+							list.add(line.trim());
+						}
 					}
 				}
-			}
-			catch (IOException ioe) {
+				catch (IOException ioe) {
+				}
 			}
 		}
 

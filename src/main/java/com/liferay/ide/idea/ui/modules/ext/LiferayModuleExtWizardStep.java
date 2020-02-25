@@ -22,6 +22,7 @@ import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.util.ui.UIUtil;
 
 import com.liferay.ide.idea.util.CoreUtil;
+import com.liferay.ide.idea.util.GradleUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import java.awt.event.ItemEvent;
@@ -39,6 +40,8 @@ import javax.swing.JTextField;
 import javax.swing.plaf.basic.BasicComboBoxEditor;
 
 import org.jetbrains.annotations.NotNull;
+
+import org.osgi.framework.Version;
 
 /**
  * @author Charles Wu
@@ -90,10 +93,21 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep implements Life
 
 					String dependency = (String)item;
 
-					String[] s = dependency.split(" ");
+					if (CoreUtil.compareVersions(
+							new Version(GradleUtil.getWorkspacePluginVersion(_project)), new Version("2.2.4")) < 0) {
 
-					if (s.length == 2) {
-						_originalModuleVersionField.setText(s[1]);
+						String[] s = dependency.split(" ");
+
+						if (s.length == 2) {
+							_originalModuleVersionField.setText(s[1]);
+						}
+					}
+					else {
+						String[] s = dependency.split(":");
+
+						if (s.length == 3) {
+							_originalModuleVersionField.setText(s[2]);
+						}
 					}
 				}
 			});
@@ -148,11 +162,18 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep implements Life
 
 		String s = (String)item;
 
-		int i1 = s.indexOf(":");
-		int i2 = s.indexOf(" ");
+		if (CoreUtil.compareVersions(
+				new Version(GradleUtil.getWorkspacePluginVersion(_project)), new Version("2.2.4")) < 0) {
 
-		if ((i1 > -1) && (i2 > -1)) {
-			return s.substring(i1 + 1, i2);
+			int i1 = s.indexOf(":");
+			int i2 = s.indexOf(" ");
+
+			if ((i1 > -1) && (i2 > -1)) {
+				return s.substring(i1 + 1, i2);
+			}
+		}
+		else {
+			return s.split(":")[1];
 		}
 
 		return s;
