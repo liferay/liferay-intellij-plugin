@@ -43,13 +43,12 @@ public class SpringMvcPortletModuleWizardStep extends ModuleWizardStep implement
 		_frameworkCombo.addItemListener(
 			e -> {
 				_frameworkDependenciesCombo.removeAllItems();
-
 				String value = (String)_frameworkCombo.getSelectedItem();
 
 				if (value.equals(SpringMVCPortletProjectConstants.SPRING_FRAMEWORK[0])) {
 					_frameworkDependenciesCombo.removeAllItems();
 
-					if (liferayVersion.equals(WorkspaceConstants.LIFERAY_VERSIONS[3])) {
+					if (liferayVersion.equals(WorkspaceConstants.LIFERAY_VERSIONS[0])) {
 						_addComboItems(
 							SpringMVCPortletProjectConstants.SPRING_FRAMEWORK_DEPENDENCIES,
 							_frameworkDependenciesCombo);
@@ -120,16 +119,21 @@ public class SpringMvcPortletModuleWizardStep extends ModuleWizardStep implement
 	private void _intializeSpringConfigurationData(String liferayVersion) {
 		_clearSpringConfigurationData();
 
-		if (liferayVersion.equals(WorkspaceConstants.LIFERAY_VERSIONS[0])) {
+		if (liferayVersion.equals(WorkspaceConstants.LIFERAY_VERSIONS[3])) {
 			_frameworkCombo.addItem(SpringMVCPortletProjectConstants.SPRING_FRAMEWORK[1]);
 		}
 		else {
 			_addComboItems(SpringMVCPortletProjectConstants.SPRING_FRAMEWORK, _frameworkCombo);
 		}
 
-		_frameworkDependenciesCombo.addItem(SpringMVCPortletProjectConstants.SPRING_FRAMEWORK_DEPENDENCIES[0]);
-		_addComboItems(SpringMVCPortletProjectConstants.SPRING_VIEW_TYPE, _viewTypeCombo);
+		if (liferayVersion.equals(WorkspaceConstants.LIFERAY_VERSIONS[0])) {
+			_addComboItems(SpringMVCPortletProjectConstants.SPRING_FRAMEWORK_DEPENDENCIES, _frameworkDependenciesCombo);
+		}
+		else {
+			_frameworkDependenciesCombo.addItem(SpringMVCPortletProjectConstants.SPRING_FRAMEWORK_DEPENDENCIES[0]);
+		}
 
+		_addComboItems(SpringMVCPortletProjectConstants.SPRING_VIEW_TYPE, _viewTypeCombo);
 		_frameworkCombo.setSelectedIndex(0);
 		_frameworkDependenciesCombo.setSelectedIndex(0);
 		_viewTypeCombo.setSelectedIndex(0);
