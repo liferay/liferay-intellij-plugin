@@ -143,6 +143,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 
 		for (String type : BladeCLI.getProjectTemplates()) {
 			if (Objects.equals("fragment", type) || Objects.equals("modules-ext", type) ||
+				Objects.equals("spring-mvc-portlet", type) ||
 				(Objects.equals("7.0", liferayVersion) && Objects.equals("social-bookmark", type))) {
 
 				continue;
