@@ -227,4 +227,4 @@ verifyBlade {
 	checksum bladeLatestMD5
 }
 
-version = "1.6.0"
+version = "1.7.0"
