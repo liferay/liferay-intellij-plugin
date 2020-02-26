@@ -206,7 +206,7 @@
 		<programRunner id="Run" implementation="com.liferay.ide.idea.server.LiferayServerRunner"/>
 		<programRunner id="Debug" implementation="com.liferay.ide.idea.server.LiferayServerDebuggerRunner"/>
 		<projectService serviceImplementation="com.liferay.ide.idea.core.LiferayProjectTypeService"/>
-		<fileTypeFactory implementation="com.liferay.ide.idea.bnd.BndFileTypeFactory"/>
+		<fileType name="bnd" implementationClass="com.liferay.ide.idea.bnd.BndFileType" fieldName="INSTANCE" language="bnd" extensions="bnd"/>
 		<codeInsight.lineMarkerProvider language="XML" implementationClass="com.liferay.ide.idea.language.service.LiferayServiceXMLLineMarkerProvider"/>
 		<codeInsight.lineMarkerProvider language="JAVA" implementationClass="com.liferay.ide.idea.language.service.LiferayServiceJavaImplLineMarkerProvider"/>
 		<standardResourceProvider implementation="com.liferay.ide.idea.language.LiferayDefinitionsResourceProvider"/>

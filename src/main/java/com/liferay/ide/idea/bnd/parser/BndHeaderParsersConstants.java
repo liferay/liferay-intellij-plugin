@@ -20,6 +20,7 @@ import com.liferay.ide.idea.bnd.LiferayBndConstants;
 
 /**
  * @author Dominik Marks
+ * @author Simon Jiang
  */
 public class BndHeaderParsersConstants {
 
@@ -38,7 +39,8 @@ public class BndHeaderParsersConstants {
 	};
 
 	public static final String[] FILE_REFERENCE_PROPERTIES = {
-		LiferayBndConstants.LIFERAY_JS_CONFIG, LiferayBndConstants.LIFERAY_CONFIGURATION_PATH
+		LiferayBndConstants.LIFERAY_JS_CONFIG, LiferayBndConstants.LIFERAY_CONFIGURATION_PATH,
+		LiferayBndConstants.WEB_CONTEXT_PATH
 	};
 
 }

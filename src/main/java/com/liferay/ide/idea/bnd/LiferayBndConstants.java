@@ -55,4 +55,6 @@ public class LiferayBndConstants {
 
 	public static final String SASS = "-sass";
 
+	public static final String WEB_CONTEXT_PATH = "Web-ContextPath";
+
 }
