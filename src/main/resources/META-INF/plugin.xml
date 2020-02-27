@@ -31,6 +31,17 @@
 	</p>
 	<p>
 		<ul>
+			<li>1.7.0</li>
+			<ul>
+				<li>INTELLIJ-87 compatible and adapt to JetBrains default Java 11 runtime</li>
+				<li>INTELLIJ-91 bug fix for config server on portal-ext.properties</li>
+				<li>INTELLIJ-21 add deploy task on gradle projects</li>
+				<li>INTELLIJ-92 bug fix on watch task</li>
+				<li>INTELLIJ-80 new liferay spring mvc portlet project wizard</li>
+				<li>INTELLIJ-99 add support for wildfly 16</li>
+				<li>Upgraded to gradle 5</li>
+				<li>Updated embedded blade cli to 3.9.1</li>
+			</ul>
 			<li>1.6.0</li>
 			<ul>
 				<li>INTELLIJ-78 update xml schemas and portlet 3.0 specification</li>
