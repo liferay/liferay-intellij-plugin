@@ -104,6 +104,7 @@ public class PortalWildFlyBundle extends AbstractPortalBundle {
 
 		addBootClasspath(bundlePath.toString(), "org.jboss.logmanager", args, "-Xbootclasspath/p:");
 		addBootClasspath(bundlePath.toString(), "org.jboss.log4j.logmanager", args, "-Xbootclasspath/p:");
+		addBootClasspath(bundlePath.toString(), "org.wildfly.common", args, "-Xbootclasspath/p:");
 
 		args.add("-Dorg.jboss.boot.log.file=" + FileUtil.pathAppend(bundlePath, "standalone/log/boot.log"));
 		args.add(
