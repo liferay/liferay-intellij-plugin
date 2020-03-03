@@ -16,7 +16,6 @@ package com.liferay.ide.idea.ui.actions;
 
 import com.intellij.execution.ExecutionListener;
 import com.intellij.execution.ExecutionManager;
-import com.intellij.execution.RunManager;
 import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
@@ -98,6 +97,8 @@ public abstract class AbstractLiferayAction extends AnAction {
 
 		VirtualFile[] contentRootsVirtualFiles = modifiableRootModel.getContentRoots();
 
+		modifiableRootModel.dispose();
+
 		assert contentRootsVirtualFiles[0] != null;
 
 		return contentRootsVirtualFiles[0];
@@ -121,19 +122,7 @@ public abstract class AbstractLiferayAction extends AnAction {
 	private void _perform(AnActionEvent anActionEvent, Project project) {
 		RunnerAndConfigurationSettings runnerAndConfigurationSettings = processRunnerConfiguration(anActionEvent);
 
-		RunManager runManager = RunManager.getInstance(project);
-
-		RunnerAndConfigurationSettings existingConfigurationSettings = runManager.findConfigurationByName(
-			(runnerAndConfigurationSettings == null) ? null : runnerAndConfigurationSettings.getName());
-
-		if (existingConfigurationSettings == null) {
-			runManager.setTemporaryConfiguration(runnerAndConfigurationSettings);
-		}
-		else {
-			runManager.setSelectedConfiguration(existingConfigurationSettings);
-		}
-
-		doExecute(anActionEvent, existingConfigurationSettings);
+		doExecute(anActionEvent, runnerAndConfigurationSettings);
 
 		MessageBus messageBus = project.getMessageBus();
 
