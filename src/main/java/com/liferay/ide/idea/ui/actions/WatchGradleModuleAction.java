@@ -29,8 +29,10 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 
+import com.liferay.ide.idea.core.WorkspaceConstants;
 import com.liferay.ide.idea.server.gogo.GogoTelnetClient;
 import com.liferay.ide.idea.util.GradleUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import icons.LiferayIcons;
 
@@ -54,7 +56,7 @@ import java.util.Properties;
  * @author Terry Jia
  * @author Simon Jiang
  */
-public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
+public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction implements LiferayWorkspaceSupport {
 
 	public WatchGradleModuleAction() {
 		super("Watch", "Run watch task", LiferayIcons.LIFERAY_ICON, "watch");
@@ -122,13 +124,22 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
 			return false;
 		}
 
-		Module module = ModuleUtil.findModuleForFile(virtualFile, project);
+		String virtualFileToStr = virtualFile.toString();
 
-		if (module == null) {
-			return false;
+		String moduleDirectoryName = getGradleProperty(
+			project.getBasePath(), WorkspaceConstants.MODULES_DIR_PROPERTY, WorkspaceConstants.MODULES_DIR_DEFAULT);
+
+		if (virtualFileToStr.contains("/" + moduleDirectoryName + "/")) {
+			Module module = ModuleUtil.findModuleForFile(virtualFile, project);
+
+			if (module == null) {
+				return false;
+			}
+
+			return GradleUtil.isWatchableProject(module);
 		}
 
-		return GradleUtil.isWatchableProject(module);
+		return false;
 	}
 
 	@Override
