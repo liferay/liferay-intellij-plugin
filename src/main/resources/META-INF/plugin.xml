@@ -40,6 +40,7 @@
 				<li>INTELLIJ-80 new liferay spring mvc portlet project wizard</li>
 				<li>INTELLIJ-97 RunnerAndConfigurationSettings should not be null</li>
 				<li>INTELLIJ-99 add support for wildfly 16</li>
+				<li>INTELLIJ-102 fix spring wizard issue of supporting portal bundle 7.3</li>
 				<li>Upgraded to gradle 5</li>
 				<li>Updated embedded blade cli to 3.9.1</li>
 			</ul>
