@@ -80,6 +80,8 @@ dockerImageBuild {
 dockerPublishRelease {
 	dependsOn dockerImageBuild
 
+	buildSearchableOptions.enabled = false
+
 	List<String> args = ['docker', 'run', '--rm', '--init', '-v', "${userHome}/.gradle/wrapper:/root/.gradle/wrapper"]
 
 	if (gradleCredentialsProperties.exists()) {
