@@ -2,7 +2,7 @@ buildscript {
 	dependencies {
 		classpath group: "com.gradle", name: "build-scan-plugin", version: "2.0.2"
 		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.source.formatter", version: "latest.release"
-		classpath group: "nu.studer", name: "gradle-credentials-plugin", version: "1.0.4"
+		classpath group: "nu.studer", name: "gradle-credentials-plugin", version: "2.1"
 	}
 
 	repositories {
@@ -17,7 +17,7 @@ buildscript {
 
 plugins {
 	id "de.undercouch.download" version "4.0.0"
-	id "org.jetbrains.intellij" version "0.4.10"
+	id "org.jetbrains.intellij" version "0.4.16"
 }
 
 apply plugin: "com.gradle.build-scan"
@@ -200,10 +200,10 @@ processResources {
 	dependsOn verifyBlade
 }
 
-def intellijApiKey = credentials.intellijApiKey ?: ""
+def marketplaceKey = credentials.marketplaceKey ?: ""
 
 publishPlugin {
-	token intellijApiKey
+	token marketplaceKey
 }
 
 repositories {
