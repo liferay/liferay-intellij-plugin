@@ -45,6 +45,7 @@
 				<li>INTELLIJ-100 upgrade blade to latest 3.9.1 snapshot and portal 7.3 support</li>
 				<li>INTELLIJ-101 fix getTargetPlatformArtifacts of LiferayWorkspaceProject base on new depdencyManagement task</li>
 				<li>INTELLIJ-102 fix spring wizard issue of supporting portal bundle 7.3</li>
+				<li>INTELLIJ-105 upgrade sinceBuild to 192</li>
 				<li>Upgraded to gradle 5</li>
 			</ul>
 			<li>1.6.0</li>
