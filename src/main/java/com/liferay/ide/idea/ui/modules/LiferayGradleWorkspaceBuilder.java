@@ -19,7 +19,6 @@ import com.intellij.openapi.externalSystem.ExternalSystemModulePropertyManager;
 import com.intellij.openapi.externalSystem.importing.ImportSpecBuilder;
 import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode;
 import com.intellij.openapi.externalSystem.service.project.manage.ExternalProjectsManager;
-import com.intellij.openapi.externalSystem.service.project.manage.ExternalProjectsManagerImpl;
 import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemSettings;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
@@ -33,11 +32,13 @@ import icons.GradleIcons;
 
 import javax.swing.Icon;
 
+import org.jetbrains.plugins.gradle.settings.DistributionType;
 import org.jetbrains.plugins.gradle.settings.GradleProjectSettings;
 import org.jetbrains.plugins.gradle.util.GradleConstants;
 
 /**
  * @author Joye Luo
+ * @author Simon Jiang
  */
 public class LiferayGradleWorkspaceBuilder extends LiferayWorkspaceBuilder {
 
@@ -70,6 +71,14 @@ public class LiferayGradleWorkspaceBuilder extends LiferayWorkspaceBuilder {
 
 			gradleProjectSettings.setExternalProjectPath(project.getBasePath());
 
+			gradleProjectSettings.setDistributionType(DistributionType.DEFAULT_WRAPPED);
+			gradleProjectSettings.setDelegatedBuild(true);
+			gradleProjectSettings.setDisableWrapperSourceDistributionNotification(true);
+			gradleProjectSettings.setUseAutoImport(true);
+			gradleProjectSettings.setResolveModulePerSourceSet(true);
+			gradleProjectSettings.setupNewProjectDefault();
+			gradleProjectSettings.setDirectDelegatedBuild(true);
+
 			AbstractExternalSystemSettings externalSystemSettings = ExternalSystemApiUtil.getSettings(
 				project, GradleConstants.SYSTEM_ID);
 
@@ -78,13 +87,15 @@ public class LiferayGradleWorkspaceBuilder extends LiferayWorkspaceBuilder {
 
 			ImportSpecBuilder importSpecBuilder = new ImportSpecBuilder(project, GradleConstants.SYSTEM_ID);
 
+			importSpecBuilder.forceWhenUptodate(true);
+			importSpecBuilder.whenAutoImportEnabled();
 			importSpecBuilder.use(ProgressExecutionMode.IN_BACKGROUND_ASYNC);
 			importSpecBuilder.useDefaultCallback();
 
 			ExternalSystemUtil.refreshProject(project.getBasePath(), importSpecBuilder.build());
 		};
 
-		ExternalProjectsManager externalProjectsManager = ExternalProjectsManagerImpl.getInstance(project);
+		ExternalProjectsManager externalProjectsManager = ExternalProjectsManager.getInstance(project);
 
 		externalProjectsManager.runWhenInitialized(
 			() -> {
