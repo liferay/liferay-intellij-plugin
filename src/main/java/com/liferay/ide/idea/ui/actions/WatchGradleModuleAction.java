@@ -25,6 +25,7 @@ import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMo
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
@@ -124,18 +125,24 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction imp
 			return false;
 		}
 
-		String virtualFileToStr = virtualFile.toString();
+		Module module = ModuleUtil.findModuleForFile(virtualFile, project);
+
+		if (module == null) {
+			return false;
+		}
+
+		VirtualFile projectVirtualFile = ProjectUtil.guessProjectDir(project);
+
+		if (projectVirtualFile.equals(virtualFile)) {
+			return GradleUtil.isWatchableProject(module);
+		}
 
 		String moduleDirectoryName = getGradleProperty(
 			project.getBasePath(), WorkspaceConstants.MODULES_DIR_PROPERTY, WorkspaceConstants.MODULES_DIR_DEFAULT);
 
-		if (virtualFileToStr.contains("/" + moduleDirectoryName + "/")) {
-			Module module = ModuleUtil.findModuleForFile(virtualFile, project);
+		String virtualFileToStr = virtualFile.toString();
 
-			if (module == null) {
-				return false;
-			}
-
+		if (virtualFileToStr.contains("/" + moduleDirectoryName)) {
 			return GradleUtil.isWatchableProject(module);
 		}
 

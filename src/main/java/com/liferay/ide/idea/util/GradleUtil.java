@@ -187,10 +187,12 @@ public class GradleUtil {
 		for (RunContentDescriptor descriptor : allDescriptors) {
 			ProcessHandler processHandler = descriptor.getProcessHandler();
 
-			boolean processTerminated = processHandler.isProcessTerminated();
+			if (processHandler != null) {
+				boolean processTerminated = processHandler.isProcessTerminated();
 
-			if (Objects.equals(project.getName() + " [watch]", descriptor.getDisplayName()) && !processTerminated) {
-				return false;
+				if (Objects.equals(project.getName() + " [watch]", descriptor.getDisplayName()) && !processTerminated) {
+					return false;
+				}
 			}
 		}
 
