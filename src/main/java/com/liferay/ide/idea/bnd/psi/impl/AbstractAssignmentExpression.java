@@ -21,9 +21,9 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 
 import com.liferay.ide.idea.bnd.psi.AssignmentExpression;
+import com.liferay.ide.idea.bnd.psi.BndHeaderValuePart;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.lang.manifest.psi.HeaderValuePart;
 
 /**
  * @author Charles Wu
@@ -36,7 +36,7 @@ public abstract class AbstractAssignmentExpression extends ASTWrapperPsiElement 
 
 	@Override
 	public String getName() {
-		HeaderValuePart namePsi = getNameElement();
+		BndHeaderValuePart namePsi = getNameElement();
 
 		String result = (namePsi != null) ? namePsi.getUnwrappedText() : null;
 
@@ -48,13 +48,13 @@ public abstract class AbstractAssignmentExpression extends ASTWrapperPsiElement 
 	}
 
 	@Override
-	public HeaderValuePart getNameElement() {
-		return PsiTreeUtil.getChildOfType(this, HeaderValuePart.class);
+	public BndHeaderValuePart getNameElement() {
+		return PsiTreeUtil.getChildOfType(this, BndHeaderValuePart.class);
 	}
 
 	@Override
 	public String getValue() {
-		HeaderValuePart valuePsi = getValueElement();
+		BndHeaderValuePart valuePsi = getValueElement();
 
 		String result = (valuePsi != null) ? valuePsi.getUnwrappedText() : null;
 
@@ -66,11 +66,11 @@ public abstract class AbstractAssignmentExpression extends ASTWrapperPsiElement 
 	}
 
 	@Override
-	public HeaderValuePart getValueElement() {
-		HeaderValuePart namePsi = getNameElement();
+	public BndHeaderValuePart getValueElement() {
+		BndHeaderValuePart namePsi = getNameElement();
 
 		if (namePsi != null) {
-			return PsiTreeUtil.getNextSiblingOfType(namePsi, HeaderValuePart.class);
+			return PsiTreeUtil.getNextSiblingOfType(namePsi, BndHeaderValuePart.class);
 		}
 
 		return null;

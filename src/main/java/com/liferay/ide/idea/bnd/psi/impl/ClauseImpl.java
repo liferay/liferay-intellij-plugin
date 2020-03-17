@@ -19,6 +19,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.util.PsiTreeUtil;
 
 import com.liferay.ide.idea.bnd.psi.Attribute;
+import com.liferay.ide.idea.bnd.psi.BndHeaderValuePart;
 import com.liferay.ide.idea.bnd.psi.Clause;
 import com.liferay.ide.idea.bnd.psi.Directive;
 
@@ -26,7 +27,6 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.lang.manifest.psi.HeaderValuePart;
 
 /**
  * @author Charles Wu
@@ -85,8 +85,8 @@ public class ClauseImpl extends ASTWrapperPsiElement implements Clause {
 	}
 
 	@Override
-	public HeaderValuePart getValue() {
-		return findChildByClass(HeaderValuePart.class);
+	public BndHeaderValuePart getValue() {
+		return findChildByClass(BndHeaderValuePart.class);
 	}
 
 	@Override
