@@ -188,7 +188,7 @@ formatSource {
 intellij {
 	plugins "java", "CSS", "DatabaseTools", "gradle", "Groovy", "java-i18n", "JavaEE", "JavaScriptLanguage", "jsp", "junit", "maven", "PersistenceSupport", "properties", "sass"
 	pluginName "liferay-intellij-plugin"
-	version "IU-2019.2.3"
+	version "IU-2019.3.3"
 }
 
 patchPluginXml {
