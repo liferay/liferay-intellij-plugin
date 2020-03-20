@@ -31,6 +31,11 @@
 	</p>
 	<p>
 		<ul>
+			<li>1.7.2</li>
+			<ul>
+				<li>INTELLIJ-53 better support on bnd.bnd(community contribution)</li>
+				<li>INTELLIJ-107 bug fix for watch task</li>
+			</ul>
 			<li>1.7.1</li>
 			<ul>
 				<li>INTELLIJ-105 upgrade sinceBuild to 192</li>
