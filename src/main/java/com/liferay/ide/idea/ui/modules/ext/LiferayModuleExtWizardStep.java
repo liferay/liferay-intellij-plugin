@@ -16,9 +16,17 @@ package com.liferay.ide.idea.ui.modules.ext;
 
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
+import com.intellij.openapi.externalSystem.model.DataNode;
+import com.intellij.openapi.externalSystem.model.ExternalProjectInfo;
+import com.intellij.openapi.externalSystem.model.ProjectKeys;
+import com.intellij.openapi.externalSystem.model.project.LibraryData;
+import com.intellij.openapi.externalSystem.model.project.LibraryPathType;
+import com.intellij.openapi.externalSystem.model.project.ProjectData;
+import com.intellij.openapi.externalSystem.service.project.ProjectDataManager;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.ColoredListCellRenderer;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.UIUtil;
 
 import com.liferay.ide.idea.util.CoreUtil;
@@ -27,6 +35,8 @@ import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import java.awt.event.ItemEvent;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -40,12 +50,14 @@ import javax.swing.JTextField;
 import javax.swing.plaf.basic.BasicComboBoxEditor;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.plugins.gradle.util.GradleConstants;
 
 import org.osgi.framework.Version;
 
 /**
  * @author Charles Wu
  * @author Terry Jia
+ * @author Simon Jiang
  */
 public class LiferayModuleExtWizardStep extends ModuleWizardStep implements LiferayWorkspaceSupport {
 
@@ -135,6 +147,10 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep implements Life
 	public boolean validate() throws ConfigurationException {
 		String validationTitle = "Validation Error";
 
+		if (_originalModuleNameComboBox.getItemCount() == 0) {
+			throw new ConfigurationException("No valid original modules can be selected", validationTitle);
+		}
+
 		if (CoreUtil.isNullOrEmpty(_getOriginalModuleName())) {
 			throw new ConfigurationException("Please input original module name", validationTitle);
 		}
@@ -179,10 +195,48 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep implements Life
 		return s;
 	}
 
+	private List<String> _getProjectDataNodesSource(List<String> targetPlatformArtifacts) {
+		ProjectDataManager projectDataManager = ProjectDataManager.getInstance();
+
+		ExternalProjectInfo externalProjectData = projectDataManager.getExternalProjectData(
+			_project, GradleConstants.SYSTEM_ID, _project.getBasePath());
+
+		DataNode<ProjectData> projectData = externalProjectData.getExternalProjectStructure();
+
+		Collection<DataNode<?>> dataNodes = projectData.getChildren();
+
+		List<String> targetPlatformArtifactsWithSource = new ArrayList<>();
+
+		for (DataNode<?> child : dataNodes) {
+			if (!ProjectKeys.LIBRARY.equals(child.getKey())) {
+				continue;
+			}
+
+			LibraryData libraryData = (LibraryData)child.getData();
+
+			String sourceLibInfo = ContainerUtil.getFirstItem(libraryData.getPaths(LibraryPathType.SOURCE));
+
+			if (CoreUtil.isNullOrEmpty(sourceLibInfo)) {
+				continue;
+			}
+
+			String artifactWithSource =
+				libraryData.getGroupId() + ":" + libraryData.getArtifactId() + ":" + libraryData.getVersion();
+
+			if (targetPlatformArtifacts.contains(artifactWithSource)) {
+				targetPlatformArtifactsWithSource.add(artifactWithSource);
+			}
+		}
+
+		return targetPlatformArtifactsWithSource;
+	}
+
 	private void _insertOriginalModuleNames() {
 		List<String> targetPlatformArtifacts = getTargetPlatformDependencies(_project);
 
-		targetPlatformArtifacts.forEach(
+		List<String> newTargetPlatformArtifacts = _getProjectDataNodesSource(targetPlatformArtifacts);
+
+		newTargetPlatformArtifacts.forEach(
 			line -> {
 				String[] s = line.split(":");
 
