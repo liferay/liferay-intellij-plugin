@@ -28,6 +28,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.io.FilenameUtils;
+
 import org.gradle.tooling.model.DomainObjectSet;
 import org.gradle.tooling.model.GradleModuleVersion;
 import org.gradle.tooling.model.idea.IdeaDependency;
@@ -61,14 +63,21 @@ public class LiferayGradleProjectResolverExtension extends AbstractProjectResolv
 
 		ExternalProject externalProject = _getExternalProject(gradleModule, resolverCtx);
 
+		File moduleDir = externalProject.getProjectDir();
+
+		ProjectData projectData = ideProject.getData();
+
+		String ideProjectFileDirectoryPath = FilenameUtils.separatorsToSystem(
+			projectData.getIdeProjectFileDirectoryPath());
+
 		if (resolverCtx.isResolveModulePerSourceSet()) {
 			final Map<String, Pair<DataNode<GradleSourceSetData>, ExternalSourceSet>> sourceSetMap =
 				ideProject.getUserData(GradleProjectResolver.RESOLVED_SOURCE_SETS);
 			final Map<String, String> artifactsMap = ideProject.getUserData(
 				GradleProjectResolver.CONFIGURATION_ARTIFACTS);
-            assert sourceSetMap != null;
-            assert artifactsMap != null;
-            assert externalProject != null;
+			assert sourceSetMap != null;
+			assert artifactsMap != null;
+			assert externalProject != null;
 			_processSourceSets(
 				resolverCtx, gradleModule, externalProject, ideModule,
 				new SourceSetsProcessor() {
@@ -79,42 +88,47 @@ public class LiferayGradleProjectResolverExtension extends AbstractProjectResolv
 						@NotNull ExternalSourceSet sourceSet) {
 
 						Collection<ExternalDependency> dependencies = sourceSet.getDependencies();
-						DomainObjectSet<? extends IdeaDependency> gradleDependencies = gradleModule.getDependencies();
 
-						for (IdeaDependency dependency : gradleDependencies) {
-							if (dependency instanceof InternalIdeaSingleEntryLibraryDependency) {
-								InternalIdeaSingleEntryLibraryDependency localDependency =
-									(InternalIdeaSingleEntryLibraryDependency)dependency;
-								DefaultExternalLibraryDependency libraryDependency =
-									new DefaultExternalLibraryDependency();
+						if (ideProjectFileDirectoryPath.equals(moduleDir.getAbsolutePath())) {
+							DomainObjectSet<? extends IdeaDependency> gradleDependencies =
+								gradleModule.getDependencies();
 
-								File jarFile = localDependency.getFile();
+							for (IdeaDependency dependency : gradleDependencies) {
+								if (dependency instanceof InternalIdeaSingleEntryLibraryDependency) {
+									InternalIdeaSingleEntryLibraryDependency localDependency =
+										(InternalIdeaSingleEntryLibraryDependency)dependency;
+									DefaultExternalLibraryDependency libraryDependency =
+										new DefaultExternalLibraryDependency();
 
-								String jarName = jarFile.getName();
+									File jarFile = localDependency.getFile();
 
-								if (jarName.endsWith(".jar")) {
-									GradleModuleVersion gradleModuleVersion = localDependency.getGradleModuleVersion();
+									String jarName = jarFile.getName();
 
-                                    assert gradleModuleVersion != null;
+									if (jarName.endsWith(".jar")) {
+										GradleModuleVersion gradleModuleVersion =
+											localDependency.getGradleModuleVersion();
 
-									libraryDependency.setName(gradleModuleVersion.getName());
+											assert gradleModuleVersion != null;
 
-									libraryDependency.setGroup(gradleModuleVersion.getGroup());
+										libraryDependency.setName(gradleModuleVersion.getName());
 
-									libraryDependency.setVersion(gradleModuleVersion.getVersion());
+										libraryDependency.setGroup(gradleModuleVersion.getGroup());
 
-									libraryDependency.setFile(jarFile);
+										libraryDependency.setVersion(gradleModuleVersion.getVersion());
 
-									libraryDependency.setSource(localDependency.getSource());
+										libraryDependency.setFile(jarFile);
 
-									InternalIdeaDependencyScope jarScope = localDependency.getScope();
+										libraryDependency.setSource(localDependency.getSource());
 
-									libraryDependency.setScope(jarScope.getScope());
+										InternalIdeaDependencyScope jarScope = localDependency.getScope();
 
-									libraryDependency.setExported(localDependency.getExported());
+										libraryDependency.setScope(jarScope.getScope());
+
+										libraryDependency.setExported(localDependency.getExported());
+									}
+
+									dependencies.add(libraryDependency);
 								}
-
-								dependencies.add(libraryDependency);
 							}
 						}
 
