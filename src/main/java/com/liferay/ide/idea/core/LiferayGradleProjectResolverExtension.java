@@ -59,9 +59,11 @@ public class LiferayGradleProjectResolverExtension extends AbstractProjectResolv
 	@Override
 	public void populateModuleDependencies(
 		@NotNull IdeaModule gradleModule, @NotNull DataNode<ModuleData> ideModule,
-		@NotNull final DataNode<ProjectData> ideProject) {
+		@NotNull DataNode<ProjectData> ideProject) {
 
 		ExternalProject externalProject = _getExternalProject(gradleModule, resolverCtx);
+
+		assert externalProject != null;
 
 		File moduleDir = externalProject.getProjectDir();
 
@@ -71,29 +73,31 @@ public class LiferayGradleProjectResolverExtension extends AbstractProjectResolv
 			projectData.getIdeProjectFileDirectoryPath());
 
 		if (resolverCtx.isResolveModulePerSourceSet()) {
-			final Map<String, Pair<DataNode<GradleSourceSetData>, ExternalSourceSet>> sourceSetMap =
-				ideProject.getUserData(GradleProjectResolver.RESOLVED_SOURCE_SETS);
 			final Map<String, String> artifactsMap = ideProject.getUserData(
 				GradleProjectResolver.CONFIGURATION_ARTIFACTS);
-			assert sourceSetMap != null;
+
 			assert artifactsMap != null;
-			assert externalProject != null;
+
+			final Map<String, Pair<DataNode<GradleSourceSetData>, ExternalSourceSet>> sourceSetMap =
+				ideProject.getUserData(GradleProjectResolver.RESOLVED_SOURCE_SETS);
+
+			assert sourceSetMap != null;
+
 			_processSourceSets(
 				resolverCtx, gradleModule, externalProject, ideModule,
 				new SourceSetsProcessor() {
 
 					@Override
 					public void process(
-						@NotNull IdeaModule gradleModule, @NotNull DataNode<? extends ModuleData> dataNode,
+						@NotNull IdeaModule ideaModule, @NotNull DataNode<? extends ModuleData> dataNode,
 						@NotNull ExternalSourceSet sourceSet) {
 
 						Collection<ExternalDependency> dependencies = sourceSet.getDependencies();
 
 						if (ideProjectFileDirectoryPath.equals(moduleDir.getAbsolutePath())) {
-							DomainObjectSet<? extends IdeaDependency> gradleDependencies =
-								gradleModule.getDependencies();
+							DomainObjectSet<? extends IdeaDependency> moduleDependencies = ideaModule.getDependencies();
 
-							for (IdeaDependency dependency : gradleDependencies) {
+							for (IdeaDependency dependency : moduleDependencies) {
 								if (dependency instanceof InternalIdeaSingleEntryLibraryDependency) {
 									InternalIdeaSingleEntryLibraryDependency localDependency =
 										(InternalIdeaSingleEntryLibraryDependency)dependency;
@@ -142,26 +146,26 @@ public class LiferayGradleProjectResolverExtension extends AbstractProjectResolv
 
 	@Nullable
 	private static ExternalProject _getExternalProject(
-		@NotNull IdeaModule gradleModule, @NotNull ProjectResolverContext resolverCtx) {
+		@NotNull IdeaModule ideaModule, @NotNull ProjectResolverContext resolverCtx) {
 
-		ExternalProject project = resolverCtx.getExtraProject(gradleModule, ExternalProject.class);
+		ExternalProject externalProject = resolverCtx.getExtraProject(ideaModule, ExternalProject.class);
 
-		if ((project == null) && resolverCtx.isResolveModulePerSourceSet()) {
+		if ((externalProject == null) && resolverCtx.isResolveModulePerSourceSet()) {
 			_LOG.error("External Project model is missing for module-per-sourceSet import mode.");
 		}
 
-		return project;
+		return externalProject;
 	}
 
 	private static void _processSourceSets(
-		@NotNull ProjectResolverContext resolverCtx, @NotNull IdeaModule gradleModule,
-		@NotNull ExternalProject externalProject, @NotNull DataNode<ModuleData> ideModule,
+		@NotNull ProjectResolverContext resolverCtx, @NotNull IdeaModule ideaModule,
+		@NotNull ExternalProject externalProject, @NotNull DataNode<ModuleData> moduleData,
 		@NotNull SourceSetsProcessor processor) {
 
 		Map<String, DataNode<GradleSourceSetData>> sourceSetsMap = new HashMap<>();
 
 		for (DataNode<GradleSourceSetData> dataNode :
-				ExternalSystemApiUtil.findAll(ideModule, GradleSourceSetData.KEY)) {
+				ExternalSystemApiUtil.findAll(moduleData, GradleSourceSetData.KEY)) {
 
 			GradleSourceSetData gradleSourceSetData = dataNode.getData();
 
@@ -174,20 +178,20 @@ public class LiferayGradleProjectResolverExtension extends AbstractProjectResolv
 			Map<? extends IExternalSystemSourceType, ? extends ExternalSourceDirectorySet> sources =
 				sourceSet.getSources();
 
-			if (sources.isEmpty())
-
+			if (sources.isEmpty()) {
 				continue;
+			}
 
-			final String moduleId = GradleProjectResolverUtil.getModuleId(resolverCtx, gradleModule, sourceSet);
+			final String moduleId = GradleProjectResolverUtil.getModuleId(resolverCtx, ideaModule, sourceSet);
 
 			final DataNode<? extends ModuleData> moduleDataNode =
-				sourceSetsMap.isEmpty() ? ideModule : sourceSetsMap.get(moduleId);
+				sourceSetsMap.isEmpty() ? moduleData : sourceSetsMap.get(moduleId);
 
-			if (moduleDataNode == null)
-
+			if (moduleDataNode == null) {
 				continue;
+			}
 
-			processor.process(gradleModule, moduleDataNode, sourceSet);
+			processor.process(ideaModule, moduleDataNode, sourceSet);
 		}
 	}
 
