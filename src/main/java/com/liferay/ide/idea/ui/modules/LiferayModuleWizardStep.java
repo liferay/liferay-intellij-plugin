@@ -89,15 +89,25 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 
 				String type = lastPathComponent.toString();
 
-				if (Objects.equals("theme-contributor", type) || Objects.equals("theme", type) ||
-					Objects.equals("layout-template", type)) {
-
+				if (Objects.equals("theme", type) || Objects.equals("layout-template", type)) {
 					_packageName.setEditable(false);
 					_packageName.setEnabled(false);
 					_className.setEditable(false);
 					_className.setEnabled(false);
 					_servcieName.setEnabled(false);
 					_servcieName.setEditable(false);
+					_contributorType.setEditable(false);
+					_contributorType.setEnabled(false);
+				}
+				else if (Objects.equals("theme-contributor", type)) {
+					_packageName.setEditable(false);
+					_packageName.setEnabled(false);
+					_className.setEditable(false);
+					_className.setEnabled(false);
+					_servcieName.setEnabled(false);
+					_servcieName.setEditable(false);
+					_contributorType.setEditable(true);
+					_contributorType.setEnabled(true);
 				}
 				else if (Objects.equals("service-builder", type)) {
 					_packageName.setEditable(true);
@@ -106,6 +116,8 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 					_className.setEditable(false);
 					_servcieName.setEnabled(false);
 					_servcieName.setEditable(false);
+					_contributorType.setEditable(false);
+					_contributorType.setEnabled(false);
 				}
 				else if (Objects.equals("service", type)) {
 					_packageName.setEditable(true);
@@ -114,6 +126,8 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 					_className.setEnabled(true);
 					_servcieName.setEnabled(true);
 					_servcieName.setEditable(true);
+					_contributorType.setEditable(false);
+					_contributorType.setEnabled(false);
 				}
 				else if (Objects.equals("service-wrapper", type)) {
 					_packageName.setEditable(true);
@@ -122,6 +136,8 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 					_className.setEnabled(true);
 					_servcieName.setEnabled(true);
 					_servcieName.setEditable(true);
+					_contributorType.setEditable(false);
+					_contributorType.setEnabled(false);
 				}
 				else {
 					_packageName.setEditable(true);
@@ -130,6 +146,8 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 					_className.setEnabled(true);
 					_servcieName.setEnabled(false);
 					_servcieName.setEditable(false);
+					_contributorType.setEditable(false);
+					_contributorType.setEnabled(false);
 				}
 			});
 
@@ -173,6 +191,14 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 		return _mainPanel;
 	}
 
+	public String getContributorType() {
+		if (_contributorType.isEditable()) {
+			return _contributorType.getText();
+		}
+
+		return null;
+	}
+
 	public String getPackageName() {
 		if (_packageName.isEditable()) {
 			return _packageName.getText();
@@ -205,6 +231,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 		_builder.setType(getSelectedType());
 		_builder.setClassName(getClassName());
 		_builder.setPackageName(getPackageName());
+		_builder.setContributorType(getContributorType());
 
 		if (getSelectedType().equals("service") || getSelectedType().equals("service-wrapper")) {
 			_builder.setServiceName(getServiceName());
@@ -341,6 +368,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 
 	private LiferayModuleBuilder _builder;
 	private JTextField _className;
+	private JTextField _contributorType;
 	private JPanel _mainPanel;
 	private JTextField _packageName;
 	private final Project _project;
