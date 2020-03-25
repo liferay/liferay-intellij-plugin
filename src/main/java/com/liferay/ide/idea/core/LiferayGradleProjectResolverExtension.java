@@ -22,6 +22,8 @@ import com.intellij.openapi.externalSystem.model.project.ProjectData;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.util.Pair;
 
+import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
+
 import java.io.File;
 
 import java.util.Collection;
@@ -72,6 +74,12 @@ public class LiferayGradleProjectResolverExtension extends AbstractProjectResolv
 		String ideProjectFileDirectoryPath = FilenameUtils.separatorsToSystem(
 			projectData.getIdeProjectFileDirectoryPath());
 
+		if (!LiferayWorkspaceSupport.isValidGradleWorkspaceLocation(ideProjectFileDirectoryPath)) {
+			super.populateModuleDependencies(gradleModule, ideModule, ideProject);
+
+			return;
+		}
+
 		if (resolverCtx.isResolveModulePerSourceSet()) {
 			final Map<String, String> artifactsMap = ideProject.getUserData(
 				GradleProjectResolver.CONFIGURATION_ARTIFACTS);
@@ -112,7 +120,9 @@ public class LiferayGradleProjectResolverExtension extends AbstractProjectResolv
 										GradleModuleVersion gradleModuleVersion =
 											localDependency.getGradleModuleVersion();
 
-											assert gradleModuleVersion != null;
+										if (gradleModuleVersion == null) {
+											continue;
+										}
 
 										libraryDependency.setName(gradleModuleVersion.getName());
 
