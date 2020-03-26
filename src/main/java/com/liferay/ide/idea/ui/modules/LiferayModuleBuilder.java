@@ -92,6 +92,10 @@ public class LiferayModuleBuilder extends ModuleBuilder implements LiferayWorksp
 		_className = className;
 	}
 
+	public void setContributorType(String contributorType) {
+		_contributorType = contributorType;
+	}
+
 	public void setPackageName(String packageName) {
 		_packageName = packageName;
 	}
@@ -159,6 +163,19 @@ public class LiferayModuleBuilder extends ModuleBuilder implements LiferayWorksp
 			sb.append(" ");
 		}
 
+		if (_type.equals("theme-contributor")) {
+			sb.append("-C ");
+
+			if (!CoreUtil.isNullOrEmpty(_contributorType)) {
+				sb.append(_contributorType);
+			}
+			else {
+				sb.append(moduleDir.getName());
+			}
+
+			sb.append(" ");
+		}
+
 		if ((_type.equals("service") || _type.equals("service-wrapper")) && !CoreUtil.isNullOrEmpty(_serviceName)) {
 			sb.append("-s ");
 			sb.append(_serviceName);
@@ -214,6 +231,7 @@ public class LiferayModuleBuilder extends ModuleBuilder implements LiferayWorksp
 	private static final String _LIFERAY_MODULES = "Liferay Modules";
 
 	private String _className;
+	private String _contributorType;
 	private String _packageName;
 	private String _serviceName;
 	private String _type;
