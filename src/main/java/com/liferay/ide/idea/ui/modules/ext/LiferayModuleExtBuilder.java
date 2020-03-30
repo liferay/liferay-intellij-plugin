@@ -136,10 +136,8 @@ public class LiferayModuleExtBuilder extends ModuleBuilder implements LiferayWor
 		sb.append("-m ");
 		sb.append(_originalModuleName);
 
-		if (getTargetPlatformVersion(project) == null) {
-			sb.append(" -M ");
-			sb.append(_originalModuleVersion);
-		}
+		sb.append(" -M ");
+		sb.append(_originalModuleVersion);
 
 		sb.append(" ");
 		sb.append("\"");
