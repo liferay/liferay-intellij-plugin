@@ -15,14 +15,14 @@
 package com.liferay.ide.idea.language;
 
 import com.intellij.codeInsight.completion.CompletionType;
-import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 
 import java.util.List;
 
 /**
  * @author Dominik Marks
  */
-public class LiferayXmlFileReferenceContributorTest extends LightCodeInsightFixtureTestCase {
+public class LiferayXmlFileReferenceContributorTest extends LightJavaCodeInsightFixtureTestCase {
 
 	public void testXmlAttributeFileReference() {
 		myFixture.configureByFiles("default.xml", "my_resources.xml");
