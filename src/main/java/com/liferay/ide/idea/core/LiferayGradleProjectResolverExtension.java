@@ -139,9 +139,9 @@ public class LiferayGradleProjectResolverExtension extends AbstractProjectResolv
 										libraryDependency.setScope(jarScope.getScope());
 
 										libraryDependency.setExported(localDependency.getExported());
-									}
 
-									dependencies.add(libraryDependency);
+										dependencies.add(libraryDependency);
+									}
 								}
 							}
 						}
