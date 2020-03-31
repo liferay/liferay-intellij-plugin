@@ -56,6 +56,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
@@ -68,6 +69,7 @@ import org.jetbrains.plugins.gradle.util.GradleConstants;
 
 /**
  * @author Charles Wu
+ * @author Simon Jiang
  */
 public class OverrideFilesComponent implements LiferayWorkspaceSupport {
 
@@ -219,7 +221,11 @@ public class OverrideFilesComponent implements LiferayWorkspaceSupport {
 		LibraryData libraryData = function.get();
 
 		if (libraryData != null) {
-			return ContainerUtil.getFirstItem(libraryData.getPaths(LibraryPathType.SOURCE));
+			Set<String> libraryDataPaths = libraryData.getPaths(LibraryPathType.SOURCE);
+
+			if (!libraryDataPaths.isEmpty()) {
+				return ContainerUtil.getFirstItem(libraryDataPaths);
+			}
 		}
 
 		throw new ConfigurationException(MessagesBundle.message("modules.ext.override.jar.undefined"), "Error");
