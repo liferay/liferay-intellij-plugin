@@ -98,21 +98,21 @@ public class LiferayXmlFileReferenceContributor extends PsiReferenceContributor 
 	private static Collection<PsiFileSystemItem> _getModuleResourceDirectories(@NotNull final PsiFile file) {
 		final VirtualFile virtualFile = file.getVirtualFile();
 
-		if (virtualFile == null)
-
+		if (virtualFile == null) {
 			return Collections.emptyList();
+		}
 
 		final PsiDirectory parent = file.getParent();
 
 		final Module module = ModuleUtilCore.findModuleForPsiElement((parent == null) ? file : parent);
 
-		if (module == null)
-
+		if (module == null) {
 			return Collections.emptyList();
+		}
 
 		PsiManager psiManager = PsiManager.getInstance(module.getProject());
 
-		Collection<PsiFileSystemItem> result = new ArrayList<>();
+		Collection<PsiFileSystemItem> moduleResourceDirectories = new ArrayList<>();
 
 		ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
 
@@ -120,11 +120,11 @@ public class LiferayXmlFileReferenceContributor extends PsiReferenceContributor 
 			PsiDirectory psiDirectory = psiManager.findDirectory(sourceRoot);
 
 			if (psiDirectory != null) {
-				result.add(psiDirectory);
+				moduleResourceDirectories.add(psiDirectory);
 			}
 		}
 
-		return result;
+		return moduleResourceDirectories;
 	}
 
 }
