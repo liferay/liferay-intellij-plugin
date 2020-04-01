@@ -50,6 +50,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
@@ -62,11 +63,12 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Terry Jia
+ * @author Simon Jiang
  */
 public class LiferayModuleWizardStep extends ModuleWizardStep implements LiferayWorkspaceSupport {
 
 	public LiferayModuleWizardStep(LiferayModuleBuilder builder, Project project) {
-		_loadSupportedVersionRanges();
+		SwingUtilities.invokeLater(this::_loadSupportedVersionRanges);
 
 		_builder = builder;
 		_project = project;
