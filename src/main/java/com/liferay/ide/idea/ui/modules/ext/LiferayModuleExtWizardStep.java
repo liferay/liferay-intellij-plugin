@@ -14,8 +14,15 @@
 
 package com.liferay.ide.idea.ui.modules.ext;
 
+import com.google.common.collect.Lists;
+
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId;
+import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListenerAdapter;
+import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskType;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.ColoredListCellRenderer;
@@ -27,7 +34,6 @@ import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import java.awt.event.ItemEvent;
 
-import java.util.List;
 import java.util.Objects;
 
 import javax.swing.ComboBoxEditor;
@@ -37,15 +43,19 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicComboBoxEditor;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.plugins.gradle.service.task.GradleTaskManager;
+import org.jetbrains.plugins.gradle.util.GradleConstants;
 
 import org.osgi.framework.Version;
 
 /**
  * @author Charles Wu
  * @author Terry Jia
+ * @author Simon Jiang
  */
 public class LiferayModuleExtWizardStep extends ModuleWizardStep implements LiferayWorkspaceSupport {
 
@@ -112,12 +122,12 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep implements Life
 				}
 			});
 
-		if ((_project != null) && (getTargetPlatformVersion(_project) != null)) {
-			_insertOriginalModuleNames();
+		Application application = ApplicationManager.getApplication();
 
-			_originalModuleNameComboBox.setMaximumRowCount(12);
-			_originalModuleVersionField.setEnabled(false);
-		}
+		application.executeOnPooledThread(this::_insertOriginalModuleNames);
+
+		_originalModuleNameComboBox.setMaximumRowCount(12);
+		_originalModuleVersionField.setEnabled(false);
 	}
 
 	@Override
@@ -184,15 +194,50 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep implements Life
 	}
 
 	private void _insertOriginalModuleNames() {
-		List<String> targetPlatformArtifacts = getTargetPlatformDependencies(_project);
+		GradleTaskManager gradleTaskManager = new GradleTaskManager();
 
-		targetPlatformArtifacts.forEach(
-			line -> {
-				String[] s = line.split(":");
+		final boolean[] dependencyStringStart = {false};
 
-				if (s[0].equals("com.liferay")) {
-					_originalModuleNameComboBox.addItem(line);
+		gradleTaskManager.executeTasks(
+			ExternalSystemTaskId.create(GradleConstants.SYSTEM_ID, ExternalSystemTaskType.EXECUTE_TASK, _project),
+			Lists.newArrayList("dependencyManagement"), _project.getBasePath(), null, null,
+			new ExternalSystemTaskNotificationListenerAdapter() {
+
+				@Override
+				public void onTaskOutput(@NotNull ExternalSystemTaskId id, @NotNull String text, boolean stdOut) {
+					String projectId = ExternalSystemTaskId.getProjectId(_project);
+
+					if (!projectId.equals(id.getIdeProjectId())) {
+						return;
+					}
+
+					if (text.contains("Task :dependencyManagement")) {
+						dependencyStringStart[0] = true;
+
+						return;
+					}
+
+					if (dependencyStringStart[0] == true) {
+						String dependencyStringRemoveT = text.replace("\t", "");
+
+						String dependencyString = dependencyStringRemoveT.replace("\n", "");
+
+						String[] dependencyValues = dependencyString.split(":");
+
+						if (dependencyValues[0].equals("com.liferay")) {
+							SwingUtilities.invokeLater(
+								new Runnable() {
+
+									@Override
+									public void run() {
+										_originalModuleNameComboBox.addItem(dependencyString);
+									}
+
+								});
+						}
+					}
 				}
+
 			});
 	}
 
