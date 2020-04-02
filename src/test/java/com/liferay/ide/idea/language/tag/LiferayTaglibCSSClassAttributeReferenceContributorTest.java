@@ -15,14 +15,14 @@
 package com.liferay.ide.idea.language.tag;
 
 import com.intellij.codeInsight.completion.CompletionType;
-import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 
 import java.util.List;
 
 /**
  * @author Dominik Marks
  */
-public class LiferayTaglibCSSClassAttributeReferenceContributorTest extends LightCodeInsightFixtureTestCase {
+public class LiferayTaglibCSSClassAttributeReferenceContributorTest extends LightJavaCodeInsightFixtureTestCase {
 
 	public void testCompletionCSS() {
 		myFixture.configureByFiles("view.jsp", "main.css", "liferay-aui.tld");

@@ -24,13 +24,14 @@ import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.LanguageLevelModuleExtension;
 import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.newvfs.impl.VfsRootAccess;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.PsiTestUtil;
 import com.intellij.testFramework.fixtures.DefaultLightProjectDescriptor;
-import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 import com.intellij.util.PathUtil;
 
 import java.io.File;
@@ -46,7 +47,7 @@ import org.jetbrains.plugins.gradle.util.GradleConstants;
 /**
  * @author Dominik Marks
  */
-public class LiferayJspDebuggerSourceFinderAdapterTest extends LightCodeInsightFixtureTestCase {
+public class LiferayJspDebuggerSourceFinderAdapterTest extends LightJavaCodeInsightFixtureTestCase {
 
 	public void testSourceFinderInLibrary() {
 		SourcesFinder<JavaeeFacet[]> sourcesFinder = new LiferayJspDebuggerSourceFinderAdapter();
@@ -130,7 +131,7 @@ public class LiferayJspDebuggerSourceFinderAdapterTest extends LightCodeInsightF
 
 			final String testDataPath = PathUtil.toSystemIndependentName(testDataDir.getAbsolutePath());
 
-			VfsRootAccess.allowRootAccess(testDataPath);
+			VfsRootAccess.allowRootAccess(Disposer.newDisposable(), testDataPath);
 
 			PsiTestUtil.addLibrary(
 				modifiableRootModel, "com.liferay:com.liferay.login.web", testDataPath, "com.liferay.login.web.jar");

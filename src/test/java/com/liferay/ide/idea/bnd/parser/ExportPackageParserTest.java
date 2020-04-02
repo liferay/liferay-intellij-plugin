@@ -22,6 +22,7 @@ import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.LanguageLevelModuleExtension;
 import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.newvfs.impl.VfsRootAccess;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.psi.PsiElement;
@@ -30,7 +31,7 @@ import com.intellij.psi.PsiPackage;
 import com.intellij.psi.PsiReference;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.DefaultLightProjectDescriptor;
-import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 import com.intellij.util.PathUtil;
 
 import java.io.File;
@@ -42,7 +43,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author Dominik Marks
  */
-public class ExportPackageParserTest extends LightCodeInsightFixtureTestCase {
+public class ExportPackageParserTest extends LightJavaCodeInsightFixtureTestCase {
 
 	public void testInvalidExportPackageHighlighting() {
 		myFixture.configureByFiles("invalidExportPackage/bnd.bnd", "com/liferay/test/Foo.java");
@@ -198,7 +199,7 @@ public class ExportPackageParserTest extends LightCodeInsightFixtureTestCase {
 
 			final String testDataPath = PathUtil.toSystemIndependentName(testDataDir.getAbsolutePath());
 
-			VfsRootAccess.allowRootAccess(testDataPath);
+			VfsRootAccess.allowRootAccess(Disposer.newDisposable(), testDataPath);
 		}
 
 	};

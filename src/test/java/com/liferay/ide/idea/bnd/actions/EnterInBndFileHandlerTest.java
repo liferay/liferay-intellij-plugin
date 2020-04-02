@@ -14,12 +14,12 @@
 
 package com.liferay.ide.idea.bnd.actions;
 
-import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 
 /**
  * @author Dominik Marks
  */
-public class EnterInBndFileHandlerTest extends LightPlatformCodeInsightFixtureTestCase {
+public class EnterInBndFileHandlerTest extends BasePlatformTestCase {
 
 	public void testEnterInBndFileHandler() {
 		myFixture.configureByFiles("bnd.bnd");

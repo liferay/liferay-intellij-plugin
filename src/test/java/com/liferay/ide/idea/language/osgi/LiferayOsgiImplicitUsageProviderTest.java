@@ -20,13 +20,14 @@ import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.LanguageLevelModuleExtension;
 import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.newvfs.impl.VfsRootAccess;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.testFramework.IdeaTestUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.PsiTestUtil;
 import com.intellij.testFramework.fixtures.DefaultLightProjectDescriptor;
-import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 import com.intellij.util.PathUtil;
 
 import java.io.File;
@@ -39,7 +40,7 @@ import org.junit.Ignore;
  * @author Dominik Marks
  */
 @Ignore
-public class LiferayOsgiImplicitUsageProviderTest extends LightCodeInsightFixtureTestCase {
+public class LiferayOsgiImplicitUsageProviderTest extends LightJavaCodeInsightFixtureTestCase {
 
 	public void testOsgiImplicitUsage() {
 		myFixture.configureByFile("MyComponent.java");
@@ -83,7 +84,7 @@ public class LiferayOsgiImplicitUsageProviderTest extends LightCodeInsightFixtur
 
 			final String testDataPath = PathUtil.toSystemIndependentName(testDataDir.getAbsolutePath());
 
-			VfsRootAccess.allowRootAccess(testDataPath);
+			VfsRootAccess.allowRootAccess(Disposer.newDisposable(), testDataPath);
 
 			PsiTestUtil.addLibrary(model, "OSGi", testDataPath, "osgi.jar");
 		}

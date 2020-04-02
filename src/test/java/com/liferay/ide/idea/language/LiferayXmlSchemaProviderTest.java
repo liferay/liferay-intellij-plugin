@@ -15,14 +15,14 @@
 package com.liferay.ide.idea.language;
 
 import com.intellij.codeInsight.completion.CompletionType;
-import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 
 import java.util.List;
 
 /**
  * @author Dominik Marks
  */
-public class LiferayXmlSchemaProviderTest extends LightCodeInsightFixtureTestCase {
+public class LiferayXmlSchemaProviderTest extends LightJavaCodeInsightFixtureTestCase {
 
 	public void testCompletion() {
 		myFixture.configureByFiles("portlet-model-hints.xml");

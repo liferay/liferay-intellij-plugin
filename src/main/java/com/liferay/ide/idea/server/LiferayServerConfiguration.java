@@ -26,7 +26,6 @@ import com.intellij.execution.configurations.LocatableConfigurationBase;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.configurations.RuntimeConfigurationException;
-import com.intellij.execution.configurations.SearchScopeProvider;
 import com.intellij.execution.configurations.SearchScopeProvidingRunProfile;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.util.JavaParametersUtil;
@@ -40,12 +39,14 @@ import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
+import com.intellij.psi.search.GlobalSearchScopes;
+import com.intellij.util.xmlb.SkipDefaultsSerializationFilter;
 import com.intellij.util.xmlb.XmlSerializer;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 
 import com.liferay.ide.idea.util.CoreUtil;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -58,6 +59,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Terry Jia
  * @author Simon Jiang
  */
+@SuppressWarnings("unchecked")
 public class LiferayServerConfiguration
 	extends LocatableConfigurationBase implements CommonJavaRunConfigurationParameters, SearchScopeProvidingRunProfile {
 
@@ -182,7 +184,7 @@ public class LiferayServerConfiguration
 	@Nullable
 	@Override
 	public GlobalSearchScope getSearchScope() {
-		return SearchScopeProvider.createSearchScope(getModules());
+		return GlobalSearchScopes.executionScope(Arrays.asList(getModules()));
 	}
 
 	@Nullable
@@ -305,7 +307,7 @@ public class LiferayServerConfiguration
 
 		javaRunConfigurationExtensionManager.writeExternal(this, element);
 
-		XmlSerializer.serializeInto(_liferayServerConfig, element, new SkipDefaultValuesSerializationFilters());
+		XmlSerializer.serializeInto(_liferayServerConfig, element, new SkipDefaultsSerializationFilter());
 		EnvironmentVariablesComponent.writeExternal(element, getEnvs());
 
 		if (_javaRunConfigurationModule.getModule() != null) {

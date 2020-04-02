@@ -21,12 +21,13 @@ import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.LanguageLevelModuleExtension;
 import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.vfs.newvfs.impl.VfsRootAccess;
 import com.intellij.pom.java.LanguageLevel;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.PsiTestUtil;
 import com.intellij.testFramework.fixtures.DefaultLightProjectDescriptor;
-import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 import com.intellij.util.PathUtil;
 
 import java.io.File;
@@ -38,7 +39,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author Dominik Marks
  */
-public class ComponentPropertiesCompletionContributorTest extends LightCodeInsightFixtureTestCase {
+public class ComponentPropertiesCompletionContributorTest extends LightJavaCodeInsightFixtureTestCase {
 
 	public void testComponentPropertiesCompletion() {
 		myFixture.configureByFile("MyComponent.java");
@@ -103,7 +104,7 @@ public class ComponentPropertiesCompletionContributorTest extends LightCodeInsig
 
 			final String testDataPath = PathUtil.toSystemIndependentName(testDataDir.getAbsolutePath());
 
-			VfsRootAccess.allowRootAccess(testDataPath);
+			VfsRootAccess.allowRootAccess(Disposer.newDisposable(), testDataPath);
 
 			PsiTestUtil.addLibrary(modifiableRootModel, "OSGi", testDataPath, "osgi.jar");
 		}

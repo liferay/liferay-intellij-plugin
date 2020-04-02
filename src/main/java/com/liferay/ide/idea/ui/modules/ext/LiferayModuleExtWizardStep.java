@@ -61,6 +61,9 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep implements Life
 
 	public LiferayModuleExtWizardStep(WizardContext wizardContext, LiferayModuleExtBuilder liferayModuleExtBuilder) {
 		_project = wizardContext.getProject();
+
+		_workspacePluginVersion = GradleUtil.getWorkspacePluginVersion(_project);
+
 		_liferayModuleExtBuilder = liferayModuleExtBuilder;
 
 		_moduleNameHintLabel.setFont(UIUtil.getLabelFont(UIUtil.FontSize.SMALL));
@@ -103,9 +106,7 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep implements Life
 
 					String dependency = (String)item;
 
-					if (CoreUtil.compareVersions(
-							new Version(GradleUtil.getWorkspacePluginVersion(_project)), new Version("2.2.4")) < 0) {
-
+					if (CoreUtil.compareVersions(new Version(_workspacePluginVersion), new Version("2.2.4")) < 0) {
 						String[] s = dependency.split(" ");
 
 						if (s.length == 2) {
@@ -145,6 +146,11 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep implements Life
 	public boolean validate() throws ConfigurationException {
 		String validationTitle = "Validation Error";
 
+		if (getTargetPlatformVersion(_project) == null) {
+			throw new ConfigurationException(
+				"Please set target platform version for liferay workspace project", validationTitle);
+		}
+
 		if (_originalModuleNameComboBox.getItemCount() == 0) {
 			throw new ConfigurationException("No valid original modules can be selected", validationTitle);
 		}
@@ -176,9 +182,7 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep implements Life
 
 		String s = (String)item;
 
-		if (CoreUtil.compareVersions(
-				new Version(GradleUtil.getWorkspacePluginVersion(_project)), new Version("2.2.4")) < 0) {
-
+		if (CoreUtil.compareVersions(new Version(_workspacePluginVersion), new Version("2.2.4")) < 0) {
 			int i1 = s.indexOf(":");
 			int i2 = s.indexOf(" ");
 
@@ -194,6 +198,10 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep implements Life
 	}
 
 	private void _insertOriginalModuleNames() {
+		if (getTargetPlatformVersion(_project) == null) {
+			return;
+		}
+
 		GradleTaskManager gradleTaskManager = new GradleTaskManager();
 
 		final boolean[] dependencyStringStart = {false};
@@ -247,5 +255,6 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep implements Life
 	private JComboBox<String> _originalModuleNameComboBox;
 	private JTextField _originalModuleVersionField;
 	private final Project _project;
+	private String _workspacePluginVersion;
 
 }

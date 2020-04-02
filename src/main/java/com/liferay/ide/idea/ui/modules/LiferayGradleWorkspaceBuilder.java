@@ -15,12 +15,9 @@
 package com.liferay.ide.idea.ui.modules;
 
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.externalSystem.ExternalSystemModulePropertyManager;
 import com.intellij.openapi.externalSystem.importing.ImportSpecBuilder;
 import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode;
 import com.intellij.openapi.externalSystem.service.project.manage.ExternalProjectsManager;
-import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemSettings;
-import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.ConfigurationException;
@@ -34,6 +31,7 @@ import javax.swing.Icon;
 
 import org.jetbrains.plugins.gradle.settings.DistributionType;
 import org.jetbrains.plugins.gradle.settings.GradleProjectSettings;
+import org.jetbrains.plugins.gradle.settings.GradleSettings;
 import org.jetbrains.plugins.gradle.util.GradleConstants;
 
 /**
@@ -62,10 +60,6 @@ public class LiferayGradleWorkspaceBuilder extends LiferayWorkspaceBuilder {
 
 		Project project = module.getProject();
 
-		ExternalSystemModulePropertyManager propertyManager = ExternalSystemModulePropertyManager.getInstance(module);
-
-		propertyManager.setExternalId(GradleConstants.SYSTEM_ID);
-
 		Runnable runnable = () -> {
 			GradleProjectSettings gradleProjectSettings = new GradleProjectSettings();
 
@@ -79,18 +73,15 @@ public class LiferayGradleWorkspaceBuilder extends LiferayWorkspaceBuilder {
 			gradleProjectSettings.setupNewProjectDefault();
 			gradleProjectSettings.setDirectDelegatedBuild(true);
 
-			AbstractExternalSystemSettings externalSystemSettings = ExternalSystemApiUtil.getSettings(
-				project, GradleConstants.SYSTEM_ID);
+			GradleSettings gradleSettings = GradleSettings.getInstance(project);
 
-			//noinspection unchecked
-			externalSystemSettings.linkProject(gradleProjectSettings);
+			gradleSettings.linkProject(gradleProjectSettings);
 
 			ImportSpecBuilder importSpecBuilder = new ImportSpecBuilder(project, GradleConstants.SYSTEM_ID);
 
 			importSpecBuilder.forceWhenUptodate(true);
 			importSpecBuilder.whenAutoImportEnabled();
 			importSpecBuilder.use(ProgressExecutionMode.IN_BACKGROUND_ASYNC);
-			importSpecBuilder.useDefaultCallback();
 
 			ExternalSystemUtil.refreshProject(project.getBasePath(), importSpecBuilder.build());
 		};

@@ -20,14 +20,14 @@ import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
-import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 
 import java.util.List;
 
 /**
  * @author Dominik Marks
  */
-public class FileReferenceParserTest extends LightPlatformCodeInsightFixtureTestCase {
+public class FileReferenceParserTest extends BasePlatformTestCase {
 
 	public void testFileReferenceContributor() {
 		myFixture.configureByFiles("fileReferenceContributor/bnd.bnd", "configs/main.js");
