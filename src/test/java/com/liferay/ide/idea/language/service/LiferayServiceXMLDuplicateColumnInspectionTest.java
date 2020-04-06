@@ -15,7 +15,7 @@
 package com.liferay.ide.idea.language.service;
 
 import com.intellij.codeInsight.intention.IntentionAction;
-import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 
 import java.util.List;
 import java.util.Objects;
@@ -23,7 +23,7 @@ import java.util.Objects;
 /**
  * @author Dominik Marks
  */
-public class LiferayServiceXMLDuplicateColumnInspectionTest extends LightCodeInsightFixtureTestCase {
+public class LiferayServiceXMLDuplicateColumnInspectionTest extends LightJavaCodeInsightFixtureTestCase {
 
 	public void testDuplicateColumnInspection() {
 		myFixture.configureByFiles("service.xml");

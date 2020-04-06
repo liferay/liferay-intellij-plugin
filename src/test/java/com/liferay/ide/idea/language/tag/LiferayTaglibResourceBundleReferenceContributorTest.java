@@ -18,14 +18,14 @@ import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReference;
-import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 
 import java.util.List;
 
 /**
  * @author Dominik Marks
  */
-public class LiferayTaglibResourceBundleReferenceContributorTest extends LightCodeInsightFixtureTestCase {
+public class LiferayTaglibResourceBundleReferenceContributorTest extends LightJavaCodeInsightFixtureTestCase {
 
 	public void testCompletion() {
 		myFixture.configureByFiles("view.jsp", "liferay-ui.tld", "Language.properties", "foo.properties");

@@ -28,7 +28,7 @@ import com.intellij.pom.java.LanguageLevel;
 import com.intellij.testFramework.IdeaTestUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.DefaultLightProjectDescriptor;
-import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 
 import java.util.Collection;
 import java.util.List;
@@ -42,7 +42,7 @@ import org.jetbrains.annotations.NotNull;
  * @author Dominik Marks
  * @author Gregory Amerson
  */
-public class LiferayServiceJavaImplLineMarkerProviderTest extends LightCodeInsightFixtureTestCase {
+public class LiferayServiceJavaImplLineMarkerProviderTest extends LightJavaCodeInsightFixtureTestCase {
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	public void testExceptionNameInspection() {

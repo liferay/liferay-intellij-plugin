@@ -25,7 +25,7 @@ import com.intellij.pom.java.LanguageLevel;
 import com.intellij.testFramework.IdeaTestUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.DefaultLightProjectDescriptor;
-import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author Dominik Marks
  */
-public class LiferayTaglibModelContextJavaBeanReferenceProviderTest extends LightCodeInsightFixtureTestCase {
+public class LiferayTaglibModelContextJavaBeanReferenceProviderTest extends LightJavaCodeInsightFixtureTestCase {
 
 	public void testJavaBeanReferenceLookupByString() {
 		myFixture.configureByFiles("view.jsp", "liferay-aui.tld", "com/liferay/ide/model/MyModel.java");

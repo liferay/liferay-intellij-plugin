@@ -15,14 +15,14 @@
 package com.liferay.ide.idea.bnd.parser;
 
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
-import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 
 import java.util.List;
 
 /**
  * @author Dominik Marks
  */
-public class BundleVersionParserTest extends LightPlatformCodeInsightFixtureTestCase {
+public class BundleVersionParserTest extends BasePlatformTestCase {
 
 	public void testInvalidBundleVersionHighlighting() {
 		myFixture.configureByText("bnd.bnd", "Bundle-Version: foo.bar\n");

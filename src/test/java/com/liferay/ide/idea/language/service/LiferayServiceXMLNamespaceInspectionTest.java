@@ -14,12 +14,12 @@
 
 package com.liferay.ide.idea.language.service;
 
-import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 
 /**
  * @author Dominik Marks
  */
-public class LiferayServiceXMLNamespaceInspectionTest extends LightCodeInsightFixtureTestCase {
+public class LiferayServiceXMLNamespaceInspectionTest extends LightJavaCodeInsightFixtureTestCase {
 
 	public void testInvalidNamespaceInspection() {
 		myFixture.configureByFiles("service_invalid.xml");

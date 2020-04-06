@@ -246,7 +246,7 @@ public class OverrideFilesComponent implements LiferayWorkspaceSupport {
 					if (selected) {
 						//noinspection deprecation
 
-						setForeground(UIUtil.getListSelectionForeground());
+						setForeground(UIUtil.getListSelectionForeground(false));
 					}
 					else if (value instanceof EntryDescription) {
 						EntryDescription entryDescription = (EntryDescription)value;

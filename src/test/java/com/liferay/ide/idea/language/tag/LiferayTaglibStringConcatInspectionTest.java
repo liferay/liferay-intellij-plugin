@@ -25,7 +25,7 @@ import com.intellij.pom.java.LanguageLevel;
 import com.intellij.testFramework.IdeaTestUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.DefaultLightProjectDescriptor;
-import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 
 import java.util.List;
 import java.util.Objects;
@@ -35,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author Dominik Marks
  */
-public class LiferayTaglibStringConcatInspectionTest extends LightCodeInsightFixtureTestCase {
+public class LiferayTaglibStringConcatInspectionTest extends LightJavaCodeInsightFixtureTestCase {
 
 	public void testStringConcatInspection() {
 		myFixture.configureByFiles("view.jsp", "liferay-aui.tld");

@@ -368,6 +368,7 @@ public class LiferayProjectTypeStep
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public JTextField getModuleNameField() {
 		return null;
 	}

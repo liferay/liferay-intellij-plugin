@@ -19,13 +19,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleManager;
-import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import com.intellij.util.containers.ContainerUtil;
 
 /**
  * @author Dominik Marks
  */
-public class BndFormattingTest extends LightPlatformCodeInsightFixtureTestCase {
+public class BndFormattingTest extends BasePlatformTestCase {
 
 	public void testFormatter() {
 		myFixture.configureByFiles("bnd.bnd");

@@ -18,6 +18,8 @@ import aQute.bnd.version.Version;
 import aQute.bnd.version.VersionRange;
 
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -35,6 +37,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -68,7 +71,9 @@ import org.jetbrains.annotations.Nullable;
 public class LiferayModuleWizardStep extends ModuleWizardStep implements LiferayWorkspaceSupport {
 
 	public LiferayModuleWizardStep(LiferayModuleBuilder builder, Project project) {
-		SwingUtilities.invokeLater(this::_loadSupportedVersionRanges);
+		Application application = ApplicationManager.getApplication();
+
+		application.executeOnPooledThread(this::_loadSupportedVersionRanges);
 
 		_builder = builder;
 		_project = project;
@@ -161,24 +166,27 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 
 		String liferayVersion = getLiferayVersion(_project);
 
-		for (String type : BladeCLI.getProjectTemplates()) {
-			if (Objects.equals("fragment", type) || Objects.equals("modules-ext", type) ||
-				Objects.equals("spring-mvc-portlet", type) ||
-				(Objects.equals("7.0", liferayVersion) && Objects.equals("social-bookmark", type))) {
+		SwingUtilities.invokeLater(
+			() -> {
+				for (String type : BladeCLI.getProjectTemplates()) {
+					if (Objects.equals("fragment", type) || Objects.equals("modules-ext", type) ||
+						Objects.equals("spring-mvc-portlet", type) ||
+						(Objects.equals("7.0", liferayVersion) && Objects.equals("social-bookmark", type))) {
 
-				continue;
-			}
+						continue;
+					}
 
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(type, true);
+					DefaultMutableTreeNode node = new DefaultMutableTreeNode(type, true);
 
-			root.add(node);
-		}
+					root.add(node);
+				}
 
-		TreeModel model = new DefaultTreeModel(root);
+				TreeModel model = new DefaultTreeModel(root);
 
-		_typesTree.setModel(model);
+				_typesTree.setModel(model);
 
-		_typesTree.setSelectionRow(0);
+				_typesTree.setSelectionRow(0);
+			});
 	}
 
 	public String getClassName() {
@@ -328,7 +336,8 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 
 									if (tempEntryName.equals("META-INF/MANIFEST.MF")) {
 										try (InputStream manifestInput = tempZipFile.getInputStream(tempEntry)) {
-											List<String> lines = IOUtils.readLines(manifestInput);
+											List<String> lines = IOUtils.readLines(
+												manifestInput, Charset.defaultCharset());
 
 											for (String line : lines) {
 												String liferayVersionString = "Liferay-Versions:";

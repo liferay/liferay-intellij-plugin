@@ -161,7 +161,7 @@ public class LiferayJspDebuggerSourceFinderAdapter implements SourcesFinder<Java
 
 		Optional<FileNameMatcher> fileNameMatcher = fileNameMatchers.stream(
 		).filter(
-			matcher -> matcher.accept(relPath)
+			matcher -> matcher.acceptsCharSequence(relPath)
 		).findFirst();
 
 		return fileNameMatcher.isPresent();

@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author Dominik Marks
  */
+@SuppressWarnings("unchecked")
 public class LiferayTaglibInspectionToolProvider implements InspectionToolProvider {
 
 	@NotNull

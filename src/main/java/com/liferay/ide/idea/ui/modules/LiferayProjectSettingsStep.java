@@ -165,6 +165,7 @@ public class LiferayProjectSettingsStep extends ModuleWizardStep implements Sett
 	}
 
 	@NotNull
+	@SuppressWarnings("deprecation")
 	public JTextField getModuleNameField() {
 		return _getNameComponent();
 	}

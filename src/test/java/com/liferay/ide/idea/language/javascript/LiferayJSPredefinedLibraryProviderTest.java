@@ -17,7 +17,7 @@ package com.liferay.ide.idea.language.javascript;
 import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.openapi.externalSystem.model.project.LibraryData;
 import com.intellij.openapi.externalSystem.model.project.LibraryPathType;
-import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 import com.intellij.util.PathUtil;
 
 import java.io.File;
@@ -32,7 +32,7 @@ import org.jetbrains.plugins.gradle.util.GradleConstants;
 /**
  * @author Dominik Marks
  */
-public class LiferayJSPredefinedLibraryProviderTest extends LightCodeInsightFixtureTestCase {
+public class LiferayJSPredefinedLibraryProviderTest extends LightJavaCodeInsightFixtureTestCase {
 
 	public void setUp() throws Exception {
 		File testFile = new File(_TEST_DATA_PATH);

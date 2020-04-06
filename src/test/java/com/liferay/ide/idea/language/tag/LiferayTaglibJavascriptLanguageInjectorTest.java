@@ -15,14 +15,14 @@
 package com.liferay.ide.idea.language.tag;
 
 import com.intellij.codeInsight.completion.CompletionType;
-import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 
 import java.util.List;
 
 /**
  * @author Dominik Marks
  */
-public class LiferayTaglibJavascriptLanguageInjectorTest extends LightCodeInsightFixtureTestCase {
+public class LiferayTaglibJavascriptLanguageInjectorTest extends LightJavaCodeInsightFixtureTestCase {
 
 	public void testAuiValidatorCustomBody() {
 		myFixture.configureByFiles("aui-validator-custom.jsp", "liferay-aui.tld");

@@ -14,12 +14,12 @@
 
 package com.liferay.ide.idea.language.service;
 
-import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 
 /**
  * @author Dominik Marks
  */
-public class LiferayServiceXMLEntityUuidInspectionTest extends LightCodeInsightFixtureTestCase {
+public class LiferayServiceXMLEntityUuidInspectionTest extends LightJavaCodeInsightFixtureTestCase {
 
 	public void testInvalidUuidInspection() {
 		myFixture.configureByFiles("service_invalid.xml");

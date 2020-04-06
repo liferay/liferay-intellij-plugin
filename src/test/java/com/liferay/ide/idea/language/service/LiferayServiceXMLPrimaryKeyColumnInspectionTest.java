@@ -14,12 +14,12 @@
 
 package com.liferay.ide.idea.language.service;
 
-import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 
 /**
  * @author Dominik Marks
  */
-public class LiferayServiceXMLPrimaryKeyColumnInspectionTest extends LightCodeInsightFixtureTestCase {
+public class LiferayServiceXMLPrimaryKeyColumnInspectionTest extends LightJavaCodeInsightFixtureTestCase {
 
 	public void testInvalidPrimaryKeyInspection() {
 		myFixture.configureByFiles("service_invalid.xml");
