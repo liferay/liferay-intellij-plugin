@@ -14,7 +14,7 @@
         </constraints>
         <properties>
           <labelFor value="870a1"/>
-          <text resource-bundle="messages/ProjectBundle" key="project.new.wizard.module.name.title"/>
+          <text value="Module name:"/>
         </properties>
       </component>
       <component id="870a1" class="javax.swing.JTextField" binding="_moduleName">
@@ -32,7 +32,7 @@
           <gridbag weightx="0.0" weighty="1.0"/>
         </constraints>
         <properties>
-          <text resource-bundle="messages/ProjectBundle" key="project.new.wizard.module.root.title"/>
+          <text value="Content root:"/>
         </properties>
       </component>
       <component id="50436" class="javax.swing.JLabel">
@@ -41,7 +41,7 @@
           <gridbag weightx="0.0" weighty="1.0"/>
         </constraints>
         <properties>
-          <text resource-bundle="messages/ProjectBundle" key="project.new.wizard.module.file.title"/>
+          <text value="Module file location:"/>
         </properties>
       </component>
       <component id="c86e3" class="javax.swing.JTextField" binding="_moduleContentRoot">
