@@ -148,18 +148,7 @@ public class BndPsiUtil {
 			packageName = packageName.substring(0, size);
 		}
 
-		Project project = psiElement.getProject();
-
-		Module module = ModuleUtilCore.findModuleForPsiElement(psiElement);
-
-		GlobalSearchScope scope;
-
-		if (module == null) {
-			scope = ProjectScope.getAllScope(project);
-		}
-		else {
-			scope = module.getModuleWithDependenciesAndLibrariesScope(false);
-		}
+		GlobalSearchScope scope = ProjectScope.getAllScope(psiElement.getProject());
 
 		PackageReferenceSet packageReferenceSet = new PackageReferenceSet(packageName, psiElement, offset, scope) {
 
@@ -197,16 +186,7 @@ public class BndPsiUtil {
 	public static PsiDirectory[] resolvePackage(@NotNull PsiElement psiElement, @NotNull String packageName) {
 		Project project = psiElement.getProject();
 
-		Module module = ModuleUtilCore.findModuleForPsiElement(psiElement);
-
-		GlobalSearchScope scope;
-
-		if (module == null) {
-			scope = ProjectScope.getAllScope(project);
-		}
-		else {
-			scope = module.getModuleWithDependenciesAndLibrariesScope(false);
-		}
+		GlobalSearchScope scope = ProjectScope.getAllScope(project);
 
 		JavaPsiFacade javaPsiFacade = JavaPsiFacade.getInstance(project);
 

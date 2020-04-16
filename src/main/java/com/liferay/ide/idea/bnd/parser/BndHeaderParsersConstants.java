@@ -35,12 +35,11 @@ public class BndHeaderParsersConstants {
 		LiferayBndConstants.LIFERAY_RELENG_MODULE_GROUP_DESCRIPTION,
 		LiferayBndConstants.LIFERAY_RELENG_MODULE_GROUP_TITLE, LiferayBndConstants.LIFERAY_REQUIRE_SCHEMA_VERSION,
 		LiferayBndConstants.LIFERAY_SERVICE, LiferayBndConstants.DYNAMIC_IMPORT_PACKAGE,
-		LiferayBndConstants.LIFERAY_MODULES_COMPAT_ADAPTERS
+		LiferayBndConstants.LIFERAY_MODULES_COMPAT_ADAPTERS, LiferayBndConstants.WEB_CONTEXT_PATH
 	};
 
 	public static final String[] FILE_REFERENCE_PROPERTIES = {
-		LiferayBndConstants.LIFERAY_JS_CONFIG, LiferayBndConstants.LIFERAY_CONFIGURATION_PATH,
-		LiferayBndConstants.WEB_CONTEXT_PATH
+		LiferayBndConstants.LIFERAY_JS_CONFIG, LiferayBndConstants.LIFERAY_CONFIGURATION_PATH
 	};
 
 }
