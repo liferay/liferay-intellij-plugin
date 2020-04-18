@@ -121,7 +121,7 @@ public class GradleUtil {
 		if (projectRoot != null) {
 			GradleProjectSettings gradleProjectSettings = gradleSettings.getLinkedProjectSettings(projectRoot);
 
-			if ((gradleProjectSettings != null) && !gradleProjectSettings.isUseAutoImport()) {
+			if (gradleProjectSettings != null) {
 				ExternalSystemUtil.refreshProjects(new ImportSpecBuilder(project, GradleConstants.SYSTEM_ID));
 			}
 		}
