@@ -138,66 +138,71 @@ public class LiferayPostStartupActivity implements DumbAware, LiferayWorkspaceSu
 	private void _addWebRoot(Module module) {
 		ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
 
-		VirtualFile[] sourceRoots = moduleRootManager.getSourceRoots();
-
-		if (sourceRoots.length > 0) {
-			for (VirtualFile sourceRoot : sourceRoots) {
+		Stream.of(
+			moduleRootManager.getSourceRoots()
+		).filter(
+			sourceRoot -> {
 				String sourcePath = sourceRoot.getPath();
 
-				if (sourcePath.contains("src/main/resources")) {
-					String resourcesPath = sourcePath.concat("/META-INF/resources");
+				return sourcePath.contains("src/main/resources");
+			}
+		).map(
+			sourceRoot -> {
+				String sourcePath = sourceRoot.getPath();
 
-					LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
+				String resourcesPath = sourcePath.concat("/META-INF/resources");
 
-					VirtualFile resources = localFileSystem.findFileByPath(resourcesPath);
+				LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
 
-					if (FileUtil.exist(resources)) {
-						boolean hasWebFacet = false;
+				return localFileSystem.findFileByPath(resourcesPath);
+			}
+		).filter(
+			resourcesFolder -> FileUtil.exist(resourcesFolder)
+		).forEach(
+			resourcesFolder -> {
+				boolean hasWebFacet = false;
 
-						FacetManager facetManager = FacetManager.getInstance(module);
+				FacetManager facetManager = FacetManager.getInstance(module);
 
-						Facet<?>[] facets = facetManager.getAllFacets();
+				Facet<?>[] facets = facetManager.getAllFacets();
 
-						for (Facet<?> facet : facets) {
-							WebFacetType webFacetType = WebFacetType.getInstance();
+				for (Facet<?> facet : facets) {
+					WebFacetType webFacetType = WebFacetType.getInstance();
 
-							FacetType<?, ?> facetType = facet.getType();
+					FacetType<?, ?> facetType = facet.getType();
 
-							String facetTypePresentableName = facetType.getPresentableName();
+					String facetTypePresentableName = facetType.getPresentableName();
 
-							if (facetTypePresentableName.equals(webFacetType.getPresentableName())) {
-								hasWebFacet = true;
+					if (facetTypePresentableName.equals(webFacetType.getPresentableName())) {
+						hasWebFacet = true;
 
-								break;
-							}
-						}
-
-						if (!hasWebFacet) {
-							ProjectFacetManager projectFacetManager = ProjectFacetManager.getInstance(
-								module.getProject());
-
-							WebFacetConfiguration webFacetConfiguration =
-								projectFacetManager.createDefaultConfiguration(WebFacetType.getInstance());
-
-							ModifiableFacetModel modifiableFacetModel = facetManager.createModifiableModel();
-
-							WebFacetType webFacetType = WebFacetType.getInstance();
-
-							WebFacet webFacet = facetManager.createFacet(
-								webFacetType, webFacetType.getPresentableName(), webFacetConfiguration, null);
-
-							webFacet.addWebRoot(resources, "/");
-
-							modifiableFacetModel.addFacet(webFacet);
-
-							Application application = ApplicationManager.getApplication();
-
-							application.invokeLater(() -> application.runWriteAction(modifiableFacetModel::commit));
-						}
+						break;
 					}
 				}
+
+				if (!hasWebFacet) {
+					ProjectFacetManager projectFacetManager = ProjectFacetManager.getInstance(module.getProject());
+
+					WebFacetConfiguration webFacetConfiguration = projectFacetManager.createDefaultConfiguration(
+						WebFacetType.getInstance());
+
+					ModifiableFacetModel modifiableFacetModel = facetManager.createModifiableModel();
+
+					WebFacetType webFacetType = WebFacetType.getInstance();
+
+					WebFacet webFacet = facetManager.createFacet(
+						webFacetType, webFacetType.getPresentableName(), webFacetConfiguration, null);
+
+					webFacet.addWebRoot(resourcesFolder, "/");
+
+					modifiableFacetModel.addFacet(webFacet);
+
+					Application application = ApplicationManager.getApplication();
+
+					application.invokeLater(() -> application.runWriteAction(modifiableFacetModel::commit));
+				}
 			}
-		}
+		);
 	}
 
 }
