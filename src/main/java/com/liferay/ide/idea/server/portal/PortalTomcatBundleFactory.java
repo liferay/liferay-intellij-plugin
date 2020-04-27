@@ -44,8 +44,8 @@ public class PortalTomcatBundleFactory extends AbstractPortalBundleFactory {
 		Path libPath = FileUtil.pathAppend(path, "lib");
 		Path webappPath = FileUtil.pathAppend(path, "webapps");
 
-		if (FileUtil.exist(binPath) && FileUtil.exist(confPath) && FileUtil.exist(libPath) &&
-			FileUtil.exist(webappPath)) {
+		if (FileUtil.exists(binPath) && FileUtil.exists(confPath) && FileUtil.exists(libPath) &&
+			FileUtil.exists(webappPath)) {
 
 			return true;
 		}

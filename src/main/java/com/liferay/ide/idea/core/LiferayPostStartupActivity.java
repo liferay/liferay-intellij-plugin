@@ -157,7 +157,7 @@ public class LiferayPostStartupActivity implements DumbAware, LiferayWorkspaceSu
 				return localFileSystem.findFileByPath(resourcesPath);
 			}
 		).filter(
-			resourcesFolder -> FileUtil.exist(resourcesFolder)
+			resourcesFolder -> FileUtil.exists(resourcesFolder)
 		).forEach(
 			resourcesFolder -> {
 				boolean hasWebFacet = false;

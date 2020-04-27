@@ -51,7 +51,7 @@ public class PortalWildFlyBundle extends AbstractPortalBundle {
 	public Path[] getRuntimeClasspath() {
 		List<Path> paths = new ArrayList<>();
 
-		if (FileUtil.exist(bundlePath)) {
+		if (FileUtil.exists(bundlePath)) {
 			paths.add(FileUtil.pathAppend(bundlePath, "jboss-modules.jar"));
 
 			File[] libs = _getJarsFromModules(bundlePath.toString(), "org.jboss.logmanager");

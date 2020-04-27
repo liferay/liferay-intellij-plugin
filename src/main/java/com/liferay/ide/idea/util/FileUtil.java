@@ -63,7 +63,7 @@ public class FileUtil {
 		copyFile(src, new File(dir, newName));
 	}
 
-	public static boolean exist(File file) {
+	public static boolean exists(File file) {
 		if ((file != null) && file.exists()) {
 			return true;
 		}
@@ -71,15 +71,15 @@ public class FileUtil {
 		return false;
 	}
 
-	public static boolean exist(Path path) {
-		if ((path != null) && exist(path.toFile())) {
+	public static boolean exists(Path path) {
+		if ((path != null) && exists(path.toFile())) {
 			return true;
 		}
 
 		return false;
 	}
 
-	public static boolean exist(VirtualFile file) {
+	public static boolean exists(VirtualFile file) {
 		if ((file != null) && file.exists()) {
 			return true;
 		}
