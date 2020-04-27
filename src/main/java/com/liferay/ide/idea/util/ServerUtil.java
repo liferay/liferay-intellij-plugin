@@ -194,7 +194,7 @@ public class ServerUtil {
 
 		File verifyFile = verifyLocation.toFile();
 
-		if (FileUtil.exist(verifyFile) && verifyFile.isDirectory()) {
+		if (FileUtil.exists(verifyFile) && verifyFile.isDirectory()) {
 			return true;
 		}
 

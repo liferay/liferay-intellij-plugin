@@ -56,10 +56,10 @@ public class LayeredModulePathFactory {
 	public static void loadOverlays(File layeringRoot, List<File> path) {
 		File overlays = new File(layeringRoot, _OVERLAYS);
 
-		if (FileUtil.exist(overlays)) {
+		if (FileUtil.exists(overlays)) {
 			File refs = new File(overlays, _OVERLAYS);
 
-			if (FileUtil.exist(refs)) {
+			if (FileUtil.exists(refs)) {
 				try {
 					for (String overlay : readRefs(refs)) {
 						File root = new File(overlays, overlay);
@@ -249,7 +249,7 @@ public class LayeredModulePathFactory {
 
 			File layeredPath = new File(relativeLayPath.toUri());
 
-			if (FileUtil.exist(layeredPath)) {
+			if (FileUtil.exists(layeredPath)) {
 				return layeredPath.listFiles(filter);
 			}
 		}

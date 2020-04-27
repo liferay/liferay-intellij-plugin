@@ -14,7 +14,7 @@
 
 package com.liferay.ide.idea.language.jsp;
 
-import com.intellij.debugger.DebuggerBundle;
+import com.intellij.debugger.JavaDebuggerBundle;
 import com.intellij.debugger.NoDataException;
 import com.intellij.debugger.SourcePosition;
 import com.intellij.debugger.engine.DebugProcess;
@@ -115,7 +115,7 @@ public class LiferayJspDebuggerPositionManager extends JSR45PositionManager<Java
 					}
 					catch (InternalError internalError) {
 						myDebugProcess.printToConsole(
-							DebuggerBundle.message("internal.error.locations.of.line", referenceType.name()));
+							JavaDebuggerBundle.message("internal.error.locations.of.line", referenceType.name()));
 					}
 
 					return null;

@@ -59,7 +59,7 @@ public abstract class AbstractPortalBundleFactory implements PortalBundleFactory
 
 		Path osgiPath = Paths.get(path.toString(), "osgi");
 
-		if (FileUtil.exist(osgiPath)) {
+		if (FileUtil.exists(osgiPath)) {
 			return true;
 		}
 

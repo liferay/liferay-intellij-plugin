@@ -60,11 +60,10 @@ public abstract class AbstractLiferayMavenGoalAction extends AbstractLiferayActi
 		ProgramRunner<?> programRunner = DefaultJavaProgramRunner.getInstance();
 
 		try {
-			programRunner.execute(
-				new ExecutionEnvironment(
-					DefaultRunExecutor.getRunExecutorInstance(), programRunner, runnerAndConfigurationSettings,
-					project),
-				null);
+			ExecutionEnvironment executionEnvironment = new ExecutionEnvironment(
+				DefaultRunExecutor.getRunExecutorInstance(), programRunner, runnerAndConfigurationSettings, project);
+
+			programRunner.execute(executionEnvironment);
 		}
 		catch (ExecutionException ee) {
 			MavenUtil.showError(project, "Failed to execute Maven goal", ee);

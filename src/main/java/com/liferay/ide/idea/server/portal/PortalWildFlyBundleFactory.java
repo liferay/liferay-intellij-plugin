@@ -49,7 +49,7 @@ public class PortalWildFlyBundleFactory extends AbstractPortalBundleFactory {
 		Path standalonePath = FileUtil.pathAppend(path, "standalone");
 		Path binPath = FileUtil.pathAppend(path, "bin");
 
-		if (FileUtil.exist(modulesPath) && FileUtil.exist(standalonePath) && FileUtil.exist(binPath)) {
+		if (FileUtil.exists(modulesPath) && FileUtil.exists(standalonePath) && FileUtil.exists(binPath)) {
 			String versions = getManifestPropFromJBossModulesFolder(
 				new File[] {new File(path.toString(), "modules")}, "org.jboss.as.product", "wildfly-full/dir/META-INF",
 				JBOSS_RELEASE_VERSION);

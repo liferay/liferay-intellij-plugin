@@ -19,8 +19,6 @@ import com.intellij.javaee.facet.JavaeeFacet;
 import com.intellij.openapi.externalSystem.model.project.LibraryData;
 import com.intellij.openapi.externalSystem.model.project.LibraryPathType;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.LanguageLevelModuleExtension;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -33,6 +31,8 @@ import com.intellij.testFramework.PsiTestUtil;
 import com.intellij.testFramework.fixtures.DefaultLightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 import com.intellij.util.PathUtil;
+
+import com.liferay.ide.idea.util.SdkUtil;
 
 import java.io.File;
 
@@ -121,11 +121,7 @@ public class LiferayJspDebuggerSourceFinderAdapterTest extends LightJavaCodeInsi
 				extension.setLanguageLevel(LanguageLevel.JDK_1_8);
 			}
 
-			JavaAwareProjectJdkTableImpl javaAwareProjectJdkTableImpl = JavaAwareProjectJdkTableImpl.getInstanceEx();
-
-			Sdk jdk = javaAwareProjectJdkTableImpl.getInternalJdk();
-
-			modifiableRootModel.setSdk(jdk);
+			modifiableRootModel.setSdk(SdkUtil.getTestJdk());
 
 			File testDataDir = new File(_TEST_DATA_PATH);
 

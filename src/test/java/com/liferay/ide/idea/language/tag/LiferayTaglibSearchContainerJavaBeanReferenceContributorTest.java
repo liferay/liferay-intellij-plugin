@@ -17,7 +17,6 @@ package com.liferay.ide.idea.language.tag;
 import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.LanguageLevelModuleExtension;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -26,6 +25,8 @@ import com.intellij.testFramework.IdeaTestUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.DefaultLightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
+
+import com.liferay.ide.idea.util.SdkUtil;
 
 import java.util.List;
 
@@ -71,11 +72,7 @@ public class LiferayTaglibSearchContainerJavaBeanReferenceContributorTest extend
 				languageLevelModuleExtension.setLanguageLevel(LanguageLevel.JDK_1_8);
 			}
 
-			JavaAwareProjectJdkTableImpl javaAwareProjectJdkTableImpl = JavaAwareProjectJdkTableImpl.getInstanceEx();
-
-			Sdk jdk = javaAwareProjectJdkTableImpl.getInternalJdk();
-
-			modifiableRootModel.setSdk(jdk);
+			modifiableRootModel.setSdk(SdkUtil.getTestJdk());
 		}
 
 		@Override

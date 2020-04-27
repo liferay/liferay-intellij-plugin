@@ -22,6 +22,7 @@ import com.intellij.openapi.project.Project;
 
 import icons.LiferayIcons;
 
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -40,6 +41,13 @@ public class LiferayServerConfigurationType extends ConfigurationTypeBase implem
 				@Override
 				public RunConfiguration createTemplateConfiguration(@NotNull Project project) {
 					return new LiferayServerConfiguration(project, this, "");
+				}
+
+				@NonNls
+				@NotNull
+				@Override
+				public String getId() {
+					return getName();
 				}
 
 			});

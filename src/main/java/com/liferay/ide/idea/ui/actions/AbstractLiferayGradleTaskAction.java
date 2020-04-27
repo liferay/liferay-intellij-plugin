@@ -171,7 +171,7 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 				" ");
 
 			if (continuous()) {
-				scriptParameters = scriptParameters + " --continuous";
+				scriptParameters = scriptParameters + " --continuous --rerun-tasks";
 			}
 
 			ExternalSystemTaskExecutionSettings settings = new ExternalSystemTaskExecutionSettings();

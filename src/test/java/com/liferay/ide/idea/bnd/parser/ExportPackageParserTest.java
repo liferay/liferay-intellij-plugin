@@ -17,8 +17,6 @@ package com.liferay.ide.idea.bnd.parser;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.impl.JavaAwareProjectJdkTableImpl;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.LanguageLevelModuleExtension;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -33,6 +31,8 @@ import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.DefaultLightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 import com.intellij.util.PathUtil;
+
+import com.liferay.ide.idea.util.SdkUtil;
 
 import java.io.File;
 
@@ -189,11 +189,7 @@ public class ExportPackageParserTest extends LightJavaCodeInsightFixtureTestCase
 				extension.setLanguageLevel(LanguageLevel.JDK_1_8);
 			}
 
-			JavaAwareProjectJdkTableImpl javaAwareProjectJdkTableImpl = JavaAwareProjectJdkTableImpl.getInstanceEx();
-
-			Sdk sdk = javaAwareProjectJdkTableImpl.getInternalJdk();
-
-			modifiableRootModel.setSdk(sdk);
+			modifiableRootModel.setSdk(SdkUtil.getTestJdk());
 
 			File testDataDir = new File(_TEST_DATA_PATH);
 
