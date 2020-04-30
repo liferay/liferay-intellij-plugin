@@ -1,6 +1,6 @@
 <idea-plugin>
 	<id>com.liferay.ide.intellij.plugin</id>
-	<name>Liferay IntelliJ Plugin</name>
+	<name>Liferay</name>
 	<vendor url="https://www.liferay.com">Liferay Inc.</vendor>
 	<description><![CDATA[<p>
 		Liferay Plugin for IntelliJ IDEA

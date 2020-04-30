@@ -6,4 +6,4 @@ COPY . /liferay-intellij-plugin
 
 WORKDIR /liferay-intellij-plugin
 
-CMD ["./gradlew", "clean", "test", "publishPlugin"]
+CMD ["./gradlew", "clean", "-x", "test", "publishPlugin"]
