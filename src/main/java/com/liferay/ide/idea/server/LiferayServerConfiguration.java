@@ -40,7 +40,6 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.GlobalSearchScopes;
-import com.intellij.util.xmlb.SkipDefaultsSerializationFilter;
 import com.intellij.util.xmlb.XmlSerializer;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 
@@ -307,7 +306,7 @@ public class LiferayServerConfiguration
 
 		javaRunConfigurationExtensionManager.writeExternal(this, element);
 
-		XmlSerializer.serializeInto(_liferayServerConfig, element, new SkipDefaultsSerializationFilter());
+		XmlSerializer.serializeInto(_liferayServerConfig, element, null);
 		EnvironmentVariablesComponent.writeExternal(element, getEnvs());
 
 		if (_javaRunConfigurationModule.getModule() != null) {

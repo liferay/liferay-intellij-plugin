@@ -15,12 +15,14 @@
 package com.liferay.ide.idea.bnd.parser;
 
 import com.intellij.lang.annotation.AnnotationHolder;
+import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.util.TextRange;
 
 import com.liferay.ide.idea.bnd.psi.BndHeader;
 import com.liferay.ide.idea.bnd.psi.BndHeaderValue;
 import com.liferay.ide.idea.bnd.psi.BndHeaderValuePart;
 import com.liferay.ide.idea.bnd.psi.Clause;
+import com.liferay.ide.idea.util.LiferayAnnotationUtil;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -53,7 +55,8 @@ public class BundleVersionParser extends BndHeaderParser {
 
 				TextRange range = bndHeaderValuePart.getHighlightingRange();
 
-				annotationHolder.createErrorAnnotation(range, iae.getMessage());
+				LiferayAnnotationUtil.createAnnotation(
+					annotationHolder, HighlightSeverity.ERROR, iae.getMessage(), range);
 
 				return true;
 			}

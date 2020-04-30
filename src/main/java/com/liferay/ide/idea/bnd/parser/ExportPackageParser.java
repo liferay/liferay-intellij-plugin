@@ -14,9 +14,10 @@
 
 package com.liferay.ide.idea.bnd.parser;
 
-import com.intellij.codeInsight.daemon.JavaErrorMessages;
+import com.intellij.codeInsight.daemon.JavaErrorBundle;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.annotation.AnnotationHolder;
+import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiDirectory;
@@ -35,6 +36,7 @@ import com.liferay.ide.idea.bnd.psi.BndTokenType;
 import com.liferay.ide.idea.bnd.psi.Clause;
 import com.liferay.ide.idea.bnd.psi.Directive;
 import com.liferay.ide.idea.bnd.psi.util.BndPsiUtil;
+import com.liferay.ide.idea.util.LiferayAnnotationUtil;
 
 import java.util.List;
 
@@ -105,9 +107,9 @@ public class ExportPackageParser extends BasePackageParser {
 							packageName = packageName.replaceAll("\\s", "");
 
 							if (StringUtil.isEmptyOrSpaces(packageName)) {
-								TextRange highlightTextRange = textRange.shiftRight(offset);
-
-								annotationHolder.createErrorAnnotation(highlightTextRange, "Invalid reference");
+								LiferayAnnotationUtil.createAnnotation(
+									annotationHolder, HighlightSeverity.ERROR, "Invalid reference",
+									textRange.shiftRight(offset));
 
 								annotated = true;
 
@@ -122,9 +124,9 @@ public class ExportPackageParser extends BasePackageParser {
 
 								TextRange highlightTextRange = textRangeWithoutWhitespaces.shiftRight(offset);
 
-								annotationHolder.createErrorAnnotation(
-									highlightTextRange,
-									JavaErrorMessages.message("cannot.resolve.package", packageName));
+								LiferayAnnotationUtil.createAnnotation(
+									annotationHolder, HighlightSeverity.ERROR,
+									JavaErrorBundle.message("cannot.resolve.package", packageName), highlightTextRange);
 
 								annotated = true;
 							}

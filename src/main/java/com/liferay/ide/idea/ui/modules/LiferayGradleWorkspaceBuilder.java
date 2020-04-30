@@ -68,7 +68,6 @@ public class LiferayGradleWorkspaceBuilder extends LiferayWorkspaceBuilder {
 			gradleProjectSettings.setDistributionType(DistributionType.DEFAULT_WRAPPED);
 			gradleProjectSettings.setDelegatedBuild(true);
 			gradleProjectSettings.setDisableWrapperSourceDistributionNotification(true);
-			gradleProjectSettings.setUseAutoImport(true);
 			gradleProjectSettings.setResolveModulePerSourceSet(true);
 			gradleProjectSettings.setupNewProjectDefault();
 			gradleProjectSettings.setDirectDelegatedBuild(true);
@@ -80,7 +79,6 @@ public class LiferayGradleWorkspaceBuilder extends LiferayWorkspaceBuilder {
 			ImportSpecBuilder importSpecBuilder = new ImportSpecBuilder(project, GradleConstants.SYSTEM_ID);
 
 			importSpecBuilder.forceWhenUptodate(true);
-			importSpecBuilder.whenAutoImportEnabled();
 			importSpecBuilder.use(ProgressExecutionMode.IN_BACKGROUND_ASYNC);
 
 			ExternalSystemUtil.refreshProject(project.getBasePath(), importSpecBuilder.build());

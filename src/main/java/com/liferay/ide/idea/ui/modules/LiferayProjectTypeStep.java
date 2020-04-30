@@ -29,7 +29,6 @@ import com.intellij.ide.util.newProjectWizard.WizardDelegate;
 import com.intellij.ide.util.newProjectWizard.impl.FrameworkSupportModelBase;
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
-import com.intellij.ide.util.projectWizard.SettingsStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.ide.wizard.CommitStepException;
 import com.intellij.openapi.Disposable;
@@ -91,7 +90,6 @@ import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -101,9 +99,9 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Terry Jia
+ * @author Simon Jiang
  */
-public class LiferayProjectTypeStep
-	extends ModuleWizardStep implements Disposable, LiferayWorkspaceSupport, SettingsStep {
+public class LiferayProjectTypeStep extends ModuleWizardStep implements Disposable, LiferayWorkspaceSupport {
 
 	public static final Function<FrameworkSupportNode, String> NODE_STRING_FUNCTION = FrameworkSupportNodeBase::getId;
 
@@ -314,23 +312,6 @@ public class LiferayProjectTypeStep
 	}
 
 	@Override
-	public void addExpertField(@NotNull String label, @NotNull JComponent field) {
-	}
-
-	@Override
-	public void addExpertPanel(@NotNull JComponent panel) {
-	}
-
-	@Override
-	public void addSettingsComponent(@NotNull JComponent component) {
-	}
-
-	@Override
-	public void addSettingsField(@NotNull String label, @NotNull JComponent field) {
-		LiferayProjectSettingsStep.addField(label, field, _headerPanel);
-	}
-
-	@Override
 	public void dispose() {
 		_lastSelectedGroup = null;
 		_settingsStep = null;
@@ -350,11 +331,6 @@ public class LiferayProjectTypeStep
 	}
 
 	@Override
-	public WizardContext getContext() {
-		return _context;
-	}
-
-	@Override
 	public String getHelpId() {
 		if ((_getCustomStep() != null) && (_getCustomStep().getHelpId() != null)) {
 			return _getCustomStep().getHelpId();
@@ -365,12 +341,6 @@ public class LiferayProjectTypeStep
 		}
 
 		return "Module_Category_and_Options";
-	}
-
-	@Override
-	@SuppressWarnings("deprecation")
-	public JTextField getModuleNameField() {
-		return null;
 	}
 
 	@Override
@@ -415,10 +385,6 @@ public class LiferayProjectTypeStep
 
 		_settingsStep = null;
 		_headerPanel.removeAll();
-
-		if ((groupModuleBuilder != null) && (groupModuleBuilder.getModuleType() != null)) {
-			_settingsStep = groupModuleBuilder.modifyProjectTypeStep(this);
-		}
 
 		if ((groupModuleBuilder == null) || groupModuleBuilder.isTemplateBased()) {
 			_showTemplates(group);
@@ -502,10 +468,6 @@ public class LiferayProjectTypeStep
 
 		if (step != null) {
 			step.updateDataModel();
-		}
-
-		if (_settingsStep != null) {
-			_settingsStep.updateDataModel();
 		}
 	}
 

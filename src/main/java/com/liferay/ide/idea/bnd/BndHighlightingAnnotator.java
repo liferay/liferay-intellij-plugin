@@ -14,9 +14,9 @@
 
 package com.liferay.ide.idea.bnd;
 
-import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
+import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 
@@ -30,6 +30,7 @@ import com.liferay.ide.idea.bnd.psi.BndToken;
 import com.liferay.ide.idea.bnd.psi.BndTokenType;
 import com.liferay.ide.idea.bnd.psi.Clause;
 import com.liferay.ide.idea.bnd.psi.Directive;
+import com.liferay.ide.idea.util.LiferayAnnotationUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -101,9 +102,8 @@ public class BndHighlightingAnnotator implements Annotator {
 		PsiElement psiElement, TextAttributesKey textAttributesKey, AnnotationHolder annotationHolder) {
 
 		if (psiElement != null) {
-			Annotation annotation = annotationHolder.createInfoAnnotation(psiElement, null);
-
-			annotation.setTextAttributes(textAttributesKey);
+			LiferayAnnotationUtil.createAnnotation(
+				annotationHolder, HighlightSeverity.INFORMATION, "", textAttributesKey);
 		}
 	}
 
