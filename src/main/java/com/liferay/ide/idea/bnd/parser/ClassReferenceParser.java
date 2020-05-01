@@ -14,10 +14,10 @@
 
 package com.liferay.ide.idea.bnd.parser;
 
-import com.intellij.codeInsight.daemon.JavaErrorMessages;
+import com.intellij.codeInsight.daemon.JavaErrorBundle;
 import com.intellij.codeInspection.ProblemHighlightType;
-import com.intellij.lang.annotation.Annotation;
 import com.intellij.lang.annotation.AnnotationHolder;
+import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
@@ -33,6 +33,7 @@ import com.liferay.ide.idea.bnd.psi.BndHeader;
 import com.liferay.ide.idea.bnd.psi.BndHeaderValue;
 import com.liferay.ide.idea.bnd.psi.BndHeaderValuePart;
 import com.liferay.ide.idea.bnd.psi.Clause;
+import com.liferay.ide.idea.util.LiferayAnnotationUtil;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.lang.manifest.ManifestBundle;
@@ -66,8 +67,9 @@ public class ClassReferenceParser extends BndHeaderParser {
 		String className = valuePart.getUnwrappedText();
 
 		if (StringUtil.isEmptyOrSpaces(className)) {
-			holder.createErrorAnnotation(
-				valuePart.getHighlightingRange(), ManifestBundle.message("header.reference.invalid"));
+			LiferayAnnotationUtil.createAnnotation(
+				holder, HighlightSeverity.ERROR, ManifestBundle.message("header.reference.invalid"),
+				valuePart.getHighlightingRange());
 
 			return true;
 		}
@@ -89,11 +91,9 @@ public class ClassReferenceParser extends BndHeaderParser {
 		PsiClass psiClass = javaPsiFacade.findClass(className, globalSearchScope);
 
 		if (psiClass == null) {
-			String message = JavaErrorMessages.message("error.cannot.resolve.class", className);
-
-			Annotation annotation = holder.createErrorAnnotation(valuePart.getHighlightingRange(), message);
-
-			annotation.setHighlightType(ProblemHighlightType.LIKE_UNKNOWN_SYMBOL);
+			LiferayAnnotationUtil.createAnnotation(
+				holder, HighlightSeverity.ERROR, JavaErrorBundle.message("error.cannot.resolve.class", className),
+				ProblemHighlightType.LIKE_UNKNOWN_SYMBOL);
 
 			return true;
 		}

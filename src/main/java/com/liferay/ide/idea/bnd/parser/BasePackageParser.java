@@ -14,8 +14,9 @@
 
 package com.liferay.ide.idea.bnd.parser;
 
-import com.intellij.codeInsight.daemon.JavaErrorMessages;
+import com.intellij.codeInsight.daemon.JavaErrorBundle;
 import com.intellij.lang.annotation.AnnotationHolder;
+import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiReference;
@@ -25,6 +26,7 @@ import com.liferay.ide.idea.bnd.psi.BndHeaderValue;
 import com.liferay.ide.idea.bnd.psi.BndHeaderValuePart;
 import com.liferay.ide.idea.bnd.psi.Clause;
 import com.liferay.ide.idea.bnd.psi.util.BndPsiUtil;
+import com.liferay.ide.idea.util.LiferayAnnotationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,8 +57,9 @@ public class BasePackageParser extends BndHeaderParser {
 					packageName = StringUtil.trimEnd(packageName, ".*");
 
 					if (StringUtil.isEmptyOrSpaces(packageName)) {
-						annotationHolder.createErrorAnnotation(
-							bndHeaderValuePart.getHighlightingRange(), "Invalid reference");
+						LiferayAnnotationUtil.createAnnotation(
+							annotationHolder, HighlightSeverity.ERROR, "Invalid reference",
+							bndHeaderValuePart.getHighlightingRange());
 
 						annotated = true;
 
@@ -73,9 +76,10 @@ public class BasePackageParser extends BndHeaderParser {
 						PsiDirectory[] psiDirectories = BndPsiUtil.resolvePackage(bndHeader, packageName);
 
 						if (psiDirectories.length == 0) {
-							annotationHolder.createErrorAnnotation(
-								bndHeaderValuePart.getHighlightingRange(),
-								JavaErrorMessages.message("cannot.resolve.package", packageName));
+							LiferayAnnotationUtil.createAnnotation(
+								annotationHolder, HighlightSeverity.ERROR,
+								JavaErrorBundle.message("cannot.resolve.package", packageName),
+								bndHeaderValuePart.getHighlightingRange());
 							annotated = true;
 						}
 					}

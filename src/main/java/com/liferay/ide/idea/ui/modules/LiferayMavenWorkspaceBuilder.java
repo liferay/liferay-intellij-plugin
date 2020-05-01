@@ -29,7 +29,6 @@ import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.project.MavenImportListener;
-import org.jetbrains.idea.maven.project.MavenImportingSettings;
 import org.jetbrains.idea.maven.project.MavenProjectsManager;
 
 /**
@@ -61,10 +60,6 @@ public class LiferayMavenWorkspaceBuilder extends LiferayWorkspaceBuilder {
 			Project mavenProject = module.getProject();
 
 			MavenProjectsManager mavenProjectManager = MavenProjectsManager.getInstance(mavenProject);
-
-			MavenImportingSettings mavenImportingSettings = mavenProjectManager.getImportingSettings();
-
-			mavenImportingSettings.setImportAutomatically(true);
 
 			mavenProjectManager.forceUpdateAllProjectsOrFindAllAvailablePomFiles();
 

@@ -75,8 +75,6 @@ public class LiferayGradleProjectResolverExtension extends AbstractProjectResolv
 			projectData.getIdeProjectFileDirectoryPath());
 
 		if (!LiferayWorkspaceSupport.isValidGradleWorkspaceLocation(ideProjectFileDirectoryPath)) {
-			super.populateModuleDependencies(gradleModule, ideModule, ideProject);
-
 			return;
 		}
 
@@ -144,10 +142,10 @@ public class LiferayGradleProjectResolverExtension extends AbstractProjectResolv
 									}
 								}
 							}
-						}
 
-						GradleProjectResolverUtil.buildDependencies(
-							resolverCtx, sourceSetMap, artifactsMap, dataNode, dependencies, ideProject);
+							GradleProjectResolverUtil.buildDependencies(
+								resolverCtx, sourceSetMap, artifactsMap, dataNode, dependencies, ideProject);
+						}
 					}
 
 				});

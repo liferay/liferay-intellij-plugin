@@ -85,7 +85,7 @@ public class LiferayPostStartupActivity implements DumbAware, LiferayWorkspaceSu
 						});
 				}));
 
-		startupManager.registerPostStartupActivity(
+		startupManager.runAfterOpened(
 			() -> messageBusConnection.subscribe(
 				ProjectTopics.MODULES,
 				new ModuleListener() {
