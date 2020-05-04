@@ -142,10 +142,10 @@ public class LiferayGradleProjectResolverExtension extends AbstractProjectResolv
 									}
 								}
 							}
-
-							GradleProjectResolverUtil.buildDependencies(
-								resolverCtx, sourceSetMap, artifactsMap, dataNode, dependencies, ideProject);
 						}
+
+						GradleProjectResolverUtil.buildDependencies(
+							resolverCtx, sourceSetMap, artifactsMap, dataNode, dependencies, ideProject);
 					}
 
 				});
