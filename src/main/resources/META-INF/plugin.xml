@@ -31,6 +31,11 @@
 	</p>
 	<p>
 		<ul>
+			<li>1.7.3</li>
+			<ul>
+				<li>INTELLIJ-119 change plugin name and add an icon</li>
+				<li>INTELLIJ-120 upgrade sinceBuild to 201 and fix compatibility problems</li>
+			</ul>
 			<li>1.7.2</li>
 			<ul>
 				<li>INTELLIJ-53 better support on bnd.bnd(community contribution)</li>
@@ -39,8 +44,6 @@
 				<li>INTELLIJ-107 bug fix for watch task</li>
 				<li>INTELLIJ-113 add support on creating project on Intellij IDEA 2020.1</li>
 				<li>INTELLIJ-114 updated embedded blade cli to 3.9.2</li>
-				<li>INTELLIJ-119 change plugin name and add an icon</li>
-				<li>INTELLIJ-120 upgrade sinceBuild to 201 and fix compatibility problems</li>
 			</ul>
 			<li>1.7.1</li>
 			<ul>
