@@ -75,6 +75,8 @@ public class LiferayGradleProjectResolverExtension extends AbstractProjectResolv
 			projectData.getIdeProjectFileDirectoryPath());
 
 		if (!LiferayWorkspaceSupport.isValidGradleWorkspaceLocation(ideProjectFileDirectoryPath)) {
+			super.populateModuleDependencies(gradleModule, ideModule, ideProject);
+
 			return;
 		}
 
