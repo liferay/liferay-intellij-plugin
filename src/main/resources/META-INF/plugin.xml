@@ -31,6 +31,10 @@
 	</p>
 	<p>
 		<ul>
+			<li>1.7.4</li>
+			<ul>
+				<li>INTELLIJ-124 bug fix for project dependencies</li>
+			</ul>
 			<li>1.7.3</li>
 			<ul>
 				<li>INTELLIJ-119 change plugin name and add an icon</li>
