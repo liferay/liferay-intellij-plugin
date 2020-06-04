@@ -1,5 +1,7 @@
 <idea-plugin>
 	<extensions defaultExtensionNs="com.intellij">
+		<backgroundPostStartupActivity implementation="com.liferay.ide.idea.core.LiferayWebFacetPostStartupActivity"/>
+
 		<debugger.positionManagerFactory id="liferayPositionManager" implementation="com.liferay.ide.idea.language.jsp.LiferayJspDebuggerPositionManagerFactory" />
 	</extensions>
 </idea-plugin>
