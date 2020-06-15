@@ -1,5 +1,7 @@
 <idea-plugin>
     <extensions defaultExtensionNs="com.intellij">
+        <psi.referenceContributor implementation="com.liferay.ide.idea.language.tag.LiferayTaglibResourceBundleReferenceContributor"/>
+
         <inspectionToolProvider implementation="com.liferay.ide.idea.language.tag.LiferayTaglibInspectionToolProvider"/>
     </extensions>
 </idea-plugin>

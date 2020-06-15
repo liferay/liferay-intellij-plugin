@@ -260,7 +260,7 @@ public class LiferayNamePathComponent extends JPanel {
 				IdeBundle.message("prompt.enter.project.file.location", context.getPresentationName()));
 		}
 
-		if (_shouldBeAbsolute && !new File(projectDirectory).isAbsolute()) {
+		if (_shouldBeAbsolute && !FileUtil.isAbsolute(projectDirectory)) {
 			throw new ConfigurationException(
 				StringUtil.capitalize(
 					IdeBundle.message("file.location.should.be.absolute", context.getPresentationName())));

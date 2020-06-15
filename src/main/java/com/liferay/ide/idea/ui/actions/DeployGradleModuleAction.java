@@ -19,6 +19,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 
+import com.liferay.ide.idea.util.FileUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import icons.LiferayIcons;
@@ -51,7 +52,7 @@ public class DeployGradleModuleAction extends AbstractLiferayGradleTaskAction im
 
 		if ((virtualFile != null) && (gradleFile != null) &&
 			ProjectRootsUtil.isModuleContentRoot(virtualFile, project) && !baseDir.equals(virtualFile) &&
-			new File(project.getBasePath(), getHomeDir(project.getBasePath())).exists()) {
+			FileUtil.exists(new File(project.getBasePath(), getHomeDir(project.getBasePath())))) {
 
 			return true;
 		}

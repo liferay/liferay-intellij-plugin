@@ -230,7 +230,6 @@
 		<standardResourceProvider implementation="com.liferay.ide.idea.language.LiferayDefinitionsResourceProvider"/>
 		<xml.schemaProvider implementation="com.liferay.ide.idea.language.LiferayXmlSchemaProvider" />
 		<psi.referenceContributor implementation="com.liferay.ide.idea.language.LiferayXmlFileReferenceContributor"/>
-		<psi.referenceContributor implementation="com.liferay.ide.idea.language.tag.LiferayTaglibResourceBundleReferenceContributor"/>
 		<psi.referenceContributor implementation="com.liferay.ide.idea.language.tag.LiferayTaglibClassNameReferenceContributor"/>
 		<psi.referenceContributor implementation="com.liferay.ide.idea.language.tag.LiferayTaglibSearchContainerJavaBeanReferenceContributor"/>
 		<psi.referenceContributor implementation="com.liferay.ide.idea.language.tag.LiferayTaglibModelContextJavaBeanReferenceContributor"/>
