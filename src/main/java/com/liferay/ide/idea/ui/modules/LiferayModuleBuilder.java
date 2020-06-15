@@ -203,9 +203,7 @@ public class LiferayModuleBuilder extends ModuleBuilder implements LiferayWorksp
 	private VirtualFile _createAndGetContentEntry() {
 		String path = FileUtil.toSystemIndependentName(getContentEntryPath());
 
-		new File(
-			path
-		).mkdirs();
+		FileUtil.createDirectory(new File(path));
 
 		LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
 

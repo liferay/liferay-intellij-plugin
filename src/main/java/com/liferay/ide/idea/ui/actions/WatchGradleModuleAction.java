@@ -32,6 +32,7 @@ import com.intellij.ui.content.ContentManager;
 
 import com.liferay.ide.idea.core.WorkspaceConstants;
 import com.liferay.ide.idea.server.gogo.GogoTelnetClient;
+import com.liferay.ide.idea.util.FileUtil;
 import com.liferay.ide.idea.util.GradleUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
@@ -210,7 +211,7 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction imp
 
 						@Override
 						public FileVisitResult postVisitDirectory(Path dir, IOException e) {
-							if (new File(dir.toFile(), "bnd.bnd").exists()) {
+							if (FileUtil.exists(new File(dir.toFile(), "bnd.bnd"))) {
 								return FileVisitResult.SKIP_SUBTREE;
 							}
 

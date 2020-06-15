@@ -208,9 +208,9 @@ public class LayeredModulePathFactory {
 
 				// Now add-ons
 
-				File[] addOns = new File(
-					file, layersConfig._getAddOnsPath()
-				).listFiles();
+				File fileDirecory = new File(file, layersConfig._getAddOnsPath());
+
+				File[] addOns = fileDirecory.listFiles();
 
 				if (addOns != null) {
 					for (File addOn : addOns) {
