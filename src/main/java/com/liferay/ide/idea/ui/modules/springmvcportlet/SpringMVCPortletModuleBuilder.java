@@ -84,6 +84,10 @@ public class SpringMVCPortletModuleBuilder extends ModuleBuilder implements Life
 		_frameworkDependencies = frameworkDependencies;
 	}
 
+	public void setLiferayVersion(String liferayVersion) {
+		_liferayVersion = liferayVersion;
+	}
+
 	@Override
 	public void setupRootModel(ModifiableRootModel modifiableRootModel) {
 		VirtualFile virtualFile = _createAndGetContentEntry();
@@ -149,13 +153,14 @@ public class SpringMVCPortletModuleBuilder extends ModuleBuilder implements Life
 		sb.append(_viewType);
 		sb.append(" ");
 		sb.append("-v ");
-		sb.append(getLiferayVersion(project));
+		sb.append(_liferayVersion);
 
 		BladeCLI.execute(sb.toString());
 	}
 
 	private String _framework;
 	private String _frameworkDependencies;
+	private String _liferayVersion;
 	private String _viewType;
 
 }

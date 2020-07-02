@@ -21,6 +21,8 @@ import com.intellij.ide.util.projectWizard.SdkSettingsStep;
 import com.intellij.ide.util.projectWizard.SettingsStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.module.StdModuleTypes;
 import com.intellij.openapi.project.Project;
@@ -30,11 +32,16 @@ import com.intellij.openapi.util.Condition;
 
 import com.liferay.ide.idea.core.WorkspaceConstants;
 import com.liferay.ide.idea.util.BladeCLI;
+import com.liferay.ide.idea.util.ListUtil;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import java.io.File;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -50,6 +57,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Terry Jia
  * @author Joye Luo
  * @author Simon Jiang
+ * @author Ethan Sun
  */
 @SuppressWarnings("rawtypes")
 public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
@@ -73,6 +81,59 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 	@Override
 	@SuppressWarnings("unchecked")
 	public ModuleWizardStep modifySettingsStep(@NotNull SettingsStep settingsStep) {
+		JComboBox productVersionComboBox = new ComboBox<>();
+
+		JCheckBox showAllProductVersionCheckBox = new JCheckBox();
+
+		showAllProductVersionCheckBox.setSelected(true);
+
+		showAllProductVersionCheckBox.addActionListener(
+			e -> {
+				boolean showAllProductVersion = showAllProductVersionCheckBox.isSelected();
+
+				Application application = ApplicationManager.getApplication();
+
+				application.executeOnPooledThread(
+					() -> {
+						String[] allWorkspaceProducts = BladeCLI.getWorkspaceProducts(showAllProductVersion);
+
+						if (!ListUtil.isEmpty(allWorkspaceProducts)) {
+							_productVersions.clear();
+
+							productVersionComboBox.removeAllItems();
+
+							Collections.addAll(_productVersions, allWorkspaceProducts);
+						}
+
+						for (String productVersion : _productVersions) {
+							productVersionComboBox.addItem(productVersion);
+						}
+
+						productVersionComboBox.setSelectedIndex(0);
+
+						_productVersion = (String)productVersionComboBox.getSelectedItem();
+					});
+			});
+
+		showAllProductVersionCheckBox.doClick();
+
+		productVersionComboBox.addActionListener(
+			new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent event) {
+					if (productVersionComboBox.equals(event.getSource())) {
+						_productVersion = (String)productVersionComboBox.getSelectedItem();
+					}
+				}
+
+			});
+
+		if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_GRADLE_WORKSPACE)) {
+			settingsStep.addSettingsField("Product version:", productVersionComboBox);
+			settingsStep.addSettingsField("Show All Product Versions", showAllProductVersionCheckBox);
+		}
+
 		JComboBox liferayVersionComboBox = new ComboBox<>();
 
 		for (String liferayVersion : WorkspaceConstants.LIFERAY_VERSIONS) {
@@ -81,14 +142,8 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 
 		liferayVersionComboBox.setSelectedItem(WorkspaceConstants.DEFAULT_LIFERAY_VERSION);
 
-		settingsStep.addSettingsField("Liferay version:", liferayVersionComboBox);
-
-		JCheckBox enableTargetPlatformCheckBox = new JCheckBox();
-
-		enableTargetPlatformCheckBox.setSelected(_enableTargetPlatform);
-
-		if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_GRADLE_WORKSPACE)) {
-			settingsStep.addSettingsField("Enable target platform:", enableTargetPlatformCheckBox);
+		if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_MAVEN_WORKSPACE)) {
+			settingsStep.addSettingsField("Liferay version:", liferayVersionComboBox);
 		}
 
 		JComboBox targetPlatformComboBox = new ComboBox<>();
@@ -113,7 +168,7 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 
 			});
 
-		if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_GRADLE_WORKSPACE)) {
+		if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_MAVEN_WORKSPACE)) {
 			settingsStep.addSettingsField("Target platform:", targetPlatformComboBox);
 		}
 
@@ -154,14 +209,6 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 				}
 			});
 
-		enableTargetPlatformCheckBox.addActionListener(
-			e -> {
-				_enableTargetPlatform = enableTargetPlatformCheckBox.isSelected();
-
-				targetPlatformComboBox.setEnabled(_enableTargetPlatform);
-				indexSourcesCheckBox.setEnabled(_enableTargetPlatform);
-			});
-
 		if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_GRADLE_WORKSPACE)) {
 			settingsStep.addSettingsField("Index Sources:", indexSourcesCheckBox);
 			settingsStep.addSettingsField("", customLabel);
@@ -188,7 +235,14 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 		sb.append("\" ");
 		sb.append("init ");
 		sb.append("-v ");
-		sb.append(_liferayVersion);
+
+		if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_MAVEN_WORKSPACE)) {
+			sb.append(_liferayVersion);
+		}
+		else if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_GRADLE_WORKSPACE)) {
+			sb.append(_productVersion);
+		}
+
 		sb.append(" ");
 		sb.append("-f ");
 
@@ -203,12 +257,11 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 
 		BladeCLI.execute(sb.toString());
 
-		if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_GRADLE_WORKSPACE) && _enableTargetPlatform) {
+		if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_GRADLE_WORKSPACE)) {
 			try {
 				PropertiesConfiguration config = new PropertiesConfiguration(
 					new File(project.getBasePath(), "gradle.properties"));
 
-				config.setProperty(WorkspaceConstants.TARGET_PLATFORM_VERSION_PROPERTY, _targetPlatform);
 				config.setProperty(WorkspaceConstants.TARGET_PLATFORM_INDEX_SOURCES_PROPERTY, _indexSources);
 
 				config.save();
@@ -218,10 +271,11 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 		}
 	}
 
-	private boolean _enableTargetPlatform = true;
 	private boolean _indexSources = false;
 	private String _liferayProjectType;
 	private String _liferayVersion = WorkspaceConstants.DEFAULT_LIFERAY_VERSION;
+	private String _productVersion = WorkspaceConstants.DEFAULT_PRODUCT_VERSION;
+	private List<String> _productVersions = new CopyOnWriteArrayList<>();
 	private String _targetPlatform = WorkspaceConstants.DEFAULT_TARGET_PLATFORM_VERSION;
 
 }

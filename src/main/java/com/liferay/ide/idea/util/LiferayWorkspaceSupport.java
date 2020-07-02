@@ -14,11 +14,22 @@
 
 package com.liferay.ide.idea.util;
 
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.externalSystem.model.DataNode;
 import com.intellij.openapi.externalSystem.model.ExternalProjectInfo;
 import com.intellij.openapi.externalSystem.model.ProjectKeys;
 import com.intellij.openapi.externalSystem.model.project.LibraryData;
 import com.intellij.openapi.externalSystem.model.project.ProjectData;
+import com.intellij.openapi.externalSystem.service.notification.ExternalSystemNotificationManager;
+import com.intellij.openapi.externalSystem.service.notification.NotificationCategory;
+import com.intellij.openapi.externalSystem.service.notification.NotificationData;
+import com.intellij.openapi.externalSystem.service.notification.NotificationSource;
 import com.intellij.openapi.externalSystem.service.project.ProjectDataManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.impl.JavaHomeFinder;
@@ -27,12 +38,12 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import com.liferay.ide.idea.core.WorkspaceConstants;
+import com.liferay.ide.idea.ui.modules.LiferayWorkspaceProductTip;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
 
@@ -47,6 +58,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -72,6 +84,31 @@ import org.osgi.framework.Version;
  * @author Ethan Sun
  */
 public interface LiferayWorkspaceSupport {
+
+	public static Map<String, ProductInfo> getProductInfos(Project project) {
+		try (JsonReader jsonReader = new JsonReader(Files.newBufferedReader(_workspaceCacheFile.toPath()))) {
+			Gson gson = new Gson();
+
+			TypeToken<Map<String, ProductInfo>> typeToken = new TypeToken<Map<String, ProductInfo>>() {
+			};
+
+			return gson.fromJson(jsonReader, typeToken.getType());
+		}
+		catch (Exception e) {
+			NotificationData notificationData = new NotificationData(
+				"<b>Cannot Find Product Info</b>", "<i>" + project.getName() + "</i> \n" + e.getMessage(),
+				NotificationCategory.WARNING, NotificationSource.TASK_EXECUTION);
+
+			notificationData.setBalloonNotification(true);
+
+			ExternalSystemNotificationManager externalSystemNotificationManager =
+				ExternalSystemNotificationManager.getInstance(project);
+
+			externalSystemNotificationManager.showNotification(GradleConstants.SYSTEM_ID, notificationData);
+		}
+
+		return null;
+	}
 
 	public static List<LibraryData> getTargetPlatformArtifacts(Project project) {
 		ProjectDataManager projectDataManager = ProjectDataManager.getInstance();
@@ -218,7 +255,7 @@ public interface LiferayWorkspaceSupport {
 		String result = getGradleProperty(
 			location, WorkspaceConstants.HOME_DIR_PROPERTY, WorkspaceConstants.HOME_DIR_DEFAULT);
 
-		if ((result == null) || result.equals("")) {
+		if (CoreUtil.isNullOrEmpty(result)) {
 			return WorkspaceConstants.HOME_DIR_DEFAULT;
 		}
 
@@ -251,30 +288,27 @@ public interface LiferayWorkspaceSupport {
 
 	@Nullable
 	public default String getLiferayVersion(Project project) {
-		String liferayVersion = WorkspaceConstants.DEFAULT_LIFERAY_VERSION;
+		String targetPlatformVersion = getTargetPlatformVersion(project);
 
-		VirtualFile projectRoot = getWorkspaceVirtualFile(project);
+		if (!CoreUtil.isNullOrEmpty(targetPlatformVersion)) {
+			String[] versionArr = targetPlatformVersion.split("\\.");
 
-		if (projectRoot == null) {
-			return liferayVersion;
+			return versionArr[0] + "." + versionArr[1];
 		}
 
-		VirtualFile settingsVirtualFile = projectRoot.findFileByRelativePath("/.blade.properties");
+		ProductInfo workspaceProductInfo = getWorkspaceProductInfo(project);
 
-		if (settingsVirtualFile != null) {
-			Properties props = new Properties();
+		if (Objects.nonNull(workspaceProductInfo)) {
+			String workspaceProductTargetPlatformVersion = workspaceProductInfo.getTargetPlatformVersion();
 
-			try (InputStream inputStream = settingsVirtualFile.getInputStream()) {
-				props.load(inputStream);
+			if (verfiyTargetPlatformVersion(workspaceProductTargetPlatformVersion)) {
+				String[] versionArr = workspaceProductTargetPlatformVersion.split("\\.");
 
-				liferayVersion = props.getProperty(
-					WorkspaceConstants.BLADE_LIFERAY_VERSION_FIELD, WorkspaceConstants.DEFAULT_LIFERAY_VERSION);
-			}
-			catch (IOException ioe) {
+				return versionArr[0] + "." + versionArr[1];
 			}
 		}
 
-		return liferayVersion;
+		return "";
 	}
 
 	@Nullable
@@ -455,7 +489,33 @@ public interface LiferayWorkspaceSupport {
 	public default String getTargetPlatformVersion(Project project) {
 		String location = project.getBasePath();
 
-		return getGradleProperty(location, WorkspaceConstants.TARGET_PLATFORM_VERSION_PROPERTY, null);
+		if (isValidGradleWorkspaceProject(project)) {
+			return getGradleProperty(location, WorkspaceConstants.TARGET_PLATFORM_VERSION_PROPERTY, null);
+		}
+		else if (isValidMavenWorkspaceLocation(project)) {
+			return getMavenProperty(project, WorkspaceConstants.WORKSPACE_BOM_VERSION, null);
+		}
+
+		return null;
+	}
+
+	public default ProductInfo getWorkspaceProductInfo(Project project) {
+		String projectPath = project.getBasePath();
+
+		String workspaceProductKey = getGradleProperty(
+			projectPath, WorkspaceConstants.WORKSPACE_PRODUCT_PROPERTY, null);
+
+		if (CoreUtil.isNullOrEmpty(workspaceProductKey)) {
+			return null;
+		}
+
+		Map<String, ProductInfo> productInfos = getProductInfos(project);
+
+		if (Objects.nonNull(productInfos)) {
+			return productInfos.get(workspaceProductKey);
+		}
+
+		return null;
 	}
 
 	@NotNull
@@ -477,7 +537,43 @@ public interface LiferayWorkspaceSupport {
 		return retval;
 	}
 
+	public default void showLiferayWorkspaceProductTip(Project project) {
+		String projectPath = project.getBasePath();
+
+		if (isValidGradleWorkspaceLocation(project.getBasePath())) {
+			String workspaceProductKey = getGradleProperty(
+				projectPath, WorkspaceConstants.WORKSPACE_PRODUCT_PROPERTY, null);
+
+			if (CoreUtil.isNullOrEmpty(workspaceProductKey)) {
+				Application application = ApplicationManager.getApplication();
+
+				application.invokeAndWait(
+					() -> {
+						LiferayWorkspaceProductTip liferayWorkspaceProductTip = new LiferayWorkspaceProductTip(project);
+
+						liferayWorkspaceProductTip.showAndGet();
+					});
+			}
+		}
+	}
+
+	public default boolean verfiyTargetPlatformVersion(String targetPlatformVersion) {
+		if (CoreUtil.isNullOrEmpty(targetPlatformVersion)) {
+			return false;
+		}
+
+		int dashPosition = targetPlatformVersion.indexOf(StringPool.DASH);
+
+		if (dashPosition != -1) {
+			return aQute.bnd.version.Version.isVersion(targetPlatformVersion.substring(0, dashPosition));
+		}
+
+		return aQute.bnd.version.Version.isVersion(targetPlatformVersion);
+	}
+
 	public final String BUILD_GRADLE_FILE_NAME = "build.gradle";
+
+	public final String DEFAULT_WORKSPACE_CACHE_FILE = ".liferay/workspace/.product_info.json";
 
 	public final String GRADLE_PROPERTIES_FILE_NAME = "gradle.properties";
 
@@ -486,6 +582,60 @@ public interface LiferayWorkspaceSupport {
 
 	public final String SETTINGS_GRADLE_FILE_NAME = "settings.gradle";
 
+	public final File _workspaceCacheFile = new File(System.getProperty("user.home"), DEFAULT_WORKSPACE_CACHE_FILE);
 	public Map<String, List<String>> targetPlatformDependenciesMap = new HashMap<>();
+
+	public class ProductInfo {
+
+		public String getAppServerTomcatVersion() {
+			return _appServerTomcatVersion;
+		}
+
+		public String getBundleUrl() {
+			return _bundleUrl;
+		}
+
+		public String getLiferayDockerImage() {
+			return _liferayDockerImage;
+		}
+
+		public String getLiferayProductVersion() {
+			return _liferayProductVersion;
+		}
+
+		public String getReleaseDate() {
+			return _releaseDate;
+		}
+
+		public String getTargetPlatformVersion() {
+			return _targetPlatformVersion;
+		}
+
+		public boolean isInitialVersion() {
+			return _initialVersion;
+		}
+
+		@SerializedName("appServerTomcatVersion")
+		private String _appServerTomcatVersion;
+
+		@SerializedName("bundleUrl")
+		private String _bundleUrl;
+
+		@SerializedName("initialVersion")
+		private boolean _initialVersion;
+
+		@SerializedName("liferayDockerImage")
+		private String _liferayDockerImage;
+
+		@SerializedName("liferayProductVersion")
+		private String _liferayProductVersion;
+
+		@SerializedName("releaseDate")
+		private String _releaseDate;
+
+		@SerializedName("targetPlatformVersion")
+		private String _targetPlatformVersion;
+
+	}
 
 }

@@ -30,6 +30,8 @@ public class WorkspaceConstants {
 
 	public static final String DEFAULT_LIFERAY_VERSION = "7.2";
 
+	public static final String DEFAULT_PRODUCT_VERSION = "portal-7.2-ga2";
+
 	public static final String DEFAULT_TARGET_PLATFORM_VERSION = "7.2.1";
 
 	public static final String EXT_DIR_DEFAULT = "ext";
@@ -70,5 +72,9 @@ public class WorkspaceConstants {
 	public static final String WARS_DIR_PROPERTY = "liferay.workspace.wars.dir";
 
 	public static final String WIZARD_LIFERAY_VERSION_FIELD = "selected.liferay.version";
+
+	public static final String WORKSPACE_BOM_VERSION = "liferay.bom.version";
+
+	public static final String WORKSPACE_PRODUCT_PROPERTY = "liferay.workspace.product";
 
 }
