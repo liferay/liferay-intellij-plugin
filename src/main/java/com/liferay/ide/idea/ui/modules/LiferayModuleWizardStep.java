@@ -301,11 +301,17 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 
 		VersionRange versionRange = _projectTemplateVersionRangeMap.get(projectTemplateName);
 
+		boolean warCoreExt = projectTemplateName.equals("war.core.ext");
+
 		boolean formField = projectTemplateName.equals("form.field");
 
 		if (LiferayWorkspaceSupport.isValidMavenWorkspaceLocation(workspaceProject)) {
 			if (formField && liferayVersion.equals("7.3")) {
 				throw new ConfigurationException("Form Field project is not supported 7.3 for Maven", validationTitle);
+			}
+
+			if (warCoreExt) {
+				throw new ConfigurationException("Not support to create maven war-core-ext project.", validationTitle);
 			}
 		}
 
