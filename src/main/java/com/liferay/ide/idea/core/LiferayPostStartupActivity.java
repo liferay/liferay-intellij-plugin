@@ -65,9 +65,8 @@ public class LiferayPostStartupActivity implements DumbAware, LiferayWorkspaceSu
 					application.runReadAction(
 						() -> {
 							if (projectPath.equals(project.getBasePath())) {
-								String homeDir = getHomeDir(project.getBasePath());
-
-								ProjectConfigurationUtil.configExcludedFolder(project, homeDir);
+								ProjectConfigurationUtil.configExcludedFolder(
+									project, getHomeDir(project.getBasePath()));
 							}
 						});
 				}));

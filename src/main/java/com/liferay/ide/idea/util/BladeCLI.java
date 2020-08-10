@@ -45,9 +45,7 @@ public class BladeCLI {
 		javaTask.setFork(true);
 		javaTask.setFailonerror(true);
 
-		File bladeJar = getBladeJar();
-
-		javaTask.setJar(bladeJar);
+		javaTask.setJar(getBladeJar());
 
 		javaTask.setArgs(args);
 

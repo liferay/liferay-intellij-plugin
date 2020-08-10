@@ -35,9 +35,7 @@ public class InitBundleGradleAction extends AbstractLiferayGradleTaskAction impl
 	protected void handleProcessTerminated(Project project) {
 		super.handleProcessTerminated(project);
 
-		String homeDir = getHomeDir(project.getBasePath());
-
-		ProjectConfigurationUtil.configExcludedFolder(project, homeDir);
+		ProjectConfigurationUtil.configExcludedFolder(project, getHomeDir(project.getBasePath()));
 	}
 
 }

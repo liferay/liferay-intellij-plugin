@@ -192,10 +192,8 @@ public class LiferayGradleProjectResolverExtension extends AbstractProjectResolv
 				continue;
 			}
 
-			final String moduleId = GradleProjectResolverUtil.getModuleId(resolverCtx, ideaModule, sourceSet);
-
-			final DataNode<? extends ModuleData> moduleDataNode =
-				sourceSetsMap.isEmpty() ? moduleData : sourceSetsMap.get(moduleId);
+			final DataNode<? extends ModuleData> moduleDataNode = sourceSetsMap.isEmpty() ? moduleData :
+				sourceSetsMap.get(GradleProjectResolverUtil.getModuleId(resolverCtx, ideaModule, sourceSet));
 
 			if (moduleDataNode == null) {
 				continue;
