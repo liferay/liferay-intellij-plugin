@@ -92,9 +92,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 			event -> {
 				TreePath treePath = event.getNewLeadSelectionPath();
 
-				Object lastPathComponent = treePath.getLastPathComponent();
-
-				String type = lastPathComponent.toString();
+				String type = String.valueOf(treePath.getLastPathComponent());
 
 				if (Objects.equals("theme", type) || Objects.equals("layout-template", type)) {
 					_packageName.setEditable(false);
@@ -264,7 +262,6 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 		String classNameValue = getClassName();
 		PsiDirectoryFactory psiDirectoryFactory = PsiDirectoryFactory.getInstance(workspaceProject);
 		PsiNameHelper psiNameHelper = PsiNameHelper.getInstance(workspaceProject);
-		String liferayVersion = getLiferayVersion(_project);
 
 		String type = getSelectedType();
 
@@ -272,12 +269,14 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 
 		VersionRange versionRange = _projectTemplateVersionRangeMap.get(projectTemplateName);
 
-		boolean npm = type.startsWith("npm");
-
 		if (versionRange != null) {
+			String liferayVersion = getLiferayVersion(_project);
+
 			boolean include = versionRange.includes(new Version(liferayVersion));
 
 			if (!include) {
+				boolean npm = type.startsWith("npm");
+
 				if (npm) {
 					throw new ConfigurationException(
 						"NPM portlet project templates generated from this tool are not supported for specified " +

@@ -53,8 +53,6 @@ public abstract class AbstractLiferayTaglibReferenceContributor extends PsiRefer
 
 		if (xmlTag != null) {
 			String namespace = xmlTag.getNamespace();
-			String localName = xmlTag.getLocalName();
-			String attributeName = xmlAttribute.getLocalName();
 
 			Map<String, Collection<AbstractMap.SimpleImmutableEntry<String, String>>> taglibAttributesMap =
 				getTaglibAttributesMap();
@@ -70,7 +68,7 @@ public abstract class AbstractLiferayTaglibReferenceContributor extends PsiRefer
 						String key = entry.getKey();
 						String value = entry.getValue();
 
-						if (key.equals(localName) && value.equals(attributeName)) {
+						if (key.equals(xmlTag.getLocalName()) && value.equals(xmlAttribute.getLocalName())) {
 							return true;
 						}
 

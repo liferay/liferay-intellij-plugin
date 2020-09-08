@@ -109,8 +109,6 @@ public class LiferayGradleProjectResolverExtension extends AbstractProjectResolv
 								if (dependency instanceof InternalIdeaSingleEntryLibraryDependency) {
 									InternalIdeaSingleEntryLibraryDependency localDependency =
 										(InternalIdeaSingleEntryLibraryDependency)dependency;
-									DefaultExternalLibraryDependency libraryDependency =
-										new DefaultExternalLibraryDependency();
 
 									File jarFile = localDependency.getFile();
 
@@ -123,6 +121,9 @@ public class LiferayGradleProjectResolverExtension extends AbstractProjectResolv
 										if (gradleModuleVersion == null) {
 											continue;
 										}
+
+										DefaultExternalLibraryDependency libraryDependency =
+											new DefaultExternalLibraryDependency();
 
 										libraryDependency.setName(gradleModuleVersion.getName());
 

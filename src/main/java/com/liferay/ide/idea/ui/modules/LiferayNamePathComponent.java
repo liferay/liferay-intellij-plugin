@@ -385,8 +385,6 @@ public class LiferayNamePathComponent extends JPanel {
 				try {
 					_setPathNameSyncEnabled(false);
 
-					String name = getText(0, getLength());
-
 					String path = _path.getText();
 
 					path = path.trim();
@@ -394,6 +392,8 @@ public class LiferayNamePathComponent extends JPanel {
 					int lastSeparatorIndex = path.lastIndexOf(File.separator);
 
 					if (lastSeparatorIndex >= 0) {
+						String name = getText(0, getLength());
+
 						setPath(path.substring(0, lastSeparatorIndex + 1) + name);
 					}
 				}

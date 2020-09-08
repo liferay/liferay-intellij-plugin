@@ -17,6 +17,7 @@ package com.liferay.ide.idea.bnd.parser;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.PsiBuilder;
 import com.intellij.lang.PsiParser;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.tree.TokenSet;
@@ -39,9 +40,9 @@ public class BndParser implements PsiParser {
 	@NotNull
 	@Override
 	public ASTNode parse(@NotNull IElementType root, @NotNull PsiBuilder builder) {
-		builder.setDebugMode(
-			ApplicationManager.getApplication(
-			).isUnitTestMode());
+		Application app = ApplicationManager.getApplication();
+
+		builder.setDebugMode(app.isUnitTestMode());
 
 		PsiBuilder.Marker rootMarker = builder.mark();
 

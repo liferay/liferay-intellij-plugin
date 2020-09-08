@@ -168,10 +168,6 @@ public class LiferayTaglibStrictQuoteEscapingInspection extends XmlSuppressableI
 			JspFile jspFile = JspPsiUtil.getJspFile(psiElement);
 
 			if (jspFile != null) {
-				XmlAttributeValue xmlAttributeValue = (XmlAttributeValue)psiElement;
-
-				TextRange textRange = psiElement.getTextRange();
-
 				PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(project);
 
 				Document document = psiDocumentManager.getDocument(jspFile);
@@ -179,9 +175,13 @@ public class LiferayTaglibStrictQuoteEscapingInspection extends XmlSuppressableI
 				if (document != null) {
 					psiDocumentManager.doPostponedOperationsAndUnblockDocument(document);
 
+					XmlAttributeValue xmlAttributeValue = (XmlAttributeValue)psiElement;
+
 					String oldText = xmlAttributeValue.getText();
 
 					String newText = "\'" + StringUtil.unquoteString(oldText, '\"') + "\'";
+
+					TextRange textRange = psiElement.getTextRange();
 
 					document.replaceString(textRange.getStartOffset(), textRange.getEndOffset(), newText);
 

@@ -19,6 +19,7 @@ import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.codeInspection.XmlSuppressableInspectionTool;
+import com.intellij.lang.ASTNode;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
@@ -175,24 +176,21 @@ public abstract class AbstractLiferayServiceXMLDuplicateEntryInspection extends 
 
 			if (xmlTag != null) {
 				XmlTag parentXmlTag = PsiTreeUtil.getParentOfType(xmlTag, XmlTag.class);
-				XmlText spacerXmlText = PsiTreeUtil.getPrevSiblingOfType(xmlTag, XmlText.class);
 
 				if (parentXmlTag != null) {
 					WriteCommandAction.Builder writeCommandActionBuilder = WriteCommandAction.writeCommandAction(
 						project, containingFile);
 
+					XmlText spacerXmlText = PsiTreeUtil.getPrevSiblingOfType(xmlTag, XmlText.class);
+
 					writeCommandActionBuilder.run(
 						() -> {
-							parentXmlTag.getNode(
-							).removeChild(
-								xmlTag.getNode()
-							);
+							ASTNode node = parentXmlTag.getNode();
+
+							node.removeChild(xmlTag.getNode());
 
 							if (spacerXmlText != null) {
-								parentXmlTag.getNode(
-								).removeChild(
-									spacerXmlText.getNode()
-								);
+								node.removeChild(spacerXmlText.getNode());
 							}
 						});
 				}

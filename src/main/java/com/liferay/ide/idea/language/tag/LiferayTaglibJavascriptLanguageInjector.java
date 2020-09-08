@@ -69,13 +69,14 @@ public class LiferayTaglibJavascriptLanguageInjector implements JSTargetedInject
 			xmlTag = xmlAttribute.getParent();
 		}
 
-		String localName = xmlTag.getLocalName();
 		String namespace = xmlTag.getNamespace();
 
 		if (_taglibAttributes.containsKey(namespace)) {
 			Collection<AbstractMap.SimpleImmutableEntry<String, String>> attributes = _taglibAttributes.get(namespace);
 
 			Stream<AbstractMap.SimpleImmutableEntry<String, String>> stream = attributes.stream();
+
+			String localName = xmlTag.getLocalName();
 
 			if (psiElement instanceof XmlTag) {
 				stream.filter(
