@@ -57,7 +57,10 @@ public class LiferayTaglibJavaBeanReference extends PsiReferenceBase<XmlAttribut
 
 		for (PsiMethod psiMethod : allProperties.values()) {
 			String name = PropertyUtil.getPropertyNameByGetter(psiMethod);
+
 			PsiType psiType = psiMethod.getReturnType();
+
+			PsiType psiSubstitutor = PsiSubstitutor.EMPTY.substitute(psiType);
 
 			LookupElementBuilder lookupElementBuilder = LookupElementBuilder.create(
 				name
@@ -67,9 +70,7 @@ public class LiferayTaglibJavaBeanReference extends PsiReferenceBase<XmlAttribut
 				" (" + PsiFormatUtil.formatMethod(psiMethod, PsiSubstitutor.EMPTY, _FORMAT_METHOD_OPTIONS, 0) + ")",
 				true
 			).withTypeText(
-				PsiSubstitutor.EMPTY.substitute(
-					psiType
-				).getPresentableText()
+				psiSubstitutor.getPresentableText()
 			);
 
 			result.add(lookupElementBuilder);

@@ -299,14 +299,16 @@ public class LiferayTaglibCSSClassAttributeReferenceContributor extends PsiRefer
 
 			if (xmlTag != null) {
 				String namespace = xmlTag.getNamespace();
-				String xmlTagLocalName = xmlTag.getLocalName();
-				String xmlAttributeLocalName = xmlAttribute.getLocalName();
 
 				if (_taglibAttributes.containsKey(namespace)) {
 					Collection<AbstractMap.SimpleImmutableEntry<String, String>> attributes = _taglibAttributes.get(
 						namespace);
 
 					Stream<AbstractMap.SimpleImmutableEntry<String, String>> attributesStream = attributes.stream();
+
+					String xmlTagLocalName = xmlTag.getLocalName();
+
+					String xmlAttributeLocalName = xmlAttribute.getLocalName();
 
 					boolean anyMatch = attributesStream.anyMatch(
 						attribute -> {

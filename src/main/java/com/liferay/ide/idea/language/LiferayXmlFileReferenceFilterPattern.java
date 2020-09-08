@@ -57,37 +57,34 @@ public class LiferayXmlFileReferenceFilterPattern extends FilterPattern {
 
 						if (xmlTag != null) {
 							String namespace = xmlTag.getNamespace();
-							String localName = xmlTag.getLocalName();
 
 							if (_tagsMap.containsKey(namespace)) {
 								Collection<String> tags = _tagsMap.get(namespace);
 
-								if (tags.contains(localName)) {
+								if (tags.contains(xmlTag.getLocalName())) {
 									return true;
 								}
 							}
 						}
 					}
 					else if (xmlElement instanceof XmlAttributeValue) {
-						XmlAttributeValue xmlAttributeValue = (XmlAttributeValue)element;
-
 						if (psiElement instanceof XmlAttribute) {
+							XmlAttributeValue xmlAttributeValue = (XmlAttributeValue)element;
+
 							XmlAttribute xmlAttribute = (XmlAttribute)xmlAttributeValue.getParent();
 
 							XmlTag xmlTag = xmlAttribute.getParent();
 
 							if (xmlTag != null) {
 								String namespace = xmlTag.getNamespace();
-								String localName = xmlTag.getLocalName();
-
-								String attributeLocalName = xmlAttribute.getLocalName();
-
-								AbstractMap.SimpleImmutableEntry<String, String> pair =
-									new AbstractMap.SimpleImmutableEntry<>(localName, attributeLocalName);
 
 								if (_attributesMap.containsKey(namespace)) {
 									Collection<AbstractMap.SimpleImmutableEntry<String, String>> pairs =
 										_attributesMap.get(namespace);
+
+									AbstractMap.SimpleImmutableEntry<String, String> pair =
+										new AbstractMap.SimpleImmutableEntry<>(
+											xmlTag.getLocalName(), xmlAttribute.getLocalName());
 
 									if (pairs.contains(pair)) {
 										return true;
