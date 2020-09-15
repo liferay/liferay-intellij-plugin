@@ -348,7 +348,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 	}
 
 	private void _loadSupportedVersionRanges() {
-		File bladeJar = BladeCLI.getBladeJar();
+		File bladeJar = BladeCLI.getBladeCLIFile();
 
 		if (bladeJar != null) {
 			try (ZipFile zipFile = new ZipFile(bladeJar)) {

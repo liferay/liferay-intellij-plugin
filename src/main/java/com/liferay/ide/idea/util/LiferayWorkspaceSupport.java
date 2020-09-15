@@ -161,6 +161,27 @@ public interface LiferayWorkspaceSupport {
 		return fileSystem.findFileByPath(projectBasePath);
 	}
 
+	public static boolean isFlexibleLiferayWorkspace(Project workspaceProject) {
+		if (isValidGradleWorkspaceProject(workspaceProject)) {
+			if (CoreUtil.compareVersions(
+					new Version(GradleUtil.getWorkspacePluginVersion(workspaceProject)), new Version("2.5.0")) >= 0) {
+
+				return true;
+			}
+
+			return false;
+		}
+		else if (isValidMavenWorkspaceLocation(workspaceProject)) {
+			MavenProject mavenWorkspaceProject = MavenUtil.getWorkspaceMavenProject(workspaceProject);
+
+			Properties properties = mavenWorkspaceProject.getProperties();
+
+			return Objects.nonNull(properties.getProperty(WorkspaceConstants.WORKSPACE_BOM_VERSION, null));
+		}
+
+		return false;
+	}
+
 	public static boolean isValidGradleWorkspaceLocation(@Nullable String location) {
 		if (location == null) {
 			return false;
@@ -317,10 +338,7 @@ public interface LiferayWorkspaceSupport {
 			return null;
 		}
 
-		MavenProjectsManager mavenProjectsManager = MavenProjectsManager.getInstance(project);
-
-		MavenProject mavenWorkspaceProject = mavenProjectsManager.findContainingProject(
-			getWorkspaceVirtualFile(project));
+		MavenProject mavenWorkspaceProject = MavenUtil.getWorkspaceMavenProject(project);
 
 		if (mavenWorkspaceProject == null) {
 			return defaultValue;

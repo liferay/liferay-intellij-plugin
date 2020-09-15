@@ -43,11 +43,13 @@ sourceSets {
 
 task dockerImageBuild(type:Exec)
 task dockerPublishRelease(type:Exec)
-task downloadBlade(type: Download)
+task downloadBlade392(type: Download)
+task downloadBladeLatest(type: Download)
 task downloadDtds(type: Download)
 task downloadTlds(type: Download)
 task downloadXsds(type: Download)
-task verifyBlade(type: Verify)
+task verifyBlade392(type: Verify)
+task verifyBladeLatest(type: Verify)
 
 String userHome = System.getProperty("user.home")
 
@@ -98,9 +100,16 @@ dockerPublishRelease {
 	commandLine args
 }
 
-downloadBlade {
+downloadBladeLatest {
 	src bladeLatestDownloadURL
-	dest "build/resources/main/libs/blade.jar"
+	dest new File(bladeBuildOutputDir, 'blade-latest.jar')
+	onlyIfModified true
+}
+
+downloadBlade392 {
+	dependsOn(downloadBladeLatest)
+	src blade392DownloadURL
+	dest new File(bladeBuildOutputDir, 'blade-3.9.2.jar')
 	onlyIfModified true
 }
 
@@ -202,7 +211,8 @@ patchPluginXml {
 }
 
 processResources {
-	dependsOn verifyBlade
+	dependsOn downloadBladeLatest
+	dependsOn downloadBlade392
 }
 
 def marketplaceKey = credentials.marketplaceKey ?: ""
@@ -227,11 +237,18 @@ test {
 	}
 }
 
-verifyBlade {
-	dependsOn downloadBlade
-	src "build/resources/main/libs/blade.jar"
+verifyBladeLatest {
+	dependsOn downloadBladeLatest
+	src "$bladeBuildOutputDir" + 'blade-latest.jar'
 	algorithm "MD5"
 	checksum bladeLatestMD5
+}
+
+verifyBlade392 {
+	dependsOn downloadBlade392
+	src "$bladeBuildOutputDir" + 'blade-392.jar'
+	algorithm "MD5"
+	checksum blade392MD5
 }
 
 version = "1.8.0"

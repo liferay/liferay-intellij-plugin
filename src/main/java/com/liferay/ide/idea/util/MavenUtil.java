@@ -14,6 +14,9 @@
 
 package com.liferay.ide.idea.util;
 
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -24,6 +27,10 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.idea.maven.project.MavenProject;
+import org.jetbrains.idea.maven.project.MavenProjectsManager;
 
 /**
  * @author Ethan Sun
@@ -36,6 +43,14 @@ public class MavenUtil {
 		mavenReader.setAddDefaultEntities(true);
 
 		return mavenReader.read(new FileReader(pomFile));
+	}
+
+	public static MavenProject getWorkspaceMavenProject(@NotNull Project project) {
+		MavenProjectsManager mavenProjectsManager = MavenProjectsManager.getInstance(project);
+
+		VirtualFile workspaceVirtualFile = LiferayWorkspaceSupport.getWorkspaceVirtualFile(project);
+
+		return mavenProjectsManager.findContainingProject(workspaceVirtualFile);
 	}
 
 	public static void updateMavenPom(Model model, File file) throws IOException {

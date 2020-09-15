@@ -198,7 +198,7 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep implements Life
 	}
 
 	private void _insertOriginalModuleNames() {
-		if (getTargetPlatformVersion(_project) == null) {
+		if (getWorkspaceProductInfo(_project) == null) {
 			return;
 		}
 
