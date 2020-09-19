@@ -84,9 +84,10 @@ jobs:
         run: |
           ./gradlew --no-daemon clean -x test build
       - name: Verify compatibility
-        uses: thepieterdc/intellij-plugin-verifier-action@v1.1.1
+        uses: ChrisCarini/intellij-platform-plugin-verifier-action@v1.0.3
         with:
-         plugin: './build/distributions/*.zip'
-         versions: |
-          2020.1
-          2020.1.1
+          ide-versions: |
+            ideaIC:2020.1
+            ideaIU:2020.1
+            ideaIC:2020.1.1
+            ideaIU:2020.1.1
