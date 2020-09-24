@@ -57,7 +57,8 @@ public class WorkspaceConstants {
 	public static final String TARGET_PLATFORM_VERSION_PROPERTY = "liferay.workspace.target.platform.version";
 
 	public static final String[] TARGET_PLATFORM_VERSIONS = {
-		"7.3.0", "7.2.1", "7.2.0", "7.1.3", "7.1.2", "7.1.1", "7.1.0", "7.0.6"
+		"7.3.4", "7.3.3-1", "7.3.2-1", "7.3.1-1", "7.3.0-1", "7.2.1-1", "7.2.0", "7.1.3-1", "7.1.2", "7.1.1", "7.1.0",
+		"7.0.6-2"
 	};
 
 	public static final String THEMES_DIR_DEFAULT = "themes";
