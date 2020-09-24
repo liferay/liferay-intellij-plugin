@@ -18,11 +18,10 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 
+import com.liferay.ide.idea.core.LiferayIcons;
 import com.liferay.ide.idea.core.WorkspaceConstants;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 import com.liferay.ide.idea.util.ProjectConfigurationUtil;
-
-import icons.LiferayIcons;
 
 import java.util.Arrays;
 

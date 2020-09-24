@@ -17,7 +17,7 @@ package com.liferay.ide.idea.bnd;
 import com.intellij.openapi.fileTypes.LanguageFileType;
 import com.intellij.openapi.vfs.VirtualFile;
 
-import icons.LiferayIcons;
+import com.liferay.ide.idea.core.LiferayIcons;
 
 import javax.swing.Icon;
 

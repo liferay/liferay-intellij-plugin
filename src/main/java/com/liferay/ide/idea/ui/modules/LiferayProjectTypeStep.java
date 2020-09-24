@@ -55,7 +55,6 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.popup.list.GroupedItemsListRenderer;
 import com.intellij.util.Function;
-import com.intellij.util.containers.ConcurrentMultiMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.FactoryMap;
@@ -140,7 +139,7 @@ public class LiferayProjectTypeStep extends ModuleWizardStep implements Disposab
 		_context = context;
 		_wizard = wizard;
 
-		_templatesMap = new ConcurrentMultiMap<>();
+		_templatesMap = MultiMap.createConcurrent();
 
 		List<TemplatesGroup> groups = _fillTemplatesMap(context.getProject());
 

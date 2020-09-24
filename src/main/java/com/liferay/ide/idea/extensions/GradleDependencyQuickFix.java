@@ -28,12 +28,11 @@ import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 
+import com.liferay.ide.idea.core.LiferayIcons;
 import com.liferay.ide.idea.core.MessagesBundle;
 import com.liferay.ide.idea.util.GradleUtil;
 import com.liferay.ide.idea.util.IntellijUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
-
-import icons.LiferayIcons;
 
 import javax.swing.Icon;
 

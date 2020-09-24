@@ -16,7 +16,7 @@ package com.liferay.ide.idea.language.tag;
 
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 
-import icons.LiferayIcons;
+import com.liferay.ide.idea.core.LiferayIcons;
 
 /**
  * @author Terry Jia

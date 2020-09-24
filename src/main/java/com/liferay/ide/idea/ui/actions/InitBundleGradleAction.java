@@ -16,10 +16,9 @@ package com.liferay.ide.idea.ui.actions;
 
 import com.intellij.openapi.project.Project;
 
+import com.liferay.ide.idea.core.LiferayIcons;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 import com.liferay.ide.idea.util.ProjectConfigurationUtil;
-
-import icons.LiferayIcons;
 
 /**
  * @author Andy Wu

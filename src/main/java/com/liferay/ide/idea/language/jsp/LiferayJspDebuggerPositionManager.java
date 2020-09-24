@@ -19,12 +19,13 @@ import com.intellij.debugger.NoDataException;
 import com.intellij.debugger.SourcePosition;
 import com.intellij.debugger.engine.DebugProcess;
 import com.intellij.debugger.engine.JSR45PositionManager;
+import com.intellij.ide.highlighter.JspxFileType;
+import com.intellij.ide.highlighter.NewJspFileType;
 import com.intellij.javaee.facet.JavaeeFacet;
 import com.intellij.javaee.facet.JavaeeFacetUtil;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.util.Computable;
 import com.intellij.psi.PsiFile;
 
@@ -137,6 +138,6 @@ public class LiferayJspDebuggerPositionManager extends JSR45PositionManager<Java
 			});
 	}
 
-	private static final LanguageFileType[] _LANGUAGE_FILE_TYPES = {StdFileTypes.JSP, StdFileTypes.JSPX};
+	private static final LanguageFileType[] _LANGUAGE_FILE_TYPES = {NewJspFileType.INSTANCE, JspxFileType.INSTANCE};
 
 }

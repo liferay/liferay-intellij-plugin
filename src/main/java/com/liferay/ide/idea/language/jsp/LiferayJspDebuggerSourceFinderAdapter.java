@@ -15,6 +15,7 @@
 package com.liferay.ide.idea.language.jsp;
 
 import com.intellij.debugger.engine.SourcesFinder;
+import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.javaee.deployment.JspDeploymentManager;
 import com.intellij.javaee.facet.JavaeeFacet;
 import com.intellij.openapi.application.Application;
@@ -23,7 +24,6 @@ import com.intellij.openapi.externalSystem.model.project.LibraryData;
 import com.intellij.openapi.externalSystem.model.project.LibraryPathType;
 import com.intellij.openapi.fileTypes.FileNameMatcher;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.OrderEnumerator;
 import com.intellij.openapi.roots.OrderRootType;
@@ -157,7 +157,7 @@ public class LiferayJspDebuggerSourceFinderAdapter implements SourcesFinder<Java
 	private boolean _isJava(String relPath) {
 		FileTypeManager fileTypeManager = FileTypeManager.getInstance();
 
-		List<FileNameMatcher> fileNameMatchers = fileTypeManager.getAssociations(StdFileTypes.JAVA);
+		List<FileNameMatcher> fileNameMatchers = fileTypeManager.getAssociations(JavaFileType.INSTANCE);
 
 		Optional<FileNameMatcher> fileNameMatcher = fileNameMatchers.stream(
 		).filter(
