@@ -30,13 +30,12 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 
+import com.liferay.ide.idea.core.LiferayIcons;
 import com.liferay.ide.idea.core.WorkspaceConstants;
 import com.liferay.ide.idea.server.gogo.GogoTelnetClient;
 import com.liferay.ide.idea.util.FileUtil;
 import com.liferay.ide.idea.util.GradleUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
-
-import icons.LiferayIcons;
 
 import java.io.File;
 import java.io.IOException;

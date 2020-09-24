@@ -14,7 +14,7 @@
 
 package com.liferay.ide.idea.ui.actions;
 
-import icons.LiferayIcons;
+import com.liferay.ide.idea.core.LiferayIcons;
 
 import java.util.Arrays;
 

@@ -29,13 +29,12 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 
+import com.liferay.ide.idea.core.LiferayIcons;
 import com.liferay.ide.idea.core.LiferayProjectTypeService;
 import com.liferay.ide.idea.core.WorkspaceConstants;
 import com.liferay.ide.idea.util.BladeCLI;
 import com.liferay.ide.idea.util.CoreUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
-
-import icons.LiferayIcons;
 
 import java.io.File;
 

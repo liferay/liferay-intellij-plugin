@@ -19,10 +19,9 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 
+import com.liferay.ide.idea.core.LiferayIcons;
 import com.liferay.ide.idea.util.FileUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
-
-import icons.LiferayIcons;
 
 import java.io.File;
 

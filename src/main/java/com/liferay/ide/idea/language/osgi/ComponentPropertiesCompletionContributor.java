@@ -34,7 +34,7 @@ import com.intellij.psi.impl.source.PsiClassReferenceType;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ProcessingContext;
 
-import icons.LiferayIcons;
+import com.liferay.ide.idea.core.LiferayIcons;
 
 import java.util.ArrayList;
 import java.util.Comparator;

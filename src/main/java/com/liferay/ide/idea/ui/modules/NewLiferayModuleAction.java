@@ -31,9 +31,8 @@ import com.intellij.openapi.roots.ui.configuration.ModulesConfigurator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 
+import com.liferay.ide.idea.core.LiferayIcons;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
-
-import icons.LiferayIcons;
 
 import java.util.List;
 

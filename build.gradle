@@ -191,13 +191,13 @@ formatSource {
 }
 
 intellij {
-	plugins "java", "CSS", "DatabaseTools", "gradle", "Groovy", "java-i18n", "JavaEE", "JavaScriptLanguage", "jsp", "junit", "maven", "PersistenceSupport", "properties", "sass"
+	plugins "java", "CSS", "DatabaseTools", "gradle", "Groovy", "java-i18n", "JavaEE", "Web", "JavaScriptLanguage", "jsp", "junit", "maven", "PersistenceSupport", "properties", "sass"
 	pluginName "liferay-intellij-plugin"
-	version "IU-2020.1"
+	version "IU-2020.2"
 }
 
 patchPluginXml {
-	sinceBuild "201"
+	sinceBuild "202"
 	untilBuild ""
 }
 

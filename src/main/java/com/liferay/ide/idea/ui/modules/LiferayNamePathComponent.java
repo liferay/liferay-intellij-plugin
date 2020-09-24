@@ -43,6 +43,8 @@ import java.awt.event.ActionEvent;
 
 import java.io.File;
 
+import java.nio.file.Paths;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -284,7 +286,7 @@ public class LiferayNamePathComponent extends JPanel {
 		ProjectManager projectManager = ProjectManager.getInstance();
 
 		for (Project project : projectManager.getOpenProjects()) {
-			if (ProjectUtil.isSameProject(projectDirectory, project)) {
+			if (ProjectUtil.isSameProject(Paths.get(projectDirectory), project)) {
 				String msg = String.format(
 					"Directory '%s' is already taken by the project '%s'. Please consider another location.",
 					projectDirectory, project.getName());

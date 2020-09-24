@@ -12,7 +12,7 @@
  * details.
  */
 
-package icons;
+package com.liferay.ide.idea.core;
 
 import com.intellij.openapi.util.IconLoader;
 

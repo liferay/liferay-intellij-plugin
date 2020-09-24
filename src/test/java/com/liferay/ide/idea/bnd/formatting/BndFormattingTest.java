@@ -16,7 +16,6 @@ package com.liferay.ide.idea.bnd.formatting;
 
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
@@ -40,9 +39,7 @@ public class BndFormattingTest extends BasePlatformTestCase {
 
 				PsiFile psiFile = myFixture.getFile();
 
-				TextRange textRange = psiFile.getTextRange();
-
-				codeStyleManager.reformatText(myFixture.getFile(), ContainerUtil.newArrayList(textRange));
+				codeStyleManager.reformatText(psiFile, ContainerUtil.newArrayList(psiFile.getTextRange()));
 			});
 
 		myFixture.checkResultByFile("formatted.bnd");
