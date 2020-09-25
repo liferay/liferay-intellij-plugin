@@ -39,9 +39,9 @@ import java.awt.event.ActionListener;
 
 import java.io.File;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Stream;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -148,13 +148,15 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 
 		JComboBox targetPlatformComboBox = new ComboBox<>();
 
-		for (String targetPlatformVersion : WorkspaceConstants.TARGET_PLATFORM_VERSIONS) {
-			String version = (String)liferayVersionComboBox.getSelectedItem();
+		String version = (String)liferayVersionComboBox.getSelectedItem();
 
-			if (targetPlatformVersion.startsWith(version)) {
-				targetPlatformComboBox.addItem(targetPlatformVersion);
-			}
-		}
+		String[] targetPlatformVersions = WorkspaceConstants.TARGET_PLATFORM_VERSIONS.get(version);
+
+		Stream.of(
+			targetPlatformVersions
+		).forEach(
+			targetPlatformVersion -> targetPlatformComboBox.addItem(targetPlatformVersion)
+		);
 
 		targetPlatformComboBox.addActionListener(
 			new ActionListener() {
@@ -178,13 +180,13 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 
 				targetPlatformComboBox.removeAllItems();
 
-				for (String targetPlatformVersion : WorkspaceConstants.TARGET_PLATFORM_VERSIONS) {
-					String version = (String)liferayVersionComboBox.getSelectedItem();
+				String[] selectedTargetPlatformVersions = WorkspaceConstants.TARGET_PLATFORM_VERSIONS.get(_liferayVersion);
 
-					if (targetPlatformVersion.startsWith(version)) {
-						targetPlatformComboBox.addItem(targetPlatformVersion);
-					}
-				}
+				Stream.of(
+					selectedTargetPlatformVersions
+				).forEach(
+					targetPlatformVersion -> targetPlatformComboBox.addItem(targetPlatformVersion)
+				);
 
 				targetPlatformComboBox.setSelectedIndex(0);
 
