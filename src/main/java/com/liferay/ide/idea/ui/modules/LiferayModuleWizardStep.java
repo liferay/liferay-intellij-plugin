@@ -297,23 +297,24 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 
 		String type = getSelectedType();
 
-		String projectTemplateName = type.replaceAll("-", ".");
-
-		VersionRange versionRange = _projectTemplateVersionRangeMap.get(projectTemplateName);
-
-		boolean warCoreExt = projectTemplateName.equals("war.core.ext");
-
-		boolean formField = projectTemplateName.equals("form.field");
-
 		if (LiferayWorkspaceSupport.isValidMavenWorkspaceLocation(workspaceProject)) {
-			if (formField && liferayVersion.equals("7.3")) {
-				throw new ConfigurationException("Form Field project is not supported 7.3 for Maven", validationTitle);
+			if (Objects.equals(type, "form-field")) {
+				VersionRange requiredVersionRange = new VersionRange(
+						true, new Version("7.0"), new Version("7.2"), false);
+
+				if (!requiredVersionRange.includes(new Version(liferayVersion))) {
+					throw new ConfigurationException("Form Field project is only supported 7.0 and 7.1 for Maven", validationTitle);
+				}
 			}
 
-			if (warCoreExt) {
+			if (Objects.equals(type, "war-core-ext")) {
 				throw new ConfigurationException("Not support to create maven war-core-ext project.", validationTitle);
 			}
 		}
+
+		String projectTemplateName = type.replaceAll("-", ".");
+
+		VersionRange versionRange = _projectTemplateVersionRangeMap.get(projectTemplateName);
 
 		if (versionRange != null) {
 			boolean include = versionRange.includes(new Version(liferayVersion));
@@ -329,7 +330,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 				}
 
 				throw new ConfigurationException(
-					"Specified Liferay version is invaild. Must be in range " + versionRange, validationTitle);
+					"Specified Liferay version is invalid. Must be in range " + versionRange, validationTitle);
 			}
 		}
 		else {
