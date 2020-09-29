@@ -221,6 +221,12 @@
 			<action class="com.liferay.ide.idea.ui.actions.InitBundleGradleAction" id="GradleInitBundle"/>
 			<action class="com.liferay.ide.idea.ui.actions.InitBundleMavenAction" id="MavenInitBundle"/>
 		</group>
+
+		<action id="com.liferay.ide.idea.ui.actions.CompareOriginalImplementationAction"
+				class="com.liferay.ide.idea.ui.actions.CompareOriginalImplementationAction"
+				text="Compare With Original Source">
+			<add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="CompareTwoFiles"/>
+		</action>
 	</actions>
 
 	<extensions defaultExtensionNs="com.intellij">
