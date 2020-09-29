@@ -47,7 +47,7 @@ public class LiferayWorkspaceProductTip extends DialogWrapper {
 
 		init();
 
-		setTitle("New Liferay Module Project");
+		setTitle("Update Liferay Workspace Product Setting");
 	}
 
 	@Nullable

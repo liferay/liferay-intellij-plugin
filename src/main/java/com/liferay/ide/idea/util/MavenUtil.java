@@ -15,7 +15,6 @@
 package com.liferay.ide.idea.util;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
 
 import java.io.File;
 import java.io.FileReader;
@@ -48,9 +47,7 @@ public class MavenUtil {
 	public static MavenProject getWorkspaceMavenProject(@NotNull Project project) {
 		MavenProjectsManager mavenProjectsManager = MavenProjectsManager.getInstance(project);
 
-		VirtualFile workspaceVirtualFile = LiferayWorkspaceSupport.getWorkspaceVirtualFile(project);
-
-		return mavenProjectsManager.findContainingProject(workspaceVirtualFile);
+		return mavenProjectsManager.findContainingProject(LiferayWorkspaceSupport.getWorkspaceVirtualFile(project));
 	}
 
 	public static void updateMavenPom(Model model, File file) throws IOException {

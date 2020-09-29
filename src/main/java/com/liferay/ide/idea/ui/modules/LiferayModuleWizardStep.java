@@ -300,15 +300,16 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 		if (LiferayWorkspaceSupport.isValidMavenWorkspaceLocation(workspaceProject)) {
 			if (Objects.equals(type, "form-field")) {
 				VersionRange requiredVersionRange = new VersionRange(
-						true, new Version("7.0"), new Version("7.2"), false);
+					true, new Version("7.0"), new Version("7.2"), false);
 
 				if (!requiredVersionRange.includes(new Version(liferayVersion))) {
-					throw new ConfigurationException("Form Field project is only supported 7.0 and 7.1 for Maven", validationTitle);
+					throw new ConfigurationException(
+						"Form Field project is only supported 7.0 and 7.1 for Maven", validationTitle);
 				}
 			}
 
 			if (Objects.equals(type, "war-core-ext")) {
-				throw new ConfigurationException("Not support to create maven war-core-ext project.", validationTitle);
+				throw new ConfigurationException("Not support to create maven war-core-ext project	", validationTitle);
 			}
 		}
 
@@ -349,7 +350,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 	}
 
 	private void _loadSupportedVersionRanges() {
-		File bladeJar = BladeCLI.getBladeCLIFile();
+		File bladeJar = BladeCLI.getBladeJar(BladeCLI.getBladeJarVersion());
 
 		if (bladeJar != null) {
 			try (ZipFile zipFile = new ZipFile(bladeJar)) {

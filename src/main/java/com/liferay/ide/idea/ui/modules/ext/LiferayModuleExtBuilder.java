@@ -23,7 +23,6 @@ import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.module.StdModuleTypes;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -138,13 +137,7 @@ public class LiferayModuleExtBuilder extends ModuleBuilder implements LiferayWor
 		sb.append("-m ");
 		sb.append(_originalModuleName);
 
-		ProjectManager projectManager = ProjectManager.getInstance();
-
-		Project liferayWorkspaceProject = projectManager.getOpenProjects()[0];
-
-		if (Objects.nonNull(liferayWorkspaceProject) &&
-			!LiferayWorkspaceSupport.isFlexibleLiferayWorkspace(liferayWorkspaceProject)) {
-
+		if (Objects.nonNull(project) && !LiferayWorkspaceSupport.isFlexibleLiferayWorkspace(project)) {
 			sb.append(" -M ");
 			sb.append(_originalModuleVersion);
 		}

@@ -39,10 +39,9 @@ import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -113,9 +112,9 @@ public class LiferayWorkspaceProductDialog extends DialogWrapper {
 		application.invokeAndWait(
 			() -> {
 				try {
-					final String productKey = (String)_productVersionComboBox.getSelectedItem();
-
 					if (Objects.nonNull(_project)) {
+						final String productKey = (String)_productVersionComboBox.getSelectedItem();
+
 						Path projectPath = Paths.get(Objects.requireNonNull(_project.getBasePath()));
 
 						Path gradlePropertiesPath = projectPath.resolve("gradle.properties");
@@ -173,28 +172,28 @@ public class LiferayWorkspaceProductDialog extends DialogWrapper {
 
 				@Override
 				public void run() {
-					String[] allWorkspaceProducts = BladeCLI.getWorkspaceProducts(showAll);
+					List<String> allWorkspaceProducts = Arrays.asList(BladeCLI.getWorkspaceProducts(showAll));
 
 					if (!ListUtil.isEmpty(allWorkspaceProducts)) {
-						_productVersions.clear();
-
 						_productVersionComboBox.removeAllItems();
-
-						Collections.addAll(_productVersions, allWorkspaceProducts);
 					}
 
-					for (String productVersion : _productVersions) {
-						_productVersionComboBox.addItem(productVersion);
-					}
+					allWorkspaceProducts.stream(
+					).forEach(
+						productVersion -> _productVersionComboBox.addItem(productVersion)
+					);
 
-					_productVersionComboBox.setSelectedIndex(0);
+					int defaultProductVersionIndex = allWorkspaceProducts.indexOf(
+						WorkspaceConstants.DEFAULT_PRODUCT_VERSION);
+
+					_productVersionComboBox.setSelectedIndex(
+						(defaultProductVersionIndex == -1) ? 0 : defaultProductVersionIndex);
 				}
 
 			});
 	}
 
 	private JComboBox<String> _productVersionComboBox;
-	private final List<String> _productVersions = new CopyOnWriteArrayList<>();
 	private final Project _project;
 
 }

@@ -107,7 +107,6 @@ downloadBladeLatest {
 }
 
 downloadBlade392 {
-	dependsOn(downloadBladeLatest)
 	src blade392DownloadURL
 	dest new File(bladeBuildOutputDir, 'blade-3.9.2.jar')
 	onlyIfModified true

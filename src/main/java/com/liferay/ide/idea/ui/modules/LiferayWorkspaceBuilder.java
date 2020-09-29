@@ -39,8 +39,8 @@ import java.awt.event.ActionListener;
 
 import java.io.File;
 
-import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Stream;
 
 import javax.swing.JCheckBox;
@@ -81,41 +81,20 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 	@Override
 	@SuppressWarnings("unchecked")
 	public ModuleWizardStep modifySettingsStep(@NotNull SettingsStep settingsStep) {
-		JComboBox productVersionComboBox = new ComboBox<>();
+		JComboBox<String> productVersionComboBox = new ComboBox<>();
 
 		JCheckBox showAllProductVersionCheckBox = new JCheckBox();
 
-		showAllProductVersionCheckBox.setSelected(true);
+		showAllProductVersionCheckBox.setSelected(false);
 
 		showAllProductVersionCheckBox.addActionListener(
 			e -> {
 				boolean showAllProductVersion = showAllProductVersionCheckBox.isSelected();
 
-				Application application = ApplicationManager.getApplication();
-
-				application.executeOnPooledThread(
-					() -> {
-						String[] allWorkspaceProducts = BladeCLI.getWorkspaceProducts(showAllProductVersion);
-
-						if (!ListUtil.isEmpty(allWorkspaceProducts)) {
-							_productVersions.clear();
-
-							productVersionComboBox.removeAllItems();
-
-							Collections.addAll(_productVersions, allWorkspaceProducts);
-						}
-
-						for (String productVersion : _productVersions) {
-							productVersionComboBox.addItem(productVersion);
-						}
-
-						productVersionComboBox.setSelectedIndex(0);
-
-						_productVersion = (String)productVersionComboBox.getSelectedItem();
-					});
+				_initProductVersionComBox(productVersionComboBox, showAllProductVersion);
 			});
 
-		showAllProductVersionCheckBox.doClick();
+		_initProductVersionComBox(productVersionComboBox, false);
 
 		productVersionComboBox.addActionListener(
 			new ActionListener() {
@@ -150,7 +129,7 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 
 		String version = (String)liferayVersionComboBox.getSelectedItem();
 
-		String[] targetPlatformVersions = WorkspaceConstants.TARGET_PLATFORM_VERSIONS.get(version);
+		String[] targetPlatformVersions = WorkspaceConstants.targetPlatformVersionMap.get(version);
 
 		Stream.of(
 			targetPlatformVersions
@@ -180,7 +159,8 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 
 				targetPlatformComboBox.removeAllItems();
 
-				String[] selectedTargetPlatformVersions = WorkspaceConstants.TARGET_PLATFORM_VERSIONS.get(_liferayVersion);
+				String[] selectedTargetPlatformVersions = WorkspaceConstants.targetPlatformVersionMap.get(
+					_liferayVersion);
 
 				Stream.of(
 					selectedTargetPlatformVersions
@@ -273,11 +253,36 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 		}
 	}
 
+	private void _initProductVersionComBox(JComboBox<String> productVersionComboBox, boolean showAllProductVersion) {
+		Application application = ApplicationManager.getApplication();
+
+		application.executeOnPooledThread(
+			() -> {
+				List<String> allWorkspaceProducts = Arrays.asList(BladeCLI.getWorkspaceProducts(showAllProductVersion));
+
+				if (!ListUtil.isEmpty(allWorkspaceProducts)) {
+					productVersionComboBox.removeAllItems();
+				}
+
+				allWorkspaceProducts.stream(
+				).forEach(
+					productVersion -> productVersionComboBox.addItem(productVersion)
+				);
+
+				int defaultProductVersionIndex = allWorkspaceProducts.indexOf(
+					WorkspaceConstants.DEFAULT_PRODUCT_VERSION);
+
+				productVersionComboBox.setSelectedIndex(
+					(defaultProductVersionIndex == -1) ? 0 : defaultProductVersionIndex);
+
+				_productVersion = (String)productVersionComboBox.getSelectedItem();
+			});
+	}
+
 	private boolean _indexSources = false;
 	private String _liferayProjectType;
 	private String _liferayVersion = WorkspaceConstants.DEFAULT_LIFERAY_VERSION;
 	private String _productVersion = WorkspaceConstants.DEFAULT_PRODUCT_VERSION;
-	private List<String> _productVersions = new CopyOnWriteArrayList<>();
 	private String _targetPlatform = WorkspaceConstants.DEFAULT_TARGET_PLATFORM_VERSION;
 
 }

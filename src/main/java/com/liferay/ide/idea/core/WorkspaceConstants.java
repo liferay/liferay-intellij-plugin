@@ -33,7 +33,7 @@ public class WorkspaceConstants {
 
 	public static final String DEFAULT_LIFERAY_VERSION = "7.3";
 
-	public static final String DEFAULT_PRODUCT_VERSION = "portal-7.3-ga5";
+	public static final String DEFAULT_PRODUCT_VERSION = "portal-7.3-ga6";
 
 	public static final String DEFAULT_TARGET_PLATFORM_VERSION = "7.3.4";
 
@@ -75,7 +75,7 @@ public class WorkspaceConstants {
 
 	public static final String WORKSPACE_PRODUCT_PROPERTY = "liferay.workspace.product";
 
-	public static final Map<String, String[]> TARGET_PLATFORM_VERSIONS = new HashMap<String, String[]>() {
+	public static final Map<String, String[]> targetPlatformVersionMap = new HashMap<String, String[]>() {
 		{
 			put("7.0", new String[] {"7.0.6-2"});
 			put("7.1", new String[] {"7.1.3-1", "7.1.2", "7.1.1", "7.1.0"});
@@ -83,4 +83,5 @@ public class WorkspaceConstants {
 			put("7.3", new String[] {"7.3.4", "7.3.3-1", "7.3.2-1", "7.3.1-1", "7.3.0-1"});
 		}
 	};
+
 }

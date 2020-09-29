@@ -322,7 +322,7 @@ public interface LiferayWorkspaceSupport {
 		if (Objects.nonNull(workspaceProductInfo)) {
 			String workspaceProductTargetPlatformVersion = workspaceProductInfo.getTargetPlatformVersion();
 
-			if (verfiyTargetPlatformVersion(workspaceProductTargetPlatformVersion)) {
+			if (verifyTargetPlatformVersion(workspaceProductTargetPlatformVersion)) {
 				String[] versionArr = workspaceProductTargetPlatformVersion.split("\\.");
 
 				return versionArr[0] + "." + versionArr[1];
@@ -508,7 +508,18 @@ public interface LiferayWorkspaceSupport {
 		String location = project.getBasePath();
 
 		if (isValidGradleWorkspaceProject(project)) {
-			return getGradleProperty(location, WorkspaceConstants.TARGET_PLATFORM_VERSION_PROPERTY, null);
+			String targetPlatformVersion = getGradleProperty(
+				location, WorkspaceConstants.TARGET_PLATFORM_VERSION_PROPERTY, null);
+
+			if (Objects.nonNull(targetPlatformVersion)) {
+				return targetPlatformVersion;
+			}
+
+			ProductInfo productInfo = getWorkspaceProductInfo(project);
+
+			if (Objects.nonNull(productInfo)) {
+				return productInfo.getTargetPlatformVersion();
+			}
 		}
 		else if (isValidMavenWorkspaceLocation(project)) {
 			return getMavenProperty(project, WorkspaceConstants.WORKSPACE_BOM_VERSION, null);
@@ -556,11 +567,9 @@ public interface LiferayWorkspaceSupport {
 	}
 
 	public default void showLiferayWorkspaceProductTip(Project project) {
-		String projectPath = project.getBasePath();
-
 		if (isValidGradleWorkspaceLocation(project.getBasePath())) {
 			String workspaceProductKey = getGradleProperty(
-				projectPath, WorkspaceConstants.WORKSPACE_PRODUCT_PROPERTY, null);
+				project.getBasePath(), WorkspaceConstants.WORKSPACE_PRODUCT_PROPERTY, null);
 
 			if (CoreUtil.isNullOrEmpty(workspaceProductKey)) {
 				Application application = ApplicationManager.getApplication();
@@ -575,7 +584,7 @@ public interface LiferayWorkspaceSupport {
 		}
 	}
 
-	public default boolean verfiyTargetPlatformVersion(String targetPlatformVersion) {
+	public default boolean verifyTargetPlatformVersion(String targetPlatformVersion) {
 		if (CoreUtil.isNullOrEmpty(targetPlatformVersion)) {
 			return false;
 		}

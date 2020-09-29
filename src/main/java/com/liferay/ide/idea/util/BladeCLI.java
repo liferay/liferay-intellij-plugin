@@ -44,7 +44,7 @@ public class BladeCLI {
 
 	public static final String BLADE_LATEST = "blade-latest.jar";
 
-	public static String[] _execute(File bladeJar, String args) {
+	public static String[] execute(File bladeJar, String args) {
 		Project project = new Project();
 		Java javaTask = new Java();
 
@@ -98,31 +98,11 @@ public class BladeCLI {
 	}
 
 	public static String[] execute(String args) {
-		return _execute(getBladeCLIFile(), args);
+		return execute(getBladeJar(getBladeJarVersion()), args);
 	}
 
 	public static String[] executeWithLatestBlade(String args) {
-		return _execute(getBladeJar(BLADE_LATEST), args);
-	}
-
-	public static synchronized File getBladeCLIFile() {
-		ProjectManager projectManager = ProjectManager.getInstance();
-
-		com.intellij.openapi.project.Project workspaceProject = projectManager.getOpenProjects()[0];
-
-		if (Objects.nonNull(workspaceProject)) {
-			if (LiferayWorkspaceSupport.isFlexibleLiferayWorkspace(workspaceProject)) {
-				_bladeJarName = BLADE_LATEST;
-			}
-			else {
-				_bladeJarName = BLADE_392;
-			}
-		}
-		else {
-			_bladeJarName = BLADE_LATEST;
-		}
-
-		return getBladeJar(_bladeJarName);
+		return execute(getBladeJar(BLADE_LATEST), args);
 	}
 
 	public static File getBladeJar(String jarName) {
@@ -165,6 +145,26 @@ public class BladeCLI {
 		}
 
 		return bladeJar;
+	}
+
+	public static synchronized String getBladeJarVersion() {
+		ProjectManager projectManager = ProjectManager.getInstance();
+
+		com.intellij.openapi.project.Project workspaceProject = projectManager.getOpenProjects()[0];
+
+		if (Objects.nonNull(workspaceProject)) {
+			if (LiferayWorkspaceSupport.isFlexibleLiferayWorkspace(workspaceProject)) {
+				_bladeJarName = BLADE_LATEST;
+			}
+			else {
+				_bladeJarName = BLADE_392;
+			}
+		}
+		else {
+			_bladeJarName = BLADE_LATEST;
+		}
+
+		return _bladeJarName;
 	}
 
 	public static synchronized String[] getProjectTemplates() {
