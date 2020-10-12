@@ -238,14 +238,14 @@ test {
 
 verifyBlade392 {
 	dependsOn downloadBlade392
-	src "$bladeBuildOutputDir" + 'blade-392.jar'
+	src file("${bladeBuildOutputDir}/blade-392.jar")
 	algorithm "MD5"
 	checksum blade392MD5
 }
 
 verifyBladeLatest {
 	dependsOn downloadBladeLatest
-	src "$bladeBuildOutputDir" + 'blade-latest.jar'
+	src file("${bladeBuildOutputDir}/blade-latest.jar")
 	algorithm "MD5"
 	checksum bladeLatestMD5
 }
