@@ -47,7 +47,7 @@ jobs:
       - name: Build
         shell: bash
         run: |
-          ./gradlew --no-daemon clean test verifyPlugin
+          ./gradlew --no-daemon --scan clean test verifyPlugin
   LinuxJDK11:
     name: Linux JDK11
     runs-on: ubuntu-18.04
@@ -68,7 +68,7 @@ jobs:
       - name: Build
         shell: bash
         run: |
-          ./gradlew --no-daemon clean test verifyPlugin
+          ./gradlew --no-daemon --scan clean test verifyPlugin
   CompatibilityChecking:
     name: Check compatibility
     runs-on: ubuntu-18.04
