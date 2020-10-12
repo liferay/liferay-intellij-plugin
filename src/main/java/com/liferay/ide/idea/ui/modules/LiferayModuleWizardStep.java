@@ -304,12 +304,13 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 
 				if (!requiredVersionRange.includes(new Version(liferayVersion))) {
 					throw new ConfigurationException(
-						"Form Field project is only supported 7.0 and 7.1 for Maven", validationTitle);
+						"Form Field project is only supported for versions 7.0 and 7.1 with Maven", validationTitle);
 				}
 			}
 
 			if (Objects.equals(type, "war-core-ext")) {
-				throw new ConfigurationException("Not support to create maven war-core-ext project	", validationTitle);
+				throw new ConfigurationException(
+					"Creating war-core-ext project with Maven is not supported", validationTitle);
 			}
 		}
 

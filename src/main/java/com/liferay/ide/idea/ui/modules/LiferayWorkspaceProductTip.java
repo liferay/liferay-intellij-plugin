@@ -94,7 +94,7 @@ public class LiferayWorkspaceProductTip extends DialogWrapper {
 	@NotNull
 	@Override
 	protected Action getOKAction() {
-		setOKButtonText("Update product setting...");
+		setOKButtonText("Update Liferay Workspace product setting...");
 
 		return super.getOKAction();
 	}
