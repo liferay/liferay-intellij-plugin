@@ -102,13 +102,13 @@ dockerPublishRelease {
 
 downloadBladeLatest {
 	src bladeLatestDownloadURL
-	dest new File(bladeBuildOutputDir, 'blade-latest.jar')
+	dest file("${bladeBuildOutputDir}/blade-latest.jar")
 	onlyIfModified true
 }
 
 downloadBlade392 {
 	src blade392DownloadURL
-	dest new File(bladeBuildOutputDir, 'blade-3.9.2.jar')
+	dest file("${bladeBuildOutputDir}/blade-3.9.2.jar")
 	onlyIfModified true
 }
 
