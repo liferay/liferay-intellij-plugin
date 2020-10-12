@@ -100,15 +100,15 @@ dockerPublishRelease {
 	commandLine args
 }
 
-downloadBladeLatest {
-	src bladeLatestDownloadURL
-	dest file("${bladeBuildOutputDir}/blade-latest.jar")
-	onlyIfModified true
-}
-
 downloadBlade392 {
 	src blade392DownloadURL
 	dest file("${bladeBuildOutputDir}/blade-3.9.2.jar")
+	onlyIfModified true
+}
+
+downloadBladeLatest {
+	src bladeLatestDownloadURL
+	dest file("${bladeBuildOutputDir}/blade-latest.jar")
 	onlyIfModified true
 }
 
@@ -236,18 +236,18 @@ test {
 	}
 }
 
-verifyBladeLatest {
-	dependsOn downloadBladeLatest
-	src "$bladeBuildOutputDir" + 'blade-latest.jar'
-	algorithm "MD5"
-	checksum bladeLatestMD5
-}
-
 verifyBlade392 {
 	dependsOn downloadBlade392
 	src "$bladeBuildOutputDir" + 'blade-392.jar'
 	algorithm "MD5"
 	checksum blade392MD5
+}
+
+verifyBladeLatest {
+	dependsOn downloadBladeLatest
+	src "$bladeBuildOutputDir" + 'blade-latest.jar'
+	algorithm "MD5"
+	checksum bladeLatestMD5
 }
 
 version = "1.8.0"
