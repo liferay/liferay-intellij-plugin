@@ -28,6 +28,7 @@ import com.intellij.psi.impl.file.PsiDirectoryFactory;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.treeStructure.Tree;
 
+import com.liferay.ide.idea.core.WorkspaceConstants;
 import com.liferay.ide.idea.util.BladeCLI;
 import com.liferay.ide.idea.util.CoreUtil;
 import com.liferay.ide.idea.util.FileUtil;
@@ -49,7 +50,9 @@ import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -67,6 +70,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Terry Jia
  * @author Simon Jiang
+ * @author Ethan Sun
  */
 public class LiferayModuleWizardStep extends ModuleWizardStep implements LiferayWorkspaceSupport {
 
@@ -164,6 +168,23 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 
 		String liferayVersion = getLiferayVersion(_project);
 
+		if (liferayVersion.isEmpty()) {
+			_liferayVersionCombo.removeAllItems();
+
+			for (String liferayVersionItem : WorkspaceConstants.LIFERAY_VERSIONS) {
+				_liferayVersionCombo.addItem(liferayVersionItem);
+			}
+
+			_liferayVersionCombo.setSelectedItem(0);
+		}
+		else {
+			_mainPanel.remove(_liferayVersionLabel);
+
+			_mainPanel.remove(_liferayVersionCombo);
+
+			_mainPanel.repaint();
+		}
+
 		SwingUtilities.invokeLater(
 			() -> {
 				for (String type : BladeCLI.getProjectTemplates()) {
@@ -207,6 +228,14 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 		return null;
 	}
 
+	public String getLiferayVersion() {
+		if (_liferayVersionCombo.isValid()) {
+			return (String)_liferayVersionCombo.getSelectedItem();
+		}
+
+		return getLiferayVersion(_project);
+	}
+
 	public String getPackageName() {
 		if (_packageName.isEditable()) {
 			return _packageName.getText();
@@ -240,6 +269,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 		_builder.setClassName(getClassName());
 		_builder.setPackageName(getPackageName());
 		_builder.setContributorType(getContributorType());
+		_builder.setLiferayVersion(getLiferayVersion());
 
 		if (getSelectedType().equals("service") || getSelectedType().equals("service-wrapper")) {
 			_builder.setServiceName(getServiceName());
@@ -263,15 +293,32 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 		PsiDirectoryFactory psiDirectoryFactory = PsiDirectoryFactory.getInstance(workspaceProject);
 		PsiNameHelper psiNameHelper = PsiNameHelper.getInstance(workspaceProject);
 
+		String liferayVersion = getLiferayVersion();
+
 		String type = getSelectedType();
+
+		if (LiferayWorkspaceSupport.isValidMavenWorkspaceLocation(workspaceProject)) {
+			if (Objects.equals(type, "form-field")) {
+				VersionRange requiredVersionRange = new VersionRange(
+					true, new Version("7.0"), new Version("7.2"), false);
+
+				if (!requiredVersionRange.includes(new Version(liferayVersion))) {
+					throw new ConfigurationException(
+						"Form Field project is only supported for versions 7.0 and 7.1 with Maven", validationTitle);
+				}
+			}
+
+			if (Objects.equals(type, "war-core-ext")) {
+				throw new ConfigurationException(
+					"Creating war-core-ext project with Maven is not supported", validationTitle);
+			}
+		}
 
 		String projectTemplateName = type.replaceAll("-", ".");
 
 		VersionRange versionRange = _projectTemplateVersionRangeMap.get(projectTemplateName);
 
 		if (versionRange != null) {
-			String liferayVersion = getLiferayVersion(_project);
-
 			boolean include = versionRange.includes(new Version(liferayVersion));
 
 			if (!include) {
@@ -285,7 +332,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 				}
 
 				throw new ConfigurationException(
-					"Specified Liferay version is invaild. Must be in range " + versionRange, validationTitle);
+					"Specified Liferay version is invalid. Must be in range " + versionRange, validationTitle);
 			}
 		}
 		else {
@@ -304,7 +351,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 	}
 
 	private void _loadSupportedVersionRanges() {
-		File bladeJar = BladeCLI.getBladeJar();
+		File bladeJar = BladeCLI.getBladeJar(BladeCLI.getBladeJarVersion());
 
 		if (bladeJar != null) {
 			try (ZipFile zipFile = new ZipFile(bladeJar)) {
@@ -379,6 +426,8 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 	private LiferayModuleBuilder _builder;
 	private JTextField _className;
 	private JTextField _contributorType;
+	private JComboBox<String> _liferayVersionCombo;
+	private JLabel _liferayVersionLabel;
 	private JPanel _mainPanel;
 	private JTextField _packageName;
 	private final Project _project;

@@ -31,7 +31,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 
 import com.liferay.ide.idea.core.LiferayIcons;
 import com.liferay.ide.idea.core.LiferayProjectTypeService;
-import com.liferay.ide.idea.core.WorkspaceConstants;
 import com.liferay.ide.idea.util.BladeCLI;
 import com.liferay.ide.idea.util.CoreUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
@@ -45,6 +44,7 @@ import org.jetbrains.plugins.gradle.util.GradleConstants;
 /**
  * @author Terry Jia
  * @author Simon Jiang
+ * @author Ethan Sun
  */
 public class LiferayModuleBuilder extends ModuleBuilder implements LiferayWorkspaceSupport {
 
@@ -55,6 +55,7 @@ public class LiferayModuleBuilder extends ModuleBuilder implements LiferayWorksp
 		return clazz.getName();
 	}
 
+	@Override
 	public ModuleWizardStep getCustomOptionsStep(WizardContext context, Disposable parentDisposable) {
 		return new LiferayModuleWizardStep(this, context.getProject());
 	}
@@ -93,6 +94,10 @@ public class LiferayModuleBuilder extends ModuleBuilder implements LiferayWorksp
 
 	public void setContributorType(String contributorType) {
 		_contributorType = contributorType;
+	}
+
+	public void setLiferayVersion(String liferayVersion) {
+		_liferayVersion = liferayVersion;
 	}
 
 	public void setPackageName(String packageName) {
@@ -137,14 +142,8 @@ public class LiferayModuleBuilder extends ModuleBuilder implements LiferayWorksp
 			mavenModule = true;
 		}
 
-		String liferayVersion = getLiferayVersion(project);
-
-		if (liferayVersion == null) {
-			liferayVersion = WorkspaceConstants.DEFAULT_LIFERAY_VERSION;
-		}
-
 		sb.append("-v ");
-		sb.append(liferayVersion);
+		sb.append(_liferayVersion);
 		sb.append(" ");
 		sb.append("-t ");
 		sb.append(_type);
@@ -229,6 +228,7 @@ public class LiferayModuleBuilder extends ModuleBuilder implements LiferayWorksp
 
 	private String _className;
 	private String _contributorType;
+	private String _liferayVersion;
 	private String _packageName;
 	private String _serviceName;
 	private String _type;

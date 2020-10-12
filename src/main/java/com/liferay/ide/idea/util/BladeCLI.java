@@ -14,6 +14,8 @@
 
 package com.liferay.ide.idea.util;
 
+import com.intellij.openapi.project.ProjectManager;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,6 +26,7 @@ import java.net.URL;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Scanner;
 import java.util.jar.JarEntry;
@@ -37,7 +40,11 @@ import org.apache.tools.ant.taskdefs.Java;
  */
 public class BladeCLI {
 
-	public static String[] execute(String args) {
+	public static final String BLADE_392 = "blade-3.9.2.jar";
+
+	public static final String BLADE_LATEST = "blade-latest.jar";
+
+	public static String[] execute(File bladeJar, String args) {
 		Project project = new Project();
 		Java javaTask = new Java();
 
@@ -45,7 +52,7 @@ public class BladeCLI {
 		javaTask.setFork(true);
 		javaTask.setFailonerror(true);
 
-		javaTask.setJar(getBladeJar());
+		javaTask.setJar(bladeJar);
 
 		javaTask.setArgs(args);
 
@@ -90,20 +97,28 @@ public class BladeCLI {
 		return lines.toArray(new String[0]);
 	}
 
-	public static File getBladeJar() {
+	public static String[] execute(String args) {
+		return execute(getBladeJar(getBladeJarVersion()), args);
+	}
+
+	public static String[] executeWithLatestBlade(String args) {
+		return execute(getBladeJar(BLADE_LATEST), args);
+	}
+
+	public static File getBladeJar(String jarName) {
 		Properties properties = System.getProperties();
 
 		File temp = new File(properties.getProperty("user.home"), ".liferay-intellij-plugin");
 
-		File bladeJar = new File(temp, "blade.jar");
+		File bladeJar = new File(temp, jarName);
 
 		boolean needToCopy = true;
 
 		ClassLoader bladeClassLoader = BladeCLI.class.getClassLoader();
 
-		URL url = bladeClassLoader.getResource("/libs/blade.jar");
+		URL url = bladeClassLoader.getResource("/libs/" + jarName);
 
-		try (InputStream in = bladeClassLoader.getResourceAsStream("/libs/blade.jar")) {
+		try (InputStream in = bladeClassLoader.getResourceAsStream("/libs/" + jarName)) {
 			JarURLConnection jarURLConnection = (JarURLConnection)url.openConnection();
 
 			JarEntry jarEntry = jarURLConnection.getJarEntry();
@@ -132,6 +147,26 @@ public class BladeCLI {
 		return bladeJar;
 	}
 
+	public static synchronized String getBladeJarVersion() {
+		ProjectManager projectManager = ProjectManager.getInstance();
+
+		com.intellij.openapi.project.Project workspaceProject = projectManager.getOpenProjects()[0];
+
+		if (Objects.nonNull(workspaceProject)) {
+			if (LiferayWorkspaceSupport.isFlexibleLiferayWorkspace(workspaceProject)) {
+				_bladeJarName = BLADE_LATEST;
+			}
+			else {
+				_bladeJarName = BLADE_392;
+			}
+		}
+		else {
+			_bladeJarName = BLADE_LATEST;
+		}
+
+		return _bladeJarName;
+	}
+
 	public static synchronized String[] getProjectTemplates() {
 		List<String> templateNames = new ArrayList<>();
 
@@ -150,5 +185,30 @@ public class BladeCLI {
 
 		return templateNames.toArray(new String[0]);
 	}
+
+	public static synchronized String[] getWorkspaceProducts(boolean showAll) {
+		List<String> workspaceProducts = new ArrayList<>();
+
+		String[] executeResult;
+
+		if (showAll) {
+			executeResult = executeWithLatestBlade("init --list --all");
+		}
+		else {
+			executeResult = executeWithLatestBlade("init --list");
+		}
+
+		for (String result : executeResult) {
+			String category = result.trim();
+
+			if (category.indexOf(" ") == -1) {
+				workspaceProducts.add(category);
+			}
+		}
+
+		return workspaceProducts.toArray(new String[0]);
+	}
+
+	private static String _bladeJarName = null;
 
 }

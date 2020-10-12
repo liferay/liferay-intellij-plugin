@@ -14,6 +14,9 @@
 
 package com.liferay.ide.idea.core;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author Terry Jia
  * @author Simon Jiang
@@ -28,9 +31,11 @@ public class WorkspaceConstants {
 
 	public static final String DEFAULT_BUNDLE_ARTIFACT_NAME_PROPERTY = "liferay.workspace.bundle.artifact.name";
 
-	public static final String DEFAULT_LIFERAY_VERSION = "7.2";
+	public static final String DEFAULT_LIFERAY_VERSION = "7.3";
 
-	public static final String DEFAULT_TARGET_PLATFORM_VERSION = "7.2.1";
+	public static final String DEFAULT_PRODUCT_VERSION = "portal-7.3-ga6";
+
+	public static final String DEFAULT_TARGET_PLATFORM_VERSION = "7.3.4";
 
 	public static final String EXT_DIR_DEFAULT = "ext";
 
@@ -56,11 +61,6 @@ public class WorkspaceConstants {
 
 	public static final String TARGET_PLATFORM_VERSION_PROPERTY = "liferay.workspace.target.platform.version";
 
-	public static final String[] TARGET_PLATFORM_VERSIONS = {
-		"7.3.4", "7.3.3-1", "7.3.2-1", "7.3.1-1", "7.3.0-1", "7.2.1-1", "7.2.0", "7.1.3-1", "7.1.2", "7.1.1", "7.1.0",
-		"7.0.6-2"
-	};
-
 	public static final String THEMES_DIR_DEFAULT = "themes";
 
 	public static final String THEMES_DIR_PROPERTY = "liferay.workspace.themes.dir";
@@ -70,5 +70,18 @@ public class WorkspaceConstants {
 	public static final String WARS_DIR_PROPERTY = "liferay.workspace.wars.dir";
 
 	public static final String WIZARD_LIFERAY_VERSION_FIELD = "selected.liferay.version";
+
+	public static final String WORKSPACE_BOM_VERSION = "liferay.bom.version";
+
+	public static final String WORKSPACE_PRODUCT_PROPERTY = "liferay.workspace.product";
+
+	public static final Map<String, String[]> targetPlatformVersionMap = new HashMap<String, String[]>() {
+		{
+			put("7.0", new String[] {"7.0.6-2"});
+			put("7.1", new String[] {"7.1.3-1", "7.1.2", "7.1.1", "7.1.0"});
+			put("7.2", new String[] {"7.2.1-1", "7.2.0"});
+			put("7.3", new String[] {"7.3.4", "7.3.3-1", "7.3.2-1", "7.3.1-1", "7.3.0-1"});
+		}
+	};
 
 }

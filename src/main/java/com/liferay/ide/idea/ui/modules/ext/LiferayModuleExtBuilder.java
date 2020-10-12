@@ -34,6 +34,8 @@ import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import java.io.File;
 
+import java.util.Objects;
+
 import javax.swing.Icon;
 
 import org.jetbrains.plugins.gradle.util.GradleConstants;
@@ -135,8 +137,10 @@ public class LiferayModuleExtBuilder extends ModuleBuilder implements LiferayWor
 		sb.append("-m ");
 		sb.append(_originalModuleName);
 
-		sb.append(" -M ");
-		sb.append(_originalModuleVersion);
+		if (Objects.nonNull(project) && !LiferayWorkspaceSupport.isFlexibleLiferayWorkspace(project)) {
+			sb.append(" -M ");
+			sb.append(_originalModuleVersion);
+		}
 
 		sb.append(" ");
 		sb.append("\"");
