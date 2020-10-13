@@ -44,6 +44,7 @@ import org.jetbrains.plugins.gradle.util.GradleConstants;
  * @author Terry Jia
  * @author Simon Jiang
  * @author Charles Wu
+ * @author Seiphon Wang
  */
 public class LiferayModuleExtBuilder extends ModuleBuilder implements LiferayWorkspaceSupport {
 

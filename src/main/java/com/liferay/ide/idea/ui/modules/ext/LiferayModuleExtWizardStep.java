@@ -56,6 +56,7 @@ import org.osgi.framework.Version;
  * @author Charles Wu
  * @author Terry Jia
  * @author Simon Jiang
+ * @author Seiphon Wang
  */
 public class LiferayModuleExtWizardStep extends ModuleWizardStep implements LiferayWorkspaceSupport {
 
@@ -164,7 +165,16 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep implements Life
 			throw new ConfigurationException("Please input original module version", validationTitle);
 		}
 
-		if (Objects.equals("7.0", getLiferayVersion(_project))) {
+		if (Objects.isNull(getLiferayVersion(_project))) {
+			throw new ConfigurationException(
+				"The property `liferay.workspace.product` or `liferay.workspace.target.platform.version` has not " +
+					"been set. One of these properties must be set in order to continue.",
+				validationTitle);
+		}
+
+		if (CoreUtil.compareVersions(Version.parseVersion(getLiferayVersion(_project)), Version.parseVersion("7.0")) <=
+				0) {
+
 			throw new ConfigurationException(
 				"Module Ext Projects only work on Liferay Workspace which version is greater than 7.0",
 				validationTitle);

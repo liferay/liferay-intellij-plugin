@@ -511,15 +511,19 @@ public interface LiferayWorkspaceSupport {
 			String targetPlatformVersion = getGradleProperty(
 				location, WorkspaceConstants.TARGET_PLATFORM_VERSION_PROPERTY, null);
 
-			if (Objects.nonNull(targetPlatformVersion)) {
-				return targetPlatformVersion;
+			if (CoreUtil.isNullOrEmpty(targetPlatformVersion)) {
+				ProductInfo productInfo = getWorkspaceProductInfo(project);
+
+				if (Objects.nonNull(productInfo)) {
+					targetPlatformVersion = productInfo.getTargetPlatformVersion();
+
+					if (targetPlatformVersion.contains("-")) {
+						targetPlatformVersion = targetPlatformVersion.substring(0, targetPlatformVersion.indexOf("-"));
+					}
+				}
 			}
 
-			ProductInfo productInfo = getWorkspaceProductInfo(project);
-
-			if (Objects.nonNull(productInfo)) {
-				return productInfo.getTargetPlatformVersion();
-			}
+			return targetPlatformVersion;
 		}
 		else if (isValidMavenWorkspaceLocation(project)) {
 			return getMavenProperty(project, WorkspaceConstants.WORKSPACE_BOM_VERSION, null);
