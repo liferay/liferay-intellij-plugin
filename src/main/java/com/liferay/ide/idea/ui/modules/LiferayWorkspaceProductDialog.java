@@ -24,6 +24,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.vfs.VfsUtil;
 
 import com.liferay.ide.idea.core.WorkspaceConstants;
@@ -75,8 +76,6 @@ public class LiferayWorkspaceProductDialog extends DialogWrapper {
 	protected JComponent createCenterPanel() {
 		JPanel dialogPanel = new JPanel(new GridLayout(2, 2));
 
-		getProductVersion(false);
-
 		JLabel productVersionLabel = new JLabel("Product Version:");
 
 		_productVersionComboBox = new ComboBox<>();
@@ -91,7 +90,7 @@ public class LiferayWorkspaceProductDialog extends DialogWrapper {
 			e -> {
 				boolean showAll = showAllProductVersionCheckBox.isSelected();
 
-				getProductVersion(showAll);
+				rendererProductVersion(showAll);
 			});
 
 		dialogPanel.add(productVersionLabel);
@@ -101,6 +100,8 @@ public class LiferayWorkspaceProductDialog extends DialogWrapper {
 		dialogPanel.add(showAllProductVersionLabel);
 
 		dialogPanel.add(showAllProductVersionCheckBox);
+
+		rendererProductVersion(false);
 
 		return dialogPanel;
 	}
@@ -161,10 +162,20 @@ public class LiferayWorkspaceProductDialog extends DialogWrapper {
 				}
 			});
 
-		close(OK_EXIT_CODE);
+		super.doOKAction();
 	}
 
-	protected void getProductVersion(boolean showAll) {
+	@Nullable
+	@Override
+	protected ValidationInfo doValidate() {
+		if (_productVersionComboBox.getSelectedIndex() == -1) {
+			return new ValidationInfo("Please configure product version");
+		}
+
+		return super.doValidate();
+	}
+
+	protected void rendererProductVersion(boolean showAll) {
 		Application application = ApplicationManager.getApplication();
 
 		application.executeOnPooledThread(
