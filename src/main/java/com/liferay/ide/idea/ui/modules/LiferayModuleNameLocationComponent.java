@@ -311,12 +311,15 @@ public class LiferayModuleNameLocationComponent implements LiferayWorkspaceSuppo
 		if (liferayModuleBuilder != null) {
 			String templateType = liferayModuleBuilder.getType();
 
-			if (Objects.equals("theme", templateType) || Objects.equals("layout-template", templateType) ||
-				Objects.equals("spring-mvc-portlet", templateType) || Objects.equals("war-hook", templateType) ||
-				Objects.equals("war-mvc-portlet", templateType)) {
+			if (templateType.startsWith("war") || Objects.equals("theme", templateType) ||
+				Objects.equals("layout-template", templateType) || Objects.equals("spring-mvc-portlet", templateType)) {
 
 				targetFolderName = getWorkspaceProperty(
 					project, WorkspaceConstants.WARS_DIR_PROPERTY, WorkspaceConstants.WARS_DIR_DEFAULT);
+			}
+			else if (Objects.equals("js-theme", templateType)) {
+				targetFolderName = getWorkspaceProperty(
+					project, WorkspaceConstants.THEMES_DIR_PROPERTY, WorkspaceConstants.THEMES_DIR_DEFAULT);
 			}
 			else if (Objects.equals("war-core-ext", templateType)) {
 				targetFolderName = getWorkspaceProperty(
