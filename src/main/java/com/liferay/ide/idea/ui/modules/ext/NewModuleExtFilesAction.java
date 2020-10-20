@@ -31,6 +31,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 
+import com.liferay.ide.idea.core.LiferayIcons;
 import com.liferay.ide.idea.core.MessagesBundle;
 import com.liferay.ide.idea.ui.compoments.FixedSizeRefreshButton;
 import com.liferay.ide.idea.util.GradleDependency;
@@ -50,6 +51,10 @@ import javax.swing.JTextField;
  * @author Charles Wu
  */
 public class NewModuleExtFilesAction extends AnAction implements DumbAware, LiferayWorkspaceSupport {
+
+	public NewModuleExtFilesAction() {
+		super(LiferayIcons.LIFERAY_ICON);
+	}
 
 	@Override
 	public void actionPerformed(AnActionEvent anActionEvent) {
