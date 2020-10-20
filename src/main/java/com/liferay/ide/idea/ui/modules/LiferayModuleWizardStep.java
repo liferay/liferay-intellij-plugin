@@ -164,18 +164,21 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 
 		_typesPanel.add(typesScrollPane, "archetypes");
 
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode("root", true);
+		_liferayVersion = getLiferayVersion(_project);
 
-		String liferayVersion = getLiferayVersion(_project);
+		if (_liferayVersion.isEmpty()) {
+			_liferayVersion = WorkspaceConstants.DEFAULT_LIFERAY_VERSION;
 
-		if (liferayVersion.isEmpty()) {
 			_liferayVersionCombo.removeAllItems();
 
 			for (String liferayVersionItem : WorkspaceConstants.LIFERAY_VERSIONS) {
 				_liferayVersionCombo.addItem(liferayVersionItem);
 			}
 
-			_liferayVersionCombo.setSelectedItem(0);
+			_liferayVersionCombo.setSelectedItem(_liferayVersion);
+
+			_liferayVersionCombo.addActionListener(
+				e -> _liferayVersion = (String)_liferayVersionCombo.getSelectedItem());
 		}
 		else {
 			_mainPanel.remove(_liferayVersionLabel);
@@ -187,10 +190,11 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 
 		SwingUtilities.invokeLater(
 			() -> {
+				DefaultMutableTreeNode root = new DefaultMutableTreeNode("root", true);
+
 				for (String type : BladeCLI.getProjectTemplates()) {
 					if (Objects.equals("fragment", type) || Objects.equals("modules-ext", type) ||
-						Objects.equals("spring-mvc-portlet", type) ||
-						(Objects.equals("7.0", liferayVersion) && Objects.equals("social-bookmark", type))) {
+						Objects.equals("spring-mvc-portlet", type)) {
 
 						continue;
 					}
@@ -228,14 +232,6 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 		return null;
 	}
 
-	public String getLiferayVersion() {
-		if (_liferayVersionCombo.isValid()) {
-			return (String)_liferayVersionCombo.getSelectedItem();
-		}
-
-		return getLiferayVersion(_project);
-	}
-
 	public String getPackageName() {
 		if (_packageName.isEditable()) {
 			return _packageName.getText();
@@ -269,7 +265,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 		_builder.setClassName(getClassName());
 		_builder.setPackageName(getPackageName());
 		_builder.setContributorType(getContributorType());
-		_builder.setLiferayVersion(getLiferayVersion());
+		_builder.setLiferayVersion(_liferayVersion);
 
 		if (getSelectedType().equals("service") || getSelectedType().equals("service-wrapper")) {
 			_builder.setServiceName(getServiceName());
@@ -293,8 +289,6 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 		PsiDirectoryFactory psiDirectoryFactory = PsiDirectoryFactory.getInstance(workspaceProject);
 		PsiNameHelper psiNameHelper = PsiNameHelper.getInstance(workspaceProject);
 
-		String liferayVersion = getLiferayVersion();
-
 		String type = getSelectedType();
 
 		if (LiferayWorkspaceSupport.isValidMavenWorkspaceLocation(workspaceProject)) {
@@ -302,7 +296,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 				VersionRange requiredVersionRange = new VersionRange(
 					true, new Version("7.0"), new Version("7.2"), false);
 
-				if (!requiredVersionRange.includes(new Version(liferayVersion))) {
+				if (!requiredVersionRange.includes(new Version(_liferayVersion))) {
 					throw new ConfigurationException(
 						"Form Field project is only supported for versions 7.0 and 7.1 with Maven", validationTitle);
 				}
@@ -319,7 +313,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 		VersionRange versionRange = _projectTemplateVersionRangeMap.get(projectTemplateName);
 
 		if (versionRange != null) {
-			boolean include = versionRange.includes(new Version(liferayVersion));
+			boolean include = versionRange.includes(new Version(_liferayVersion));
 
 			if (!include) {
 				boolean npm = type.startsWith("npm");
@@ -426,6 +420,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 	private LiferayModuleBuilder _builder;
 	private JTextField _className;
 	private JTextField _contributorType;
+	private String _liferayVersion;
 	private JComboBox<String> _liferayVersionCombo;
 	private JLabel _liferayVersionLabel;
 	private JPanel _mainPanel;

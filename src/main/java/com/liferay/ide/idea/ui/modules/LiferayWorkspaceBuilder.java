@@ -26,9 +26,8 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.module.StdModuleTypes;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.util.Condition;
+import com.intellij.openapi.ui.Messages;
 
 import com.liferay.ide.idea.core.WorkspaceConstants;
 import com.liferay.ide.idea.util.BladeCLI;
@@ -196,16 +195,22 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 			settingsStep.addSettingsField("", customLabel);
 		}
 
-		return new SdkSettingsStep(
-			settingsStep, this,
-			new Condition<SdkTypeId>() {
+		return new SdkSettingsStep(settingsStep, this, this::isSuitableSdkType) {
 
-				@Override
-				public boolean value(SdkTypeId sdkType) {
-					return isSuitableSdkType(sdkType);
+			@Override
+			public boolean validate() throws com.intellij.openapi.options.ConfigurationException {
+				if (productVersionComboBox.getSelectedIndex() == -1) {
+					Messages.showWarningDialog(
+						"Create liferay workspace project failure, product version can not be null.",
+						"Projects Not Created");
+
+					return false;
 				}
 
-			});
+				return super.validate();
+			}
+
+		};
 	}
 
 	protected void initWorkspace(Project project) {
