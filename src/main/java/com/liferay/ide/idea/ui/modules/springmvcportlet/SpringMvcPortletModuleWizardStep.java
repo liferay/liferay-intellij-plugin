@@ -22,6 +22,7 @@ import com.liferay.ide.idea.core.WorkspaceConstants;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import javax.swing.JComboBox;
@@ -43,7 +44,7 @@ public class SpringMvcPortletModuleWizardStep extends ModuleWizardStep implement
 
 		_liferayVersion = getLiferayVersion(_project);
 
-		if (_liferayVersion.isEmpty()) {
+		if (Objects.isNull(_liferayVersion)) {
 			_liferayVersion = WorkspaceConstants.DEFAULT_LIFERAY_VERSION;
 
 			_liferayVersionCombo.removeAllItems();
@@ -54,7 +55,7 @@ public class SpringMvcPortletModuleWizardStep extends ModuleWizardStep implement
 
 			_liferayVersionCombo.setSelectedItem(_liferayVersion);
 
-			_intializeSpringConfigurationData();
+			_initializeSpringConfigurationData();
 
 			_frameworkCombo.addActionListener(
 				e -> {
@@ -77,7 +78,7 @@ public class SpringMvcPortletModuleWizardStep extends ModuleWizardStep implement
 
 			_mainPanel.repaint();
 
-			_intializeSpringConfigurationData();
+			_initializeSpringConfigurationData();
 
 			_frameworkCombo.addActionListener(
 				e -> {
@@ -127,7 +128,7 @@ public class SpringMvcPortletModuleWizardStep extends ModuleWizardStep implement
 		}
 	}
 
-	private void _intializeSpringConfigurationData() {
+	private void _initializeSpringConfigurationData() {
 		_clearSpringConfigurationData();
 
 		if (_liferayVersion.equals(WorkspaceConstants.LIFERAY_VERSIONS[3])) {

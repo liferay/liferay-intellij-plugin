@@ -317,19 +317,7 @@ public interface LiferayWorkspaceSupport {
 			return versionArr[0] + "." + versionArr[1];
 		}
 
-		ProductInfo workspaceProductInfo = getWorkspaceProductInfo(project);
-
-		if (Objects.nonNull(workspaceProductInfo)) {
-			String workspaceProductTargetPlatformVersion = workspaceProductInfo.getTargetPlatformVersion();
-
-			if (verifyTargetPlatformVersion(workspaceProductTargetPlatformVersion)) {
-				String[] versionArr = workspaceProductTargetPlatformVersion.split("\\.");
-
-				return versionArr[0] + "." + versionArr[1];
-			}
-		}
-
-		return "";
+		return null;
 	}
 
 	@Nullable
@@ -511,15 +499,19 @@ public interface LiferayWorkspaceSupport {
 			String targetPlatformVersion = getGradleProperty(
 				location, WorkspaceConstants.TARGET_PLATFORM_VERSION_PROPERTY, null);
 
-			if (Objects.nonNull(targetPlatformVersion)) {
-				return targetPlatformVersion;
+			if (CoreUtil.isNullOrEmpty(targetPlatformVersion)) {
+				ProductInfo productInfo = getWorkspaceProductInfo(project);
+
+				if (Objects.nonNull(productInfo)) {
+					targetPlatformVersion = productInfo.getTargetPlatformVersion();
+				}
 			}
 
-			ProductInfo productInfo = getWorkspaceProductInfo(project);
-
-			if (Objects.nonNull(productInfo)) {
-				return productInfo.getTargetPlatformVersion();
+			if (!CoreUtil.isNullOrEmpty(targetPlatformVersion) && targetPlatformVersion.contains("-")) {
+				targetPlatformVersion = targetPlatformVersion.substring(0, targetPlatformVersion.indexOf("-"));
 			}
+
+			return targetPlatformVersion;
 		}
 		else if (isValidMavenWorkspaceLocation(project)) {
 			return getMavenProperty(project, WorkspaceConstants.WORKSPACE_BOM_VERSION, null);

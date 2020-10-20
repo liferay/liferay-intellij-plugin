@@ -166,7 +166,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 
 		_liferayVersion = getLiferayVersion(_project);
 
-		if (_liferayVersion.isEmpty()) {
+		if (Objects.isNull(_liferayVersion)) {
 			_liferayVersion = WorkspaceConstants.DEFAULT_LIFERAY_VERSION;
 
 			_liferayVersionCombo.removeAllItems();
