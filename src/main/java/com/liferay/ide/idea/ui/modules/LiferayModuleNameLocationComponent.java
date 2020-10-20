@@ -316,6 +316,7 @@ public class LiferayModuleNameLocationComponent implements LiferayWorkspaceSuppo
 			for (String projectType : _WAR_TYPE_PROJECT) {
 				if (projectType.equals(templateType)) {
 					warProject = true;
+
 					break;
 				}
 			}
