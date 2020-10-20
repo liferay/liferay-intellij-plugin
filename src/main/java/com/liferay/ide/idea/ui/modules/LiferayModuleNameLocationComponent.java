@@ -311,9 +311,16 @@ public class LiferayModuleNameLocationComponent implements LiferayWorkspaceSuppo
 		if (liferayModuleBuilder != null) {
 			String templateType = liferayModuleBuilder.getType();
 
-			if (templateType.startsWith("war") || Objects.equals("theme", templateType) ||
-				Objects.equals("layout-template", templateType) || Objects.equals("spring-mvc-portlet", templateType)) {
+			boolean warProject = false;
 
+			for (String projectType : _WAR_TYPE_PROJECT) {
+				if (projectType.equals(templateType)) {
+					warProject = true;
+					break;
+				}
+			}
+
+			if (warProject) {
 				targetFolderName = getWorkspaceProperty(
 					project, WorkspaceConstants.WARS_DIR_PROPERTY, WorkspaceConstants.WARS_DIR_DEFAULT);
 			}
@@ -393,6 +400,8 @@ public class LiferayModuleNameLocationComponent implements LiferayWorkspaceSuppo
 
 		return true;
 	}
+
+	private static final String[] _WAR_TYPE_PROJECT = {"layout-template", "theme", "war-hook", "war-mvc-portlet"};
 
 	private boolean _contentRootChangedByUser = false;
 	private boolean _contentRootDocListenerEnabled = true;
