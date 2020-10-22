@@ -66,6 +66,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Joye Luo
  * @author Simon Jiang
  * @author Ethan Sun
+ * @author Seiphon Wang
  */
 @SuppressWarnings("rawtypes")
 public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
@@ -120,66 +121,67 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 			settingsStep.addSettingsField("Product version:", productVersionComboBox);
 			settingsStep.addSettingsField("Show All Product Versions", showAllProductVersionCheckBox);
 		}
+		else if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_MAVEN_WORKSPACE)) {
+			JComboBox liferayVersionComboBox = new ComboBox<>();
 
-		JComboBox liferayVersionComboBox = new ComboBox<>();
+			for (String liferayVersion : WorkspaceConstants.LIFERAY_VERSIONS) {
+				liferayVersionComboBox.addItem(liferayVersion);
+			}
 
-		for (String liferayVersion : WorkspaceConstants.LIFERAY_VERSIONS) {
-			liferayVersionComboBox.addItem(liferayVersion);
-		}
+			liferayVersionComboBox.setSelectedItem(WorkspaceConstants.DEFAULT_LIFERAY_VERSION);
 
-		liferayVersionComboBox.setSelectedItem(WorkspaceConstants.DEFAULT_LIFERAY_VERSION);
+			if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_MAVEN_WORKSPACE)) {
+				settingsStep.addSettingsField("Liferay version:", liferayVersionComboBox);
+			}
 
-		if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_MAVEN_WORKSPACE)) {
-			settingsStep.addSettingsField("Liferay version:", liferayVersionComboBox);
-		}
+			JComboBox targetPlatformComboBox = new ComboBox<>();
 
-		JComboBox targetPlatformComboBox = new ComboBox<>();
+			String version = (String)liferayVersionComboBox.getSelectedItem();
 
-		String version = (String)liferayVersionComboBox.getSelectedItem();
+			String[] targetPlatformVersions = WorkspaceConstants.targetPlatformVersionMap.get(version);
 
-		String[] targetPlatformVersions = WorkspaceConstants.targetPlatformVersionMap.get(version);
+			Stream.of(
+				targetPlatformVersions
+			).forEach(
+				targetPlatformVersion -> targetPlatformComboBox.addItem(targetPlatformVersion)
+			);
 
-		Stream.of(
-			targetPlatformVersions
-		).forEach(
-			targetPlatformVersion -> targetPlatformComboBox.addItem(targetPlatformVersion)
-		);
+			targetPlatformComboBox.addActionListener(
+				new ActionListener() {
 
-		targetPlatformComboBox.addActionListener(
-			new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent event) {
-					if (targetPlatformComboBox.equals(event.getSource())) {
-						_targetPlatform = (String)targetPlatformComboBox.getSelectedItem();
+					@Override
+					public void actionPerformed(ActionEvent event) {
+						if (targetPlatformComboBox.equals(event.getSource())) {
+							_targetPlatform = (String)targetPlatformComboBox.getSelectedItem();
+						}
 					}
-				}
 
-			});
+				});
 
-		if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_MAVEN_WORKSPACE)) {
-			settingsStep.addSettingsField("Target platform:", targetPlatformComboBox);
+			if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_MAVEN_WORKSPACE)) {
+				settingsStep.addSettingsField("Target platform:", targetPlatformComboBox);
+			}
+
+			liferayVersionComboBox.addActionListener(
+				e -> {
+					_liferayVersion = (String)liferayVersionComboBox.getSelectedItem();
+
+					targetPlatformComboBox.removeAllItems();
+
+					String[] selectedTargetPlatformVersions = WorkspaceConstants.targetPlatformVersionMap.get(
+						_liferayVersion);
+
+					Stream.of(
+						selectedTargetPlatformVersions
+					).forEach(
+						targetPlatformVersion -> targetPlatformComboBox.addItem(targetPlatformVersion)
+					);
+
+					targetPlatformComboBox.setSelectedIndex(0);
+
+					_targetPlatform = (String)targetPlatformComboBox.getSelectedItem();
+				});
 		}
-
-		liferayVersionComboBox.addActionListener(
-			e -> {
-				_liferayVersion = (String)liferayVersionComboBox.getSelectedItem();
-
-				targetPlatformComboBox.removeAllItems();
-
-				String[] selectedTargetPlatformVersions = WorkspaceConstants.targetPlatformVersionMap.get(
-					_liferayVersion);
-
-				Stream.of(
-					selectedTargetPlatformVersions
-				).forEach(
-					targetPlatformVersion -> targetPlatformComboBox.addItem(targetPlatformVersion)
-				);
-
-				targetPlatformComboBox.setSelectedIndex(0);
-
-				_targetPlatform = (String)targetPlatformComboBox.getSelectedItem();
-			});
 
 		JCheckBox indexSourcesCheckBox = new JCheckBox();
 
