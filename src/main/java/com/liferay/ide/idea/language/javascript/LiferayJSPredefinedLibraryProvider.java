@@ -36,8 +36,8 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.intellij.webcore.libraries.ScriptingLibraryManager;
 import com.intellij.webcore.libraries.ScriptingLibraryModel;
 
+import com.liferay.ide.idea.util.GradleUtil;
 import com.liferay.ide.idea.util.IntellijUtil;
-import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -202,7 +202,7 @@ public class LiferayJSPredefinedLibraryProvider extends JSPredefinedLibraryProvi
 			return _targetPlatformArtifacts;
 		}
 
-		return LiferayWorkspaceSupport.getTargetPlatformArtifacts(project);
+		return GradleUtil.getTargetPlatformArtifacts(project);
 	}
 
 	private static final String _LIFERAY_JAVASCRIPT_LIBRARY_NAME = "Liferay JavaScript";

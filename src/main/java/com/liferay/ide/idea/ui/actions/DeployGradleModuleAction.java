@@ -51,7 +51,7 @@ public class DeployGradleModuleAction extends AbstractLiferayGradleTaskAction im
 
 		if ((virtualFile != null) && (gradleFile != null) &&
 			ProjectRootsUtil.isModuleContentRoot(virtualFile, project) && !baseDir.equals(virtualFile) &&
-			FileUtil.exists(new File(project.getBasePath(), getHomeDir(project.getBasePath())))) {
+			FileUtil.exists(new File(project.getBasePath(), getHomeDir(project)))) {
 
 			return true;
 		}

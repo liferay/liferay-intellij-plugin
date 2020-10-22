@@ -29,14 +29,20 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.DocumentAdapter;
 
+import com.liferay.ide.idea.core.LiferayCore;
 import com.liferay.ide.idea.core.WorkspaceConstants;
+import com.liferay.ide.idea.core.WorkspaceProvider;
 import com.liferay.ide.idea.ui.modules.ext.LiferayModuleExtBuilder;
 import com.liferay.ide.idea.ui.modules.springmvcportlet.SpringMVCPortletModuleBuilder;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import java.io.File;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -104,7 +110,14 @@ public class LiferayModuleNameLocationComponent implements LiferayWorkspaceSuppo
 					String moduleName = _getModuleName();
 
 					if ((path.length() > 0) && !Comparing.strEqual(moduleName, namePathComponent.getNameValue())) {
-						path += "/" + _getTargetFolderName() + "/" + moduleName;
+						String targetFolderName = _getTargetFolderName();
+
+						if (Objects.isNull(targetFolderName)) {
+							path += "/" + moduleName;
+						}
+						else {
+							path += "/" + targetFolderName + "/" + moduleName;
+						}
 					}
 
 					if (!_contentRootChangedByUser) {
@@ -234,7 +247,16 @@ public class LiferayModuleNameLocationComponent implements LiferayWorkspaceSuppo
 
 			setModuleName(moduleName);
 
-			String contentRoot = baseDirPath + "/" + _getTargetFolderName() + "/" + moduleName;
+			String contentRoot = null;
+
+			String targetFolderName = _getTargetFolderName();
+
+			if (Objects.isNull(targetFolderName)) {
+				contentRoot = baseDirPath + "/" + moduleName;
+			}
+			else {
+				contentRoot = baseDirPath + "/" + _getTargetFolderName() + "/" + moduleName;
+			}
 
 			_setModuleContentRoot(contentRoot);
 			_setImlFileLocation(contentRoot);
@@ -288,30 +310,23 @@ public class LiferayModuleNameLocationComponent implements LiferayWorkspaceSuppo
 	}
 
 	private String _getTargetFolderName() {
-		AbstractModuleBuilder builder = getModuleBuilder();
-		LiferayModuleBuilder liferayModuleBuilder = null;
-
 		Project project = _context.getProject();
 
-		String targetFolderName = getWorkspaceProperty(
-			project, WorkspaceConstants.MODULES_DIR_PROPERTY, WorkspaceConstants.MODULES_DIR_DEFAULT);
+		WorkspaceProvider workspaceProvider = LiferayCore.getWorkspaceProvider(project);
+
+		if (Objects.isNull(workspaceProvider)) {
+			return WorkspaceConstants.MODULES_DIR_DEFAULT;
+		}
+
+		AbstractModuleBuilder builder = getModuleBuilder();
+
+		String targetFolderName = null;
+		boolean warProject = false;
 
 		if (builder instanceof LiferayModuleBuilder) {
-			liferayModuleBuilder = (LiferayModuleBuilder)builder;
-		}
-		else if (builder instanceof LiferayModuleExtBuilder) {
-			targetFolderName = getWorkspaceProperty(
-				project, WorkspaceConstants.EXT_DIR_PROPERTY, WorkspaceConstants.EXT_DIR_DEFAULT);
-		}
-		else if (builder instanceof SpringMVCPortletModuleBuilder) {
-			targetFolderName = getWorkspaceProperty(
-				project, WorkspaceConstants.WARS_DIR_PROPERTY, WorkspaceConstants.WARS_DIR_DEFAULT);
-		}
+			LiferayModuleBuilder liferayModuleBuilder = (LiferayModuleBuilder)builder;
 
-		if (liferayModuleBuilder != null) {
 			String templateType = liferayModuleBuilder.getType();
-
-			boolean warProject = false;
 
 			for (String projectType : _WAR_TYPE_PROJECT) {
 				if (projectType.equals(templateType)) {
@@ -321,17 +336,47 @@ public class LiferayModuleNameLocationComponent implements LiferayWorkspaceSuppo
 				}
 			}
 
-			if (warProject) {
-				targetFolderName = getWorkspaceProperty(
-					project, WorkspaceConstants.WARS_DIR_PROPERTY, WorkspaceConstants.WARS_DIR_DEFAULT);
-			}
-			else if (Objects.equals("js-theme", templateType)) {
+			if (Objects.equals("js-theme", templateType)) {
 				targetFolderName = getWorkspaceProperty(
 					project, WorkspaceConstants.THEMES_DIR_PROPERTY, WorkspaceConstants.THEMES_DIR_DEFAULT);
 			}
 			else if (Objects.equals("war-core-ext", templateType)) {
 				targetFolderName = getWorkspaceProperty(
 					project, WorkspaceConstants.EXT_DIR_PROPERTY, WorkspaceConstants.EXT_DIR_DEFAULT);
+			}
+			else if (!warProject) {
+				String[] defaultModuleDirs = workspaceProvider.getWorkspaceModuleDirs();
+
+				if (Objects.nonNull(defaultModuleDirs)) {
+					targetFolderName = defaultModuleDirs[0];
+				}
+			}
+		}
+		else if (builder instanceof LiferayModuleExtBuilder) {
+			targetFolderName = workspaceProvider.getWorkspaceProperty(
+				WorkspaceConstants.EXT_DIR_PROPERTY, WorkspaceConstants.EXT_DIR_DEFAULT);
+		}
+		else if (builder instanceof SpringMVCPortletModuleBuilder) {
+			warProject = true;
+		}
+
+		if (warProject) {
+			String[] defaultWarDirs = workspaceProvider.getWorkspaceWarDirs();
+
+			if (Objects.nonNull(defaultWarDirs)) {
+				if (!workspaceProvider.isGradleWorkspace()) {
+					targetFolderName = Stream.of(
+						defaultWarDirs
+					).filter(
+						warDir -> Files.exists(Paths.get(project.getBasePath(), warDir))
+					).findAny(
+					).orElseGet(
+						project::getBasePath
+					);
+				}
+				else {
+					targetFolderName = defaultWarDirs[0];
+				}
 			}
 		}
 

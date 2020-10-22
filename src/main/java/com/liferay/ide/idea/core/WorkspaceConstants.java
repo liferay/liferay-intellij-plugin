@@ -103,6 +103,7 @@ public class WorkspaceConstants {
 				"7.3.3-1",
 				LIFERAY_PORTAL_URL + "7.3.3-ga4/liferay-ce-portal-tomcat-7.3.3-ga4-20200701015330959.tar.gz");
 			put("7.3.4", LIFERAY_PORTAL_URL + "7.3.4-ga5/liferay-ce-portal-tomcat-7.3.4-ga5-20200811154319029.tar.gz");
+			put("7.3.5", LIFERAY_PORTAL_URL + "7.3.5-ga6/liferay-ce-portal-tomcat-7.3.5-ga6-20200930172312275.tar.gz");
 		}
 	};
 	public static final Map<String, String[]> targetPlatformVersionMap = new HashMap<String, String[]>() {

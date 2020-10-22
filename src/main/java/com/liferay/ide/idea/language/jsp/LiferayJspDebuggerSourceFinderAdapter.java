@@ -34,8 +34,8 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import com.intellij.util.containers.ContainerUtil;
 
+import com.liferay.ide.idea.util.GradleUtil;
 import com.liferay.ide.idea.util.IntellijUtil;
-import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -129,7 +129,7 @@ public class LiferayJspDebuggerSourceFinderAdapter implements SourcesFinder<Java
 			return _targetPlatformArtifacts;
 		}
 
-		return LiferayWorkspaceSupport.getTargetPlatformArtifacts(project);
+		return GradleUtil.getTargetPlatformArtifacts(project);
 	}
 
 	private void _addJspFiles(String relPath, Project project, Collection<PsiFile> psiFiles, VirtualFile jarRoot) {

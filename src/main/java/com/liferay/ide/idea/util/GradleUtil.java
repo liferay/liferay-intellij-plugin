@@ -21,6 +21,12 @@ import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.execution.ui.RunContentManager;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.externalSystem.importing.ImportSpecBuilder;
+import com.intellij.openapi.externalSystem.model.DataNode;
+import com.intellij.openapi.externalSystem.model.ExternalProjectInfo;
+import com.intellij.openapi.externalSystem.model.ProjectKeys;
+import com.intellij.openapi.externalSystem.model.project.LibraryData;
+import com.intellij.openapi.externalSystem.model.project.ProjectData;
+import com.intellij.openapi.externalSystem.service.project.ProjectDataManager;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
@@ -36,6 +42,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -125,6 +134,40 @@ public class GradleUtil {
 				ExternalSystemUtil.refreshProjects(new ImportSpecBuilder(project, GradleConstants.SYSTEM_ID));
 			}
 		}
+	}
+
+	public static List<LibraryData> getTargetPlatformArtifacts(Project project) {
+		ProjectDataManager projectDataManager = ProjectDataManager.getInstance();
+
+		Collection<ExternalProjectInfo> externalProjectInfos = projectDataManager.getExternalProjectsData(
+			project, GradleConstants.SYSTEM_ID);
+
+		for (ExternalProjectInfo externalProjectInfo : externalProjectInfos) {
+			DataNode<ProjectData> projectData = externalProjectInfo.getExternalProjectStructure();
+
+			if (projectData == null) {
+				continue;
+			}
+
+			Collection<DataNode<?>> dataNodes = projectData.getChildren();
+
+			List<LibraryData> libraryData = new ArrayList<>(dataNodes.size());
+
+			for (DataNode<?> child : dataNodes) {
+				if (!ProjectKeys.LIBRARY.equals(child.getKey())) {
+					continue;
+				}
+
+				libraryData.add((LibraryData)child.getData());
+			}
+
+			libraryData.sort(
+				Comparator.comparing(LibraryData::getArtifactId, Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER)));
+
+			return libraryData;
+		}
+
+		return Collections.emptyList();
 	}
 
 	public static GradleProject getWorkspaceGradleProject(Project project) {

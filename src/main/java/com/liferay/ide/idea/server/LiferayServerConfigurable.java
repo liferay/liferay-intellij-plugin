@@ -133,10 +133,10 @@ public class LiferayServerConfigurable
 
 			String basePath = project.getBasePath();
 
-			Path path = Paths.get(getHomeDir(basePath));
+			Path path = Paths.get(getHomeDir(project));
 
 			if (!path.isAbsolute()) {
-				path = Paths.get(basePath, getHomeDir(basePath));
+				path = Paths.get(basePath, getHomeDir(project));
 			}
 
 			_liferayServer.setText(path.toString());

@@ -37,6 +37,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.liferay.ide.idea.util.FileUtil;
 import com.liferay.ide.idea.util.GradleDependency;
 import com.liferay.ide.idea.util.GradleDependencyUpdater;
+import com.liferay.ide.idea.util.GradleUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import java.io.File;
@@ -149,7 +150,7 @@ public class CompareOriginalImplementationAction extends AnAction implements Lif
 	}
 
 	private File _getSourceJar(VirtualFile virtualFile) {
-		List<LibraryData> targetPlatformArtifacts = LiferayWorkspaceSupport.getTargetPlatformArtifacts(_project);
+		List<LibraryData> targetPlatformArtifacts = GradleUtil.getTargetPlatformArtifacts(_project);
 
 		if (!targetPlatformArtifacts.isEmpty() && LiferayWorkspaceSupport.isValidGradleWorkspaceProject(_project) &&
 			virtualFile.exists()) {
