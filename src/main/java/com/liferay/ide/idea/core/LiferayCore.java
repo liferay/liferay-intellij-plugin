@@ -29,9 +29,9 @@ public class LiferayCore {
 
 	public static WorkspaceProvider getWorkspaceProvider(Project project) {
 		try {
-			Collection<WorkspaceProvider> providers = _getWorkspaceProviders();
+			Collection<WorkspaceProvider> workspaceProviders = _getWorkspaceProviders();
 
-			for (WorkspaceProvider provider : providers) {
+			for (WorkspaceProvider provider : workspaceProviders) {
 				try {
 					WorkspaceProvider workspaceProvider = provider.provide(project, WorkspaceProvider.class);
 

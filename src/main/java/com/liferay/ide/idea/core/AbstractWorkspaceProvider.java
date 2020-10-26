@@ -39,9 +39,9 @@ public abstract class AbstractWorkspaceProvider implements WorkspaceProvider {
 		String targetPlatformVersion = getTargetPlatformVersion();
 
 		if (!CoreUtil.isNullOrEmpty(targetPlatformVersion)) {
-			String[] versionArr = targetPlatformVersion.split("\\.");
+			String[] version = targetPlatformVersion.split("\\.");
 
-			return versionArr[0] + "." + versionArr[1];
+			return version[0] + "." + version[1];
 		}
 
 		return null;
