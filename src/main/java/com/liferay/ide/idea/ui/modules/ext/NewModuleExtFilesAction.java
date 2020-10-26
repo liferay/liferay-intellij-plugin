@@ -36,6 +36,7 @@ import com.liferay.ide.idea.core.MessagesBundle;
 import com.liferay.ide.idea.ui.compoments.FixedSizeRefreshButton;
 import com.liferay.ide.idea.util.GradleDependency;
 import com.liferay.ide.idea.util.GradleDependencyUpdater;
+import com.liferay.ide.idea.util.GradleUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import java.io.IOException;
@@ -145,8 +146,7 @@ public class NewModuleExtFilesAction extends AnAction implements DumbAware, Life
 
 		private void _getLibraryData() {
 			try {
-				List<LibraryData> targetPlatformArtifacts = LiferayWorkspaceSupport.getTargetPlatformArtifacts(
-					_project);
+				List<LibraryData> targetPlatformArtifacts = GradleUtil.getTargetPlatformArtifacts(_project);
 
 				if (targetPlatformArtifacts.isEmpty()) {
 					return;

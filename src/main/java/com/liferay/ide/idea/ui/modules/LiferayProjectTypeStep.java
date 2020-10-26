@@ -64,7 +64,10 @@ import com.intellij.util.containers.MultiMap;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 
+import com.liferay.ide.idea.core.LiferayCore;
+import com.liferay.ide.idea.core.ProductInfo;
 import com.liferay.ide.idea.core.WorkspaceConstants;
+import com.liferay.ide.idea.core.WorkspaceProvider;
 import com.liferay.ide.idea.ui.modules.ext.LiferayModuleExtBuilder;
 import com.liferay.ide.idea.ui.modules.springmvcportlet.SpringMVCPortletModuleBuilder;
 import com.liferay.ide.idea.util.CoreUtil;
@@ -595,14 +598,18 @@ public class LiferayProjectTypeStep extends ModuleWizardStep implements Disposab
 			if (_customSteps.isEmpty()) {
 				Project project = Objects.requireNonNull(_context.getProject());
 
-				String projectBasePath = project.getBasePath();
+				WorkspaceProvider workspaceProvider = LiferayCore.getWorkspaceProvider(project);
 
-				if (LiferayWorkspaceSupport.isValidGradleWorkspaceLocation(projectBasePath)) {
+				if (Objects.isNull(workspaceProvider)) {
+					return false;
+				}
+
+				if (workspaceProvider.isGradleWorkspace()) {
 					Map<String, ProductInfo> productInfosMap = LiferayWorkspaceSupport.getProductInfos(project);
 
 					if ((productInfosMap != null) && !productInfosMap.isEmpty()) {
-						String workspaceProductKey = getGradleProperty(
-							projectBasePath, WorkspaceConstants.WORKSPACE_PRODUCT_PROPERTY, null);
+						String workspaceProductKey = workspaceProvider.getWorkspaceProperty(
+							WorkspaceConstants.WORKSPACE_PRODUCT_PROPERTY, null);
 
 						Set<String> productInfosSet = productInfosMap.keySet();
 

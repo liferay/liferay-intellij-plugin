@@ -31,7 +31,6 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 
 import com.liferay.ide.idea.core.LiferayIcons;
-import com.liferay.ide.idea.core.WorkspaceConstants;
 import com.liferay.ide.idea.server.gogo.GogoTelnetClient;
 import com.liferay.ide.idea.util.FileUtil;
 import com.liferay.ide.idea.util.GradleUtil;
@@ -137,8 +136,7 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction imp
 			return GradleUtil.isWatchableProject(module);
 		}
 
-		String moduleDirectoryName = getGradleProperty(
-			project.getBasePath(), WorkspaceConstants.MODULES_DIR_PROPERTY, WorkspaceConstants.MODULES_DIR_DEFAULT);
+		String moduleDirectoryName = getWorkspaceModuleDir(project);
 
 		String virtualFileToStr = virtualFile.toString();
 
