@@ -19,7 +19,6 @@ import com.intellij.openapi.project.Project;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Objects;
 import java.util.ServiceLoader;
 
 /**
@@ -28,62 +27,53 @@ import java.util.ServiceLoader;
 public class LiferayCore {
 
 	public static WorkspaceProvider getWorkspaceProvider(Project project) {
-		try {
-			Collection<WorkspaceProvider> workspaceProviders = _getWorkspaceProviders();
+		Collection<WorkspaceProvider> workspaceProviders = _getWorkspaceProviders();
 
-			for (WorkspaceProvider provider : workspaceProviders) {
-				try {
-					WorkspaceProvider workspaceProvider = provider.provide(project, WorkspaceProvider.class);
+		for (WorkspaceProvider provider : workspaceProviders) {
+			try {
+				WorkspaceProvider workspaceProvider = provider.provide(project, WorkspaceProvider.class);
 
-					if (!Objects.isNull(workspaceProvider)) {
-						return workspaceProvider;
-					}
-				}
-				catch (Throwable th) {
-					throw new RuntimeException("_getWorkspaceProvider error", th);
+				if (workspaceProvider != null) {
+					return workspaceProvider;
 				}
 			}
-		}
-		catch (Throwable th) {
-			throw new RuntimeException("_getWorkspaceProvider error", th);
+			catch (Throwable th) {
+				throw new RuntimeException("getWorkspaceProvider error", th);
+			}
 		}
 
 		return null;
 	}
 
-	private static Collection<WorkspaceProvider> _getWorkspaceProviders() throws Exception {
+	private static Collection<WorkspaceProvider> _getWorkspaceProviders() {
 		if (_workspaceProviders == null) {
 			_workspaceProviders = new ArrayList<>();
 
-			ServiceLoader<WorkspaceProvider> serviceLoader = ServiceLoader.load(
-				WorkspaceProvider.class, LiferayCore.class.getClassLoader());
+			try {
+				ServiceLoader<WorkspaceProvider> serviceLoader = ServiceLoader.load(
+					WorkspaceProvider.class, LiferayCore.class.getClassLoader());
 
-			Iterator<WorkspaceProvider> workspaceProviderIterator = serviceLoader.iterator();
+				Iterator<WorkspaceProvider> iterator = serviceLoader.iterator();
 
-			while (workspaceProviderIterator.hasNext()) {
-				try {
-					WorkspaceProvider workspaceProvider = workspaceProviderIterator.next();
-
-					_workspaceProviders.add(workspaceProvider);
-				}
-				catch (Throwable e) {
-					Class<?> throwableClass = e.getClass();
-
-					System.err.println(
-						"Exception thrown while loading WorkspaceProvider." + System.lineSeparator() + "Exception: " +
-							throwableClass.getName() + ": " + e.getMessage());
-
-					Throwable cause = e.getCause();
-
-					if (cause != null) {
-						Class<?> throwableCauseClass = cause.getClass();
-
-						System.err.print(throwableCauseClass.getName() + ": " + cause.getMessage());
-					}
+				while (iterator.hasNext()) {
+					_workspaceProviders.add(iterator.next());
 				}
 			}
+			catch (Throwable e) {
+				Class<?> throwableClass = e.getClass();
 
-			return _workspaceProviders;
+				System.err.println(
+					"Exception thrown while loading WorkspaceProvider." + System.lineSeparator() + "Exception: " +
+						throwableClass.getName() + ": " + e.getMessage());
+
+				Throwable cause = e.getCause();
+
+				if (cause != null) {
+					Class<?> throwableCauseClass = cause.getClass();
+
+					System.err.print(throwableCauseClass.getName() + ": " + cause.getMessage());
+				}
+			}
 		}
 
 		return _workspaceProviders;
