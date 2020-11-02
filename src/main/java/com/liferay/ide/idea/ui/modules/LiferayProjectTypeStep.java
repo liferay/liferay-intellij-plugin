@@ -88,6 +88,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -145,7 +146,7 @@ public class LiferayProjectTypeStep extends ModuleWizardStep implements Disposab
 		_context = context;
 		_wizard = wizard;
 
-		_templatesMap = MultiMap.createConcurrent();
+		_templatesMap = new ConcurrentHashMap<>();
 
 		List<TemplatesGroup> groups = _fillTemplatesMap(context.getProject());
 
@@ -702,7 +703,7 @@ public class LiferayProjectTypeStep extends ModuleWizardStep implements Disposab
 	private ModuleWizardStep _settingsStep;
 
 	private LiferayProjectTemplateList _templatesList;
-	private MultiMap<TemplatesGroup, ProjectTemplate> _templatesMap;
+	private Map<TemplatesGroup, List<ProjectTemplate>> _templatesMap;
 	private NewLiferayModuleWizard _wizard;
 
 }

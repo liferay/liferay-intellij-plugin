@@ -88,7 +88,8 @@ jobs:
         with:
          plugin: './build/distributions/*.zip'
          versions: |
-          2020.2
-          2020.2.3
+          2019.3
           2020.1
           2020.1.4
+          2020.2
+          2020.2.3
