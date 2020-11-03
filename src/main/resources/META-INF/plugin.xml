@@ -41,11 +41,12 @@
 				<li>INTELLIJ-131 add validation on not able to create project in maven workspace</li>
 				<li>INTELLIJ-132 support creating ext module in gradle workspace</li>
 				<li>INTELLIJ-133 updated embedded blade cli to 4.0.5</li>
-				<li>INTELLIJ-135 add validation on not able to create js-theme and js-widget projecs</li>
+				<li>INTELLIJ-135 add validation on not able to create js-theme and js-widget projects</li>
+				<li>INTELLIJ-136 Add a new wizard to prompt users to select liferay.workspace.product</li>
 				<li>INTELLIJ-138 support both blade 3.9.2 and latest 4.0.5</li>
 				<li>INTELLIJ-140 add compare with original implementation in ext project</li>
 				<li>INTELLIJ-142 add validation on creating form-field project</li>
-				<li>INTELLIJ-143 bug fix for bundle url when creating a liferay maven workspace project</li>
+				<li>INTELLIJ-143 bug fix for updating bundle url when creating a liferay maven workspace project</li>
 				<li>INTELLIJ-144 support install to Intellij IDEA Community 2020.2.2</li>
 				<li>INTELLIJ-145 update dtd version to liferay 7.3</li>
 				<li>INTELLIJ-150 fix compatibility problems</li>
