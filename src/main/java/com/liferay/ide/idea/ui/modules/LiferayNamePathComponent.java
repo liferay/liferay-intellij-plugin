@@ -16,7 +16,6 @@ package com.liferay.ide.idea.ui.modules;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.highlighter.ProjectFileType;
-import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.ide.util.BrowseFilesListener;
 import com.intellij.ide.util.projectWizard.ProjectWizardUtil;
 import com.intellij.ide.util.projectWizard.WizardContext;
@@ -33,6 +32,8 @@ import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.FieldPanel;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+
+import com.liferay.ide.idea.util.ProjectUtil;
 
 import java.awt.Dimension;
 import java.awt.Font;
