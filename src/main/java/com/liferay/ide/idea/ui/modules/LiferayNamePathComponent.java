@@ -16,6 +16,7 @@ package com.liferay.ide.idea.ui.modules;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.highlighter.ProjectFileType;
+import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.ide.util.BrowseFilesListener;
 import com.intellij.ide.util.projectWizard.ProjectWizardUtil;
 import com.intellij.ide.util.projectWizard.WizardContext;
@@ -33,7 +34,7 @@ import com.intellij.ui.FieldPanel;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
 
-import com.liferay.ide.idea.util.ProjectUtil;
+import com.liferay.ide.idea.core.MessagesBundle;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -64,7 +65,7 @@ public class LiferayNamePathComponent extends JPanel {
 		String filesLocationLabel = IdeBundle.message("label.project.files.location");
 		String fileDirectoryTitle = IdeBundle.message(
 			"title.select.project.file.directory", IdeBundle.message("project.new.wizard.project.identification"));
-		String fileDirectoryDescription = IdeBundle.message(
+		String fileDirectoryDescription = MessagesBundle.message(
 			"description.select.project.file.directory",
 			StringUtil.capitalize(IdeBundle.message("project.new.wizard.project.identification")));
 
@@ -252,7 +253,7 @@ public class LiferayNamePathComponent extends JPanel {
 			ApplicationInfo applicationInfo = ApplicationInfo.getInstance();
 
 			throw new ConfigurationException(
-				IdeBundle.message(
+				MessagesBundle.message(
 					"prompt.new.project.file.name", applicationInfo.getVersionName(), context.getPresentationName()));
 		}
 
@@ -260,16 +261,16 @@ public class LiferayNamePathComponent extends JPanel {
 
 		if (StringUtil.isEmptyOrSpaces(projectDirectory)) {
 			throw new ConfigurationException(
-				IdeBundle.message("prompt.enter.project.file.location", context.getPresentationName()));
+				MessagesBundle.message("prompt.enter.project.file.location", context.getPresentationName()));
 		}
 
 		if (_shouldBeAbsolute && !FileUtil.isAbsolute(projectDirectory)) {
 			throw new ConfigurationException(
 				StringUtil.capitalize(
-					IdeBundle.message("file.location.should.be.absolute", context.getPresentationName())));
+					MessagesBundle.message("file.location.should.be.absolute", context.getPresentationName())));
 		}
 
-		String message = IdeBundle.message("directory.project.file.directory", context.getPresentationName());
+		String message = MessagesBundle.message("directory.project.file.directory", context.getPresentationName());
 
 		if (!ProjectWizardUtil.createDirectoryIfNotExists(message, projectDirectory, isPathChangedByUser())) {
 			return false;
@@ -303,7 +304,7 @@ public class LiferayNamePathComponent extends JPanel {
 		File projectFile = new File(file, fileName);
 
 		if (projectFile.exists()) {
-			message = IdeBundle.message(
+			message = MessagesBundle.message(
 				"prompt.overwrite.project.file", projectFile.getAbsolutePath(), context.getPresentationName());
 
 			int answer = Messages.showYesNoDialog(

@@ -30,6 +30,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.DocumentAdapter;
 
 import com.liferay.ide.idea.core.LiferayCore;
+import com.liferay.ide.idea.core.MessagesBundle;
 import com.liferay.ide.idea.core.WorkspaceConstants;
 import com.liferay.ide.idea.core.WorkspaceProvider;
 import com.liferay.ide.idea.ui.modules.ext.LiferayModuleExtBuilder;
@@ -434,7 +435,7 @@ public class LiferayModuleNameLocationComponent implements LiferayWorkspaceSuppo
 			String identification = IdeBundle.message("project.new.wizard.module.identification");
 			String existsTitle = IdeBundle.message("title.file.already.exists");
 
-			String filePrompt = IdeBundle.message(
+			String filePrompt = MessagesBundle.message(
 				"prompt.overwrite.project.file", moduleFile.getAbsolutePath(), identification);
 
 			int answer = Messages.showYesNoDialog(filePrompt, existsTitle, Messages.getQuestionIcon());
