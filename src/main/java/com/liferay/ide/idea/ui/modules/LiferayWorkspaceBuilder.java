@@ -90,6 +90,66 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 	@Override
 	@SuppressWarnings("unchecked")
 	public ModuleWizardStep modifySettingsStep(@NotNull SettingsStep settingsStep) {
+		if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_MAVEN_WORKSPACE)) {
+			JComboBox liferayVersionComboBox = new ComboBox<>();
+
+			for (String liferayVersion : WorkspaceConstants.LIFERAY_VERSIONS) {
+				liferayVersionComboBox.addItem(liferayVersion);
+			}
+
+			liferayVersionComboBox.setSelectedItem(WorkspaceConstants.DEFAULT_LIFERAY_VERSION);
+
+			JComboBox targetPlatformComboBox = new ComboBox<>();
+
+			String version = (String)liferayVersionComboBox.getSelectedItem();
+
+			String[] targetPlatformVersions = WorkspaceConstants.targetPlatformVersionMap.get(version);
+
+			Stream.of(
+				targetPlatformVersions
+			).forEach(
+				targetPlatformVersion -> targetPlatformComboBox.addItem(targetPlatformVersion)
+			);
+
+			liferayVersionComboBox.addActionListener(
+				e -> {
+					_liferayVersion = (String)liferayVersionComboBox.getSelectedItem();
+
+					targetPlatformComboBox.removeAllItems();
+
+					String[] selectedTargetPlatformVersions = WorkspaceConstants.targetPlatformVersionMap.get(
+						_liferayVersion);
+
+					Stream.of(
+						selectedTargetPlatformVersions
+					).forEach(
+						targetPlatformVersion -> targetPlatformComboBox.addItem(targetPlatformVersion)
+					);
+
+					targetPlatformComboBox.setSelectedIndex(0);
+
+					_targetPlatform = (String)targetPlatformComboBox.getSelectedItem();
+				});
+
+			targetPlatformComboBox.addActionListener(
+				new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent event) {
+						if (targetPlatformComboBox.equals(event.getSource())) {
+							_targetPlatform = (String)targetPlatformComboBox.getSelectedItem();
+						}
+					}
+
+				});
+
+			settingsStep.addSettingsField("Liferay version:", liferayVersionComboBox);
+
+			settingsStep.addSettingsField("Target platform:", targetPlatformComboBox);
+
+			return new SdkSettingsStep(settingsStep, this, this::isSuitableSdkType);
+		}
+
 		JComboBox<String> productVersionComboBox = new ComboBox<>();
 
 		JCheckBox showAllProductVersionCheckBox = new JCheckBox();
@@ -117,72 +177,6 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 
 			});
 
-		if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_GRADLE_WORKSPACE)) {
-			settingsStep.addSettingsField("Product version:", productVersionComboBox);
-			settingsStep.addSettingsField("Show All Product Versions", showAllProductVersionCheckBox);
-		}
-		else if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_MAVEN_WORKSPACE)) {
-			JComboBox liferayVersionComboBox = new ComboBox<>();
-
-			for (String liferayVersion : WorkspaceConstants.LIFERAY_VERSIONS) {
-				liferayVersionComboBox.addItem(liferayVersion);
-			}
-
-			liferayVersionComboBox.setSelectedItem(WorkspaceConstants.DEFAULT_LIFERAY_VERSION);
-
-			if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_MAVEN_WORKSPACE)) {
-				settingsStep.addSettingsField("Liferay version:", liferayVersionComboBox);
-			}
-
-			JComboBox targetPlatformComboBox = new ComboBox<>();
-
-			String version = (String)liferayVersionComboBox.getSelectedItem();
-
-			String[] targetPlatformVersions = WorkspaceConstants.targetPlatformVersionMap.get(version);
-
-			Stream.of(
-				targetPlatformVersions
-			).forEach(
-				targetPlatformVersion -> targetPlatformComboBox.addItem(targetPlatformVersion)
-			);
-
-			targetPlatformComboBox.addActionListener(
-				new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent event) {
-						if (targetPlatformComboBox.equals(event.getSource())) {
-							_targetPlatform = (String)targetPlatformComboBox.getSelectedItem();
-						}
-					}
-
-				});
-
-			if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_MAVEN_WORKSPACE)) {
-				settingsStep.addSettingsField("Target platform:", targetPlatformComboBox);
-			}
-
-			liferayVersionComboBox.addActionListener(
-				e -> {
-					_liferayVersion = (String)liferayVersionComboBox.getSelectedItem();
-
-					targetPlatformComboBox.removeAllItems();
-
-					String[] selectedTargetPlatformVersions = WorkspaceConstants.targetPlatformVersionMap.get(
-						_liferayVersion);
-
-					Stream.of(
-						selectedTargetPlatformVersions
-					).forEach(
-						targetPlatformVersion -> targetPlatformComboBox.addItem(targetPlatformVersion)
-					);
-
-					targetPlatformComboBox.setSelectedIndex(0);
-
-					_targetPlatform = (String)targetPlatformComboBox.getSelectedItem();
-				});
-		}
-
 		JCheckBox indexSourcesCheckBox = new JCheckBox();
 
 		JLabel customLabel = new JLabel();
@@ -201,10 +195,13 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 				}
 			});
 
-		if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_GRADLE_WORKSPACE)) {
-			settingsStep.addSettingsField("Index Sources:", indexSourcesCheckBox);
-			settingsStep.addSettingsField("", customLabel);
-		}
+		settingsStep.addSettingsField("Product version:", productVersionComboBox);
+
+		settingsStep.addSettingsField("Show All Product Versions", showAllProductVersionCheckBox);
+
+		settingsStep.addSettingsField("Index Sources:", indexSourcesCheckBox);
+
+		settingsStep.addSettingsField("", customLabel);
 
 		return new SdkSettingsStep(settingsStep, this, this::isSuitableSdkType) {
 
