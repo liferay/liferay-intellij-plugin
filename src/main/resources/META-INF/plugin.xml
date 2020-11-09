@@ -31,6 +31,11 @@
 	</p>
 	<p>
 		<ul>
+			<li>1.8.1</li>
+			<ul>
+				<li>INTELLIJ-155 bug fix for creating a liferay maven workspace project</li>
+			</ul>
+		<ul>
 			<li>1.8.0</li>
 			<ul>
 				<li>INTELLIJ-110 resolve relative paths in xml files(community contribution)</li>
