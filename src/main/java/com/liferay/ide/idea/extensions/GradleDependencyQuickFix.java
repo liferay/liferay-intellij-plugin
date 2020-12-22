@@ -70,7 +70,7 @@ public class GradleDependencyQuickFix
 	@NotNull
 	@Override
 	public String getText() {
-		return MessagesBundle.message("orderEntry.fix.add.library.to.gradle", LibraryUtil.getPresentableName(_library));
+		return MessagesBundle.message("orderEntry.fix.add.library.to.gradle", _library.getPresentableName());
 	}
 
 	@Override

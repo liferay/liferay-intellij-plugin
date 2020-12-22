@@ -215,8 +215,9 @@ formatSource {
 intellij {
 	plugins "java", "CSS", "DatabaseTools", "gradle", "Groovy", "java-i18n", "JavaEE", "Web", "JavaScriptLanguage", "jsp", "junit", "maven", "PersistenceSupport", "properties", "sass"
 	pluginName "liferay-intellij-plugin"
-	version "IU-2020.2"
+	version "IU-2020.3"
 }
+
 
 patchPluginXml {
 	sinceBuild "202"
@@ -267,4 +268,4 @@ verifyBladeLatest {
 	checksum bladeLatestMD5
 }
 
-version = "1.8.1"
+version = "1.9.0"
