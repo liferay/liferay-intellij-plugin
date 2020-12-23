@@ -234,6 +234,8 @@
 
 		<group id="LiferayActionGroup" class="com.liferay.ide.idea.ui.actions.LiferayActionGroup" popup="true" text="Liferay" icon="/icons/liferay.svg">
 			<add-to-group group-id="ProjectViewPopupMenu" />
+			<action class="com.liferay.ide.idea.ui.actions.BuildServiceGradleModuleAction" id="BuildServiceGradleModuleAction"/>
+			<action class="com.liferay.ide.idea.ui.actions.BuildServiceMavenModuleAction" id="BuildServiceMavenModuleAction"/>
 			<action class="com.liferay.ide.idea.ui.actions.DeployGradleModuleAction" id="DeployLiferayGradleModule"/>
 			<action class="com.liferay.ide.idea.ui.actions.WatchGradleModuleAction" id="WatchLiferayGradleModule"/>
 			<action class="com.liferay.ide.idea.ui.actions.DeployMavenModuleAction" id="DeployLiferayMavenModule"/>
