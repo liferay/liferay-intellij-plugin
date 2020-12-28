@@ -23,7 +23,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.roots.libraries.LibraryUtil;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -70,7 +69,7 @@ public class GradleDependencyQuickFix
 	@NotNull
 	@Override
 	public String getText() {
-		return MessagesBundle.message("orderEntry.fix.add.library.to.gradle", LibraryUtil.getPresentableName(_library));
+		return MessagesBundle.message("orderEntry.fix.add.library.to.gradle", _library.getPresentableName());
 	}
 
 	@Override

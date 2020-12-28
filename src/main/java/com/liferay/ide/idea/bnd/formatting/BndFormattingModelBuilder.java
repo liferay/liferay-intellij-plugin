@@ -15,6 +15,7 @@
 package com.liferay.ide.idea.bnd.formatting;
 
 import com.intellij.formatting.Alignment;
+import com.intellij.formatting.FormattingContext;
 import com.intellij.formatting.FormattingModel;
 import com.intellij.formatting.FormattingModelBuilder;
 import com.intellij.formatting.FormattingModelProvider;
@@ -40,7 +41,10 @@ public class BndFormattingModelBuilder implements FormattingModelBuilder {
 
 	@NotNull
 	@Override
-	public FormattingModel createModel(PsiElement element, CodeStyleSettings settings) {
+	public FormattingModel createModel(@NotNull FormattingContext formattingContext) {
+		PsiElement element = formattingContext.getPsiElement();
+		CodeStyleSettings settings = formattingContext.getCodeStyleSettings();
+
 		ASTNode astNode = element.getNode();
 
 		PsiFile psiFile = element.getContainingFile();

@@ -23,12 +23,13 @@ import javax.swing.Icon;
  */
 public class LiferayIcons {
 
-	public static final Icon BND_ICON = IconLoader.getIcon("/icons/bnd.png");
+	public static final Icon BND_ICON = IconLoader.getIcon("/icons/bnd.png", LiferayIcons.class);
 
-	public static final Icon LIFERAY_ICON = IconLoader.getIcon("/icons/liferay.svg");
+	public static final Icon LIFERAY_ICON = IconLoader.getIcon("/icons/liferay.svg", LiferayIcons.class);
 
-	public static final Icon OSGI_ICON = IconLoader.getIcon("/icons/osgi.png");
+	public static final Icon OSGI_ICON = IconLoader.getIcon("/icons/osgi.png", LiferayIcons.class);
 
-	public static final Icon SPRING_ICON = IconLoader.getIcon("/icons/portletMVC4Spring_16x16_new.png");
+	public static final Icon SPRING_ICON = IconLoader.getIcon(
+		"/icons/portletMVC4Spring_16x16_new.png", LiferayIcons.class);
 
 }
