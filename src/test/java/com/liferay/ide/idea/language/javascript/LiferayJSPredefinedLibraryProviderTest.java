@@ -106,24 +106,6 @@ public class LiferayJSPredefinedLibraryProviderTest extends LightJavaCodeInsight
 		return _TEST_DATA_PATH;
 	}
 
-	@Override
-	protected void runTest() throws Throwable {
-
-		// ignore all tests if not on windows
-
-		if (_isWindows()) {
-			super.runTest();
-		}
-	}
-
-	private static boolean _isWindows() {
-		String osName = System.getProperty("os.name");
-
-		osName = osName.toLowerCase();
-
-		return osName.contains("windows");
-	}
-
 	private static final String _TEST_DATA_PATH =
 		"testdata/com/liferay/ide/idea/language/javascript/LiferayJSPredefinedLibraryProviderTest";
 
