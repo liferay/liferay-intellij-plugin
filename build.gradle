@@ -218,7 +218,6 @@ intellij {
 	version "IU-2020.3"
 }
 
-
 patchPluginXml {
 	sinceBuild "202"
 	untilBuild ""

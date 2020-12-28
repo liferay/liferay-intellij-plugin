@@ -41,7 +41,7 @@ public class BndFormattingModelBuilder implements FormattingModelBuilder {
 
 	@NotNull
 	@Override
-	public FormattingModel createModel(@NotNull FormattingContext formattingContext){
+	public FormattingModel createModel(@NotNull FormattingContext formattingContext) {
 		PsiElement element = formattingContext.getPsiElement();
 		CodeStyleSettings settings = formattingContext.getCodeStyleSettings();
 

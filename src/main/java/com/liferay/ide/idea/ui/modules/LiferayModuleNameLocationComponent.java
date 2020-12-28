@@ -250,9 +250,7 @@ public class LiferayModuleNameLocationComponent implements LiferayWorkspaceSuppo
 
 			String contentRoot = null;
 
-			String targetFolderName = _getTargetFolderName();
-
-			if (Objects.isNull(targetFolderName)) {
+			if (Objects.isNull(_getTargetFolderName())) {
 				contentRoot = baseDirPath + "/" + moduleName;
 			}
 			else {
