@@ -1,4 +1,4 @@
-FROM openjdk:8-stretch
+FROM openjdk:11-stretch
 
 CMD ["mkdir", "-p", "/root/.gradle/"]
 
