@@ -15,7 +15,7 @@ jobs:
       - name: Set up JDK8
         uses: actions/setup-java@v1
         with:
-          java-version: 1.8
+          java-version: 11
       - name: Cache
         uses: actions/cache@v1
         with:
@@ -27,27 +27,27 @@ jobs:
         shell: bash
         run: |
           ./gradlew --no-daemon checkSourceFormatting
-  LinuxJDK8:
-    name: Linux JDK8
-    runs-on: ubuntu-18.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - name: Set up JDK8
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8
-      - name: Cache
-        uses: actions/cache@v1
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-      - name: Build
-        shell: bash
-        run: |
-          ./gradlew --no-daemon --scan clean test verifyPlugin
+  #LinuxJDK8:
+  #  name: Linux JDK8
+  #  runs-on: ubuntu-18.04
+  #  steps:
+  #    - name: Checkout
+  #      uses: actions/checkout@v1
+  #    - name: Set up JDK8
+  #      uses: actions/setup-java@v1
+  #      with:
+  #        java-version: 1.8
+  #    - name: Cache
+  #      uses: actions/cache@v1
+  #      with:
+  #        path: ~/.gradle/caches
+  #        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+  #        restore-keys: |
+  #          ${{ runner.os }}-gradle-
+  #    - name: Build
+  #      shell: bash
+  #      run: |
+  #        ./gradlew --no-daemon --scan clean test verifyPlugin
   LinuxJDK11:
     name: Linux JDK11
     runs-on: ubuntu-18.04
