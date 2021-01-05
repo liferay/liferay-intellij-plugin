@@ -23,16 +23,21 @@ import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.module.StdModuleTypes;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectType;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import com.liferay.ide.idea.core.LiferayIcons;
+import com.liferay.ide.idea.core.LiferayProjectTypeService;
+import com.liferay.ide.idea.ui.modules.LiferayProjectType;
 import com.liferay.ide.idea.util.BladeCLI;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import java.io.File;
+
+import java.util.Objects;
 
 import javax.swing.Icon;
 
@@ -91,9 +96,14 @@ public class SpringMVCPortletModuleBuilder extends ModuleBuilder implements Life
 	@Override
 	public void setupRootModel(ModifiableRootModel modifiableRootModel) {
 		VirtualFile virtualFile = _createAndGetContentEntry();
+
 		Project project = modifiableRootModel.getProject();
 
-		_createProject(virtualFile, project);
+		ProjectType projectType = LiferayProjectTypeService.getProjectType(project);
+
+		String typeId = projectType.getId();
+
+		_createProject(virtualFile, project, typeId);
 
 		modifiableRootModel.addContentEntry(virtualFile);
 
@@ -104,11 +114,7 @@ public class SpringMVCPortletModuleBuilder extends ModuleBuilder implements Life
 			modifiableRootModel.inheritSdk();
 		}
 
-		virtualFile.refresh(true, true);
-
-		ExternalSystemUtil.refreshProject(
-			project, GradleConstants.SYSTEM_ID, project.getBasePath(), false,
-			ProgressExecutionMode.IN_BACKGROUND_ASYNC);
+		_refreshProject(project, typeId);
 	}
 
 	public void setViewType(String viewType) {
@@ -127,7 +133,7 @@ public class SpringMVCPortletModuleBuilder extends ModuleBuilder implements Life
 		return localFileSystem.refreshAndFindFileByPath(path);
 	}
 
-	private void _createProject(VirtualFile projectRoot, Project project) {
+	private void _createProject(VirtualFile projectRoot, Project project, String typeId) {
 		VirtualFile virtualFile = projectRoot.getParent();
 		StringBuilder sb = new StringBuilder();
 
@@ -135,6 +141,12 @@ public class SpringMVCPortletModuleBuilder extends ModuleBuilder implements Life
 		sb.append(virtualFile.getPath());
 		sb.append("\"");
 		sb.append(" ");
+
+		if (Objects.equals(typeId, LiferayProjectType.LIFERAY_MAVEN_WORKSPACE)) {
+			sb.append("-b ");
+			sb.append("maven ");
+		}
+
 		sb.append("--base \"");
 		sb.append(project.getBasePath());
 		sb.append("\" -t ");
@@ -156,6 +168,23 @@ public class SpringMVCPortletModuleBuilder extends ModuleBuilder implements Life
 		sb.append(_liferayVersion);
 
 		BladeCLI.execute(sb.toString());
+	}
+
+	private void _refreshProject(Project project, String typeId) {
+		VirtualFile projectDir = LiferayWorkspaceSupport.getWorkspaceVirtualFile(project);
+
+		if (projectDir == null) {
+			return;
+		}
+
+		projectDir.refresh(false, true);
+
+		if (Objects.equals(typeId, LiferayProjectType.LIFERAY_MAVEN_WORKSPACE)) {
+			return;
+		}
+
+		ExternalSystemUtil.refreshProject(
+			project, GradleConstants.SYSTEM_ID, projectDir.getPath(), false, ProgressExecutionMode.IN_BACKGROUND_ASYNC);
 	}
 
 	private String _framework;
