@@ -15,6 +15,7 @@
 package com.liferay.ide.idea.ui.actions;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.module.JavaModuleType;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
@@ -23,6 +24,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.liferay.ide.idea.core.LiferayIcons;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
+import java.util.Collection;
 import java.util.Objects;
 
 /**
@@ -51,13 +53,7 @@ public class BuildServiceGradleModuleAction extends AbstractLiferayGradleTaskAct
 				return false;
 			}
 
-			String moduleDirectoryName = getWorkspaceModuleDir(project);
-
-			String virtualFileToStr = virtualFile.toString();
-
-			if (virtualFileToStr.contains("/" + moduleDirectoryName)) {
-				return !Objects.isNull(virtualFile.findChild("service.xml"));
-			}
+			return !Objects.isNull(virtualFile.findChild("service.xml"));
 		}
 
 		return false;
