@@ -299,7 +299,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 				validationTitle);
 		}
 
-		if (LiferayWorkspaceSupport.isValidMavenWorkspaceLocation(workspaceProject)) {
+		if (LiferayWorkspaceSupport.isValidMavenWorkspaceProject(workspaceProject)) {
 			if (Objects.equals(type, "form-field")) {
 				VersionRange requiredVersionRange = new VersionRange(
 					true, new Version("7.0"), new Version("7.2"), false);

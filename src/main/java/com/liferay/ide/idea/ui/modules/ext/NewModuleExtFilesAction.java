@@ -70,9 +70,15 @@ public class NewModuleExtFilesAction extends AnAction implements DumbAware, Life
 
 		presentation.setEnabledAndVisible(false);
 
+		Project project = anActionEvent.getProject();
+
+		if (Objects.isNull(project)) {
+			return;
+		}
+
 		VirtualFile contextVirtualFile = anActionEvent.getData(CommonDataKeys.VIRTUAL_FILE);
 
-		VirtualFile moduleExtDir = getModuleExtDirFile(anActionEvent.getProject());
+		VirtualFile moduleExtDir = getModuleExtDirFile(project);
 
 		if ((contextVirtualFile == null) || (moduleExtDir == null)) {
 			return;

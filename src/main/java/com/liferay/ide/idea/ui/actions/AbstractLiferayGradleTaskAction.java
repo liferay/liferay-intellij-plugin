@@ -26,6 +26,8 @@ import com.intellij.openapi.externalSystem.service.notification.NotificationData
 import com.intellij.openapi.externalSystem.service.notification.NotificationSource;
 import com.intellij.openapi.externalSystem.task.TaskCallback;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -37,6 +39,7 @@ import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.swing.Icon;
 
@@ -99,19 +102,25 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 
 	@Override
 	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
-		VirtualFile baseDir = LiferayWorkspaceSupport.getWorkspaceVirtualFile(anActionEvent.getProject());
+		Project project = anActionEvent.getProject();
 
-		if (baseDir == null) {
+		if (!LiferayWorkspaceSupport.isValidGradleWorkspaceProject(project)) {
 			return false;
 		}
 
-		VirtualFile gradleFile = baseDir.findChild("build.gradle");
+		VirtualFile virtualFile = getVirtualFile(anActionEvent);
 
-		if (baseDir.equals(getVirtualFile(anActionEvent)) && (gradleFile != null)) {
-			return true;
+		if ((project == null) || (virtualFile == null)) {
+			return false;
 		}
 
-		return false;
+		Module module = ModuleUtil.findModuleForFile(virtualFile, project);
+
+		if (Objects.isNull(module)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	@Nullable

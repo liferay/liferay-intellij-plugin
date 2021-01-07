@@ -98,7 +98,7 @@ public class LiferayMavenWorkspaceProvider extends AbstractWorkspaceProvider {
 
 	@Override
 	public <T> T provide(Project project, Class<T> adapterType) {
-		if (LiferayWorkspaceSupport.isValidMavenWorkspaceLocation(project)) {
+		if (LiferayWorkspaceSupport.isValidMavenWorkspaceProject(project)) {
 			return adapterType.cast(new LiferayMavenWorkspaceProvider(project));
 		}
 

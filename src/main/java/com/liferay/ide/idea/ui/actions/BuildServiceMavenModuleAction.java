@@ -15,9 +15,6 @@
 package com.liferay.ide.idea.ui.actions;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtil;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import com.liferay.ide.idea.core.LiferayIcons;
@@ -39,22 +36,12 @@ public class BuildServiceMavenModuleAction extends AbstractLiferayMavenGoalActio
 
 	@Override
 	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
-		Project project = anActionEvent.getProject();
-
-		if (LiferayWorkspaceSupport.isValidMavenWorkspaceLocation(project)) {
+		if (super.isEnabledAndVisible(anActionEvent)) {
 			VirtualFile virtualFile = getVirtualFile(anActionEvent);
 
-			if ((project == null) || (virtualFile == null)) {
-				return false;
+			if (!Objects.isNull(virtualFile.findChild("service.xml"))) {
+				return true;
 			}
-
-			Module module = ModuleUtil.findModuleForFile(virtualFile, project);
-
-			if (module == null) {
-				return false;
-			}
-
-			return !Objects.isNull(virtualFile.findChild("service.xml"));
 		}
 
 		return false;

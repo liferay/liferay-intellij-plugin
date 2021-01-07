@@ -40,6 +40,7 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.model.MavenPlugin;
 import org.jetbrains.idea.maven.project.MavenProject;
@@ -127,11 +128,11 @@ public interface LiferayWorkspaceSupport {
 		return matcher.matches();
 	}
 
-	public static boolean isValidGradleWorkspaceProject(Project project) {
+	public static boolean isValidGradleWorkspaceProject(@NotNull Project project) {
 		return isValidGradleWorkspaceLocation(project.getBasePath());
 	}
 
-	public static boolean isValidMavenWorkspaceLocation(Project project) {
+	public static boolean isValidMavenWorkspaceProject(@NotNull Project project) {
 		if (project == null) {
 			return false;
 		}
@@ -170,9 +171,7 @@ public interface LiferayWorkspaceSupport {
 	}
 
 	public static boolean isValidWorkspaceLocation(Project project) {
-		if ((project != null) &&
-			(isValidGradleWorkspaceLocation(project.getBasePath()) || isValidMavenWorkspaceLocation(project))) {
-
+		if ((project != null) && (isValidGradleWorkspaceProject(project) || isValidMavenWorkspaceProject(project))) {
 			return true;
 		}
 

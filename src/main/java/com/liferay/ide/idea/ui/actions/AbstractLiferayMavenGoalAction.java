@@ -22,12 +22,15 @@ import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.runners.ProgramRunner;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.swing.Icon;
 
@@ -72,11 +75,25 @@ public abstract class AbstractLiferayMavenGoalAction extends AbstractLiferayActi
 
 	@Override
 	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
-		if (LiferayWorkspaceSupport.isValidMavenWorkspaceLocation(anActionEvent.getProject())) {
-			return true;
+		Project project = anActionEvent.getProject();
+
+		if (!LiferayWorkspaceSupport.isValidMavenWorkspaceProject(project)) {
+			return false;
 		}
 
-		return false;
+		VirtualFile virtualFile = getVirtualFile(anActionEvent);
+
+		if ((project == null) || (virtualFile == null)) {
+			return false;
+		}
+
+		Module module = ModuleUtil.findModuleForFile(virtualFile, project);
+
+		if (Objects.isNull(module)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	@Nullable

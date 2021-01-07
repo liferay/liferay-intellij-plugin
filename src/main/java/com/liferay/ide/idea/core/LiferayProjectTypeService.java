@@ -51,7 +51,7 @@ public class LiferayProjectTypeService implements PersistentStateComponent<Proje
 			return new ProjectType(LiferayProjectType.LIFERAY_GRADLE_WORKSPACE);
 		}
 
-		if (LiferayWorkspaceSupport.isValidMavenWorkspaceLocation(project)) {
+		if (LiferayWorkspaceSupport.isValidMavenWorkspaceProject(project)) {
 			return new ProjectType(LiferayProjectType.LIFERAY_MAVEN_WORKSPACE);
 		}
 

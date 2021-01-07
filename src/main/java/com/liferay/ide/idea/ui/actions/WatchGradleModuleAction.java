@@ -118,6 +118,10 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction imp
 	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
 		Project project = anActionEvent.getProject();
 
+		if (!LiferayWorkspaceSupport.isValidGradleWorkspaceProject(project)) {
+			return false;
+		}
+
 		VirtualFile virtualFile = getVirtualFile(anActionEvent);
 
 		if ((project == null) || (virtualFile == null)) {
@@ -126,7 +130,7 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction imp
 
 		Module module = ModuleUtil.findModuleForFile(virtualFile, project);
 
-		if (module == null) {
+		if (Objects.isNull(module)) {
 			return false;
 		}
 
@@ -138,9 +142,14 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction imp
 
 		String moduleDirectoryName = getWorkspaceModuleDir(project);
 
-		String virtualFileToStr = virtualFile.toString();
+		if (!Objects.isNull(moduleDirectoryName)) {
+			String virtualFileToStr = virtualFile.toString();
 
-		if (virtualFileToStr.contains("/" + moduleDirectoryName)) {
+			if (virtualFileToStr.contains("/" + moduleDirectoryName)) {
+				return GradleUtil.isWatchableProject(module);
+			}
+		}
+		else {
 			return GradleUtil.isWatchableProject(module);
 		}
 
