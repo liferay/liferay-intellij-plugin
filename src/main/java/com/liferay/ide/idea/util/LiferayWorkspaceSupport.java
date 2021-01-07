@@ -261,6 +261,10 @@ public interface LiferayWorkspaceSupport {
 	public default String getWorkspaceModuleDir(Project project) {
 		WorkspaceProvider workspaceProvider = LiferayCore.getWorkspaceProvider(project);
 
+		if (Objects.isNull(workspaceProvider)) {
+			return null;
+		}
+
 		String[] workspaceModuleDirs = workspaceProvider.getWorkspaceModuleDirs();
 
 		if (!Objects.isNull(workspaceModuleDirs)) {
