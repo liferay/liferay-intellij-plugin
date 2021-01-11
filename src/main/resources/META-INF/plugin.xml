@@ -31,11 +31,17 @@
 	</p>
 	<p>
 		<ul>
+			<li>1.9.0</li>
+			<ul>
+				<li>INTELLIJ-158 fix compatibility problems on Intellij IDEA 2020.3</li>
+				<li>INTELLIJ-159 updated embedded blade cli to 4.0.6</li>
+				<li>INTELLIJ-161 </li>
+				<li>INTELLIJ-162 </li>
+			</ul>
 			<li>1.8.1</li>
 			<ul>
 				<li>INTELLIJ-155 bug fix for creating a liferay maven workspace project</li>
 			</ul>
-		<ul>
 			<li>1.8.0</li>
 			<ul>
 				<li>INTELLIJ-110 resolve relative paths in xml files(community contribution)</li>
