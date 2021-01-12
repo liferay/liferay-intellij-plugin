@@ -20,7 +20,6 @@ import com.intellij.ide.util.projectWizard.AbstractModuleBuilder;
 import com.intellij.ide.util.projectWizard.ProjectWizardUtil;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
@@ -35,6 +34,7 @@ import com.liferay.ide.idea.core.WorkspaceConstants;
 import com.liferay.ide.idea.core.WorkspaceProvider;
 import com.liferay.ide.idea.ui.modules.ext.LiferayModuleExtBuilder;
 import com.liferay.ide.idea.ui.modules.springmvcportlet.SpringMVCPortletModuleBuilder;
+import com.liferay.ide.idea.util.IntellijUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import java.io.File;
@@ -55,6 +55,7 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Terry Jia
+ * @author Simon Jiang
  */
 public class LiferayModuleNameLocationComponent implements LiferayWorkspaceSupport {
 
@@ -267,15 +268,25 @@ public class LiferayModuleNameLocationComponent implements LiferayWorkspaceSuppo
 	public boolean validate() throws ConfigurationException {
 		AbstractModuleBuilder builder = getModuleBuilder();
 
-		if ((builder != null) && !builder.validateModuleName(_getModuleName())) {
+		String moduleName = _getModuleName();
+
+		if ((builder != null) && !builder.validateModuleName(moduleName)) {
+			Messages.showWarningDialog(
+				"Module \'" + moduleName + "\' is invalid. Please specify another name.", "Module Name Error");
+
 			return false;
+		}
+
+		Module module = IntellijUtil.getModule(_context.getProject(), moduleName);
+
+		if (module != null) {
+			throw new ConfigurationException(
+				"Module \'" + moduleName + "\' already exist in project. Please, specify another name", moduleName);
 		}
 
 		if (!_validateModulePaths()) {
 			return false;
 		}
-
-		_validateExistingModuleName();
 
 		return true;
 	}
@@ -392,26 +403,6 @@ public class LiferayModuleNameLocationComponent implements LiferayWorkspaceSuppo
 		_contentRootDocListenerEnabled = false;
 		_moduleContentRoot.setText(FileUtil.toSystemDependentName(path));
 		_contentRootDocListenerEnabled = true;
-	}
-
-	private void _validateExistingModuleName() throws ConfigurationException {
-		Project project = _context.getProject();
-
-		if (project == null) {
-			return;
-		}
-
-		String moduleName = _getModuleName();
-
-		ModuleManager moduleManager = ModuleManager.getInstance(project);
-
-		Module module = moduleManager.findModuleByName(moduleName);
-
-		if (module != null) {
-			String msg = "Module \'" + moduleName + "\' already exists in project. Please specify another name.";
-
-			throw new ConfigurationException(msg);
-		}
 	}
 
 	private boolean _validateModulePaths() throws ConfigurationException {

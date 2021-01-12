@@ -15,13 +15,16 @@
 package com.liferay.ide.idea.ui.modules.springmvcportlet;
 
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
+import com.intellij.ide.util.projectWizard.ModuleBuilderListener;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.module.StdModuleTypes;
+import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectType;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -33,6 +36,7 @@ import com.liferay.ide.idea.core.LiferayIcons;
 import com.liferay.ide.idea.core.LiferayProjectTypeService;
 import com.liferay.ide.idea.ui.modules.LiferayProjectType;
 import com.liferay.ide.idea.util.BladeCLI;
+import com.liferay.ide.idea.util.IntellijUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import java.io.File;
@@ -41,12 +45,34 @@ import java.util.Objects;
 
 import javax.swing.Icon;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.gradle.util.GradleConstants;
 
 /**
  * @author Terry Jia
+ * @author Simon Jiang
  */
 public class SpringMVCPortletModuleBuilder extends ModuleBuilder implements LiferayWorkspaceSupport {
+
+	public SpringMVCPortletModuleBuilder() {
+		addListener(
+			new ModuleBuilderListener() {
+
+				@Override
+				public void moduleCreated(@NotNull Module module) {
+					Project project = module.getProject();
+
+					ProjectType projectType = LiferayProjectTypeService.getProjectType(project);
+
+					if (Objects.equals(projectType.getId(), LiferayProjectType.LIFERAY_GRADLE_WORKSPACE)) {
+						ExternalSystemUtil.refreshProject(
+							project, GradleConstants.SYSTEM_ID, project.getBasePath(), false,
+							ProgressExecutionMode.IN_BACKGROUND_ASYNC);
+					}
+				}
+
+			});
+	}
 
 	@Override
 	public String getBuilderId() {
@@ -114,11 +140,16 @@ public class SpringMVCPortletModuleBuilder extends ModuleBuilder implements Life
 			modifiableRootModel.inheritSdk();
 		}
 
-		_refreshProject(project, typeId);
+		_refreshProject(project);
 	}
 
 	public void setViewType(String viewType) {
 		_viewType = viewType;
+	}
+
+	@Override
+	public boolean validateModuleName(@NotNull String moduleName) throws ConfigurationException {
+		return IntellijUtil.validateExistingModuleName(moduleName);
 	}
 
 	private VirtualFile _createAndGetContentEntry() {
@@ -170,7 +201,7 @@ public class SpringMVCPortletModuleBuilder extends ModuleBuilder implements Life
 		BladeCLI.execute(sb.toString());
 	}
 
-	private void _refreshProject(Project project, String typeId) {
+	private void _refreshProject(Project project) {
 		VirtualFile projectDir = LiferayWorkspaceSupport.getWorkspaceVirtualFile(project);
 
 		if (projectDir == null) {
@@ -178,13 +209,6 @@ public class SpringMVCPortletModuleBuilder extends ModuleBuilder implements Life
 		}
 
 		projectDir.refresh(false, true);
-
-		if (Objects.equals(typeId, LiferayProjectType.LIFERAY_MAVEN_WORKSPACE)) {
-			return;
-		}
-
-		ExternalSystemUtil.refreshProject(
-			project, GradleConstants.SYSTEM_ID, projectDir.getPath(), false, ProgressExecutionMode.IN_BACKGROUND_ASYNC);
 	}
 
 	private String _framework;

@@ -15,13 +15,16 @@
 package com.liferay.ide.idea.ui.modules.ext;
 
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
+import com.intellij.ide.util.projectWizard.ModuleBuilderListener;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.module.StdModuleTypes;
+import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.util.io.FileUtilRt;
@@ -30,6 +33,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 
 import com.liferay.ide.idea.core.LiferayIcons;
 import com.liferay.ide.idea.util.BladeCLI;
+import com.liferay.ide.idea.util.IntellijUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import java.io.File;
@@ -38,6 +42,7 @@ import java.util.Objects;
 
 import javax.swing.Icon;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.gradle.util.GradleConstants;
 
 /**
@@ -46,6 +51,22 @@ import org.jetbrains.plugins.gradle.util.GradleConstants;
  * @author Charles Wu
  */
 public class LiferayModuleExtBuilder extends ModuleBuilder implements LiferayWorkspaceSupport {
+
+	public LiferayModuleExtBuilder() {
+		addListener(
+			new ModuleBuilderListener() {
+
+				@Override
+				public void moduleCreated(@NotNull Module module) {
+					Project project = module.getProject();
+
+					ExternalSystemUtil.refreshProject(
+						project, GradleConstants.SYSTEM_ID, project.getBasePath(), false,
+						ProgressExecutionMode.IN_BACKGROUND_ASYNC);
+				}
+
+			});
+	}
 
 	@Override
 	public String getBuilderId() {
@@ -104,11 +125,12 @@ public class LiferayModuleExtBuilder extends ModuleBuilder implements LiferayWor
 			modifiableRootModel.inheritSdk();
 		}
 
-		virtualFile.refresh(true, true);
+		_refreshProject(project);
+	}
 
-		ExternalSystemUtil.refreshProject(
-			project, GradleConstants.SYSTEM_ID, project.getBasePath(), false,
-			ProgressExecutionMode.IN_BACKGROUND_ASYNC);
+	@Override
+	public boolean validateModuleName(@NotNull String moduleName) throws ConfigurationException {
+		return IntellijUtil.validateExistingModuleName(moduleName);
 	}
 
 	private VirtualFile _createAndGetContentEntry() {
@@ -148,6 +170,16 @@ public class LiferayModuleExtBuilder extends ModuleBuilder implements LiferayWor
 		sb.append("\"");
 
 		BladeCLI.execute(sb.toString());
+	}
+
+	private void _refreshProject(Project project) {
+		VirtualFile projectDir = LiferayWorkspaceSupport.getWorkspaceVirtualFile(project);
+
+		if (projectDir == null) {
+			return;
+		}
+
+		projectDir.refresh(false, true);
 	}
 
 	private static final String _LIFERAY_EXT_MODULES = "Liferay Modules Ext";

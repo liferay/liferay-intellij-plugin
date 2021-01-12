@@ -19,6 +19,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable;
+import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;
 import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileSystem;
@@ -27,6 +29,7 @@ import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayUtil;
 
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
@@ -82,6 +85,39 @@ public class IntellijUtil {
 		return jarRoot;
 	}
 
+	public static Module getModule(Project project, String moduleName) {
+		Module module = null;
+
+		final ProjectStructureConfigurable fromConfigurable = ProjectStructureConfigurable.getInstance(project);
+
+		if (fromConfigurable != null) {
+			ModuleStructureConfigurable modulesConfig = fromConfigurable.getModulesConfig();
+
+			module = modulesConfig.getModule(moduleName);
+		}
+		else {
+			ModuleManager moduleManager = ModuleManager.getInstance(project);
+
+			module = moduleManager.findModuleByName(moduleName);
+		}
+
+		if (Objects.isNull(module)) {
+			ModuleManager moduleManager = ModuleManager.getInstance(project);
+
+			Module[] modules = moduleManager.getModules();
+
+			for (Module moduleItem : modules) {
+				String moduleItemName = moduleItem.getName();
+
+				if (moduleItemName.endsWith(moduleName)) {
+					return moduleItem;
+				}
+			}
+		}
+
+		return module;
+	}
+
 	@Nullable
 	public static PsiFile getModulePsiFileByName(@NotNull Module module, String fileName) {
 		PsiFile[] psiFiles = getModulePsiFilesByName(module, fileName);
@@ -129,5 +165,15 @@ public class IntellijUtil {
 	public static PsiFile[] getProjectPsiFilesByName(Project project, String name) {
 		return FilenameIndex.getFilesByName(project, name, GlobalSearchScope.projectScope(project));
 	}
+
+	public static boolean validateExistingModuleName(String moduleName) {
+		if (Objects.isNull(moduleName)) {
+			return false;
+		}
+
+		return moduleName.matches(_MODULE_NAME_REGEX);
+	}
+
+	private static final String _MODULE_NAME_REGEX = "([A-Za-z0-9_\\-.]+[A-Za-z0-9]$)|([A-Za-z0-9])";
 
 }
