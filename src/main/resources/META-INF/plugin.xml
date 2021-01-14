@@ -38,7 +38,7 @@
 				<li>INTELLIJ-159 updated embedded blade cli to 4.0.6</li>
 				<li>INTELLIJ-162 remove deploy action on non liferay maven projects</li>
 				<li>INTELLIJ-163 bug fix for creating maven spring mvc portlet project</li>
-				<li>INTELLIJ-165 Add validation for project name in new liferay module wizard</li>
+				<li>INTELLIJ-165 add validation for project name in new liferay module wizard</li>
 			</ul>
 			<li>1.8.1</li>
 			<ul>

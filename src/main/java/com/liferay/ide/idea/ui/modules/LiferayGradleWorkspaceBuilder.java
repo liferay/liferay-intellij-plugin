@@ -68,11 +68,11 @@ public class LiferayGradleWorkspaceBuilder extends LiferayWorkspaceBuilder {
 			gradleProjectSettings.setDistributionType(DistributionType.DEFAULT_WRAPPED);
 			gradleProjectSettings.setDelegatedBuild(true);
 			gradleProjectSettings.setDisableWrapperSourceDistributionNotification(false);
-			gradleProjectSettings.setResolveModulePerSourceSet(false);
+			gradleProjectSettings.setResolveModulePerSourceSet(true);
 			gradleProjectSettings.setupNewProjectDefault();
 			gradleProjectSettings.setDirectDelegatedBuild(true);
 			gradleProjectSettings.setUseQualifiedModuleNames(false);
-			gradleProjectSettings.setResolveExternalAnnotations(false);
+			gradleProjectSettings.setResolveExternalAnnotations(true);
 
 			GradleSettings gradleSettings = GradleSettings.getInstance(project);
 
