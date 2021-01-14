@@ -281,7 +281,7 @@ public class LiferayModuleNameLocationComponent implements LiferayWorkspaceSuppo
 
 		if (module != null) {
 			throw new ConfigurationException(
-				"Module \'" + moduleName + "\' already exist in project. Please, specify another name", moduleName);
+				"Module \'" + moduleName + "\' already exist in project. Please specify another name", moduleName);
 		}
 
 		if (!_validateModulePaths()) {
