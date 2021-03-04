@@ -2,5 +2,6 @@
     <extensions defaultExtensionNs="com.intellij">
         <properties.implicitPropertyUsageProvider implementation="com.liferay.ide.idea.language.resourcebundle.LiferayResourceBundlePropertiesImplicitUsageProvider" />
         <properties.implicitPropertyUsageProvider implementation="com.liferay.ide.idea.language.gradle.LiferayGradlePropertiesImplicitUsageProvider" />
+        <properties.implicitPropertyUsageProvider implementation="com.liferay.ide.idea.language.blade.LiferayBladePropertiesImplicitUsageProvider" />
     </extensions>
 </idea-plugin>
