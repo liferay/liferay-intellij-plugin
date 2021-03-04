@@ -25,8 +25,8 @@ public class LiferayGradlePropertiesImplicitUsageProviderTest extends BasePlatfo
 	public void testImplicitUsageJavaxPortletTitleInLanguageProperties() {
 		myFixture.configureByFiles("gradle.properties");
 
-		//Language.properties should not show any unused warning,
-		//even if javax.portlet.title.my_portlet is not used explicitly
+		//gradle.properties should not show any unused warning,
+		//even if liferay.workspace.modules.dir is not used explicitly
 		myFixture.checkHighlighting();
 	}
 
