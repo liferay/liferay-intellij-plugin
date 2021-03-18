@@ -131,8 +131,16 @@ public class ForkedDebuggerThread extends Thread {
 
 				@Override
 				public void processTerminated(@NotNull ProcessEvent event) {
-					StreamUtil.closeStream(stream);
-					StreamUtil.closeStream(accept);
+					try {
+						if (stream != null) {
+							stream.close();
+						}
+						if (accept != null) {
+							accept.close();
+						}
+					} catch (IOException e) {
+						ForkedDebuggerThread.LOG.error(e);
+					}
 				}
 
 			});

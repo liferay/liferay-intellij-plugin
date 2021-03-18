@@ -36,7 +36,6 @@ import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.externalSystem.service.execution.ExternalSystemRunConfiguration;
 import com.intellij.openapi.externalSystem.service.execution.ExternalSystemRunnableState;
 import com.intellij.openapi.externalSystem.service.execution.ExternalSystemTaskDebugRunner;
 import com.intellij.openapi.project.Project;
@@ -79,9 +78,6 @@ public class LiferayDockerServerDebuggerRunner
 		throws ExecutionException {
 
 		if (state instanceof ExternalSystemRunnableState) {
-            ExternalSystemRunnableState myRunnableState =
-				(ExternalSystemRunnableState)state;
-
 			RunnerSettings runnerSettings = environment.getRunnerSettings();
 
 			GenericDebuggerRunnerSettings debuggerRunnerSettings = (GenericDebuggerRunnerSettings)runnerSettings;
@@ -89,6 +85,8 @@ public class LiferayDockerServerDebuggerRunner
 			int port = Integer.decode(debuggerRunnerSettings.getDebugPort());
 
 			if (port > 0) {
+				ExternalSystemRunnableState myRunnableState = (ExternalSystemRunnableState)state;
+
 				RunContentDescriptor runContentDescriptor = _getRunContentDescriptor(
 					myRunnableState, environment, port);
 
@@ -100,9 +98,10 @@ public class LiferayDockerServerDebuggerRunner
 				final ServerSocket socket = myRunnableState.getForkSocket();
 
 				if ((socket != null) && (processHandler != null)) {
-					new ForkedDebuggerThread(
-						processHandler, runContentDescriptor, socket, environment.getProject()
-					).start();
+					ForkedDebuggerThread fordedDebuggerThread = new ForkedDebuggerThread(
+						processHandler, runContentDescriptor, socket, environment.getProject());
+
+					fordedDebuggerThread.start();
 				}
 
 				return runContentDescriptor;
@@ -118,7 +117,7 @@ public class LiferayDockerServerDebuggerRunner
 				String.format(
 					"Can not attach debugger to external system task execution. Reason: invalid run profile state is " +
 						"provided expected '%s' but got '%s'",
-						ExternalSystemRunnableState.class.getName(), runProfileStateClass.getName()));
+					ExternalSystemRunnableState.class.getName(), runProfileStateClass.getName()));
 		}
 
 		return null;
@@ -153,8 +152,7 @@ public class LiferayDockerServerDebuggerRunner
 
 	@Nullable
 	private RunContentDescriptor _getRunContentDescriptor(
-			@NotNull ExternalSystemRunnableState state, @NotNull ExecutionEnvironment environment,
-			int port)
+			@NotNull ExternalSystemRunnableState state, @NotNull ExecutionEnvironment environment, int port)
 		throws ExecutionException {
 
 		RemoteConnection connection = new RemoteConnection(true, "127.0.0.1", String.valueOf(port), false);

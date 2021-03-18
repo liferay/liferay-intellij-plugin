@@ -86,7 +86,7 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 		beforeTask(project);
 
 		ExternalSystemUtil.runTask(
-			_externalTaskExecutionInfo.getSettings(), _externalTaskExecutionInfo.getExecutorId(), project,
+			externalTaskExecutionInfo.getSettings(), externalTaskExecutionInfo.getExecutorId(), project,
 			GradleConstants.SYSTEM_ID,
 			new TaskCallback() {
 
@@ -139,15 +139,17 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 			return null;
 		}
 
-		_externalTaskExecutionInfo = _buildTaskExecutionInfo(project, workingDirectory, _taskName);
+		externalTaskExecutionInfo = _buildTaskExecutionInfo(project, workingDirectory, _taskName);
 
-		if (_externalTaskExecutionInfo == null) {
+		if (externalTaskExecutionInfo == null) {
 			return null;
 		}
 
 		return ExternalSystemUtil.createExternalSystemRunnerAndConfigurationSettings(
-			_externalTaskExecutionInfo.getSettings(), project, GradleConstants.SYSTEM_ID);
+			externalTaskExecutionInfo.getSettings(), project, GradleConstants.SYSTEM_ID);
 	}
+
+	protected ExternalTaskExecutionInfo externalTaskExecutionInfo;
 
 	private ExternalTaskExecutionInfo _buildTaskExecutionInfo(
 		Project project, @NotNull String projectPath, @NotNull String fullCommandLine) {
@@ -212,7 +214,6 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 		}
 	}
 
-	private ExternalTaskExecutionInfo _externalTaskExecutionInfo;
 	private final String _taskName;
 
 }

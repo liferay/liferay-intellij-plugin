@@ -1,0 +1,21 @@
+buildscript {
+	dependencies {
+		classpath group: "com.gradle", name: "gradle-enterprise-gradle-plugin", version: "3.6.1"
+	}
+
+	repositories {
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
+		maven {
+			url "https://repository-cdn.liferay.com/nexus/content/groups/public"
+		}
+		maven {
+			url "https://oss.sonatype.org/content/repositories/snapshots/"
+		}
+	}
+}
+
+plugins {
+	id "com.gradle.enterprise" version "3.6.1"
+}
