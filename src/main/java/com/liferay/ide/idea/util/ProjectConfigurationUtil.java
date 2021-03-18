@@ -105,14 +105,14 @@ public class ProjectConfigurationUtil {
 			ConfigurationType configurationType = producer.getConfigurationType();
 
 			if (Objects.equals(LiferayServerConfigurationType.id, configurationType.getId())) {
-				ConfigurationFactory configurationFactory = producer.getConfigurationFactory();
-
 				RunManager runManager = RunManager.getInstance(project);
 
 				RunnerAndConfigurationSettings configurationSettings = runManager.findConfigurationByTypeAndName(
 					configurationType, project.getName() + "-server");
 
 				if (configurationSettings == null) {
+					ConfigurationFactory configurationFactory = producer.getConfigurationFactory();
+
 					try {
 						RunnerAndConfigurationSettings newConfigurationSetting = runManager.createConfiguration(
 							project.getName() + "-server", configurationFactory);

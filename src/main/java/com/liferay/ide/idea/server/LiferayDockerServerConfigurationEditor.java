@@ -15,8 +15,6 @@
 package com.liferay.ide.idea.server;
 
 import com.intellij.application.options.ModulesComboBox;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
@@ -33,6 +31,7 @@ import com.liferay.ide.idea.util.GradleUtil;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -55,25 +54,24 @@ public class LiferayDockerServerConfigurationEditor
 		_dockerImageId.setEditable(false);
 		_dockerContainerId.setEditable(false);
 
-		_userActivityListener = () -> {
-			Application application = ApplicationManager.getApplication();
+		_dockerImageId.setText("loading...");
+		_dockerContainerId.setText("loading...");
 
-			application.runWriteAction(
-				() -> {
-					try {
-						ProjectInfo projectInfo = GradleUtil.getModel(ProjectInfo.class,
-								ProjectUtil.guessProjectDir(_project));
+		_userActivityListener = () -> SwingUtilities.invokeLater(
+			() -> {
+				try {
+					ProjectInfo projectInfo = GradleUtil.getModel(
+						ProjectInfo.class, ProjectUtil.guessProjectDir(_project));
 
-						if (projectInfo != null) {
-							_dockerImageId.setText(projectInfo.getDockerImageId());
-							_dockerContainerId.setText(projectInfo.getDockerContainerId());
-						}
+					if (projectInfo != null) {
+						_dockerImageId.setText(projectInfo.getDockerImageId());
+						_dockerContainerId.setText(projectInfo.getDockerContainerId());
 					}
-					catch (Exception e) {
-						_logger.warn(e);
-					}
-				});
-		};
+				}
+				catch (Exception e) {
+					_logger.warn(e);
+				}
+			});
 
 		_userActivityWatcher = new UserActivityWatcher();
 
@@ -103,6 +101,7 @@ public class LiferayDockerServerConfigurationEditor
 		return _anchor;
 	}
 
+	@Override
 	public void setAnchor(@Nullable JComponent anchor) {
 		_anchor = anchor;
 	}

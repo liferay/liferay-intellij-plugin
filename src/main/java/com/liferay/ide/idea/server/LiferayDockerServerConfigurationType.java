@@ -21,6 +21,7 @@ import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.openapi.project.Project;
 
 import com.liferay.ide.idea.core.LiferayIcons;
+
 import org.jetbrains.annotations.NotNull;
 
 /**

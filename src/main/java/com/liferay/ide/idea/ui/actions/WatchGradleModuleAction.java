@@ -32,9 +32,11 @@ import com.intellij.ui.content.ContentManager;
 
 import com.liferay.ide.idea.core.LiferayIcons;
 import com.liferay.ide.idea.server.gogo.GogoTelnetClient;
+import com.liferay.ide.idea.server.portal.PortalBundle;
 import com.liferay.ide.idea.util.FileUtil;
 import com.liferay.ide.idea.util.GradleUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
+import com.liferay.ide.idea.util.ServerUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -119,6 +121,14 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction imp
 	@Override
 	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
 		Project project = anActionEvent.getProject();
+
+		Path bundlePath = Paths.get(project.getBasePath(), getHomeDir(project));
+
+		PortalBundle portalBundle = ServerUtil.getPortalBundle(bundlePath);
+
+		if (portalBundle == null) {
+			return false;
+		}
 
 		if (!LiferayWorkspaceSupport.isValidGradleWorkspaceProject(project)) {
 			return false;

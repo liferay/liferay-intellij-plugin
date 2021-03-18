@@ -68,9 +68,7 @@ public class LiferayServerConfigurationProducer
 
 		String bundleLocation = configuration.getBundleLocation();
 
-		String basePath = project.getBasePath();
-
-		Path bundlePath = Paths.get(basePath, getHomeDir(project));
+		Path bundlePath = Paths.get(project.getBasePath(), getHomeDir(project));
 
 		if (!Objects.equals(bundleLocation, bundlePath.toString())) {
 			return false;

@@ -252,6 +252,7 @@
 			<action class="com.liferay.ide.idea.ui.actions.BuildServiceGradleModuleAction" id="BuildServiceGradleModuleAction"/>
 			<action class="com.liferay.ide.idea.ui.actions.BuildServiceMavenModuleAction" id="BuildServiceMavenModuleAction"/>
 			<action class="com.liferay.ide.idea.ui.actions.DeployGradleModuleAction" id="DeployLiferayGradleModule"/>
+			<action class="com.liferay.ide.idea.ui.actions.DeployDockerModuleAction" id="DeployDockerGradleModule"/>
 			<action class="com.liferay.ide.idea.ui.actions.WatchGradleModuleAction" id="WatchLiferayGradleModule"/>
 			<action class="com.liferay.ide.idea.ui.actions.DeployMavenModuleAction" id="DeployLiferayMavenModule"/>
 			<action class="com.liferay.ide.idea.ui.actions.InitBundleGradleAction" id="GradleInitBundle"/>

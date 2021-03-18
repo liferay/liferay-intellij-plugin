@@ -144,40 +144,6 @@ public class GradleUtil {
 		}
 	}
 
-	public static List<LibraryData> getTargetPlatformArtifacts(Project project) {
-		ProjectDataManager projectDataManager = ProjectDataManager.getInstance();
-
-		Collection<ExternalProjectInfo> externalProjectInfos = projectDataManager.getExternalProjectsData(
-			project, GradleConstants.SYSTEM_ID);
-
-		for (ExternalProjectInfo externalProjectInfo : externalProjectInfos) {
-			DataNode<ProjectData> projectData = externalProjectInfo.getExternalProjectStructure();
-
-			if (projectData == null) {
-				continue;
-			}
-
-			Collection<DataNode<?>> dataNodes = projectData.getChildren();
-
-			List<LibraryData> libraryData = new ArrayList<>(dataNodes.size());
-
-			for (DataNode<?> child : dataNodes) {
-				if (!ProjectKeys.LIBRARY.equals(child.getKey())) {
-					continue;
-				}
-
-				libraryData.add((LibraryData)child.getData());
-			}
-
-			libraryData.sort(
-				Comparator.comparing(LibraryData::getArtifactId, Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER)));
-
-			return libraryData;
-		}
-
-		return Collections.emptyList();
-	}
-
 	public static <T> T getModel(Class<T> modelClass, VirtualFile virtualFile) throws Exception {
 		T retval = null;
 
@@ -210,12 +176,11 @@ public class GradleUtil {
 				FileUtils.writeByteArrayToFile(scriptFile, initScriptContents.getBytes());
 			}
 
-			GradleConnector gradleConnector = GradleConnector.newConnector(
-			).forProjectDirectory(
-					Paths.get(
-							virtualFile.getPath()
-					).toFile()
-			);
+			GradleConnector gradleConnector = GradleConnector.newConnector();
+
+			Path virtualFilePath = Paths.get(virtualFile.getPath());
+
+			gradleConnector.forProjectDirectory(virtualFilePath.toFile());
 
 			ProjectConnection connection = gradleConnector.connect();
 
@@ -224,11 +189,46 @@ public class GradleUtil {
 			model.withArguments("--init-script", scriptFile.getAbsolutePath(), "--stacktrace");
 
 			retval = model.get();
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			throw e;
 		}
 
 		return retval;
+	}
+
+	public static List<LibraryData> getTargetPlatformArtifacts(Project project) {
+		ProjectDataManager projectDataManager = ProjectDataManager.getInstance();
+
+		Collection<ExternalProjectInfo> externalProjectInfos = projectDataManager.getExternalProjectsData(
+			project, GradleConstants.SYSTEM_ID);
+
+		for (ExternalProjectInfo externalProjectInfo : externalProjectInfos) {
+			DataNode<ProjectData> projectData = externalProjectInfo.getExternalProjectStructure();
+
+			if (projectData == null) {
+				continue;
+			}
+
+			Collection<DataNode<?>> dataNodes = projectData.getChildren();
+
+			List<LibraryData> libraryData = new ArrayList<>(dataNodes.size());
+
+			for (DataNode<?> child : dataNodes) {
+				if (!ProjectKeys.LIBRARY.equals(child.getKey())) {
+					continue;
+				}
+
+				libraryData.add((LibraryData)child.getData());
+			}
+
+			libraryData.sort(
+				Comparator.comparing(LibraryData::getArtifactId, Comparator.nullsFirst(String.CASE_INSENSITIVE_ORDER)));
+
+			return libraryData;
+		}
+
+		return Collections.emptyList();
 	}
 
 	public static GradleProject getWorkspaceGradleProject(Project project) {
