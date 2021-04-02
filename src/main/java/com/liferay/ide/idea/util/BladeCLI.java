@@ -21,19 +21,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 
-import java.net.JarURLConnection;
-import java.net.URL;
+import java.nio.file.Files;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.Scanner;
-import java.util.jar.JarEntry;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Java;
+
+import org.osgi.framework.Version;
 
 /**
  * @author Terry Jia
@@ -116,29 +120,27 @@ public class BladeCLI {
 
 		ClassLoader bladeClassLoader = BladeCLI.class.getClassLoader();
 
-		URL url = bladeClassLoader.getResource("/libs/" + jarName);
-
-		try (InputStream in = bladeClassLoader.getResourceAsStream("/libs/" + jarName)) {
-			JarURLConnection jarURLConnection = (JarURLConnection)url.openConnection();
-
-			JarEntry jarEntry = jarURLConnection.getJarEntry();
-
-			Long bladeJarTimestamp = jarEntry.getTime();
-
+		try (InputStream inputStream = bladeClassLoader.getResourceAsStream("/libs/" + jarName)) {
 			if (bladeJar.exists()) {
-				Long destTimestamp = bladeJar.lastModified();
+				Version newBladeVersion = Version.parseVersion(_getBladeVersion(inputStream));
 
-				if (destTimestamp < bladeJarTimestamp) {
-					bladeJar.delete();
-				}
-				else {
-					needToCopy = false;
+				try (InputStream existedBladeInputStream = Files.newInputStream(bladeJar.toPath())) {
+					Version existedBladeVersion = Version.parseVersion(_getBladeVersion(existedBladeInputStream));
+
+					if (newBladeVersion.compareTo(existedBladeVersion) <= 0) {
+						needToCopy = false;
+					}
 				}
 			}
+		}
+		catch (IOException ioe) {
+		}
 
+		try (InputStream inputStream = bladeClassLoader.getResourceAsStream("/libs/" + jarName)) {
 			if (needToCopy) {
-				FileUtil.writeFile(bladeJar, in);
-				bladeJar.setLastModified(bladeJarTimestamp);
+				bladeJar.delete();
+
+				FileUtil.writeFile(bladeJar, inputStream);
 			}
 		}
 		catch (IOException ioe) {
@@ -207,6 +209,29 @@ public class BladeCLI {
 		}
 
 		return workspaceProducts.toArray(new String[0]);
+	}
+
+	private static String _getBladeVersion(InputStream inputStream) {
+		try (ZipInputStream zipInput = new ZipInputStream(inputStream)) {
+			ZipEntry zipEntry = null;
+
+			do {
+				zipEntry = zipInput.getNextEntry();
+
+				if (Objects.equals("META-INF/MANIFEST.MF", zipEntry.getName())) {
+					Manifest manifest = new Manifest(zipInput);
+
+					Attributes mainAttributes = manifest.getMainAttributes();
+
+					return mainAttributes.getValue("Bundle-Version");
+				}
+			}
+			while (zipEntry != null);
+		}
+		catch (Exception e) {
+		}
+
+		return null;
 	}
 
 	private static String _bladeJarName = null;

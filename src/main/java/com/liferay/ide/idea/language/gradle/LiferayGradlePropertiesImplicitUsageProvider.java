@@ -23,10 +23,11 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author Dominik Marks
  */
-public class LiferayGradlePropertiesImplicitUsageProvider extends ImplicitPropertyUsageProvider {
+public class LiferayGradlePropertiesImplicitUsageProvider
+	implements com.intellij.lang.properties.codeInspection.unused.ImplicitPropertyUsageProvider {
 
 	@Override
-	protected boolean isUsed(@NotNull Property property) {
+	public boolean isUsed(@NotNull Property property) {
 		PsiFile containingFile = property.getContainingFile();
 
 		String propertyKey = property.getKey();

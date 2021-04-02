@@ -26,7 +26,7 @@ apply plugin: "java"
 apply plugin: "nu.studer.credentials"
 
 tasks.withType(JavaCompile) {
-	options.compilerArgs << '-Xlint:unchecked'
+	options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
 	options.deprecation = true
 }
 
@@ -215,11 +215,11 @@ formatSource {
 intellij {
 	plugins "java", "CSS", "DatabaseTools", "gradle", "Groovy", "java-i18n", "JavaEE", "Web", "JavaScriptLanguage", "jsp", "junit", "maven", "PersistenceSupport", "properties", "sass"
 	pluginName "liferay-intellij-plugin"
-	version "IU-2020.3"
+	version "IU-2021.1"
 }
 
 patchPluginXml {
-	sinceBuild "203"
+	sinceBuild "211"
 	untilBuild ""
 }
 

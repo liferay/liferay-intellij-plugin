@@ -14,7 +14,6 @@
 
 package com.liferay.ide.idea.language.gradle;
 
-import com.intellij.codeInspection.unused.UnusedPropertyInspection;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 
 /**
@@ -38,8 +37,6 @@ public class LiferayGradlePropertiesImplicitUsageProviderTest extends BasePlatfo
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-
-		myFixture.enableInspections(new UnusedPropertyInspection());
 	}
 
 }

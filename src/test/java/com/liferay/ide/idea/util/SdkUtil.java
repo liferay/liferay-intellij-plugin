@@ -32,14 +32,14 @@ public class SdkUtil {
 	public static Sdk getTestJdk() {
 		File javaHome = new File(SystemProperties.getJavaHome());
 
-		if (JdkUtil.checkForJre(javaHome) && !JdkUtil.checkForJdk(javaHome)) {
+		if (JdkUtil.checkForJre(javaHome.toPath()) && !JdkUtil.checkForJdk(javaHome.toPath())) {
 
 			// handle situation like javaHome="<somewhere>/jdk1.8.0_212/jre" (see IDEA-226353)
 
 			File javaHomeParent = javaHome.getParentFile();
 
-			if ((javaHomeParent != null) && JdkUtil.checkForJre(javaHomeParent) &&
-				JdkUtil.checkForJdk(javaHomeParent)) {
+			if ((javaHomeParent != null) && JdkUtil.checkForJre(javaHomeParent.toPath()) &&
+				JdkUtil.checkForJdk(javaHomeParent.toPath())) {
 
 				javaHome = javaHomeParent;
 			}
@@ -49,7 +49,7 @@ public class SdkUtil {
 
 		JavaSdk javaSdk = JavaSdk.getInstance();
 
-		return javaSdk.createJdk(versionName, javaHome.getAbsolutePath(), !JdkUtil.checkForJdk(javaHome));
+		return javaSdk.createJdk(versionName, javaHome.getAbsolutePath(), !JdkUtil.checkForJdk(javaHome.toPath()));
 	}
 
 }

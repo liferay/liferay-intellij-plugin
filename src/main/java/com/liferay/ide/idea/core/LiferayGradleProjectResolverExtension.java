@@ -36,6 +36,7 @@ import org.gradle.tooling.model.DomainObjectSet;
 import org.gradle.tooling.model.GradleModuleVersion;
 import org.gradle.tooling.model.idea.IdeaDependency;
 import org.gradle.tooling.model.idea.IdeaModule;
+import org.gradle.tooling.model.idea.IdeaSingleEntryLibraryDependency;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -49,8 +50,6 @@ import org.jetbrains.plugins.gradle.service.project.AbstractProjectResolverExten
 import org.jetbrains.plugins.gradle.service.project.GradleProjectResolver;
 import org.jetbrains.plugins.gradle.service.project.GradleProjectResolverUtil;
 import org.jetbrains.plugins.gradle.service.project.ProjectResolverContext;
-import org.jetbrains.plugins.gradle.tooling.serialization.internal.adapter.InternalIdeaDependencyScope;
-import org.jetbrains.plugins.gradle.tooling.serialization.internal.adapter.InternalIdeaSingleEntryLibraryDependency;
 
 /**
  * @author Simon Jiang
@@ -106,17 +105,17 @@ public class LiferayGradleProjectResolverExtension extends AbstractProjectResolv
 							DomainObjectSet<? extends IdeaDependency> moduleDependencies = ideaModule.getDependencies();
 
 							for (IdeaDependency dependency : moduleDependencies) {
-								if (dependency instanceof InternalIdeaSingleEntryLibraryDependency) {
-									InternalIdeaSingleEntryLibraryDependency localDependency =
-										(InternalIdeaSingleEntryLibraryDependency)dependency;
+								if (dependency instanceof IdeaSingleEntryLibraryDependency) {
+									IdeaSingleEntryLibraryDependency ideaDependency =
+										(IdeaSingleEntryLibraryDependency)dependency;
 
-									File jarFile = localDependency.getFile();
+									File jarFile = ideaDependency.getFile();
 
 									String jarName = jarFile.getName();
 
 									if (jarName.endsWith(".jar")) {
 										GradleModuleVersion gradleModuleVersion =
-											localDependency.getGradleModuleVersion();
+											ideaDependency.getGradleModuleVersion();
 
 										if (gradleModuleVersion == null) {
 											continue;
@@ -133,13 +132,9 @@ public class LiferayGradleProjectResolverExtension extends AbstractProjectResolv
 
 										libraryDependency.setFile(jarFile);
 
-										libraryDependency.setSource(localDependency.getSource());
+										libraryDependency.setSource(ideaDependency.getSource());
 
-										InternalIdeaDependencyScope jarScope = localDependency.getScope();
-
-										libraryDependency.setScope(jarScope.getScope());
-
-										libraryDependency.setExported(localDependency.getExported());
+										libraryDependency.setExported(ideaDependency.getExported());
 
 										dependencies.add(libraryDependency);
 									}
