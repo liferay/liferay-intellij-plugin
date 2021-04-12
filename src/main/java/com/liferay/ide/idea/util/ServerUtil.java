@@ -24,19 +24,56 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Objects;
+import java.util.Properties;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
  * @author Terry Jia
  * @author Simon Jiang
+ * @author Seiphon Wang
  */
 public class ServerUtil {
+
+	public static String getGogoShellPort(String bundleLocation) {
+		String gogoShellPortValue = "11311";
+
+		PortalBundle portalBundle = getPortalBundle(FileUtil.getPath(bundleLocation));
+
+		if (portalBundle != null) {
+			File[] extPropertiesFiles = _getPortalExtraPropertiesFiles(portalBundle, "portal-ext.properties");
+			File[] developerPropertiesFiles = _getPortalExtraPropertiesFiles(
+				portalBundle, "portal-developer.properties");
+			File[] setupWizardPropertiesFiles = _getPortalExtraPropertiesFiles(
+				portalBundle, "portal-setup-wizard.properties");
+
+			Properties portalExtraProperties = new Properties();
+
+			_loadProperties(portalExtraProperties, developerPropertiesFiles);
+			_loadProperties(portalExtraProperties, extPropertiesFiles);
+			_loadProperties(portalExtraProperties, setupWizardPropertiesFiles);
+
+			String gogoShellConnectString = portalExtraProperties.getProperty(
+				"module.framework.properties.osgi.console");
+
+			if (Objects.nonNull(gogoShellConnectString)) {
+				String[] gogoShellConnectStrings = gogoShellConnectString.split(":");
+
+				if (Objects.nonNull(gogoShellConnectStrings) && (gogoShellConnectStrings.length > 1)) {
+					gogoShellPortValue = gogoShellConnectStrings[1];
+				}
+			}
+		}
+
+		return gogoShellPortValue;
+	}
 
 	public static File[] getMarketplaceLpkgFiles(File runtime) {
 		File marketplace = new File(new File(runtime, "osgi"), "marketplace");
@@ -199,6 +236,35 @@ public class ServerUtil {
 		}
 
 		return false;
+	}
+
+	private static File[] _getPortalExtraPropertiesFiles(PortalBundle portalBundle, String propertyFileName) {
+		File[] retVal = new File[0];
+
+		Path liferayHomePath = portalBundle.getLiferayHome();
+
+		File liferayHomeDir = liferayHomePath.toFile();
+
+		if (liferayHomeDir.exists()) {
+			File[] files = liferayHomeDir.listFiles(
+				(dir, name) -> dir.equals(liferayHomeDir) && Objects.equals(name, propertyFileName));
+
+			if (files != null) {
+				retVal = files;
+			}
+		}
+
+		return retVal;
+	}
+
+	private static void _loadProperties(Properties poralExtraPropertiesFiles, File[] propertyFiles) {
+		if (ListUtil.isNotEmpty(propertyFiles)) {
+			try (InputStream stream = Files.newInputStream(propertyFiles[0].toPath())) {
+				poralExtraPropertiesFiles.load(stream);
+			}
+			catch (IOException ioe) {
+			}
+		}
 	}
 
 	private static PortalBundleFactory[] _bundleFactories = {

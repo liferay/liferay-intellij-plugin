@@ -42,6 +42,11 @@ public abstract class AbstractPortalBundle implements PortalBundle {
 		return bundlePath;
 	}
 
+	@Override
+	public Path getLiferayHome() {
+		return liferayHome;
+	}
+
 	protected Path autoDeployPath;
 	protected Path bundlePath;
 	protected Path liferayHome;

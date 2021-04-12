@@ -26,6 +26,7 @@ import com.intellij.execution.configurations.LocatableConfigurationBase;
 import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.configurations.RuntimeConfigurationException;
+import com.intellij.execution.configurations.RuntimeConfigurationWarning;
 import com.intellij.execution.configurations.SearchScopeProvidingRunProfile;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.util.JavaParametersUtil;
@@ -44,10 +45,12 @@ import com.intellij.util.xmlb.XmlSerializer;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 
 import com.liferay.ide.idea.util.CoreUtil;
+import com.liferay.ide.idea.util.ServerUtil;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import org.jdom.Element;
 
@@ -57,6 +60,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Terry Jia
  * @author Simon Jiang
+ * @author Seiphon Wang
  */
 @SuppressWarnings("unchecked")
 public class LiferayServerConfiguration
@@ -68,6 +72,8 @@ public class LiferayServerConfiguration
 		_javaRunConfigurationModule = new JavaRunConfigurationModule(project, true);
 
 		_liferayServerConfig.vmParameters = "-Xmx2560m";
+
+		_liferayServerConfig.gogoShellPort = ServerUtil.getGogoShellPort(_liferayServerConfig.bundleLocation);
 	}
 
 	@Override
@@ -82,6 +88,12 @@ public class LiferayServerConfiguration
 
 		if (CoreUtil.isNullOrEmpty(_liferayServerConfig.buildType)) {
 			throw new RuntimeConfigurationException("Please check bundle location", "Invalid bundle type");
+		}
+
+		if (!_isCorrectGogoShellPort(_liferayServerConfig.gogoShellPort)) {
+			throw new RuntimeConfigurationWarning(
+				"The customized gogo-shell port is not equals defined value in portal-ext.properties, " +
+					"portal-developer.properties or portal-setup-wizard.properties");
 		}
 
 		JavaRunConfigurationExtensionManager.checkConfigurationIsValid(this);
@@ -100,6 +112,8 @@ public class LiferayServerConfiguration
 		clone.setConfigurationModule(configurationModule);
 
 		clone.setEnvs(new LinkedHashMap<>(clone.getEnvs()));
+
+		clone.setGogoShellPort(_liferayServerConfig.gogoShellPort);
 
 		return clone;
 	}
@@ -145,6 +159,10 @@ public class LiferayServerConfiguration
 	@Override
 	public Map<String, String> getEnvs() {
 		return _envs;
+	}
+
+	public String getGogoShellPort() {
+		return _liferayServerConfig.gogoShellPort;
 	}
 
 	public Module getModule() {
@@ -275,6 +293,10 @@ public class LiferayServerConfiguration
 		_envs.putAll(envs);
 	}
 
+	public void setGogoShellPort(String gogoShellPort) {
+		_liferayServerConfig.gogoShellPort = gogoShellPort;
+	}
+
 	public void setModule(Module module) {
 		_javaRunConfigurationModule.setModule(module);
 	}
@@ -314,6 +336,16 @@ public class LiferayServerConfiguration
 		}
 	}
 
+	private boolean _isCorrectGogoShellPort(String gogoShellPort) {
+		String extGogoShellPort = ServerUtil.getGogoShellPort(_liferayServerConfig.bundleLocation);
+
+		if (Objects.equals(gogoShellPort, extGogoShellPort)) {
+			return true;
+		}
+
+		return false;
+	}
+
 	private Map<String, String> _envs = new LinkedHashMap<>();
 	private JavaRunConfigurationModule _javaRunConfigurationModule;
 	private LiferayServerConfig _liferayServerConfig = new LiferayServerConfig();
@@ -325,6 +357,7 @@ public class LiferayServerConfiguration
 		public String buildType = "";
 		public String bundleLocation = "";
 		public boolean developerMode = true;
+		public String gogoShellPort = "";
 		public boolean passParentEnvironments = true;
 		public String vmParameters = "";
 

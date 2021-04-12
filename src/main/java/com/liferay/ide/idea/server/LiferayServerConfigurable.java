@@ -60,6 +60,7 @@ public class LiferayServerConfigurable
 
 		_bundleType.setEnabled(false);
 		_liferayServer.setEnabled(true);
+		_gogoShellPort.setEnabled(true);
 
 		_liferayServer.addBrowseFolderListener(
 			"Liferay installation folder", "Choose the folder where Liferay is installed (e.g. bundles)", project,
@@ -100,6 +101,7 @@ public class LiferayServerConfigurable
 		configuration.setDeveloperMode(_developerMode.isSelected());
 		configuration.setModule(modulesComboBox.getSelectedModule());
 		configuration.setVMParameters(_vmParams.getText());
+		configuration.setGogoShellPort(_gogoShellPort.getText());
 
 		configuration.checkConfiguration();
 	}
@@ -142,6 +144,8 @@ public class LiferayServerConfigurable
 			_liferayServer.setText(path.toString());
 		}
 
+		_gogoShellPort.setText(configuration.getGogoShellPort());
+
 		_jrePath.setPathOrName(configuration.getAlternativeJrePath(), configuration.isAlternativeJrePathEnabled());
 		_developerMode.setSelected(configuration.getDeveloperMode());
 
@@ -166,6 +170,7 @@ public class LiferayServerConfigurable
 	private JComponent _anchor;
 	private JTextField _bundleType;
 	private JCheckBox _developerMode;
+	private JTextField _gogoShellPort;
 	private JrePathEditor _jrePath;
 	private TextFieldWithBrowseButton _liferayServer;
 	private JPanel _mainPanel;
