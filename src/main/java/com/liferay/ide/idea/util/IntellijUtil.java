@@ -109,7 +109,7 @@ public class IntellijUtil {
 			for (Module moduleItem : modules) {
 				String moduleItemName = moduleItem.getName();
 
-				if (moduleItemName.endsWith(moduleName)) {
+				if (moduleItemName.equals(moduleName)) {
 					return moduleItem;
 				}
 			}

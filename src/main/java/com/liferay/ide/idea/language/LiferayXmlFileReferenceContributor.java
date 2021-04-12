@@ -95,7 +95,7 @@ public class LiferayXmlFileReferenceContributor extends PsiReferenceContributor 
 			});
 	}
 
-	private static Collection<PsiFileSystemItem> _getModuleResourceDirectories(@NotNull final PsiFile file) {
+	private static Collection<PsiFileSystemItem> _getModuleResourceDirectories(final @NotNull PsiFile file) {
 		final VirtualFile virtualFile = file.getVirtualFile();
 
 		if (virtualFile == null) {
