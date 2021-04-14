@@ -33,7 +33,9 @@
 		<ul>
 			<li>1.9.1</li>
 			<ul>
+				<li>INTELLIJ-169 add more support for OSGi component properties(community contribution)</li>
 				<li>INTELLIJ-171 updated embedded blade cli to 4.0.7</li>
+				<li>INTELLIJ-172 upgrade sinceBuild to 211 and fix compatibility problems</li>
 			</ul>
 			<li>1.9.0</li>
 			<ul>
