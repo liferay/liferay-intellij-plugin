@@ -14,6 +14,8 @@
 
 package com.liferay.ide.idea.util;
 
+import aQute.bnd.version.Version;
+
 import com.google.common.collect.ListMultimap;
 
 import com.intellij.execution.process.ProcessHandler;
@@ -40,9 +42,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import java.net.JarURLConnection;
-import java.net.URL;
-
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -53,7 +53,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.jar.JarEntry;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import org.apache.commons.io.FileUtils;
 
@@ -325,37 +328,54 @@ public class GradleUtil {
 
 		File toolingJar = new File(depsDir, fullFileName);
 
-		ClassLoader bladeClassLoader = GradleUtil.class.getClassLoader();
-
-		URL url = bladeClassLoader.getResource("/libs/" + fullFileName);
+		ClassLoader classLoader = GradleUtil.class.getClassLoader();
 
 		boolean needToCopy = true;
 
-		try (InputStream in = bladeClassLoader.getResourceAsStream("/libs/" + fullFileName)) {
-			JarURLConnection jarURLConnection = (JarURLConnection)url.openConnection();
-
-			JarEntry jarEntry = jarURLConnection.getJarEntry();
-
-			Long bladeJarTimestamp = jarEntry.getTime();
-
+		try (InputStream inputStream = classLoader.getResourceAsStream("/libs/" + fullFileName)) {
 			if (toolingJar.exists()) {
-				Long destTimestamp = toolingJar.lastModified();
+				Version urlJarVersion = Version.parseVersion(_getJarVersion(inputStream));
 
-				if (destTimestamp < bladeJarTimestamp) {
-					toolingJar.delete();
-				}
-				else {
-					needToCopy = false;
+				try (InputStream existedJarInputStream = Files.newInputStream(toolingJar.toPath())) {
+					Version existedJarVersion = Version.parseVersion(_getJarVersion(existedJarInputStream));
+
+					if (urlJarVersion.compareTo(existedJarVersion) <= 0) {
+						needToCopy = false;
+					}
 				}
 			}
 
 			if (needToCopy) {
-				FileUtil.writeFile(toolingJar, in);
-				toolingJar.setLastModified(bladeJarTimestamp);
+				toolingJar.delete();
+
+				FileUtil.writeFile(toolingJar, inputStream);
 			}
 		}
 		catch (IOException ioe) {
 		}
+	}
+
+	private static String _getJarVersion(InputStream inputStream) {
+		try (ZipInputStream zipInput = new ZipInputStream(inputStream)) {
+			ZipEntry zipEntry = null;
+
+			do {
+				zipEntry = zipInput.getNextEntry();
+
+				if (Objects.equals("META-INF/MANIFEST.MF", zipEntry.getName())) {
+					Manifest manifest = new Manifest(zipInput);
+
+					Attributes mainAttributes = manifest.getMainAttributes();
+
+					return mainAttributes.getValue("Manifest-Version");
+				}
+			}
+			while (zipEntry != null);
+		}
+		catch (Exception e) {
+		}
+
+		return null;
 	}
 
 }
