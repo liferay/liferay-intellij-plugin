@@ -43,7 +43,7 @@ import org.jetbrains.plugins.gradle.util.GradleConstants;
  */
 public interface ILiferayDockerServerRunnerCallback {
 
-	public default void dockerSeverStopHandler(
+	public default void registerDockerSeverStopHandler(
 		ProcessHandler processHandler, @NotNull RunProfileState runProfileState,
 		@NotNull ExecutionEnvironment environment) {
 

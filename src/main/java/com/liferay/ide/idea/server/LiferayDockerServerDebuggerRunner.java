@@ -41,8 +41,6 @@ import com.intellij.openapi.externalSystem.service.execution.ExternalSystemTaskD
 import com.intellij.openapi.project.Project;
 import com.intellij.util.net.NetUtils;
 
-import java.net.ServerSocket;
-
 import java.util.Collection;
 
 import org.jetbrains.annotations.NotNull;
@@ -87,24 +85,7 @@ public class LiferayDockerServerDebuggerRunner
 			if (port > 0) {
 				ExternalSystemRunnableState myRunnableState = (ExternalSystemRunnableState)state;
 
-				RunContentDescriptor runContentDescriptor = _getRunContentDescriptor(
-					myRunnableState, environment, port);
-
-				if (runContentDescriptor == null)
-
-					return null;
-
-				ProcessHandler processHandler = runContentDescriptor.getProcessHandler();
-				final ServerSocket socket = myRunnableState.getForkSocket();
-
-				if ((socket != null) && (processHandler != null)) {
-					ForkedDebuggerThread fordedDebuggerThread = new ForkedDebuggerThread(
-						processHandler, runContentDescriptor, socket, environment.getProject());
-
-					fordedDebuggerThread.start();
-				}
-
-				return runContentDescriptor;
+				return _getRunContentDescriptor(myRunnableState, environment, port);
 			}
 
 			_logger.warn(
@@ -144,7 +125,7 @@ public class LiferayDockerServerDebuggerRunner
 				return runContentDescriptor;
 			}
 
-			dockerSeverStopHandler(processHandler, runProfileState, executionEnvironment);
+			registerDockerSeverStopHandler(processHandler, runProfileState, executionEnvironment);
 		}
 
 		return runContentDescriptor;
@@ -159,9 +140,9 @@ public class LiferayDockerServerDebuggerRunner
 
 		RunContentDescriptor runContentDescriptor = attachVirtualMachine(state, environment, connection, true);
 
-		if (runContentDescriptor == null)
-
+		if (runContentDescriptor == null) {
 			return null;
+		}
 
 		Application application = ApplicationManager.getApplication();
 

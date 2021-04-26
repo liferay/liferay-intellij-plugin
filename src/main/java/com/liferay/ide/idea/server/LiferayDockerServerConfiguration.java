@@ -51,7 +51,6 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.Transient;
 
 import com.liferay.ide.idea.util.CoreUtil;
-import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,7 +58,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import org.jdom.Element;
 
@@ -89,19 +87,14 @@ public class LiferayDockerServerConfiguration
 	public void checkConfiguration() throws RuntimeConfigurationException {
 		ProgramParametersUtil.checkWorkingDirectoryExist(this, getProject(), null);
 
-		if (!LiferayWorkspaceSupport.isValidGradleWorkspaceLocation(_liferayDockerServerConfig.workspaceLocation)) {
-			throw new RuntimeConfigurationException(
-				"Please set correct workspace project location", "Invalid workspace project location");
-		}
-
-		if (CoreUtil.isNullOrEmpty(_liferayDockerServerConfig.dockerImageId) ||
-			Objects.equals("loading...", _liferayDockerServerConfig.dockerImageId)) {
+		if (CoreUtil.isNullOrEmpty(_liferayDockerServerConfig.dockerImageId) &&
+			!_liferayDockerServerConfig.dockerImageId.startsWith("loading...")) {
 
 			throw new RuntimeConfigurationException("Please set correct docker image id", "Invalid docker image id");
 		}
 
-		if (CoreUtil.isNullOrEmpty(_liferayDockerServerConfig.dockerContainerId) ||
-			Objects.equals("loading...", _liferayDockerServerConfig.dockerContainerId)) {
+		if (CoreUtil.isNullOrEmpty(_liferayDockerServerConfig.dockerContainerId) &&
+			!_liferayDockerServerConfig.dockerContainerId.startsWith("loading...")) {
 
 			throw new RuntimeConfigurationException(
 				"Please set correct docker container id", "Invalid docker container id");
@@ -198,16 +191,16 @@ public class LiferayDockerServerConfiguration
 	public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment env)
 		throws ExecutionException {
 
-		ExternalSystemTaskExecutionSettings settings = new ExternalSystemTaskExecutionSettings();
-
 		String debugExecutorId = ToolWindowId.DEBUG;
+
+		ExternalSystemRunConfiguration externalSystemRunConfiguration = new ExternalSystemRunConfiguration(
+			GradleConstants.SYSTEM_ID, _project, _factory, _name);
+
+		ExternalSystemTaskExecutionSettings settings = externalSystemRunConfiguration.getSettings();
 
 		settings.setExternalProjectPath(_project.getBasePath());
 		settings.setExternalSystemIdString(GradleConstants.SYSTEM_ID.toString());
 		settings.setScriptParameters(null);
-
-		ExternalSystemRunConfiguration externalSystemRunConfiguration = new ExternalSystemRunConfiguration(
-			GradleConstants.SYSTEM_ID, _project, _factory, _name);
 
 		List<String> taskNames = new ArrayList<>();
 

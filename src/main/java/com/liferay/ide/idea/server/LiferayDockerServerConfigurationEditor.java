@@ -15,12 +15,14 @@
 package com.liferay.ide.idea.server;
 
 import com.intellij.application.options.ModulesComboBox;
-import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.ui.LabeledComponent;
+import com.intellij.openapi.util.Computable;
 import com.intellij.ui.PanelWithAnchor;
 import com.intellij.ui.UserActivityListener;
 import com.intellij.ui.UserActivityWatcher;
@@ -57,21 +59,47 @@ public class LiferayDockerServerConfigurationEditor
 		_dockerImageId.setText("loading...");
 		_dockerContainerId.setText("loading...");
 
-		_userActivityListener = () -> SwingUtilities.invokeLater(
-			() -> {
-				try {
-					ProjectInfo projectInfo = GradleUtil.getModel(
-						ProjectInfo.class, ProjectUtil.guessProjectDir(_project));
+		_userActivityListener = () -> {
+			Application application = ApplicationManager.getApplication();
 
-					if (projectInfo != null) {
-						_dockerImageId.setText(projectInfo.getDockerImageId());
-						_dockerContainerId.setText(projectInfo.getDockerContainerId());
+			application.invokeLaterOnWriteThread(
+				new Runnable() {
+
+					@Override
+					public void run() {
+						Computable<ProjectInfo> computable = new Computable<>() {
+
+							@Override
+							public ProjectInfo compute() {
+								try {
+									return GradleUtil.getModel(
+										ProjectInfo.class, ProjectUtil.guessProjectDir(_project));
+								}
+								catch (Exception e) {
+								}
+
+								return null;
+							}
+
+						};
+
+						SwingUtilities.invokeLater(
+							() -> {
+								try {
+									ProjectInfo projectInfo = computable.get();
+
+									if (projectInfo != null) {
+										_dockerImageId.setText(projectInfo.getDockerImageId());
+										_dockerContainerId.setText(projectInfo.getDockerContainerId());
+									}
+								}
+								catch (Exception e) {
+								}
+							});
 					}
-				}
-				catch (Exception e) {
-					_logger.warn(e);
-				}
-			});
+
+				});
+		};
 
 		_userActivityWatcher = new UserActivityWatcher();
 
@@ -116,8 +144,6 @@ public class LiferayDockerServerConfigurationEditor
 	@Override
 	protected void resetEditorFrom(@NotNull LiferayDockerServerConfiguration configuration) {
 	}
-
-	private static final Logger _logger = Logger.getInstance(LiferayDockerServerConfigurationEditor.class);
 
 	private JComponent _anchor;
 	private JTextField _dockerContainerId;

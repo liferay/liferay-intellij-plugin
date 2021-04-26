@@ -73,7 +73,7 @@ public class LiferayDockerServerRunner extends GenericProgramRunner implements I
 					return runContentDescriptor;
 				}
 
-				dockerSeverStopHandler(processHandler, runProfileState, environment);
+				registerDockerSeverStopHandler(processHandler, runProfileState, environment);
 			}
 
 			ExecutionConsole executionConsole = runContentDescriptor.getExecutionConsole();
