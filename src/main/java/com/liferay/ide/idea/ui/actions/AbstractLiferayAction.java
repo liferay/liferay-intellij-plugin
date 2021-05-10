@@ -20,6 +20,7 @@ import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.ide.projectView.ProjectView;
+import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -36,6 +37,15 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 
+import com.liferay.ide.idea.util.FileUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
+import com.liferay.ide.idea.util.ServerUtil;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import java.util.Objects;
+
 import javax.swing.Icon;
 
 import org.jetbrains.annotations.NotNull;
@@ -45,7 +55,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Simon Jiang
  * @author Ethan Sun
  */
-public abstract class AbstractLiferayAction extends AnAction {
+public abstract class AbstractLiferayAction extends AnAction implements LiferayWorkspaceSupport {
 
 	public AbstractLiferayAction(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
 		super(text, description, icon);
@@ -118,6 +128,38 @@ public abstract class AbstractLiferayAction extends AnAction {
 
 	@Nullable
 	protected abstract RunnerAndConfigurationSettings processRunnerConfiguration(AnActionEvent anActionEvent);
+
+	protected boolean verifyModuleDeploy(AnActionEvent anActionEvent) {
+		Project project = anActionEvent.getProject();
+
+		VirtualFile baseDir = LiferayWorkspaceSupport.getWorkspaceVirtualFile(project);
+
+		if (baseDir == null) {
+			return false;
+		}
+
+		VirtualFile virtualFile = getVirtualFile(anActionEvent);
+
+		if ((virtualFile != null) && ProjectRootsUtil.isModuleContentRoot(virtualFile, project) &&
+			!baseDir.equals(virtualFile)) {
+
+			String homeDir = getHomeDir(project);
+
+			if (Objects.isNull(homeDir)) {
+				return false;
+			}
+
+			Path portalBundlePath = Paths.get(project.getBasePath(), homeDir);
+
+			if (FileUtil.notExists(portalBundlePath) || Objects.isNull(ServerUtil.getPortalBundle(portalBundlePath))) {
+				return false;
+			}
+
+			return true;
+		}
+
+		return false;
+	}
 
 	private void _perform(AnActionEvent anActionEvent, Project project) {
 		RunnerAndConfigurationSettings runnerAndConfigurationSettings = processRunnerConfiguration(anActionEvent);

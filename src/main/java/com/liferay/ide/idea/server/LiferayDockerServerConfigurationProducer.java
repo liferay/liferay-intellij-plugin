@@ -32,6 +32,7 @@ import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import java.util.Objects;
 
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -49,6 +50,13 @@ public class LiferayDockerServerConfigurationProducer
 			@Override
 			public RunConfiguration createTemplateConfiguration(@NotNull Project project) {
 				return new LiferayDockerServerConfiguration(project, this, "Liferay Docker");
+			}
+
+			@NonNls
+			@NotNull
+			@Override
+			public String getId() {
+				return super.getId();
 			}
 
 		};

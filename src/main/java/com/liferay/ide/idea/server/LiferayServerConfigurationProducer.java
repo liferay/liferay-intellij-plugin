@@ -32,6 +32,7 @@ import java.nio.file.Paths;
 
 import java.util.Objects;
 
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -49,6 +50,13 @@ public class LiferayServerConfigurationProducer
 			@Override
 			public RunConfiguration createTemplateConfiguration(@NotNull Project project) {
 				return new LiferayServerConfiguration(project, this, "Liferay Sever");
+			}
+
+			@NonNls
+			@NotNull
+			@Override
+			public String getId() {
+				return super.getId();
 			}
 
 		};

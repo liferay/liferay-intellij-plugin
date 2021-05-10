@@ -25,6 +25,8 @@ public class WorkspaceConstants {
 
 	public static final String BLADE_LIFERAY_VERSION_FIELD = "liferay.version.default";
 
+	public static final String BUILD_DIR_DEFAULT = "build";
+
 	public static final String BUNDLE_URL_PROPERTY = "liferay.workspace.bundle.url";
 
 	public static final String DEFAULT_BUNDLE_ARTIFACT_NAME = "portal-tomcat-bundle";

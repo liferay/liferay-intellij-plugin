@@ -27,6 +27,7 @@ import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMo
 import com.intellij.openapi.externalSystem.task.TaskCallback;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.execution.ParametersListUtil;
 
 import com.liferay.ide.idea.core.LiferayIcons;
@@ -136,6 +137,23 @@ public class InitDockerBundleAction extends AbstractLiferayGradleTaskAction impl
 		Project project = anActionEvent.getRequiredData(CommonDataKeys.PROJECT);
 
 		beforeTask(project);
+	}
+
+	@Override
+	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
+		if (super.isEnabledAndVisible(anActionEvent)) {
+			VirtualFile baseDir = LiferayWorkspaceSupport.getWorkspaceVirtualFile(anActionEvent.getProject());
+
+			if (baseDir == null) {
+				return false;
+			}
+
+			if (baseDir.equals(getVirtualFile(anActionEvent))) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private static final Logger _logger = Logger.getInstance(InitDockerBundleAction.class);

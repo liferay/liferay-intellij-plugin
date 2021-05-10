@@ -14,6 +14,9 @@
 
 package com.liferay.ide.idea.util;
 
+import com.intellij.openapi.project.Project;
+
+import com.liferay.ide.idea.core.WorkspaceConstants;
 import com.liferay.ide.idea.server.portal.PortalBundle;
 import com.liferay.ide.idea.server.portal.PortalBundleFactory;
 import com.liferay.ide.idea.server.portal.PortalTomcatBundleFactory;
@@ -220,6 +223,24 @@ public class ServerUtil {
 		}
 
 		return null;
+	}
+
+	public static boolean isDockerServerExist(Project project) {
+		File buildFolder = new File(project.getBasePath(), WorkspaceConstants.BUILD_DIR_DEFAULT);
+
+		if (FileUtil.exists(buildFolder)) {
+			File dotDockerFolder = new File(buildFolder, ".docker");
+
+			if (FileUtil.exists(dotDockerFolder)) {
+				File imageIdFile = new File(dotDockerFolder, "buildDockerImage-imageId.txt");
+
+				if (FileUtil.exists(imageIdFile) && (imageIdFile.length() != 0)) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	public static boolean verifyPath(String verifyPath) {
