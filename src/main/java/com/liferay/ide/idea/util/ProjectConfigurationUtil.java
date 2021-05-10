@@ -122,6 +122,8 @@ public class ProjectConfigurationUtil {
 						newConfigurationSetting.checkSettings();
 
 						runManager.addConfiguration(newConfigurationSetting);
+
+						runManager.setSelectedConfiguration(newConfigurationSetting);
 					}
 					catch (Exception e) {
 						_logger.error(e);

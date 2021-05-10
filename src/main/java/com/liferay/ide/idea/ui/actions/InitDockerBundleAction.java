@@ -67,10 +67,13 @@ public class InitDockerBundleAction extends AbstractLiferayGradleTaskAction impl
 					configurationType, project.getName() + "-docker-server");
 
 				if (configuration == null) {
-					runManager.addConfiguration(
-						runManager.createConfiguration(
-							project.getName() + "-docker-server", producer.getConfigurationFactory()));
+					configuration = runManager.createConfiguration(
+						project.getName() + "-docker-server", producer.getConfigurationFactory());
+
+					runManager.addConfiguration(configuration);
 				}
+
+				runManager.setSelectedConfiguration(configuration);
 			}
 		}
 	}
