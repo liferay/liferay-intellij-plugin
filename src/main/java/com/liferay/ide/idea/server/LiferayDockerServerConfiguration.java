@@ -31,6 +31,8 @@ import com.intellij.execution.configurations.RuntimeConfigurationException;
 import com.intellij.execution.configurations.SearchScopeProvidingRunProfile;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.util.ProgramParametersUtil;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
 import com.intellij.openapi.externalSystem.service.execution.ExternalSystemRunConfiguration;
 import com.intellij.openapi.externalSystem.service.execution.ExternalSystemRunnableState;
@@ -38,6 +40,8 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.options.SettingsEditorGroup;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectUtil;
+import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.io.FileUtil;
@@ -50,7 +54,9 @@ import com.intellij.util.xmlb.XmlSerializer;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.Transient;
 
+import com.liferay.blade.gradle.tooling.ProjectInfo;
 import com.liferay.ide.idea.util.CoreUtil;
+import com.liferay.ide.idea.util.GradleUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,6 +64,8 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.swing.SwingUtilities;
 
 import org.jdom.Element;
 
@@ -81,6 +89,8 @@ public class LiferayDockerServerConfiguration
 		_name = name;
 
 		_javaRunConfigurationModule = new JavaRunConfigurationModule(project, true);
+
+		_initDockerInfo();
 	}
 
 	@Override
@@ -112,6 +122,10 @@ public class LiferayDockerServerConfiguration
 		JavaRunConfigurationModule configurationModule = new JavaRunConfigurationModule(getProject(), true);
 
 		configurationModule.setModule(_javaRunConfigurationModule.getModule());
+
+		clone.setDockerImageId(_liferayDockerServerConfig.dockerImageId);
+
+		clone.setDockerContainerId(_liferayDockerServerConfig.dockerContainerId);
 
 		clone.setConfigurationModule(configurationModule);
 
@@ -310,6 +324,47 @@ public class LiferayDockerServerConfiguration
 		if (_javaRunConfigurationModule.getModule() != null) {
 			_javaRunConfigurationModule.writeExternal(element);
 		}
+	}
+
+	private void _initDockerInfo() {
+		Application application = ApplicationManager.getApplication();
+
+		application.invokeLaterOnWriteThread(
+			new Runnable() {
+
+				@Override
+				public void run() {
+					Computable<ProjectInfo> computable = new Computable<>() {
+
+						@Override
+						public ProjectInfo compute() {
+							try {
+								return GradleUtil.getModel(ProjectInfo.class, ProjectUtil.guessProjectDir(_project));
+							}
+							catch (Exception e) {
+							}
+
+							return null;
+						}
+
+					};
+
+					SwingUtilities.invokeLater(
+						() -> {
+							try {
+								ProjectInfo projectInfo = computable.get();
+
+								if (projectInfo != null) {
+									_liferayDockerServerConfig.dockerImageId = projectInfo.getDockerImageId();
+									_liferayDockerServerConfig.dockerContainerId = projectInfo.getDockerContainerId();
+								}
+							}
+							catch (Exception e) {
+							}
+						});
+				}
+
+			});
 	}
 
 	private Map<String, String> _envs = new LinkedHashMap<>();
