@@ -138,6 +138,10 @@ public class LiferayModuleBuilder extends ModuleBuilder implements LiferayWorksp
 		return LiferayIcons.LIFERAY_ICON;
 	}
 
+	public String getPackageName() {
+		return _packageName;
+	}
+
 	@Override
 	public String getPresentableName() {
 		return _LIFERAY_MODULES;

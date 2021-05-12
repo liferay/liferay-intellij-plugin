@@ -25,6 +25,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.impl.file.PsiDirectoryFactory;
 import com.intellij.ui.DocumentAdapter;
@@ -37,6 +38,7 @@ import com.liferay.ide.idea.ui.modules.ext.LiferayModuleExtBuilder;
 import com.liferay.ide.idea.ui.modules.springmvcportlet.SpringMVCPortletModuleBuilder;
 import com.liferay.ide.idea.util.IntellijUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
+import com.liferay.ide.idea.util.StringPool;
 
 import java.io.File;
 
@@ -256,7 +258,7 @@ public class LiferayModuleNameLocationComponent implements LiferayWorkspaceSuppo
 
 				setModuleName(moduleName);
 
-				contentRoot = baseDirPath + "/" + moduleName;
+				contentRoot = baseDirPath + StringPool.FORWARD_SLASH + moduleName;
 			}
 			else {
 				Path targetFolderPath = Paths.get(baseDirPath, _getTargetFolderName());
@@ -265,7 +267,9 @@ public class LiferayModuleNameLocationComponent implements LiferayWorkspaceSuppo
 
 				setModuleName(moduleName);
 
-				contentRoot = baseDirPath + "/" + _getTargetFolderName() + "/" + moduleName;
+				contentRoot =
+					baseDirPath + StringPool.FORWARD_SLASH + _getTargetFolderName() + StringPool.FORWARD_SLASH +
+						moduleName;
 			}
 
 			_setModuleContentRoot(contentRoot);
@@ -444,11 +448,27 @@ public class LiferayModuleNameLocationComponent implements LiferayWorkspaceSuppo
 			}
 		}
 
-		PsiDirectoryFactory psiDirectoryFactory = PsiDirectoryFactory.getInstance(
-			Objects.requireNonNull(_context.getProject()));
+		AbstractModuleBuilder builder = getModuleBuilder();
 
-		if (!psiDirectoryFactory.isValidPackageName(moduleName)) {
-			throw new ConfigurationException(moduleName + " is not a valid package name", "Validation Error");
+		if (builder instanceof LiferayModuleBuilder) {
+			LiferayModuleBuilder liferayModuleBuilder = (LiferayModuleBuilder)builder;
+
+			String packageName = liferayModuleBuilder.getPackageName();
+
+			if (StringUtil.isEmpty(packageName)) {
+				packageName = moduleName.replace('-', '.');
+
+				packageName = packageName.replace(' ', '.');
+
+				packageName = packageName.toLowerCase();
+
+				PsiDirectoryFactory psiDirectoryFactory = PsiDirectoryFactory.getInstance(
+					Objects.requireNonNull(_context.getProject()));
+
+				if (!psiDirectoryFactory.isValidPackageName(packageName)) {
+					throw new ConfigurationException(packageName + " is not a valid package name", "Validation Error");
+				}
+			}
 		}
 
 		return true;
