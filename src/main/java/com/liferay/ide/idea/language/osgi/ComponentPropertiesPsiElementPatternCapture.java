@@ -45,17 +45,21 @@ public class ComponentPropertiesPsiElementPatternCapture {
 
 				@Override
 				public boolean accepts(@NotNull PsiElement psiElement, ProcessingContext context) {
+					PsiNameValuePair psiNameValuePair;
+
 					PsiArrayInitializerMemberValue psiArrayInitializerMemberValue = PsiTreeUtil.getParentOfType(
 						psiElement, PsiArrayInitializerMemberValue.class);
 
-					if (psiArrayInitializerMemberValue == null) {
-						return false;
+					if (psiArrayInitializerMemberValue != null) {
+						psiNameValuePair = PsiTreeUtil.getParentOfType(
+							psiArrayInitializerMemberValue, PsiNameValuePair.class);
+					}
+					else {
+						psiNameValuePair = PsiTreeUtil.getParentOfType(psiElement, PsiNameValuePair.class);
 					}
 
 					return Stream.of(
-						psiArrayInitializerMemberValue
-					).map(
-						array -> PsiTreeUtil.getParentOfType(array, PsiNameValuePair.class)
+						psiNameValuePair
 					).filter(
 						Objects::nonNull
 					).filter(
