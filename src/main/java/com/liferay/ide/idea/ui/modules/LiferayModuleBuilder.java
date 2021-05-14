@@ -14,11 +14,14 @@
 
 package com.liferay.ide.idea.ui.modules;
 
+import com.intellij.ide.projectWizard.ProjectSettingsStep;
+import com.intellij.ide.projectWizard.ProjectTypeStep;
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.ide.util.projectWizard.ModuleBuilderListener;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
+import com.intellij.ide.util.projectWizard.SdkSettingsStep;
+import com.intellij.ide.util.projectWizard.SettingsStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import com.intellij.openapi.module.Module;
@@ -28,6 +31,9 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectType;
 import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
+import com.intellij.openapi.ui.ComboBox;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -39,13 +45,22 @@ import com.liferay.ide.idea.util.CoreUtil;
 import com.liferay.ide.idea.util.IntellijUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import java.io.File;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.swing.Icon;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.gradle.util.GradleConstants;
 
 /**
@@ -70,9 +85,25 @@ public class LiferayModuleBuilder extends ModuleBuilder implements LiferayWorksp
 							project, GradleConstants.SYSTEM_ID, project.getBasePath(), false,
 							ProgressExecutionMode.IN_BACKGROUND_ASYNC);
 					}
+
+					removeListener(this);
 				}
 
 			});
+	}
+
+	@Override
+	public ModuleWizardStep[] createFinishingSteps(
+		@NotNull WizardContext wizardContext, @NotNull ModulesProvider modulesProvider) {
+
+		return new ModuleWizardStep[] {new LiferayModuleWizardStep(this, wizardContext.getProject())};
+	}
+
+	@Override
+	public ModuleWizardStep[] createWizardSteps(
+		@NotNull WizardContext wizardContext, @NotNull ModulesProvider modulesProvider) {
+
+		return new ModuleWizardStep[] {new LiferayProjectSettingsStep(wizardContext)};
 	}
 
 	@Override
@@ -83,13 +114,18 @@ public class LiferayModuleBuilder extends ModuleBuilder implements LiferayWorksp
 	}
 
 	@Override
-	public ModuleWizardStep getCustomOptionsStep(WizardContext context, Disposable parentDisposable) {
-		return new LiferayModuleWizardStep(this, context.getProject());
-	}
-
-	@Override
 	public String getDescription() {
 		return _LIFERAY_MODULES;
+	}
+
+	@NotNull
+	public List<Class<? extends ModuleWizardStep>> getIgnoredSteps() {
+		List<Class<? extends ModuleWizardStep>> ingoreStepList = new ArrayList<>(super.getIgnoredSteps());
+
+		ingoreStepList.add(ProjectTypeStep.class);
+		ingoreStepList.add(ProjectSettingsStep.class);
+
+		return ingoreStepList;
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -113,6 +149,60 @@ public class LiferayModuleBuilder extends ModuleBuilder implements LiferayWorksp
 
 	public String getType() {
 		return _type;
+	}
+
+	@Nullable
+	@Override
+	@SuppressWarnings("unchecked")
+	public ModuleWizardStep modifySettingsStep(@NotNull SettingsStep settingsStep) {
+		return null;
+	}
+
+	@Override
+	public ModuleWizardStep modifyStep(SettingsStep settingsStep) {
+		JComboBox<String> productVersionComboBox = new ComboBox<>();
+
+		JCheckBox showAllProductVersionCheckBox = new JCheckBox();
+
+		showAllProductVersionCheckBox.setSelected(false);
+
+		productVersionComboBox.addActionListener(
+			new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent event) {
+				}
+
+			});
+
+		JCheckBox indexSourcesCheckBox = new JCheckBox();
+
+		JLabel customLabel = new JLabel();
+
+		settingsStep.addSettingsField("Product version:", productVersionComboBox);
+
+		settingsStep.addSettingsField("Show All Product Versions", showAllProductVersionCheckBox);
+
+		settingsStep.addSettingsField("Index Sources:", indexSourcesCheckBox);
+
+		settingsStep.addSettingsField("", customLabel);
+
+		return new SdkSettingsStep(settingsStep, this, this::isSuitableSdkType) {
+
+			@Override
+			public boolean validate() throws ConfigurationException {
+				if (productVersionComboBox.getSelectedIndex() == -1) {
+					Messages.showWarningDialog(
+						"Create liferay workspace project failure, product version can not be null.",
+						"Projects Not Created");
+
+					return false;
+				}
+
+				return super.validate();
+			}
+
+		};
 	}
 
 	public void setClassName(String className) {

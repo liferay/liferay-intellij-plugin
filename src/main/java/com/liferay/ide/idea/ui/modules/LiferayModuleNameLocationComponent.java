@@ -41,6 +41,7 @@ import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 import java.io.File;
 
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import java.util.Objects;
@@ -246,16 +247,24 @@ public class LiferayModuleNameLocationComponent implements LiferayWorkspaceSuppo
 		if (baseDir != null) {
 			String baseDirPath = baseDir.getPath();
 
-			String moduleName = ProjectWizardUtil.findNonExistingFileName(baseDirPath, "untitled", "");
-
-			setModuleName(moduleName);
-
 			String contentRoot = null;
 
+			String moduleName;
+
 			if (Objects.isNull(_getTargetFolderName())) {
+				moduleName = ProjectWizardUtil.findNonExistingFileName(baseDirPath, "untitled", "");
+
+				setModuleName(moduleName);
+
 				contentRoot = baseDirPath + "/" + moduleName;
 			}
 			else {
+				Path targetFolderPath = Paths.get(baseDirPath, _getTargetFolderName());
+
+				moduleName = ProjectWizardUtil.findNonExistingFileName(targetFolderPath.toString(), "untitled", "");
+
+				setModuleName(moduleName);
+
 				contentRoot = baseDirPath + "/" + _getTargetFolderName() + "/" + moduleName;
 			}
 

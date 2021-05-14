@@ -236,11 +236,6 @@
 	<depends optional="true" config-file="properties.xml">com.intellij.properties</depends>
 
 	<actions>
-		<action id="NewLiferayModule" class="com.liferay.ide.idea.ui.modules.NewLiferayModuleAction"
-				text="Liferay Module" description="Add new liferay module to the liferay workspace">
-			<add-to-group anchor="last" group-id="NewGroup" />
-		</action>
-
 		<action id="NewModuleExtFiles" class="com.liferay.ide.idea.ui.modules.ext.NewModuleExtFilesAction"
 				text="Module Ext Files"
 				description="Add source files to module ext project to override original bundle">

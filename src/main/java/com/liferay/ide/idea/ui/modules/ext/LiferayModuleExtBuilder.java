@@ -14,11 +14,12 @@
 
 package com.liferay.ide.idea.ui.modules.ext;
 
+import com.intellij.ide.projectWizard.ProjectSettingsStep;
+import com.intellij.ide.projectWizard.ProjectTypeStep;
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.ide.util.projectWizard.ModuleBuilderListener;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import com.intellij.openapi.module.Module;
@@ -27,17 +28,21 @@ import com.intellij.openapi.module.StdModuleTypes;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import com.liferay.ide.idea.core.LiferayIcons;
+import com.liferay.ide.idea.ui.modules.LiferayProjectSettingsStep;
 import com.liferay.ide.idea.util.BladeCLI;
 import com.liferay.ide.idea.util.IntellijUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import java.io.File;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.swing.Icon;
@@ -63,9 +68,25 @@ public class LiferayModuleExtBuilder extends ModuleBuilder implements LiferayWor
 					ExternalSystemUtil.refreshProject(
 						project, GradleConstants.SYSTEM_ID, project.getBasePath(), false,
 						ProgressExecutionMode.IN_BACKGROUND_ASYNC);
+
+					removeListener(this);
 				}
 
 			});
+	}
+
+	@Override
+	public ModuleWizardStep[] createFinishingSteps(
+		@NotNull WizardContext wizardContext, @NotNull ModulesProvider modulesProvider) {
+
+		return new ModuleWizardStep[] {new LiferayModuleExtWizardStep(wizardContext, this)};
+	}
+
+	@Override
+	public ModuleWizardStep[] createWizardSteps(
+		@NotNull WizardContext wizardContext, @NotNull ModulesProvider modulesProvider) {
+
+		return new ModuleWizardStep[] {new LiferayProjectSettingsStep(wizardContext)};
 	}
 
 	@Override
@@ -76,13 +97,18 @@ public class LiferayModuleExtBuilder extends ModuleBuilder implements LiferayWor
 	}
 
 	@Override
-	public ModuleWizardStep getCustomOptionsStep(WizardContext context, Disposable parentDisposable) {
-		return new LiferayModuleExtWizardStep(context, this);
-	}
-
-	@Override
 	public String getDescription() {
 		return _LIFERAY_EXT_MODULES;
+	}
+
+	@NotNull
+	public List<Class<? extends ModuleWizardStep>> getIgnoredSteps() {
+		List<Class<? extends ModuleWizardStep>> ingoreStepList = new ArrayList<>(super.getIgnoredSteps());
+
+		ingoreStepList.add(ProjectTypeStep.class);
+		ingoreStepList.add(ProjectSettingsStep.class);
+
+		return ingoreStepList;
 	}
 
 	@Override
