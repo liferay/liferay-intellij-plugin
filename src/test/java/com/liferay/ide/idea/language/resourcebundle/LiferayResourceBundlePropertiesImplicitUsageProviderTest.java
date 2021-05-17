@@ -14,6 +14,7 @@
 
 package com.liferay.ide.idea.language.resourcebundle;
 
+import com.intellij.lang.properties.codeInspection.unused.UnusedPropertyInspection;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 
 /**
@@ -45,6 +46,8 @@ public class LiferayResourceBundlePropertiesImplicitUsageProviderTest extends Ba
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+
+		myFixture.enableInspections(new UnusedPropertyInspection());
 	}
 
 }
