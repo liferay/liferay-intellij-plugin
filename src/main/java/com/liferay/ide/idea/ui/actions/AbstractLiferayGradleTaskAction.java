@@ -17,7 +17,6 @@ package com.liferay.ide.idea.ui.actions;
 import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.executors.DefaultRunExecutor;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
 import com.intellij.openapi.externalSystem.model.execution.ExternalTaskExecutionInfo;
 import com.intellij.openapi.externalSystem.service.notification.ExternalSystemNotificationManager;
@@ -31,21 +30,30 @@ import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.execution.ParametersListUtil;
 
 import com.liferay.ide.idea.util.CoreUtil;
+import com.liferay.ide.idea.util.GradleUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
+import com.liferay.ide.idea.util.ListUtil;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.swing.Icon;
 
 import org.gradle.cli.CommandLineArgumentException;
 import org.gradle.cli.CommandLineParser;
 import org.gradle.cli.ParsedCommandLine;
+import org.gradle.tooling.model.DomainObjectSet;
+import org.gradle.tooling.model.GradleProject;
+import org.gradle.tooling.model.GradleTask;
+import org.gradle.tooling.model.Task;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -63,7 +71,7 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 
 		super(text, description, icon);
 
-		_taskName = taskName;
+		this.taskName = taskName;
 	}
 
 	protected void afterTask(Project project) {
@@ -80,8 +88,6 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 	@Override
 	protected void doExecute(
 		AnActionEvent anActionEvent, RunnerAndConfigurationSettings runnerAndConfigurationSettings) {
-
-		Project project = anActionEvent.getRequiredData(CommonDataKeys.PROJECT);
 
 		beforeTask(project);
 
@@ -103,9 +109,29 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 			getProgressMode(), true);
 	}
 
+	protected List<String> getGradleTasks(Module module) {
+		GradleProject gradleProject = GradleUtil.getGradleProject(module);
+
+		if (gradleProject == null) {
+			return Collections.emptyList();
+		}
+
+		List<GradleTask> gradleTasks = new ArrayList<>();
+
+		_fetchGradleTasks(gradleProject, taskName, gradleTasks);
+
+		Stream<GradleTask> gradleTaskStream = gradleTasks.stream();
+
+		return gradleTaskStream.map(
+			Task::getPath
+		).collect(
+			Collectors.toList()
+		);
+	}
+
 	@Override
 	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
-		Project project = anActionEvent.getProject();
+		project = anActionEvent.getProject();
 
 		if (!LiferayWorkspaceSupport.isValidGradleWorkspaceProject(project)) {
 			return false;
@@ -117,7 +143,7 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 			return false;
 		}
 
-		Module module = ModuleUtil.findModuleForFile(virtualFile, project);
+		module = ModuleUtil.findModuleForFile(virtualFile, project);
 
 		if (Objects.isNull(module)) {
 			return false;
@@ -129,8 +155,6 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 	@Nullable
 	@Override
 	protected RunnerAndConfigurationSettings processRunnerConfiguration(AnActionEvent anActionEvent) {
-		Project project = anActionEvent.getRequiredData(CommonDataKeys.PROJECT);
-
 		final VirtualFile projectDir = getWorkingDirectory(anActionEvent);
 
 		final String workingDirectory = projectDir.getCanonicalPath();
@@ -139,7 +163,13 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 			return null;
 		}
 
-		externalTaskExecutionInfo = _buildTaskExecutionInfo(project, workingDirectory, _taskName);
+		List<String> gradleTasks = getGradleTasks(module);
+
+		if (ListUtil.isEmpty(gradleTasks)) {
+			return null;
+		}
+
+		externalTaskExecutionInfo = _buildTaskExecutionInfo(project, workingDirectory, gradleTasks);
 
 		if (externalTaskExecutionInfo == null) {
 			return null;
@@ -149,10 +179,18 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 			externalTaskExecutionInfo.getSettings(), project, GradleConstants.SYSTEM_ID);
 	}
 
+	protected boolean verifyTask(GradleTask gradleTask) {
+		return true;
+	}
+
+	protected static Module module;
+	protected static Project project;
+
 	protected ExternalTaskExecutionInfo externalTaskExecutionInfo;
+	protected String taskName;
 
 	private ExternalTaskExecutionInfo _buildTaskExecutionInfo(
-		Project project, @NotNull String projectPath, @NotNull String fullCommandLine) {
+		Project project, @NotNull String projectPath, @NotNull List<String> gradleTasks) {
 
 		CommandLineParser gradleCmdParser = new CommandLineParser();
 
@@ -160,7 +198,7 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 
 		commandLineConverter.configure(gradleCmdParser);
 
-		ParsedCommandLine parsedCommandLine = gradleCmdParser.parse(ParametersListUtil.parse(fullCommandLine, true));
+		ParsedCommandLine parsedCommandLine = gradleCmdParser.parse(gradleTasks);
 
 		try {
 			Map<String, List<String>> optionsMap = commandLineConverter.convert(parsedCommandLine, new HashMap<>());
@@ -200,7 +238,7 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 		}
 		catch (CommandLineArgumentException clae) {
 			NotificationData notificationData = new NotificationData(
-				"<b>Command-line arguments cannot be parsed</b>", "<i>" + _taskName + "</i> \n" + clae.getMessage(),
+				"<b>Command-line arguments cannot be parsed</b>", "<i>" + taskName + "</i> \n" + clae.getMessage(),
 				NotificationCategory.WARNING, NotificationSource.TASK_EXECUTION);
 
 			notificationData.setBalloonNotification(true);
@@ -214,6 +252,34 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 		}
 	}
 
-	private final String _taskName;
+	private void _fetchGradleTasks(GradleProject gradleProject, String taskName, List<GradleTask> tasks) {
+		if (gradleProject == null) {
+			return;
+		}
+
+		DomainObjectSet<? extends GradleTask> gradleTasks = gradleProject.getTasks();
+
+		boolean parentHasTask = false;
+
+		for (GradleTask gradleTask : gradleTasks) {
+			if (Objects.equals(gradleTask.getName(), taskName) && verifyTask(gradleTask)) {
+				tasks.add(gradleTask);
+
+				parentHasTask = true;
+
+				break;
+			}
+		}
+
+		if (parentHasTask) {
+			return;
+		}
+
+		DomainObjectSet<? extends GradleProject> childGradleProjects = gradleProject.getChildren();
+
+		for (GradleProject childGradleProject : childGradleProjects) {
+			_fetchGradleTasks(childGradleProject, taskName, tasks);
+		}
+	}
 
 }

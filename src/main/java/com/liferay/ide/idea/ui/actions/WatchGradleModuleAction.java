@@ -22,8 +22,6 @@ import com.intellij.execution.ui.RunContentManager;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -120,49 +118,35 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction imp
 
 	@Override
 	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
-		Project project = anActionEvent.getProject();
+		if (super.isEnabledAndVisible(anActionEvent)) {
+			Path bundlePath = Paths.get(project.getBasePath(), getHomeDir(project));
 
-		Path bundlePath = Paths.get(project.getBasePath(), getHomeDir(project));
+			PortalBundle portalBundle = ServerUtil.getPortalBundle(bundlePath);
 
-		PortalBundle portalBundle = ServerUtil.getPortalBundle(bundlePath);
+			if (portalBundle == null) {
+				return false;
+			}
 
-		if (portalBundle == null) {
-			return false;
-		}
+			VirtualFile virtualFile = getVirtualFile(anActionEvent);
 
-		if (!LiferayWorkspaceSupport.isValidGradleWorkspaceProject(project)) {
-			return false;
-		}
+			VirtualFile projectVirtualFile = ProjectUtil.guessProjectDir(project);
 
-		VirtualFile virtualFile = getVirtualFile(anActionEvent);
-
-		if ((project == null) || (virtualFile == null)) {
-			return false;
-		}
-
-		Module module = ModuleUtil.findModuleForFile(virtualFile, project);
-
-		if (Objects.isNull(module)) {
-			return false;
-		}
-
-		VirtualFile projectVirtualFile = ProjectUtil.guessProjectDir(project);
-
-		if (projectVirtualFile.equals(virtualFile)) {
-			return GradleUtil.isWatchableProject(module);
-		}
-
-		String moduleDirectoryName = getWorkspaceModuleDir(project);
-
-		if (!Objects.isNull(moduleDirectoryName)) {
-			String virtualFileToStr = virtualFile.toString();
-
-			if (virtualFileToStr.contains("/" + moduleDirectoryName)) {
+			if (projectVirtualFile.equals(virtualFile)) {
 				return GradleUtil.isWatchableProject(module);
 			}
-		}
-		else {
-			return GradleUtil.isWatchableProject(module);
+
+			String moduleDirectoryName = getWorkspaceModuleDir(project);
+
+			if (!Objects.isNull(moduleDirectoryName)) {
+				String virtualFileToStr = virtualFile.toString();
+
+				if (virtualFileToStr.contains("/" + moduleDirectoryName)) {
+					return GradleUtil.isWatchableProject(module);
+				}
+			}
+			else {
+				return GradleUtil.isWatchableProject(module);
+			}
 		}
 
 		return false;

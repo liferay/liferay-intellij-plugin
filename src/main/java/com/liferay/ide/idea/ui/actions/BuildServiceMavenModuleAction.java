@@ -15,13 +15,22 @@
 package com.liferay.ide.idea.ui.actions;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
+import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileVisitor;
 
 import com.liferay.ide.idea.core.LiferayIcons;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
+import com.liferay.ide.idea.util.ListUtil;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Ethan Sun
@@ -37,14 +46,56 @@ public class BuildServiceMavenModuleAction extends AbstractLiferayMavenGoalActio
 	@Override
 	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
 		if (super.isEnabledAndVisible(anActionEvent)) {
-			VirtualFile virtualFile = getVirtualFile(anActionEvent);
+			_selectedFile = getVirtualFile(anActionEvent);
 
-			if (!Objects.isNull(virtualFile.findChild("service.xml"))) {
-				return true;
-			}
+			return ListUtil.isNotEmpty(_getServiceBuilderModules(_selectedFile));
 		}
 
 		return false;
 	}
+
+	private Set<Module> _getServiceBuilderModules(VirtualFile virtualFile) {
+		Set<Module> result = new HashSet<>();
+
+		VfsUtil.visitChildrenRecursively(
+			virtualFile,
+			new VirtualFileVisitor<Void>(VirtualFileVisitor.NO_FOLLOW_SYMLINKS, VirtualFileVisitor.limit(5)) {
+
+				@NotNull
+				@Override
+				public Result visitFileEx(@NotNull VirtualFile file) {
+					if (!file.isDirectory() && Objects.equals(file.getName(), "service.xml")) {
+						Module moduleForFile = ModuleUtil.findModuleForFile(file, project);
+
+						if (Objects.nonNull(moduleForFile)) {
+							result.add(moduleForFile);
+						}
+
+						return SKIP_CHILDREN;
+					}
+
+					Module moduleForFile = ModuleUtil.findModuleForFile(file, project);
+
+					if (Objects.isNull(moduleForFile)) {
+						return SKIP_CHILDREN;
+					}
+
+					boolean moduleDir = ModuleUtil.isModuleDir(moduleForFile, file);
+
+					if (moduleDir && Objects.nonNull(file.findChild("service.xml"))) {
+						result.add(moduleForFile);
+
+						return SKIP_CHILDREN;
+					}
+
+					return CONTINUE;
+				}
+
+			});
+
+		return result;
+	}
+
+	private VirtualFile _selectedFile;
 
 }

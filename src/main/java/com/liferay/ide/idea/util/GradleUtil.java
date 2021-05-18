@@ -63,6 +63,7 @@ import org.apache.commons.io.FileUtils;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ModelBuilder;
 import org.gradle.tooling.ProjectConnection;
+import org.gradle.tooling.model.DomainObjectSet;
 import org.gradle.tooling.model.GradleProject;
 
 import org.jetbrains.plugins.gradle.settings.GradleExtensionsSettings;
@@ -147,6 +148,20 @@ public class GradleUtil {
 		}
 	}
 
+	public static GradleProject getGradleProject(Module module) {
+		if (module == null) {
+			return null;
+		}
+
+		GradleProject workspaceGradleProject = getWorkspaceGradleProject(module.getProject());
+
+		if (workspaceGradleProject == null) {
+			return null;
+		}
+
+		return getNestedGradleProject(workspaceGradleProject, module.getName());
+	}
+
 	public static <T> T getModel(Class<T> modelClass, VirtualFile virtualFile) throws Exception {
 		T retval = null;
 
@@ -198,6 +213,46 @@ public class GradleUtil {
 		}
 
 		return retval;
+	}
+
+	public static GradleProject getNestedGradleProject(GradleProject gradleProject, String moduleName) {
+		if (gradleProject == null) {
+			return null;
+		}
+
+		GradleProject nestedGradleProject;
+
+		try {
+			String gradleProjectName = gradleProject.getName();
+
+			moduleName = moduleName.replace("IdeaProjects-", "");
+
+			if (gradleProjectName.equals(moduleName)) {
+				return gradleProject;
+			}
+
+			DomainObjectSet<? extends GradleProject> childGradleProjects = gradleProject.getChildren();
+
+			if (!childGradleProjects.isEmpty()) {
+				for (GradleProject childGradleProject : childGradleProjects) {
+					String childProjectName = childGradleProject.getName();
+
+					if (childProjectName.equals(moduleName)) {
+						return childGradleProject;
+					}
+
+					nestedGradleProject = getNestedGradleProject(childGradleProject, moduleName);
+
+					if (nestedGradleProject != null) {
+						return nestedGradleProject;
+					}
+				}
+			}
+		}
+		catch (Exception ignored) {
+		}
+
+		return null;
 	}
 
 	public static List<LibraryData> getTargetPlatformArtifacts(Project project) {
@@ -279,8 +334,8 @@ public class GradleUtil {
 					GradleDependency::getVersion
 				).findFirst();
 			}
-		).orElseGet(
-			() -> "2.2.4"
+		).orElse(
+			"2.2.4"
 		);
 	}
 

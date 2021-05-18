@@ -75,7 +75,7 @@ public abstract class AbstractLiferayMavenGoalAction extends AbstractLiferayActi
 
 	@Override
 	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
-		Project project = anActionEvent.getProject();
+		project = anActionEvent.getProject();
 
 		if (!LiferayWorkspaceSupport.isValidMavenWorkspaceProject(project)) {
 			return false;
@@ -127,5 +127,6 @@ public abstract class AbstractLiferayMavenGoalAction extends AbstractLiferayActi
 	}
 
 	protected List<String> goals;
+	protected Project project;
 
 }
