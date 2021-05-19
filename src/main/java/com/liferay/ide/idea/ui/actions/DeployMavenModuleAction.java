@@ -34,7 +34,11 @@ public class DeployMavenModuleAction extends AbstractLiferayMavenGoalAction impl
 
 	@Override
 	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
-		return verifyModuleDeploy(anActionEvent);
+		if (super.isEnabledAndVisible(anActionEvent)) {
+			return verifyModuleDeploy(anActionEvent);
+		}
+
+		return false;
 	}
 
 }

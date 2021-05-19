@@ -31,7 +31,11 @@ public class DeployGradleModuleAction extends AbstractLiferayGradleTaskAction im
 
 	@Override
 	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
-		return verifyModuleDeploy(anActionEvent);
+		if (super.isEnabledAndVisible(anActionEvent)) {
+			return verifyModuleDeploy(anActionEvent);
+		}
+
+		return false;
 	}
 
 }
