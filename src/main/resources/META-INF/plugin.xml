@@ -31,6 +31,17 @@
 	</p>
 	<p>
 		<ul>
+			<li>1.9.2</li>
+			<ul>
+				<li>INTELLIJ-89 enable docker suppport</li>
+				<li>INTELLIJ-93 restructure new liferay module wizards</li>
+				<li>INTELLIJ-170 improve validation on project name in new liferay module wizard</li>
+				<li>INTELLIJ-173 display gogo shell port in liferay server configuration</li>
+				<li>INTELLIJ-176 update embedded blade cli to latest 4.0.9 SNAPSHOT</li>
+				<li>INTELLIJ-179 support deploy projects to a docker server</li>
+				<li>INTELLIJ-183 improve build service action on a service-builder project</li>
+				<li>INTELLIJ-184 add OSGi component code completion for single properties(community contribution)</li>		
+			</ul>
 			<li>1.9.1</li>
 			<ul>
 				<li>INTELLIJ-169 add more support for OSGi component properties(community contribution)</li>
