@@ -25,15 +25,19 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.DumbService;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileVisitor;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 
@@ -44,9 +48,12 @@ import com.liferay.ide.idea.util.ServerUtil;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.swing.Icon;
+import javax.swing.SwingUtilities;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -65,9 +72,66 @@ public abstract class AbstractLiferayAction extends AnAction implements LiferayW
 	public void actionPerformed(final AnActionEvent anActionEvent) {
 		Project project = anActionEvent.getRequiredData(CommonDataKeys.PROJECT);
 
-		DumbService dumbService = DumbService.getInstance(project);
+		SwingUtilities.invokeLater(
+			() -> {
+				Application application = ApplicationManager.getApplication();
 
-		dumbService.suspendIndexingAndRun("Start execute action", () -> _perform(anActionEvent, project));
+				application.invokeLater(() -> _perform(anActionEvent, project));
+			});
+	}
+
+	public Set<Module> getServiceBuilderModules(AnActionEvent anActionEvent) {
+		Set<Module> result = new HashSet<>();
+
+		VirtualFile virtualFile = getVirtualFile(anActionEvent);
+
+		if (Objects.isNull(virtualFile)) {
+			return result;
+		}
+
+		Project project = anActionEvent.getProject();
+
+		if (Objects.isNull(project)) {
+			return result;
+		}
+
+		VfsUtil.visitChildrenRecursively(
+			virtualFile,
+			new VirtualFileVisitor<Void>(VirtualFileVisitor.NO_FOLLOW_SYMLINKS, VirtualFileVisitor.limit(5)) {
+
+				@NotNull
+				@Override
+				public Result visitFileEx(@NotNull VirtualFile file) {
+					if (!file.isDirectory() && Objects.equals(file.getName(), "service.xml")) {
+						Module moduleForFile = ModuleUtil.findModuleForFile(file, project);
+
+						if (Objects.nonNull(moduleForFile)) {
+							result.add(moduleForFile);
+						}
+
+						return SKIP_CHILDREN;
+					}
+
+					Module moduleForFile = ModuleUtil.findModuleForFile(file, project);
+
+					if (Objects.isNull(moduleForFile)) {
+						return SKIP_CHILDREN;
+					}
+
+					boolean moduleDir = ModuleUtil.isModuleDir(moduleForFile, file);
+
+					if (moduleDir && Objects.nonNull(file.findChild("service.xml"))) {
+						result.add(moduleForFile);
+
+						return SKIP_CHILDREN;
+					}
+
+					return CONTINUE;
+				}
+
+			});
+
+		return result;
 	}
 
 	@Override

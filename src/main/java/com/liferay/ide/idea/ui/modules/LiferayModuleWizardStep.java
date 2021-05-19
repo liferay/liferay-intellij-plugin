@@ -23,6 +23,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiNameHelper;
 import com.intellij.psi.impl.file.PsiDirectoryFactory;
 import com.intellij.ui.ScrollPaneFactory;
@@ -341,7 +342,27 @@ public class LiferayModuleWizardStep extends ModuleWizardStep implements Liferay
 			throw new ConfigurationException("Unable to get supported Liferay version", validationTitle);
 		}
 
-		if (!CoreUtil.isNullOrEmpty(packageNameValue) && !psiDirectoryFactory.isValidPackageName(packageNameValue)) {
+		if (CoreUtil.isNullOrEmpty(packageNameValue)) {
+			LiferayModuleBuilder liferayModuleBuilder = (LiferayModuleBuilder)_builder;
+
+			String packageName = liferayModuleBuilder.getPackageName();
+
+			if (StringUtil.isEmpty(packageName)) {
+				String moduleName = _builder.getName();
+
+				packageName = moduleName.replace('-', '.');
+
+				packageName = packageName.replace(' ', '.');
+
+				packageName = packageName.toLowerCase();
+
+				if (!psiDirectoryFactory.isValidPackageName(packageName)) {
+					throw new ConfigurationException(
+						"default package name " + packageName + " is not a valid package name", "Validation Error");
+				}
+			}
+		}
+		else if (!psiDirectoryFactory.isValidPackageName(packageNameValue)) {
 			throw new ConfigurationException(packageNameValue + " is not a valid package name", validationTitle);
 		}
 

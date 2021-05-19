@@ -31,6 +31,8 @@ import com.intellij.openapi.externalSystem.model.project.ProjectData;
 import com.intellij.openapi.externalSystem.service.project.ProjectDataManager;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleGrouper;
+import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
@@ -159,7 +161,7 @@ public class GradleUtil {
 			return null;
 		}
 
-		return getNestedGradleProject(workspaceGradleProject, module.getName());
+		return getNestedGradleProject(workspaceGradleProject, module);
 	}
 
 	public static <T> T getModel(Class<T> modelClass, VirtualFile virtualFile) throws Exception {
@@ -215,7 +217,7 @@ public class GradleUtil {
 		return retval;
 	}
 
-	public static GradleProject getNestedGradleProject(GradleProject gradleProject, String moduleName) {
+	public static GradleProject getNestedGradleProject(GradleProject gradleProject, Module module) {
 		if (gradleProject == null) {
 			return null;
 		}
@@ -223,11 +225,29 @@ public class GradleUtil {
 		GradleProject nestedGradleProject;
 
 		try {
-			String gradleProjectName = gradleProject.getName();
+			ModuleManager moduleManager = ModuleManager.getInstance(module.getProject());
 
-			moduleName = moduleName.replace("IdeaProjects-", "");
+			if (Objects.isNull(moduleManager)) {
+				return null;
+			}
 
-			if (gradleProjectName.equals(moduleName)) {
+			ModuleGrouper moduleGrouper = moduleManager.getModuleGrouper(moduleManager.getModifiableModel());
+
+			if (Objects.isNull(moduleGrouper)) {
+				return null;
+			}
+
+			List<String> moduleGrouperGroupPath = moduleGrouper.getGroupPath(module);
+
+			if (ListUtil.isEmpty(moduleGrouperGroupPath)) {
+				return null;
+			}
+
+			String actualName = moduleGrouperGroupPath.get(moduleGrouperGroupPath.size() - 1);
+
+			String projectName = gradleProject.getName();
+
+			if (projectName.equals(actualName)) {
 				return gradleProject;
 			}
 
@@ -237,11 +257,11 @@ public class GradleUtil {
 				for (GradleProject childGradleProject : childGradleProjects) {
 					String childProjectName = childGradleProject.getName();
 
-					if (childProjectName.equals(moduleName)) {
+					if (childProjectName.equals(actualName)) {
 						return childGradleProject;
 					}
 
-					nestedGradleProject = getNestedGradleProject(childGradleProject, moduleName);
+					nestedGradleProject = getNestedGradleProject(childGradleProject, module);
 
 					if (nestedGradleProject != null) {
 						return nestedGradleProject;
@@ -334,8 +354,8 @@ public class GradleUtil {
 					GradleDependency::getVersion
 				).findFirst();
 			}
-		).orElse(
-			"2.2.4"
+		).orElseGet(
+			() -> "2.2.4"
 		);
 	}
 

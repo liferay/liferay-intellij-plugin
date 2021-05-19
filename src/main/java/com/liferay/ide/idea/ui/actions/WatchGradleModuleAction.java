@@ -22,6 +22,8 @@ import com.intellij.execution.ui.RunContentManager;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -119,6 +121,8 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction imp
 	@Override
 	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
 		if (super.isEnabledAndVisible(anActionEvent)) {
+			Project project = anActionEvent.getProject();
+
 			Path bundlePath = Paths.get(project.getBasePath(), getHomeDir(project));
 
 			PortalBundle portalBundle = ServerUtil.getPortalBundle(bundlePath);
@@ -130,6 +134,8 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction imp
 			VirtualFile virtualFile = getVirtualFile(anActionEvent);
 
 			VirtualFile projectVirtualFile = ProjectUtil.guessProjectDir(project);
+
+			Module module = ModuleUtil.findModuleForFile(virtualFile, project);
 
 			if (projectVirtualFile.equals(virtualFile)) {
 				return GradleUtil.isWatchableProject(module);

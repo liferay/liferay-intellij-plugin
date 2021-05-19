@@ -25,9 +25,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.impl.file.PsiDirectoryFactory;
 import com.intellij.ui.DocumentAdapter;
 
 import com.liferay.ide.idea.core.LiferayCore;
@@ -445,29 +443,6 @@ public class LiferayModuleNameLocationComponent implements LiferayWorkspaceSuppo
 
 			if (answer != Messages.YES) {
 				return false;
-			}
-		}
-
-		AbstractModuleBuilder builder = getModuleBuilder();
-
-		if (builder instanceof LiferayModuleBuilder) {
-			LiferayModuleBuilder liferayModuleBuilder = (LiferayModuleBuilder)builder;
-
-			String packageName = liferayModuleBuilder.getPackageName();
-
-			if (StringUtil.isEmpty(packageName)) {
-				packageName = moduleName.replace('-', '.');
-
-				packageName = packageName.replace(' ', '.');
-
-				packageName = packageName.toLowerCase();
-
-				PsiDirectoryFactory psiDirectoryFactory = PsiDirectoryFactory.getInstance(
-					Objects.requireNonNull(_context.getProject()));
-
-				if (!psiDirectoryFactory.isValidPackageName(packageName)) {
-					throw new ConfigurationException(packageName + " is not a valid package name", "Validation Error");
-				}
 			}
 		}
 
