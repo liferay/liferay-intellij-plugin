@@ -311,5 +311,6 @@
 
 	<extensions defaultExtensionNs="org.jetbrains.plugins.gradle">
 		<projectResolve implementation="com.liferay.ide.idea.core.LiferayGradleProjectResolverExtension"/>
+		<taskManager implementation="com.liferay.ide.idea.core.LiferayGradleTaskManager"/>
 	</extensions>
 </idea-plugin>

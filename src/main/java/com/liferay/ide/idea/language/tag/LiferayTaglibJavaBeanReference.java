@@ -62,18 +62,17 @@ public class LiferayTaglibJavaBeanReference extends PsiReferenceBase<XmlAttribut
 
 			PsiType psiSubstitutor = PsiSubstitutor.EMPTY.substitute(psiType);
 
-			LookupElementBuilder lookupElementBuilder = LookupElementBuilder.create(
-				name
-			).withIcon(
-				psiMethod.getIcon(Iconable.ICON_FLAG_VISIBILITY)
-			).withTailText(
-				" (" + PsiFormatUtil.formatMethod(psiMethod, PsiSubstitutor.EMPTY, _FORMAT_METHOD_OPTIONS, 0) + ")",
-				true
-			).withTypeText(
-				psiSubstitutor.getPresentableText()
-			);
-
-			result.add(lookupElementBuilder);
+			result.add(
+				LookupElementBuilder.create(
+					name
+				).withIcon(
+					psiMethod.getIcon(Iconable.ICON_FLAG_VISIBILITY)
+				).withTailText(
+					" (" + PsiFormatUtil.formatMethod(psiMethod, PsiSubstitutor.EMPTY, _FORMAT_METHOD_OPTIONS, 0) + ")",
+					true
+				).withTypeText(
+					psiSubstitutor.getPresentableText()
+				));
 		}
 
 		return result.toArray(new Object[0]);
