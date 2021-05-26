@@ -89,3 +89,4 @@ jobs:
          plugin: './build/distributions/*.zip'
          versions: |
           2021.1
+          2021.1.1
