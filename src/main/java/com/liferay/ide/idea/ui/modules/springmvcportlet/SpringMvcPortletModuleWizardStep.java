@@ -16,9 +16,12 @@ package com.liferay.ide.idea.ui.modules.springmvcportlet;
 
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
+import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.impl.file.PsiDirectoryFactory;
 
 import com.liferay.ide.idea.core.WorkspaceConstants;
+import com.liferay.ide.idea.util.CoreUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import java.util.Map;
@@ -29,6 +32,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 /**
  * @author Terry Jia
@@ -94,6 +98,20 @@ public class SpringMvcPortletModuleWizardStep extends ModuleWizardStep implement
 		return _mainPanel;
 	}
 
+	public String getPackageName() {
+		String packageName = _packageName.getText();
+
+		if (!CoreUtil.isNullOrEmpty(packageName)) {
+			packageName = packageName.replace('-', '.');
+
+			packageName = packageName.replace(' ', '.');
+
+			return packageName.toLowerCase();
+		}
+
+		return null;
+	}
+
 	@Override
 	public void updateDataModel() {
 		Map<String, String> frameworkDependeices = SpringMVCPortletProjectConstants.springFrameworkDependeices;
@@ -104,6 +122,22 @@ public class SpringMvcPortletModuleWizardStep extends ModuleWizardStep implement
 		_builder.setFrameworkDependencies(frameworkDependeices.get(_frameworkDependenciesCombo.getSelectedItem()));
 		_builder.setLiferayVersion(_liferayVersion);
 		_builder.setViewType(viewTypes.get(_viewTypeCombo.getSelectedItem()));
+		_builder.setPackageName(getPackageName());
+	}
+
+	@Override
+	public boolean validate() throws ConfigurationException {
+		String packageName = _packageName.getText();
+
+		if (!CoreUtil.isNullOrEmpty(packageName)) {
+			PsiDirectoryFactory psiDirectoryFactory = PsiDirectoryFactory.getInstance(Objects.requireNonNull(_project));
+
+			if (!psiDirectoryFactory.isValidPackageName(packageName)) {
+				throw new ConfigurationException(packageName + " is not a valid package name", "Validation Error");
+			}
+		}
+
+		return true;
 	}
 
 	private void _addComboItems(String[] values, JComboBox<String> comboBox) {
@@ -204,6 +238,7 @@ public class SpringMvcPortletModuleWizardStep extends ModuleWizardStep implement
 	private JComboBox<String> _liferayVersionCombo;
 	private JLabel _liferayVersionLabel;
 	private JPanel _mainPanel;
+	private JTextField _packageName;
 	private final Project _project;
 	private JComboBox<String> _viewTypeCombo;
 

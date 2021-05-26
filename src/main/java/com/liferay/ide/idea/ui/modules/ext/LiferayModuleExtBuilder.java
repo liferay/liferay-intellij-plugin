@@ -25,7 +25,6 @@ import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.module.StdModuleTypes;
-import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ui.configuration.ModulesProvider;
@@ -155,7 +154,7 @@ public class LiferayModuleExtBuilder extends ModuleBuilder implements LiferayWor
 	}
 
 	@Override
-	public boolean validateModuleName(@NotNull String moduleName) throws ConfigurationException {
+	public boolean validateModuleName(@NotNull String moduleName) {
 		return IntellijUtil.validateExistingModuleName(moduleName);
 	}
 
