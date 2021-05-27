@@ -23,16 +23,21 @@ import com.intellij.util.execution.ParametersListUtil;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import org.gradle.tooling.BuildLauncher;
 import org.gradle.tooling.CancellationTokenSource;
+import org.gradle.tooling.GradleConnectionException;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProgressListener;
 import org.gradle.tooling.ProjectConnection;
+import org.gradle.tooling.ResultHandler;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -79,45 +84,27 @@ public class LiferayGradleTaskManager implements GradleTaskManagerExtension {
 			Collectors.toList()
 		);
 
-		CancellationTokenSource cancellationTokenSource = GradleConnector.newCancellationTokenSource();
+		if (tasks.contains("stopDockerContainer")) {
+			BuildLauncher buildLauncher = _gerBuilderLauncher(id, tasks, projectPath, settings, listener);
 
-		_cancellationMap.put(id, cancellationTokenSource);
+			_runStopDockerContainerTask(buildLauncher);
+
+			return true;
+		}
 
 		if (tasks.contains("startDockerContainer") && tasks.contains("logsDockerContainer")) {
-			try {
-				GradleConnector gradleConnector = GradleConnector.newConnector();
+			BuildLauncher buildLauncher = _gerBuilderLauncher(id, tasks, projectPath, settings, listener);
 
-				Path projectVirtualFilePath = Paths.get(projectPath);
-
-				gradleConnector.forProjectDirectory(projectVirtualFilePath.toFile());
-
-				ProjectConnection connection = gradleConnector.connect();
-
-				BuildLauncher buildLauncher = connection.newBuild();
-
-				buildLauncher.addArguments(settings.getArguments());
-
-				buildLauncher.forTasks(tasks.toArray(new String[0]));
-
-				GradleProgressListener gradleProgressListener = new GradleProgressListener(listener, id);
-
-				buildLauncher.addProgressListener((ProgressListener)gradleProgressListener);
-
-				buildLauncher.addProgressListener((org.gradle.tooling.events.ProgressListener)gradleProgressListener);
-
-				buildLauncher.setStandardOutput(new OutputWrapper(listener, id, true));
-
-				buildLauncher.setStandardError(new OutputWrapper(listener, id, false));
-
-				buildLauncher.withCancellationToken(cancellationTokenSource.token());
-
-				buildLauncher.run();
+			if (_stateSet.isEmpty()) {
+				_runStartDockerContainerTask(id, buildLauncher);
 			}
-			catch (Exception exception) {
-				throw new ExternalSystemException(exception);
-			}
-			finally {
-				_cancellationMap.remove(id);
+
+			while (true) {
+				if (_isStopped.get()) {
+					_runStartDockerContainerTask(id, buildLauncher);
+
+					break;
+				}
 			}
 
 			return true;
@@ -127,6 +114,82 @@ public class LiferayGradleTaskManager implements GradleTaskManagerExtension {
 			id, taskNames, projectPath, settings, jvmParametersSetup, listener);
 	}
 
+	private BuildLauncher _gerBuilderLauncher(
+		ExternalSystemTaskId id, List<String> tasks, String projectPath, GradleExecutionSettings settings,
+		ExternalSystemTaskNotificationListener listener) {
+
+		GradleConnector gradleConnector = GradleConnector.newConnector();
+
+		Path projectVirtualFilePath = Paths.get(projectPath);
+
+		gradleConnector.forProjectDirectory(projectVirtualFilePath.toFile());
+
+		ProjectConnection connection = gradleConnector.connect();
+
+		BuildLauncher buildLauncher = connection.newBuild();
+
+		buildLauncher.addArguments(settings.getArguments());
+
+		buildLauncher.forTasks(tasks.toArray(new String[0]));
+
+		GradleProgressListener gradleProgressListener = new GradleProgressListener(listener, id);
+
+		buildLauncher.addProgressListener((ProgressListener)gradleProgressListener);
+
+		buildLauncher.addProgressListener((org.gradle.tooling.events.ProgressListener)gradleProgressListener);
+
+		buildLauncher.setStandardOutput(new OutputWrapper(listener, id, true));
+
+		buildLauncher.setStandardError(new OutputWrapper(listener, id, false));
+
+		return buildLauncher;
+	}
+
+	private void _runStartDockerContainerTask(ExternalSystemTaskId id, BuildLauncher buildLauncher) {
+		CancellationTokenSource cancellationTokenSource = GradleConnector.newCancellationTokenSource();
+
+		_cancellationMap.put(id, cancellationTokenSource);
+
+		buildLauncher.withCancellationToken(cancellationTokenSource.token());
+
+		_stateSet.add("start");
+
+		try {
+			buildLauncher.run();
+		}
+		catch (Exception exception) {
+			throw new ExternalSystemException(exception);
+		}
+		finally {
+			_cancellationMap.remove(id);
+
+			_isStopped.set(false);
+		}
+	}
+
+	private void _runStopDockerContainerTask(BuildLauncher buildLauncher) {
+		try {
+			buildLauncher.run(
+				new ResultHandler<Void>() {
+
+					@Override
+					public void onComplete(Void unused) {
+						_isStopped.set(true);
+					}
+
+					@Override
+					public void onFailure(GradleConnectionException gradleConnectionException) {
+					}
+
+				});
+		}
+		catch (Exception exception) {
+			throw new ExternalSystemException(exception);
+		}
+	}
+
 	private final Map<ExternalSystemTaskId, CancellationTokenSource> _cancellationMap = new ConcurrentHashMap<>();
+	private AtomicBoolean _isStopped = new AtomicBoolean(false);
+	private Set<String> _stateSet = new HashSet<>();
 
 }
