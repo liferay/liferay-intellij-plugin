@@ -62,7 +62,7 @@ public class LiferayDockerServerConfigurationEditor
 		_userActivityListener = () -> {
 			Application application = ApplicationManager.getApplication();
 
-			application.invokeLaterOnWriteThread(
+			application.invokeLater(
 				new Runnable() {
 
 					@Override

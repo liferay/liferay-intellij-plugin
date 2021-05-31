@@ -85,14 +85,7 @@ public class LiferayDockerServerRunner extends GenericProgramRunner implements I
 			RunContentDescriptor descriptor = new RunContentDescriptor(
 				runContentDescriptor.getExecutionConsole(), runContentDescriptor.getProcessHandler(),
 				runContentDescriptor.getComponent(), runContentDescriptor.getDisplayName(),
-				runContentDescriptor.getIcon(), null, runContentDescriptor.getRestartActions()) {
-
-				@Override
-				public boolean isHiddenContent() {
-					return true;
-				}
-
-			};
+				runContentDescriptor.getIcon(), null, runContentDescriptor.getRestartActions());
 
 			descriptor.setRunnerLayoutUi(runContentDescriptor.getRunnerLayoutUi());
 

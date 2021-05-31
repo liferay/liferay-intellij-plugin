@@ -30,8 +30,8 @@ import com.intellij.openapi.externalSystem.model.project.LibraryData;
 import com.intellij.openapi.externalSystem.model.project.ProjectData;
 import com.intellij.openapi.externalSystem.service.project.ProjectDataManager;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
+import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleGrouper;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -231,19 +231,15 @@ public class GradleUtil {
 				return null;
 			}
 
-			ModuleGrouper moduleGrouper = moduleManager.getModuleGrouper(moduleManager.getModifiableModel());
+			ModifiableModuleModel modifiableModel = moduleManager.getModifiableModel();
 
-			if (Objects.isNull(moduleGrouper)) {
+			String[] moduleGroupPath = modifiableModel.getModuleGroupPath(module);
+
+			if (ListUtil.isEmpty(moduleGroupPath)) {
 				return null;
 			}
 
-			List<String> moduleGrouperGroupPath = moduleGrouper.getGroupPath(module);
-
-			if (ListUtil.isEmpty(moduleGrouperGroupPath)) {
-				return null;
-			}
-
-			String actualName = moduleGrouperGroupPath.get(moduleGrouperGroupPath.size() - 1);
+			String actualName = moduleGroupPath[moduleGroupPath.length - 1];
 
 			String projectName = gradleProject.getName();
 

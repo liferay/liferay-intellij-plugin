@@ -225,7 +225,7 @@ intellij {
 
 patchPluginXml {
 	sinceBuild "211"
-	untilBuild ""
+	untilBuild "211.*"
 }
 
 processResources {

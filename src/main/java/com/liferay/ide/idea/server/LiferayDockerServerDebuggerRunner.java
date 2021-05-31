@@ -209,14 +209,7 @@ public class LiferayDockerServerDebuggerRunner
 		RunContentDescriptor descriptor = new RunContentDescriptor(
 			runContentDescriptor.getExecutionConsole(), runContentDescriptor.getProcessHandler(),
 			runContentDescriptor.getComponent(), runContentDescriptor.getDisplayName(), runContentDescriptor.getIcon(),
-			null, runContentDescriptor.getRestartActions()) {
-
-			@Override
-			public boolean isHiddenContent() {
-				return true;
-			}
-
-		};
+			null, runContentDescriptor.getRestartActions());
 
 		descriptor.setRunnerLayoutUi(runContentDescriptor.getRunnerLayoutUi());
 

@@ -49,7 +49,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ToolWindowId;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.search.GlobalSearchScopes;
-import com.intellij.util.xmlb.SkipDefaultsSerializationFilter;
+import com.intellij.util.xmlb.SkipEmptySerializationFilter;
 import com.intellij.util.xmlb.XmlSerializer;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.Transient;
@@ -318,7 +318,7 @@ public class LiferayDockerServerConfiguration
 
 		javaRunConfigurationExtensionManager.writeExternal(this, element);
 
-		XmlSerializer.serializeInto(_liferayDockerServerConfig, element, new SkipDefaultsSerializationFilter());
+		XmlSerializer.serializeInto(_liferayDockerServerConfig, element, new SkipEmptySerializationFilter());
 		EnvironmentVariablesComponent.writeExternal(element, getEnvs());
 
 		if (_javaRunConfigurationModule.getModule() != null) {
@@ -329,7 +329,7 @@ public class LiferayDockerServerConfiguration
 	private void _initDockerInfo() {
 		Application application = ApplicationManager.getApplication();
 
-		application.invokeLaterOnWriteThread(
+		application.invokeLater(
 			new Runnable() {
 
 				@Override

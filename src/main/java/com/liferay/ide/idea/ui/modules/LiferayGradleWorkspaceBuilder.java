@@ -80,7 +80,6 @@ public class LiferayGradleWorkspaceBuilder extends LiferayWorkspaceBuilder {
 
 			ImportSpecBuilder importSpecBuilder = new ImportSpecBuilder(project, GradleConstants.SYSTEM_ID);
 
-			importSpecBuilder.forceWhenUptodate(true);
 			importSpecBuilder.use(ProgressExecutionMode.IN_BACKGROUND_ASYNC);
 
 			ExternalSystemUtil.refreshProject(project.getBasePath(), importSpecBuilder.build());
