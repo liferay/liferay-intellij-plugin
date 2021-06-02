@@ -6,6 +6,9 @@ buildscript {
 
 	repositories {
 		maven {
+			url "https://www.jetbrains.com/intellij-repository/snapshots"
+		}
+		maven {
 			url "https://repository-cdn.liferay.com/nexus/content/groups/public"
 		}
 		maven {
@@ -220,12 +223,12 @@ formatSource {
 intellij {
 	plugins "java", "CSS", "DatabaseTools", "gradle", "Groovy", "java-i18n", "JavaEE", "Web", "JavaScriptLanguage", "jsp", "junit", "maven", "PersistenceSupport", "properties", "sass"
 	pluginName "liferay-intellij-plugin"
-	version "IU-2021.1.2"
+	version "IU-212.3724-EAP-CANDIDATE-SNAPSHOT"
 }
 
 patchPluginXml {
-	sinceBuild "211"
-	untilBuild "211.*"
+	sinceBuild "212"
+	untilBuild ""
 }
 
 processResources {
