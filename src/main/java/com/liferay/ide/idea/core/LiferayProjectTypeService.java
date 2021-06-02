@@ -14,9 +14,8 @@
 
 package com.liferay.ide.idea.core;
 
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectType;
@@ -35,9 +34,7 @@ import org.jetbrains.annotations.Nullable;
 public class LiferayProjectTypeService implements PersistentStateComponent<ProjectType> {
 
 	public static LiferayProjectTypeService getInstance(@NotNull Project project) {
-		Application application = ApplicationManager.getApplication();
-
-		return application.getService(LiferayProjectTypeService.class);
+		return ServiceManager.getService(project, LiferayProjectTypeService.class);
 	}
 
 	@NotNull

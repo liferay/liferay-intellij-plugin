@@ -220,7 +220,7 @@ formatSource {
 intellij {
 	plugins "java", "CSS", "DatabaseTools", "gradle", "Groovy", "java-i18n", "JavaEE", "Web", "JavaScriptLanguage", "jsp", "junit", "maven", "PersistenceSupport", "properties", "sass"
 	pluginName "liferay-intellij-plugin"
-	version "IU-2021.1"
+	version "IU-2021.1.2"
 }
 
 patchPluginXml {
