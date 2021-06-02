@@ -55,6 +55,8 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.intellij.util.xmlb.annotations.Transient;
 
 import com.liferay.blade.gradle.tooling.ProjectInfo;
+import com.liferay.ide.idea.core.LiferayCore;
+import com.liferay.ide.idea.core.WorkspaceProvider;
 import com.liferay.ide.idea.util.CoreUtil;
 import com.liferay.ide.idea.util.GradleUtil;
 
@@ -96,6 +98,13 @@ public class LiferayDockerServerConfiguration
 	@Override
 	public void checkConfiguration() throws RuntimeConfigurationException {
 		ProgramParametersUtil.checkWorkingDirectoryExist(this, getProject(), null);
+
+		WorkspaceProvider workspaceProvider = LiferayCore.getWorkspaceProvider(_project);
+
+		if (!workspaceProvider.isGradleWorkspace()) {
+			throw new RuntimeConfigurationException(
+				"Liferay Maven workspace not support docker", "Invalid liferay workspace project type");
+		}
 
 		if (CoreUtil.isNullOrEmpty(_liferayDockerServerConfig.dockerImageId) &&
 			!_liferayDockerServerConfig.dockerImageId.startsWith("loading...")) {
