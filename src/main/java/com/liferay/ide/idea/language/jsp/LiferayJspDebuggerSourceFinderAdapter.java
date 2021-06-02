@@ -16,8 +16,8 @@ package com.liferay.ide.idea.language.jsp;
 
 import com.intellij.debugger.engine.SourcesFinder;
 import com.intellij.ide.highlighter.JavaFileType;
-import com.intellij.javaee.deployment.JspDeploymentManager;
 import com.intellij.javaee.facet.JavaeeFacet;
+import com.intellij.javaee.web.deployment.JspDeploymentManager;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.externalSystem.model.project.LibraryData;

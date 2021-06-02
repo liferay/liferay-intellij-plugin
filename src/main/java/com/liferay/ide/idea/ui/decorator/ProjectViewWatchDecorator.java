@@ -18,7 +18,6 @@ import com.intellij.ide.projectView.PresentationData;
 import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ProjectViewNodeDecorator;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTask;
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskState;
 import com.intellij.openapi.externalSystem.service.internal.ExternalSystemExecuteTaskTask;
@@ -64,7 +63,7 @@ public class ProjectViewWatchDecorator implements ProjectViewNodeDecorator {
 		}
 
 		if (ProjectRootsUtil.isModuleContentRoot(virtualFile, project)) {
-			ExternalSystemProcessingManager processingManager = ServiceManager.getService(
+			ExternalSystemProcessingManager processingManager = project.getService(
 				ExternalSystemProcessingManager.class);
 
 			List<ExternalSystemTask> taskList = processingManager.findTasksOfState(
