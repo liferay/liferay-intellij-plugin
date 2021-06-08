@@ -164,9 +164,10 @@ public class LiferayGradleWorkspaceProvider extends AbstractWorkspaceProvider {
 
 			String taskOutputInfo;
 
-			if (CoreUtil.compareVersions(
-					new Version(GradleUtil.getWorkspacePluginVersion(project)), new Version("2.2.4")) < 0) {
+			int ret = CoreUtil.compareVersions(
+				new Version(GradleUtil.getWorkspacePluginVersion(project)), new Version("2.2.4"));
 
+			if (ret < 0) {
 				taskOutputInfo = "compileOnly - Dependency management for the compileOnly configuration";
 			}
 			else {
@@ -197,7 +198,7 @@ public class LiferayGradleWorkspaceProvider extends AbstractWorkspaceProvider {
 						}
 					}
 				}
-				catch (IOException ioe) {
+				catch (IOException ioException) {
 				}
 			}
 		}
@@ -228,9 +229,10 @@ public class LiferayGradleWorkspaceProvider extends AbstractWorkspaceProvider {
 
 	@Override
 	public String[] getWorkspaceModuleDirs() {
-		if (CoreUtil.compareVersions(
-				Version.parseVersion(GradleUtil.getWorkspacePluginVersion(project)), new Version("2.5.0")) < 0) {
+		int ret = CoreUtil.compareVersions(
+			Version.parseVersion(GradleUtil.getWorkspacePluginVersion(project)), new Version("2.5.0"));
 
+		if (ret < 0) {
 			String moduleDirs = getWorkspaceProperty(WorkspaceConstants.MODULES_DIR_PROPERTY, null);
 
 			if (Objects.isNull(moduleDirs)) {
@@ -286,9 +288,10 @@ public class LiferayGradleWorkspaceProvider extends AbstractWorkspaceProvider {
 
 	@Override
 	public String[] getWorkspaceWarDirs() {
-		if (CoreUtil.compareVersions(
-				Version.parseVersion(GradleUtil.getWorkspacePluginVersion(project)), new Version("2.5.0")) < 0) {
+		int ret = CoreUtil.compareVersions(
+			Version.parseVersion(GradleUtil.getWorkspacePluginVersion(project)), new Version("2.5.0"));
 
+		if (ret < 0) {
 			String warDirs = getWorkspaceProperty(WorkspaceConstants.WARS_DIR_PROPERTY, null);
 
 			if (Objects.isNull(warDirs)) {
@@ -322,7 +325,7 @@ public class LiferayGradleWorkspaceProvider extends AbstractWorkspaceProvider {
 		try {
 			gradleDependencyUpdater = new GradleDependencyUpdater(settingsGradleFile);
 		}
-		catch (IOException ioe) {
+		catch (IOException ioException) {
 		}
 
 		String pluginVersion = Optional.ofNullable(

@@ -50,13 +50,13 @@ public class BundleVersionParser extends BndHeaderParser {
 			try {
 				new Version(value.getUnwrappedText());
 			}
-			catch (IllegalArgumentException iae) {
+			catch (IllegalArgumentException illegalArgumentException) {
 				BndHeaderValuePart bndHeaderValuePart = (BndHeaderValuePart)value;
 
 				TextRange range = bndHeaderValuePart.getHighlightingRange();
 
 				LiferayAnnotationUtil.createAnnotation(
-					annotationHolder, HighlightSeverity.ERROR, iae.getMessage(), range);
+					annotationHolder, HighlightSeverity.ERROR, illegalArgumentException.getMessage(), range);
 
 				return true;
 			}
@@ -80,7 +80,7 @@ public class BundleVersionParser extends BndHeaderParser {
 			try {
 				return new Version(value.getUnwrappedText());
 			}
-			catch (IllegalArgumentException iae) {
+			catch (IllegalArgumentException illegalArgumentException) {
 			}
 		}
 

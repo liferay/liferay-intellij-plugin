@@ -53,7 +53,7 @@ public class FileUtil {
 				avail = in.read(buf);
 			}
 		}
-		catch (Exception e) {
+		catch (Exception exception) {
 		}
 	}
 
@@ -174,14 +174,14 @@ public class FileUtil {
 				}
 			}
 		}
-		catch (Exception e) {
+		catch (Exception exception) {
 		}
 		finally {
 			if (bufferedReader != null) {
 				try {
 					bufferedReader.close();
 				}
-				catch (IOException ioe) {
+				catch (IOException ioException) {
 				}
 			}
 		}
@@ -221,7 +221,7 @@ public class FileUtil {
 
 			out.flush();
 		}
-		catch (IOException ioe) {
+		catch (IOException ioException) {
 		}
 	}
 
@@ -229,8 +229,8 @@ public class FileUtil {
 		try {
 			writeFile(f, contents.getBytes("UTF-8"), expectedProjectName);
 		}
-		catch (UnsupportedEncodingException uee) {
-			throw new RuntimeException(uee);
+		catch (UnsupportedEncodingException unsupportedEncodingException) {
+			throw new RuntimeException(unsupportedEncodingException);
 		}
 	}
 

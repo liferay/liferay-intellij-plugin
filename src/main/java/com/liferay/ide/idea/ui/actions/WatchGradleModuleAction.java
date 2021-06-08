@@ -92,11 +92,11 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction imp
 
 					gogoTelnetClient.send(cmd);
 				}
-				catch (IOException ioe) {
+				catch (IOException ioException) {
 				}
 			}
 		}
-		catch (IOException ioe) {
+		catch (IOException ioException) {
 		}
 
 		File file = new File(projectDir.getCanonicalPath());
@@ -218,7 +218,7 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction imp
 					new SimpleFileVisitor<Path>() {
 
 						@Override
-						public FileVisitResult postVisitDirectory(Path dir, IOException e) {
+						public FileVisitResult postVisitDirectory(Path dir, IOException ioException) {
 							if (FileUtil.exists(new File(dir.toFile(), "bnd.bnd"))) {
 								return FileVisitResult.SKIP_SUBTREE;
 							}
@@ -239,7 +239,7 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction imp
 
 					});
 			}
-			catch (IOException ioe) {
+			catch (IOException ioException) {
 			}
 		}
 		else {

@@ -350,7 +350,7 @@ public class LiferayDockerServerConfiguration
 							try {
 								return GradleUtil.getModel(ProjectInfo.class, ProjectUtil.guessProjectDir(_project));
 							}
-							catch (Exception e) {
+							catch (Exception exception) {
 							}
 
 							return null;
@@ -368,7 +368,7 @@ public class LiferayDockerServerConfiguration
 									_liferayDockerServerConfig.dockerContainerId = projectInfo.getDockerContainerId();
 								}
 							}
-							catch (Exception e) {
+							catch (Exception exception) {
 							}
 						});
 				}

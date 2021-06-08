@@ -81,13 +81,13 @@ public class BndCompletionContributor extends CompletionContributor {
 			});
 	}
 
-	private static ElementPattern<PsiElement> _bndHeader() {
+	private ElementPattern<PsiElement> _bndHeader() {
 		PsiElementPattern.Capture<PsiElement> element = psiElement(BndTokenType.HEADER_NAME);
 
 		return element.withLanguage(BndLanguage.INSTANCE);
 	}
 
-	private static ElementPattern<PsiElement> _directive(String name) {
+	private ElementPattern<PsiElement> _directive(String name) {
 		PsiElementPattern.Capture<PsiElement> element = psiElement(BndTokenType.HEADER_VALUE_PART);
 
 		PsiElementPattern.Capture<Directive> directiveElement = psiElement(Directive.class);
@@ -95,7 +95,7 @@ public class BndCompletionContributor extends CompletionContributor {
 		return element.withSuperParent(2, directiveElement.withName(name));
 	}
 
-	private static ElementPattern<PsiElement> _header(String name) {
+	private ElementPattern<PsiElement> _header(String name) {
 		PsiElementPattern.Capture<PsiElement> psiElementCapture = psiElement(BndTokenType.HEADER_VALUE_PART);
 
 		psiElementCapture.afterLeaf(";");

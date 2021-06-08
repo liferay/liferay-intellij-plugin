@@ -80,34 +80,8 @@ public class BndHeaderParser {
 		psiBuilder.advanceLexer();
 
 		boolean result = _parseSubclause(psiBuilder, true);
+
 		marker.done(BndElementType.ATTRIBUTE);
-
-		return result;
-	}
-
-	private static boolean _parseClause(PsiBuilder psiBuilder) {
-		PsiBuilder.Marker clauseMarker = psiBuilder.mark();
-
-		boolean result = true;
-
-		while (!psiBuilder.eof()) {
-			if (!_parseSubclause(psiBuilder, false)) {
-				result = false;
-
-				break;
-			}
-
-			IElementType tokenType = psiBuilder.getTokenType();
-
-			if (_clauseEndTokens.contains(tokenType)) {
-				break;
-			}
-			else if (tokenType == BndTokenType.SEMICOLON) {
-				psiBuilder.advanceLexer();
-			}
-		}
-
-		clauseMarker.done(BndElementType.CLAUSE);
 
 		return result;
 	}
@@ -177,6 +151,7 @@ public class BndHeaderParser {
 			}
 			else {
 				IElementType lastToken = psiBuilder.getTokenType();
+
 				psiBuilder.advanceLexer();
 
 				if ((psiBuilder.getTokenType() == BndTokenType.NEWLINE) &&
@@ -188,6 +163,33 @@ public class BndHeaderParser {
 		}
 
 		marker.done(BndElementType.HEADER_VALUE_PART);
+
+		return result;
+	}
+
+	private boolean _parseClause(PsiBuilder psiBuilder) {
+		PsiBuilder.Marker clauseMarker = psiBuilder.mark();
+
+		boolean result = true;
+
+		while (!psiBuilder.eof()) {
+			if (!_parseSubclause(psiBuilder, false)) {
+				result = false;
+
+				break;
+			}
+
+			IElementType tokenType = psiBuilder.getTokenType();
+
+			if (_clauseEndTokens.contains(tokenType)) {
+				break;
+			}
+			else if (tokenType == BndTokenType.SEMICOLON) {
+				psiBuilder.advanceLexer();
+			}
+		}
+
+		clauseMarker.done(BndElementType.CLAUSE);
 
 		return result;
 	}

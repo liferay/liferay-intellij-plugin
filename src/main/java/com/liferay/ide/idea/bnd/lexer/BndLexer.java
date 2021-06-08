@@ -97,13 +97,13 @@ public class BndLexer extends LexerBase {
 			atLineStart = true;
 		}
 
-		char c = _buffer.charAt(_tokenStart);
+		char c1 = _buffer.charAt(_tokenStart);
 
 		if (_tokenStart > 1) {
-			int c1 = _buffer.charAt(_tokenStart - 2);
-			int c2 = _buffer.charAt(_tokenStart - 1);
+			int c2 = _buffer.charAt(_tokenStart - 2);
+			int c3 = _buffer.charAt(_tokenStart - 1);
 
-			if ((c1 == '\\') && (c2 == '\n')) {
+			if ((c2 == '\\') && (c3 == '\n')) {
 				atLineStart = false;
 			}
 		}
@@ -111,11 +111,11 @@ public class BndLexer extends LexerBase {
 		if (atLineStart) {
 			_defaultState = true;
 
-			if (c == ' ') {
+			if (c1 == ' ') {
 				_tokenType = TokenType.WHITE_SPACE;
 				_tokenEnd = _tokenStart + 1;
 			}
-			else if (c == '\n') {
+			else if (c1 == '\n') {
 				_tokenType = BndTokenType.SECTION_END;
 				_tokenEnd = _tokenStart + 1;
 			}
@@ -123,14 +123,14 @@ public class BndLexer extends LexerBase {
 				int headerEnd = _tokenStart + 1;
 
 				while (headerEnd < _endOffset) {
-					c = _buffer.charAt(headerEnd);
+					c1 = _buffer.charAt(headerEnd);
 
-					if (c == ':') {
+					if (c1 == ':') {
 						_defaultState = false;
 
 						break;
 					}
-					else if (c == '\n') {
+					else if (c1 == '\n') {
 						break;
 					}
 
@@ -141,11 +141,11 @@ public class BndLexer extends LexerBase {
 				_tokenEnd = headerEnd;
 			}
 		}
-		else if (!_defaultState && (c == ':')) {
+		else if (!_defaultState && (c1 == ':')) {
 			_tokenType = BndTokenType.COLON;
 			_tokenEnd = _tokenStart + 1;
 		}
-		else if (!_defaultState && (c == ' ')) {
+		else if (!_defaultState && (c1 == ' ')) {
 			_tokenType = TokenType.WHITE_SPACE;
 			_tokenEnd = _tokenStart + 1;
 			_defaultState = true;
@@ -154,15 +154,15 @@ public class BndLexer extends LexerBase {
 			_defaultState = true;
 			IElementType special;
 
-			if (c == '\n') {
+			if (c1 == '\n') {
 				_tokenType = BndTokenType.NEWLINE;
 				_tokenEnd = _tokenStart + 1;
 			}
-			else if ((special = _specialCharactersTokenMap.get(c)) != null) {
+			else if ((special = _specialCharactersTokenMap.get(c1)) != null) {
 				_tokenType = special;
 				_tokenEnd = _tokenStart + 1;
 			}
-			else if (c == ' ') {
+			else if (c1 == ' ') {
 				_tokenType = TokenType.WHITE_SPACE;
 				_tokenEnd = _tokenStart + 1;
 			}
@@ -170,9 +170,9 @@ public class BndLexer extends LexerBase {
 				int valueEnd = _tokenStart + 1;
 
 				while (valueEnd < _endOffset) {
-					c = _buffer.charAt(valueEnd);
+					c1 = _buffer.charAt(valueEnd);
 
-					if ((c == '\n') || _specialCharactersTokenMap.containsKey(c)) {
+					if ((c1 == '\n') || _specialCharactersTokenMap.containsKey(c1)) {
 						break;
 					}
 

@@ -117,8 +117,8 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 		try {
 			_configureDeveloperMode(liferayServerConfiguration);
 		}
-		catch (Exception e) {
-			throw new ExecutionException(e);
+		catch (Exception exception) {
+			throw new ExecutionException(exception);
 		}
 
 		return javaParameters;

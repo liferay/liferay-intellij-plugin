@@ -209,10 +209,11 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 
 			return new ExternalTaskExecutionInfo(settings, DefaultRunExecutor.EXECUTOR_ID);
 		}
-		catch (CommandLineArgumentException clae) {
+		catch (CommandLineArgumentException commandLineArgumentException) {
 			NotificationData notificationData = new NotificationData(
-				"<b>Command-line arguments cannot be parsed</b>", "<i>" + _taskName + "</i> \n" + clae.getMessage(),
-				NotificationCategory.WARNING, NotificationSource.TASK_EXECUTION);
+				"<b>Command-line arguments cannot be parsed</b>",
+				"<i>" + _taskName + "</i> \n" + commandLineArgumentException.getMessage(), NotificationCategory.WARNING,
+				NotificationSource.TASK_EXECUTION);
 
 			notificationData.setBalloonNotification(true);
 

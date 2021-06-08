@@ -55,7 +55,7 @@ public class BndParser implements PsiParser {
 		return builder.getTreeBuilt();
 	}
 
-	private static void _consumeHeaderValue(PsiBuilder psiBuilder) {
+	private void _consumeHeaderValue(PsiBuilder psiBuilder) {
 		while (!psiBuilder.eof() && !HEADER_END_TOKENS.contains(psiBuilder.getTokenType())) {
 			psiBuilder.advanceLexer();
 		}
@@ -77,7 +77,9 @@ public class BndParser implements PsiParser {
 		}
 		else {
 			PsiBuilder.Marker marker = psiBuilder.mark();
+
 			_consumeHeaderValue(psiBuilder);
+
 			marker.error(ManifestBundle.message("manifest.colon.expected"));
 		}
 
@@ -100,7 +102,9 @@ public class BndParser implements PsiParser {
 			}
 			else {
 				PsiBuilder.Marker marker = psiBuilder.mark();
+
 				_consumeHeaderValue(psiBuilder);
+
 				marker.error(ManifestBundle.message("manifest.header.expected"));
 			}
 		}

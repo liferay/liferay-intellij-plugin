@@ -124,8 +124,8 @@ public class InitDockerBundleAction extends AbstractLiferayGradleTaskAction impl
 				},
 				ProgressExecutionMode.IN_BACKGROUND_ASYNC, true);
 		}
-		catch (Exception e) {
-			_logger.error(e);
+		catch (Exception exception) {
+			_logger.error(exception);
 		}
 	}
 

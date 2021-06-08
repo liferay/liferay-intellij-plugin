@@ -41,7 +41,7 @@ public class LiferayXmlSchemaProvider extends XmlSchemaProvider {
 	@Nullable
 	@Override
 	public XmlFile getSchema(@NotNull String url, @Nullable Module module, @NotNull PsiFile baseFile) {
-		URL schemaFileUrl = null;
+		URL schemaFileURL = null;
 
 		PsiFile psiFile = baseFile;
 
@@ -55,7 +55,7 @@ public class LiferayXmlSchemaProvider extends XmlSchemaProvider {
 			Objects.equals("portlet-model-hints.xml", fileName) ||
 			Objects.equals("portlet-model-hints-ext.xml", fileName)) {
 
-			schemaFileUrl = LiferayXmlSchemaProvider.class.getResource(
+			schemaFileURL = LiferayXmlSchemaProvider.class.getResource(
 				"/definitions/xsd/liferay-portlet-model-hints_7_0_0.xsd");
 		}
 		else if (Objects.equals("default.xml", fileName)) {
@@ -65,14 +65,14 @@ public class LiferayXmlSchemaProvider extends XmlSchemaProvider {
 				String psiDirectoryName = psiDirectory.getName();
 
 				if (Objects.equals("custom-sql", psiDirectoryName)) {
-					schemaFileUrl = LiferayXmlSchemaProvider.class.getResource(
+					schemaFileURL = LiferayXmlSchemaProvider.class.getResource(
 						"/definitions/xsd/liferay-custom-sql_7_0_0.xsd");
 				}
 			}
 		}
 
-		if (schemaFileUrl != null) {
-			VirtualFile virtualFile = VfsUtil.findFileByURL(schemaFileUrl);
+		if (schemaFileURL != null) {
+			VirtualFile virtualFile = VfsUtil.findFileByURL(schemaFileURL);
 
 			if (virtualFile != null) {
 				PsiManager psiManager = PsiManager.getInstance(baseFile.getProject());

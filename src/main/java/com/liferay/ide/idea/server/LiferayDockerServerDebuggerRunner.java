@@ -188,13 +188,13 @@ public class LiferayDockerServerDebuggerRunner
 
 							Thread.sleep(500);
 						}
-						catch (Exception e) {
+						catch (Exception exception) {
 						}
 					}
 					while (!debugPortStarted);
 				}
-				catch (Exception e) {
-					_logger.warn(e);
+				catch (Exception exception) {
+					_logger.warn(exception);
 				}
 			});
 

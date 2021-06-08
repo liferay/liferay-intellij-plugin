@@ -210,8 +210,8 @@ public class GradleUtil {
 
 			retval = model.get();
 		}
-		catch (Exception e) {
-			throw e;
+		catch (Exception exception) {
+			throw exception;
 		}
 
 		return retval;
@@ -265,7 +265,7 @@ public class GradleUtil {
 				}
 			}
 		}
-		catch (Exception ignored) {
+		catch (Exception exception) {
 		}
 
 		return null;
@@ -328,7 +328,7 @@ public class GradleUtil {
 		try {
 			gradleDependencyUpdater = new GradleDependencyUpdater(settingsGradleFile);
 		}
-		catch (IOException ioe) {
+		catch (IOException ioException) {
 		}
 
 		return Optional.ofNullable(
@@ -422,7 +422,7 @@ public class GradleUtil {
 				FileUtil.writeFile(toolingJar, inputStream);
 			}
 		}
-		catch (IOException ioe) {
+		catch (IOException ioException) {
 		}
 	}
 
@@ -443,7 +443,7 @@ public class GradleUtil {
 			}
 			while (zipEntry != null);
 		}
-		catch (Exception e) {
+		catch (Exception exception) {
 		}
 
 		return null;

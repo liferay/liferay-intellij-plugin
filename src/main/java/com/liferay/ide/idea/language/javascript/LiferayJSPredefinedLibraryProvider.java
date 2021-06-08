@@ -121,27 +121,6 @@ public class LiferayJSPredefinedLibraryProvider extends JSPredefinedLibraryProvi
 	}
 
 	@NotNull
-	private static Set<VirtualFile> _getJavascriptFiles(@NotNull Project project) {
-		List<LibraryData> targetPlatformArtifacts = _getTargetPlatformArtifacts(project);
-
-		Stream<LibraryData> stream = targetPlatformArtifacts.stream();
-
-		return stream.filter(
-			libraryData -> Objects.equals("com.liferay", libraryData.getGroupId())
-		).filter(
-			libraryData ->
-				Objects.equals("com.liferay.frontend.js.web", libraryData.getArtifactId()) ||
-				Objects.equals("com.liferay.frontend.js.aui.web", libraryData.getArtifactId())
-		).map(
-			LiferayJSPredefinedLibraryProvider::_getJavascriptFilesFromLibraryData
-		).flatMap(
-			javascriptFiles -> javascriptFiles.stream()
-		).collect(
-			Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(VirtualFile::getUrl)))
-		);
-	}
-
-	@NotNull
 	@SuppressWarnings("rawtypes")
 	private static Set<VirtualFile> _getJavascriptFilesFromJarRoot(@NotNull VirtualFile jarRoot) {
 		Set<VirtualFile> virtualFiles = new HashSet<>();
@@ -193,7 +172,28 @@ public class LiferayJSPredefinedLibraryProvider extends JSPredefinedLibraryProvi
 	}
 
 	@NotNull
-	private static List<LibraryData> _getTargetPlatformArtifacts(@NotNull Project project) {
+	private Set<VirtualFile> _getJavascriptFiles(@NotNull Project project) {
+		List<LibraryData> targetPlatformArtifacts = _getTargetPlatformArtifacts(project);
+
+		Stream<LibraryData> stream = targetPlatformArtifacts.stream();
+
+		return stream.filter(
+			libraryData -> Objects.equals("com.liferay", libraryData.getGroupId())
+		).filter(
+			libraryData ->
+				Objects.equals("com.liferay.frontend.js.web", libraryData.getArtifactId()) ||
+				Objects.equals("com.liferay.frontend.js.aui.web", libraryData.getArtifactId())
+		).map(
+			LiferayJSPredefinedLibraryProvider::_getJavascriptFilesFromLibraryData
+		).flatMap(
+			javascriptFiles -> javascriptFiles.stream()
+		).collect(
+			Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(VirtualFile::getUrl)))
+		);
+	}
+
+	@NotNull
+	private List<LibraryData> _getTargetPlatformArtifacts(@NotNull Project project) {
 		Application application = ApplicationManager.getApplication();
 
 		if (application.isUnitTestMode()) {

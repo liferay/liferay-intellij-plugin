@@ -47,7 +47,7 @@ public class GogoTelnetClient implements AutoCloseable {
 			_inputStream.close();
 			_outputStream.close();
 		}
-		catch (IOException ioe) {
+		catch (IOException ioException) {
 		}
 	}
 
@@ -68,21 +68,10 @@ public class GogoTelnetClient implements AutoCloseable {
 		return _readUntilNextGogoPrompt();
 	}
 
-	private static void _assertCond(boolean condition) {
+	private void _assertCond(boolean condition) {
 		if (!condition) {
 			throw new AssertionError();
 		}
-	}
-
-	private static int[] _toIntArray(List<Integer> list) {
-		int[] ret = new int[list.size()];
-		int i = 0;
-
-		for (Integer e : list) {
-			ret[i++] = e.intValue();
-		}
-
-		return ret;
 	}
 
 	private void _handshake() throws IOException {
@@ -195,6 +184,17 @@ public class GogoTelnetClient implements AutoCloseable {
 		for (int code : codes) {
 			_outputStream.write(code);
 		}
+	}
+
+	private int[] _toIntArray(List<Integer> list) {
+		int[] ret = new int[list.size()];
+		int i = 0;
+
+		for (Integer e : list) {
+			ret[i++] = e.intValue();
+		}
+
+		return ret;
 	}
 
 	private final DataInputStream _inputStream;

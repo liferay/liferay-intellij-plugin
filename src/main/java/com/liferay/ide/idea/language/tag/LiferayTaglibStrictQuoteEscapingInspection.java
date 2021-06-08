@@ -148,7 +148,7 @@ public class LiferayTaglibStrictQuoteEscapingInspection extends XmlSuppressableI
 		return false;
 	}
 
-	private static boolean _isDoubleQuoted(String s) {
+	private boolean _isDoubleQuoted(String s) {
 		if ((s.length() > 1) && (s.charAt(0) == '\"') && (s.charAt(0) == s.charAt(s.length() - 1))) {
 			return true;
 		}

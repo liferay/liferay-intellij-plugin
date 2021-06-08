@@ -104,7 +104,7 @@ public class GradleDependencyQuickFix
 				result = result.substring(0, result.lastIndexOf(":"));
 			}
 		}
-		catch (Exception e) {
+		catch (Exception exception) {
 		}
 
 		GradleUtil.addGradleDependencies(gradleFile, result);

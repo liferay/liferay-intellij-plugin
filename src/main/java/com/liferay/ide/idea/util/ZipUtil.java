@@ -37,19 +37,17 @@ public class ZipUtil {
 		try {
 			return new ZipFile(file);
 		}
-		catch (FileNotFoundException fnfe) {
-			FileNotFoundException e = new FileNotFoundException(file.getAbsolutePath());
+		catch (IOException ioException) {
+			FileNotFoundException fileNotFoundException = new FileNotFoundException(file.getAbsolutePath());
 
-			e.initCause(fnfe);
+			fileNotFoundException.initCause(ioException);
 
-			throw e;
+			throw fileNotFoundException;
 		}
 	}
 
 	public static void unzip(File file, File destDir, PathFilter pathFilter) throws IOException {
-		ZipFile zipFile = open(file);
-
-		try {
+		try (ZipFile zipFile = open(file)) {
 			Enumeration<? extends ZipEntry> entries = zipFile.entries();
 			Map<String, File> folders = new HashMap<>();
 
@@ -91,13 +89,6 @@ public class ZipUtil {
 				else {
 					_copyEntry(zipFile, entry, destDir);
 				}
-			}
-		}
-		finally {
-			try {
-				zipFile.close();
-			}
-			catch (IOException ioe) {
 			}
 		}
 	}

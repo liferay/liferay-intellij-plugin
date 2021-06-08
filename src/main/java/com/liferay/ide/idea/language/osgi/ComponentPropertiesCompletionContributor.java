@@ -59,90 +59,6 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 		_addCompletions(_createKeywordLookups());
 	}
 
-	private static String _getServiceClassName(PsiClassObjectAccessExpression psiClassObjectAccessExpression) {
-		PsiTypeElement operandPsiTypeElement = psiClassObjectAccessExpression.getOperand();
-
-		PsiJavaCodeReferenceElement psiJavaCodeReferenceElement = null;
-
-		if (operandPsiTypeElement instanceof ClsElementImpl) {
-			PsiType psiType = operandPsiTypeElement.getType();
-
-			if (psiType instanceof PsiClassReferenceType) {
-				PsiClassReferenceType psiClassReferenceType = (PsiClassReferenceType)psiType;
-
-				psiJavaCodeReferenceElement = psiClassReferenceType.getReference();
-			}
-		}
-		else {
-			psiJavaCodeReferenceElement = operandPsiTypeElement.getInnermostComponentReferenceElement();
-		}
-
-		if (psiJavaCodeReferenceElement != null) {
-			return psiJavaCodeReferenceElement.getQualifiedName();
-		}
-
-		return null;
-	}
-
-	@NotNull
-	private static List<String> _getServiceClassNames(PsiElement psiElement) {
-		List<String> result = new ArrayList<>();
-
-		PsiAnnotationParameterList annotationParameterList = PsiTreeUtil.getParentOfType(
-			psiElement, PsiAnnotationParameterList.class);
-
-		if (annotationParameterList == null) {
-			return result;
-		}
-
-		Stream.of(
-			annotationParameterList
-		).map(
-			list -> PsiTreeUtil.getChildrenOfType(list, PsiNameValuePair.class)
-		).filter(
-			Objects::nonNull
-		).flatMap(
-			Stream::of
-		).filter(
-			pair -> Objects.equals("service", pair.getName())
-		).map(
-			PsiNameValuePair::getValue
-		).filter(
-			value -> value instanceof PsiArrayInitializerMemberValue || value instanceof PsiClassObjectAccessExpression
-		).forEach(
-			value -> {
-				if (value instanceof PsiArrayInitializerMemberValue) {
-					PsiArrayInitializerMemberValue psiArrayInitializerMemberValue =
-						(PsiArrayInitializerMemberValue)value;
-
-					for (PsiAnnotationMemberValue psiAnnotationMemberValue :
-							psiArrayInitializerMemberValue.getInitializers()) {
-
-						_processInitializer(result, psiAnnotationMemberValue);
-					}
-				}
-				else {
-					_processInitializer(result, value);
-				}
-			}
-		);
-
-		return result;
-	}
-
-	private static void _processInitializer(List<String> result, PsiAnnotationMemberValue psiAnnotationMemberValue) {
-		if (psiAnnotationMemberValue instanceof PsiClassObjectAccessExpression) {
-			PsiClassObjectAccessExpression psiClassObjectAccessExpression =
-				(PsiClassObjectAccessExpression)psiAnnotationMemberValue;
-
-			String serviceClassName = _getServiceClassName(psiClassObjectAccessExpression);
-
-			if (serviceClassName != null) {
-				result.add(serviceClassName);
-			}
-		}
-	}
-
 	private void _addCompletions(Map<String, List<LookupElementBuilder>> keywordLookups) {
 		extend(
 			CompletionType.BASIC, ComponentPropertiesPsiElementPatternCapture.instance,
@@ -194,6 +110,90 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 		}
 
 		return keywordLookups;
+	}
+
+	private String _getServiceClassName(PsiClassObjectAccessExpression psiClassObjectAccessExpression) {
+		PsiTypeElement operandPsiTypeElement = psiClassObjectAccessExpression.getOperand();
+
+		PsiJavaCodeReferenceElement psiJavaCodeReferenceElement = null;
+
+		if (operandPsiTypeElement instanceof ClsElementImpl) {
+			PsiType psiType = operandPsiTypeElement.getType();
+
+			if (psiType instanceof PsiClassReferenceType) {
+				PsiClassReferenceType psiClassReferenceType = (PsiClassReferenceType)psiType;
+
+				psiJavaCodeReferenceElement = psiClassReferenceType.getReference();
+			}
+		}
+		else {
+			psiJavaCodeReferenceElement = operandPsiTypeElement.getInnermostComponentReferenceElement();
+		}
+
+		if (psiJavaCodeReferenceElement != null) {
+			return psiJavaCodeReferenceElement.getQualifiedName();
+		}
+
+		return null;
+	}
+
+	@NotNull
+	private List<String> _getServiceClassNames(PsiElement psiElement) {
+		List<String> result = new ArrayList<>();
+
+		PsiAnnotationParameterList annotationParameterList = PsiTreeUtil.getParentOfType(
+			psiElement, PsiAnnotationParameterList.class);
+
+		if (annotationParameterList == null) {
+			return result;
+		}
+
+		Stream.of(
+			annotationParameterList
+		).map(
+			list -> PsiTreeUtil.getChildrenOfType(list, PsiNameValuePair.class)
+		).filter(
+			Objects::nonNull
+		).flatMap(
+			Stream::of
+		).filter(
+			pair -> Objects.equals("service", pair.getName())
+		).map(
+			PsiNameValuePair::getValue
+		).filter(
+			value -> value instanceof PsiArrayInitializerMemberValue || value instanceof PsiClassObjectAccessExpression
+		).forEach(
+			value -> {
+				if (value instanceof PsiArrayInitializerMemberValue) {
+					PsiArrayInitializerMemberValue psiArrayInitializerMemberValue =
+						(PsiArrayInitializerMemberValue)value;
+
+					for (PsiAnnotationMemberValue psiAnnotationMemberValue :
+							psiArrayInitializerMemberValue.getInitializers()) {
+
+						_processInitializer(result, psiAnnotationMemberValue);
+					}
+				}
+				else {
+					_processInitializer(result, value);
+				}
+			}
+		);
+
+		return result;
+	}
+
+	private void _processInitializer(List<String> result, PsiAnnotationMemberValue psiAnnotationMemberValue) {
+		if (psiAnnotationMemberValue instanceof PsiClassObjectAccessExpression) {
+			PsiClassObjectAccessExpression psiClassObjectAccessExpression =
+				(PsiClassObjectAccessExpression)psiAnnotationMemberValue;
+
+			String serviceClassName = _getServiceClassName(psiClassObjectAccessExpression);
+
+			if (serviceClassName != null) {
+				result.add(serviceClassName);
+			}
+		}
 	}
 
 	// https://dev.liferay.com/develop/reference/-/knowledge_base/7-0/portlet-descriptor-to-osgi-service-property-map

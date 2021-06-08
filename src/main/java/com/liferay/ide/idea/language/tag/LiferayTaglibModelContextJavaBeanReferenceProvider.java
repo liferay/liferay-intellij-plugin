@@ -48,7 +48,7 @@ public class LiferayTaglibModelContextJavaBeanReferenceProvider extends Abstract
 		return null;
 	}
 
-	private static PsiElement _getPrevSiblingOrParent(
+	private PsiElement _getPrevSiblingOrParent(
 		PsiElement psiElement, String classNameElementNamespace, String classNameElementLocalName) {
 
 		PsiElement siblingPsiElement = psiElement.getPrevSibling();

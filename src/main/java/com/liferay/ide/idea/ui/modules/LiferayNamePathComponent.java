@@ -401,8 +401,8 @@ public class LiferayNamePathComponent extends JPanel {
 						setPath(path.substring(0, lastSeparatorIndex + 1) + name);
 					}
 				}
-				catch (BadLocationException ble) {
-					_log.error(ble);
+				catch (BadLocationException badLocationException) {
+					_log.error(badLocationException);
 				}
 				finally {
 					_setPathNameSyncEnabled(true);
@@ -432,6 +432,7 @@ public class LiferayNamePathComponent extends JPanel {
 			if (_isPathNameSyncEnabled() && !_nameChangedByUser) {
 				try {
 					_setNamePathSyncEnabled(false);
+
 					String path = getText(0, getLength());
 
 					int lastSeparatorIndex = path.lastIndexOf(File.separator);
@@ -440,8 +441,8 @@ public class LiferayNamePathComponent extends JPanel {
 						setNameValue(path.substring(lastSeparatorIndex + 1));
 					}
 				}
-				catch (BadLocationException ble) {
-					_log.error(ble);
+				catch (BadLocationException badLocationException) {
+					_log.error(badLocationException);
 				}
 				finally {
 					_setNamePathSyncEnabled(true);

@@ -119,8 +119,8 @@ public class OverrideFilesComponent implements LiferayWorkspaceSupport {
 							return Pair.create(false, null);
 						});
 				}
-				catch (IOException ioe) {
-					_logger.error(ioe);
+				catch (IOException ioException) {
+					_logger.error(ioException);
 				}
 
 				moduleRootVirtualFile.refresh(true, true);
@@ -189,8 +189,10 @@ public class OverrideFilesComponent implements LiferayWorkspaceSupport {
 		try {
 			_sourceJar = _getSourceJar();
 		}
-		catch (ConfigurationException ce) {
-			Messages.showMessageDialog(_project, ce.getMessage(), ce.getTitle(), Messages.getErrorIcon());
+		catch (ConfigurationException configurationException) {
+			Messages.showMessageDialog(
+				_project, configurationException.getMessage(), configurationException.getTitle(),
+				Messages.getErrorIcon());
 
 			return;
 		}

@@ -59,9 +59,9 @@ public class LiferayMavenWorkspaceBuilder extends LiferayWorkspaceBuilder {
 		public void moduleCreated(@NotNull Module module) {
 			Project mavenProject = module.getProject();
 
-			MavenProjectsManager mavenProjectManager = MavenProjectsManager.getInstance(mavenProject);
+			MavenProjectsManager mavenProjectsManager = MavenProjectsManager.getInstance(mavenProject);
 
-			mavenProjectManager.forceUpdateAllProjectsOrFindAllAvailablePomFiles();
+			mavenProjectsManager.forceUpdateAllProjectsOrFindAllAvailablePomFiles();
 
 			MessageBus messageBus = mavenProject.getMessageBus();
 

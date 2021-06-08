@@ -33,7 +33,7 @@ public class PropertiesUtil {
 
 			return properties;
 		}
-		catch (IOException ioe) {
+		catch (IOException ioException) {
 			return null;
 		}
 	}

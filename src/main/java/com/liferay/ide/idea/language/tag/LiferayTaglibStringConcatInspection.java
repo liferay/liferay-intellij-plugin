@@ -114,7 +114,7 @@ public class LiferayTaglibStringConcatInspection extends XmlSuppressableInspecti
 		return true;
 	}
 
-	private static boolean _containsTextAndJspExpressions(XmlAttributeValue xmlAttributeValue) {
+	private boolean _containsTextAndJspExpressions(XmlAttributeValue xmlAttributeValue) {
 		boolean hasValueToken = false;
 
 		XmlToken[] xmlTokens = PsiTreeUtil.getChildrenOfType(xmlAttributeValue, XmlToken.class);
@@ -136,7 +136,7 @@ public class LiferayTaglibStringConcatInspection extends XmlSuppressableInspecti
 		return false;
 	}
 
-	private static boolean _isRuntimeExpressionAttribute(XmlElementDescriptor xmlElementDescriptor, String name) {
+	private boolean _isRuntimeExpressionAttribute(XmlElementDescriptor xmlElementDescriptor, String name) {
 		PsiElement declarationPsiElement = xmlElementDescriptor.getDeclaration();
 
 		if (declarationPsiElement instanceof XmlTag) {

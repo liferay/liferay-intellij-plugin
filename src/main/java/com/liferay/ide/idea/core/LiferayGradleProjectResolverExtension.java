@@ -151,7 +151,7 @@ public class LiferayGradleProjectResolverExtension extends AbstractProjectResolv
 	}
 
 	@Nullable
-	private static ExternalProject _getExternalProject(
+	private ExternalProject _getExternalProject(
 		@NotNull IdeaModule ideaModule, @NotNull ProjectResolverContext resolverCtx) {
 
 		ExternalProject externalProject = resolverCtx.getExtraProject(ideaModule, ExternalProject.class);
@@ -163,7 +163,7 @@ public class LiferayGradleProjectResolverExtension extends AbstractProjectResolv
 		return externalProject;
 	}
 
-	private static void _processSourceSets(
+	private void _processSourceSets(
 		@NotNull ProjectResolverContext resolverCtx, @NotNull IdeaModule ideaModule,
 		@NotNull ExternalProject externalProject, @NotNull DataNode<ModuleData> moduleData,
 		@NotNull SourceSetsProcessor processor) {

@@ -112,7 +112,8 @@ public class LiferayJspDebuggerPositionManager extends JSR45PositionManager<Java
 							}
 						}
 					}
-					catch (AbsentInformationException | ClassNotPreparedException | ObjectCollectedException e) {
+					catch (AbsentInformationException | ClassNotPreparedException | ObjectCollectedException
+								exception) {
 					}
 					catch (InternalError internalError) {
 						myDebugProcess.printToConsole(

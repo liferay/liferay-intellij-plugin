@@ -130,8 +130,8 @@ public class PortalPropertiesConfigurationLayout extends PropertiesConfiguration
 				writer.flush();
 			}
 		}
-		catch (IOException ioe) {
-			throw new ConfigurationException(ioe);
+		catch (IOException ioException) {
+			throw new ConfigurationException(ioException);
 		}
 	}
 

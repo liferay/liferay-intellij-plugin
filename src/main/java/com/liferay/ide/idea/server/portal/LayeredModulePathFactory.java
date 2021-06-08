@@ -67,8 +67,8 @@ public class LayeredModulePathFactory {
 						path.add(root);
 					}
 				}
-				catch (IOException ioe) {
-					throw new RuntimeException(ioe);
+				catch (IOException ioException) {
+					throw new RuntimeException(ioException);
 				}
 			}
 		}
@@ -78,6 +78,7 @@ public class LayeredModulePathFactory {
 
 	public static boolean readLine(InputStream is, StringBuffer buffer) throws IOException {
 		buffer.setLength(0);
+
 		int c;
 
 		while (true) {
@@ -113,8 +114,8 @@ public class LayeredModulePathFactory {
 				try {
 					is.close();
 				}
-				catch (Exception e) {
-					throw new RuntimeException(e);
+				catch (Exception exception) {
+					throw new RuntimeException(exception);
 				}
 			}
 		}
@@ -275,8 +276,8 @@ public class LayeredModulePathFactory {
 
 			return new LayersConfig(props);
 		}
-		catch (IOException ioe) {
-			throw new RuntimeException(ioe);
+		catch (IOException ioException) {
+			throw new RuntimeException(ioException);
 		}
 		finally {
 			safeClose(reader);

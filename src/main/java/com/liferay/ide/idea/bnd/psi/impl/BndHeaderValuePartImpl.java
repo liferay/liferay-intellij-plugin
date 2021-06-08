@@ -98,7 +98,7 @@ public class BndHeaderValuePartImpl extends ASTWrapperPsiElement implements BndH
 		).trim();
 	}
 
-	private static boolean _isSpace(PsiElement element) {
+	private boolean _isSpace(PsiElement element) {
 		if (element instanceof BndToken) {
 			BndToken bndToken = (BndToken)element;
 

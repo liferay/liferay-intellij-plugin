@@ -37,7 +37,7 @@ public class EntryDescription {
 				_presentableUrl += "/";
 			}
 		}
-		catch (Exception e) {
+		catch (Exception exception) {
 			_presentableUrl = fileUrl;
 		}
 	}

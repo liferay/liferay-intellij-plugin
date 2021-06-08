@@ -98,7 +98,7 @@ public class BndHighlightingAnnotator implements Annotator {
 		}
 	}
 
-	private static void _annotate(
+	private void _annotate(
 		PsiElement psiElement, TextAttributesKey textAttributesKey, AnnotationHolder annotationHolder) {
 
 		if (psiElement != null) {

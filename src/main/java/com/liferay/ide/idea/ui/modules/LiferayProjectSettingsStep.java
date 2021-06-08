@@ -194,12 +194,6 @@ public class LiferayProjectSettingsStep extends ModuleWizardStep {
 		return true;
 	}
 
-	private static void _restorePanel(JPanel component, int i) {
-		while (component.getComponentCount() > i) {
-			component.remove(component.getComponentCount() - 1);
-		}
-	}
-
 	private void _addProjectFormat(JPanel panel) {
 		addField("Project \u001bformat:", _formatPanel.getStorageFormatComboBox(), panel);
 	}
@@ -214,6 +208,12 @@ public class LiferayProjectSettingsStep extends ModuleWizardStep {
 		}
 
 		return _moduleNameLocationComponent.getModuleNameField();
+	}
+
+	private void _restorePanel(JPanel component, int i) {
+		while (component.getComponentCount() > i) {
+			component.remove(component.getComponentCount() - 1);
+		}
 	}
 
 	private void _setupPanels() {

@@ -68,8 +68,8 @@ public abstract class AbstractLiferayMavenGoalAction extends AbstractLiferayActi
 
 			programRunner.execute(executionEnvironment);
 		}
-		catch (ExecutionException ee) {
-			MavenUtil.showError(project, "Failed to execute Maven goal", ee);
+		catch (ExecutionException executionException) {
+			MavenUtil.showError(project, "Failed to execute Maven goal", executionException);
 		}
 	}
 

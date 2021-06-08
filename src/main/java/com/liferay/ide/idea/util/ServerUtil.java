@@ -135,14 +135,14 @@ public class ServerUtil {
 				}
 			}
 		}
-		catch (Exception e) {
+		catch (Exception exception) {
 		}
 		finally {
 			if (in != null) {
 				try {
 					in.close();
 				}
-				catch (IOException ioe) {
+				catch (IOException ioException) {
 				}
 			}
 		}
@@ -176,8 +176,8 @@ public class ServerUtil {
 				}
 			}
 		}
-		catch (Exception e) {
-			e.printStackTrace();
+		catch (Exception exception) {
+			exception.printStackTrace();
 		}
 
 		File[] files = getMarketplaceLpkgFiles(runtime);
@@ -196,7 +196,7 @@ public class ServerUtil {
 					}
 				}
 			}
-			catch (IOException ioe) {
+			catch (IOException ioException) {
 			}
 		}
 
@@ -283,7 +283,7 @@ public class ServerUtil {
 			try (InputStream stream = Files.newInputStream(propertyFiles[0].toPath())) {
 				poralExtraPropertiesFiles.load(stream);
 			}
-			catch (IOException ioe) {
+			catch (IOException ioException) {
 			}
 		}
 	}

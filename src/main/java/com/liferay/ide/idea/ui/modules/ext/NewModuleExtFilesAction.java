@@ -178,8 +178,8 @@ public class NewModuleExtFilesAction extends AnAction implements DumbAware, Life
 					}
 				}
 			}
-			catch (IOException ioe) {
-				_log.error(ioe);
+			catch (IOException ioException) {
+				_log.error(ioException);
 			}
 		}
 

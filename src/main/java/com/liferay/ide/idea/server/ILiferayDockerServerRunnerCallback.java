@@ -104,7 +104,7 @@ public interface ILiferayDockerServerRunnerCallback {
 							});
 					}
 				}
-				catch (Exception e) {
+				catch (Exception exception) {
 				}
 			});
 

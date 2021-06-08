@@ -120,7 +120,9 @@ public class LiferayServerConfigurable
 	@Override
 	public void resetEditorFrom(@NotNull LiferayServerConfiguration configuration) {
 		_bundleType.setEnabled(false);
+
 		_vmParams.setText(configuration.getVMParameters());
+
 		PortalBundle portalBundle = ServerUtil.getPortalBundle(FileUtil.getPath(configuration.getBundleLocation()));
 
 		if (portalBundle != null) {

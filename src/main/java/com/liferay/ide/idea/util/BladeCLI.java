@@ -133,7 +133,7 @@ public class BladeCLI {
 				}
 			}
 		}
-		catch (IOException ioe) {
+		catch (IOException ioException) {
 		}
 
 		try (InputStream inputStream = bladeClassLoader.getResourceAsStream("/libs/" + jarName)) {
@@ -143,7 +143,7 @@ public class BladeCLI {
 				FileUtil.writeFile(bladeJar, inputStream);
 			}
 		}
-		catch (IOException ioe) {
+		catch (IOException ioException) {
 		}
 
 		return bladeJar;
@@ -228,7 +228,7 @@ public class BladeCLI {
 			}
 			while (zipEntry != null);
 		}
-		catch (Exception e) {
+		catch (Exception exception) {
 		}
 
 		return null;

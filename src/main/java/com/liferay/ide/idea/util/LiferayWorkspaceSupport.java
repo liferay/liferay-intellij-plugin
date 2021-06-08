@@ -63,9 +63,9 @@ public interface LiferayWorkspaceSupport {
 
 			return gson.fromJson(jsonReader, typeToken.getType());
 		}
-		catch (Exception e) {
+		catch (Exception exception) {
 			NotificationData notificationData = new NotificationData(
-				"<b>Cannot Find Product Info</b>", "<i>" + project.getName() + "</i> \n" + e.getMessage(),
+				"<b>Cannot Find Product Info</b>", "<i>" + project.getName() + "</i> \n" + exception.getMessage(),
 				NotificationCategory.WARNING, NotificationSource.TASK_EXECUTION);
 
 			notificationData.setBalloonNotification(true);
@@ -163,7 +163,7 @@ public interface LiferayWorkspaceSupport {
 				return true;
 			}
 		}
-		catch (Exception e) {
+		catch (Exception exception) {
 			return false;
 		}
 

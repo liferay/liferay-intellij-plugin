@@ -180,8 +180,8 @@ public class CompareOriginalImplementationAction extends AnAction implements Lif
 					}
 				}
 			}
-			catch (IOException ioe) {
-				_log.error("Can not find original source file for " + _project.getName(), ioe);
+			catch (IOException ioException) {
+				_log.error("Can not find original source file for " + _project.getName(), ioException);
 			}
 		}
 
@@ -218,8 +218,8 @@ public class CompareOriginalImplementationAction extends AnAction implements Lif
 					}
 				}
 			}
-			catch (IOException ioe) {
-				_log.error("Failed to compare with original file for project " + _project.getName(), ioe);
+			catch (IOException ioException) {
+				_log.error("Failed to compare with original file for project " + _project.getName(), ioException);
 			}
 		}
 

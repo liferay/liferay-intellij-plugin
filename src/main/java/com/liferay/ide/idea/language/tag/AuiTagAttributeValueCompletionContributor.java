@@ -106,7 +106,7 @@ public class AuiTagAttributeValueCompletionContributor extends CompletionContrib
 				}));
 	}
 
-	private static List<String[]> _getLeftRightAttributes() {
+	private List<String[]> _getLeftRightAttributes() {
 		List<String[]> leftRightAttributes = new ArrayList<>();
 
 		leftRightAttributes.add(new String[] {LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI, "field-wrapper", "inlineLabel"});
@@ -118,7 +118,7 @@ public class AuiTagAttributeValueCompletionContributor extends CompletionContrib
 		return leftRightAttributes;
 	}
 
-	private static List<String[]> _getLexiconAttributes() {
+	private List<String[]> _getLexiconAttributes() {
 		List<String[]> lexiconAttributes = new ArrayList<>();
 
 		lexiconAttributes.add(new String[] {LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI, "fieldset", "markupView"});
@@ -130,7 +130,7 @@ public class AuiTagAttributeValueCompletionContributor extends CompletionContrib
 		return lexiconAttributes;
 	}
 
-	private static List<String[]> _getTargetAttributes() {
+	private List<String[]> _getTargetAttributes() {
 		List<String[]> targetAttributes = new ArrayList<>();
 
 		targetAttributes.add(new String[] {LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI, "a", "target"});
@@ -140,7 +140,7 @@ public class AuiTagAttributeValueCompletionContributor extends CompletionContrib
 		return targetAttributes;
 	}
 
-	private static List<String[]> _parseBooleanAttributes() {
+	private List<String[]> _parseBooleanAttributes() {
 		List<String[]> booleanAttributes = new ArrayList<>();
 
 		SAXReader saxReader = new SAXReader();
@@ -175,7 +175,7 @@ public class AuiTagAttributeValueCompletionContributor extends CompletionContrib
 					}
 				}
 			}
-			catch (DocumentException de) {
+			catch (DocumentException documentException) {
 			}
 		}
 

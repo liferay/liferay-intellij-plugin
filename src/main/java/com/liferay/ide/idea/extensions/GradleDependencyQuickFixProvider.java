@@ -176,7 +176,7 @@ public class GradleDependencyQuickFixProvider extends UnresolvedReferenceQuickFi
 		}
 	}
 
-	private static List<PsiClass> _filterAllowedDependencies(PsiElement psiElement, PsiClass[] psiClasses) {
+	private List<PsiClass> _filterAllowedDependencies(PsiElement psiElement, PsiClass[] psiClasses) {
 		DependencyValidationManager dependencyValidationManager = DependencyValidationManager.getInstance(
 			psiElement.getProject());
 		PsiFile fromPsiFile = psiElement.getContainingFile();
@@ -196,7 +196,7 @@ public class GradleDependencyQuickFixProvider extends UnresolvedReferenceQuickFi
 	}
 
 	@Nullable
-	private static String _getQualifiedName(
+	private String _getQualifiedName(
 		@NotNull PsiJavaCodeReferenceElement psiJavaCodeReferenceElement, String shortReferenceName,
 		PsiFile containingFile) {
 

@@ -261,7 +261,7 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 
 				config.save();
 			}
-			catch (ConfigurationException ce) {
+			catch (ConfigurationException configurationException) {
 			}
 		}
 		else if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_MAVEN_WORKSPACE)) {
@@ -283,7 +283,7 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 
 					MavenUtil.updateMavenPom(pomModel, pomFile);
 				}
-				catch (IOException | XmlPullParserException e) {
+				catch (IOException | XmlPullParserException exception) {
 				}
 			}
 		}

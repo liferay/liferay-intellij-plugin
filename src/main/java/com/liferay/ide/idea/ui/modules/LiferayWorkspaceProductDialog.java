@@ -114,8 +114,6 @@ public class LiferayWorkspaceProductDialog extends DialogWrapper {
 			() -> {
 				try {
 					if (Objects.nonNull(_project)) {
-						final String productKey = (String)_productVersionComboBox.getSelectedItem();
-
 						Path projectPath = Paths.get(Objects.requireNonNull(_project.getBasePath()));
 
 						Path gradlePropertiesPath = projectPath.resolve("gradle.properties");
@@ -125,6 +123,8 @@ public class LiferayWorkspaceProductDialog extends DialogWrapper {
 						if (FileUtil.notExists(propertyFile)) {
 							throw new FileNotFoundException();
 						}
+
+						final String productKey = (String)_productVersionComboBox.getSelectedItem();
 
 						PropertiesConfiguration config = new PropertiesConfiguration(propertyFile);
 
@@ -137,8 +137,8 @@ public class LiferayWorkspaceProductDialog extends DialogWrapper {
 						VfsUtil.markDirtyAndRefresh(true, true, true, projectRootManager.getContentRoots());
 					}
 				}
-				catch (ConfigurationException | FileNotFoundException e) {
-					Class<?> clazz = e.getClass();
+				catch (ConfigurationException | FileNotFoundException exception) {
+					Class<?> clazz = exception.getClass();
 
 					String exceptionMessage = "";
 
@@ -150,7 +150,7 @@ public class LiferayWorkspaceProductDialog extends DialogWrapper {
 					}
 
 					NotificationData notificationData = new NotificationData(
-						exceptionMessage, "<i>" + _project.getName() + "</i> \n" + e.getMessage(),
+						exceptionMessage, "<i>" + _project.getName() + "</i> \n" + exception.getMessage(),
 						NotificationCategory.WARNING, NotificationSource.TASK_EXECUTION);
 
 					notificationData.setBalloonNotification(true);

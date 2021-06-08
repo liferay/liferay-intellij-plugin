@@ -46,7 +46,7 @@ public class JavaUtil {
 
 				return a.getValue(propertyName);
 			}
-			catch (IOException ioe) {
+			catch (IOException ioException) {
 				return null;
 			}
 		}
@@ -68,7 +68,7 @@ public class JavaUtil {
 				}
 			}
 		}
-		catch (IOException ioe) {
+		catch (IOException ioException) {
 		}
 
 		return null;
