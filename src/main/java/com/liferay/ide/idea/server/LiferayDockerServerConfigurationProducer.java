@@ -46,7 +46,7 @@ public class LiferayDockerServerConfigurationProducer
 			@NotNull
 			@Override
 			public String getId() {
-				return super.getId();
+				return super.getName();
 			}
 
 		};

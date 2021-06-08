@@ -48,7 +48,7 @@ public class LiferayServerConfigurationProducer
 			@NotNull
 			@Override
 			public String getId() {
-				return super.getId();
+				return super.getName();
 			}
 
 		};

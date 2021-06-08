@@ -48,6 +48,12 @@ public class LiferayDockerServerConfigurationType extends ConfigurationTypeBase 
 					return dockerServerConfiguration;
 				}
 
+				@NotNull
+				@Override
+				public String getId() {
+					return super.getName();
+				}
+
 			});
 	}
 

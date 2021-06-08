@@ -28,6 +28,7 @@ import com.intellij.psi.PsiNameHelper;
 import com.intellij.psi.impl.file.PsiDirectoryFactory;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.treeStructure.Tree;
+import com.intellij.util.ui.UIUtil;
 
 import com.liferay.ide.idea.core.WorkspaceConstants;
 import com.liferay.ide.idea.util.BladeCLI;
@@ -77,9 +78,12 @@ import org.jetbrains.annotations.Nullable;
 public class LiferayModuleWizardStep extends ModuleWizardStep implements LiferayWorkspaceSupport {
 
 	public LiferayModuleWizardStep(LiferayModuleBuilder builder, Project project) {
-		Application application = ApplicationManager.getApplication();
+		UIUtil.invokeLaterIfNeeded(
+			() -> {
+				Application application = ApplicationManager.getApplication();
 
-		application.executeOnPooledThread(this::_loadSupportedVersionRanges);
+				application.executeOnPooledThread(this::_loadSupportedVersionRanges);
+			});
 
 		_builder = builder;
 		_project = project;
