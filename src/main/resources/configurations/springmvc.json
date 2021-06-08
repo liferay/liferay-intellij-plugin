@@ -1,0 +1,45 @@
+{
+  "7.0": {
+    "springportletmvc": {
+      "embedded": ["jsp", "thymeleaf"]
+    }
+  },
+
+  "7.1": {
+    "springportletmvc": {
+      "embedded": ["jsp", "thymeleaf"],
+      "provided": ["jsp", "thymeleaf"]
+    },
+    "portletmvc4spring": {
+      "embedded": ["jsp", "thymeleaf"]
+    }
+  },
+
+  "7.2": {
+    "springportletmvc": {
+      "embedded": ["jsp", "thymeleaf"],
+      "provided": ["jsp", "thymeleaf"]
+    },
+    "portletmvc4spring": {
+      "embedded": ["jsp", "thymeleaf"]
+    }
+  },
+
+  "7.3": {
+    "springportletmvc": {
+      "embedded": ["jsp", "thymeleaf"]
+    },
+    "portletmvc4spring": {
+      "embedded": ["jsp", "thymeleaf"]
+    }
+  },
+
+  "7.4": {
+    "springportletmvc": {
+      "embedded": ["jsp", "thymeleaf"]
+    },
+    "portletmvc4spring": {
+      "embedded": ["jsp", "thymeleaf"]
+    }
+  }
+}

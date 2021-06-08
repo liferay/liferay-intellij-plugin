@@ -24,8 +24,14 @@ import com.liferay.ide.idea.core.WorkspaceConstants;
 import com.liferay.ide.idea.util.CoreUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
+import java.io.InputStream;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import javax.swing.JComboBox;
@@ -34,10 +40,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
 /**
  * @author Terry Jia
  * @author Simon Jiang
  * @author Ethan Sun
+ * @author Seiphon Wang
  */
 public class SpringMvcPortletModuleWizardStep extends ModuleWizardStep implements LiferayWorkspaceSupport {
 
@@ -118,10 +129,11 @@ public class SpringMvcPortletModuleWizardStep extends ModuleWizardStep implement
 		Map<String, String> frameworks = SpringMVCPortletProjectConstants.springFrameworks;
 		Map<String, String> viewTypes = SpringMVCPortletProjectConstants.springViewTypes;
 
-		_builder.setFramework(frameworks.get(_frameworkCombo.getSelectedItem()));
-		_builder.setFrameworkDependencies(frameworkDependeices.get(_frameworkDependenciesCombo.getSelectedItem()));
+		_builder.setFramework(frameworks.get((String)_frameworkCombo.getSelectedItem()));
+		_builder.setFrameworkDependencies(
+			frameworkDependeices.get((String)_frameworkDependenciesCombo.getSelectedItem()));
 		_builder.setLiferayVersion(_liferayVersion);
-		_builder.setViewType(viewTypes.get(_viewTypeCombo.getSelectedItem()));
+		_builder.setViewType(viewTypes.get((String)_viewTypeCombo.getSelectedItem()));
 		_builder.setPackageName(getPackageName());
 	}
 
@@ -144,7 +156,7 @@ public class SpringMvcPortletModuleWizardStep extends ModuleWizardStep implement
 		Stream.of(
 			values
 		).forEach(
-			item -> comboBox.addItem(item)
+			comboBox::addItem
 		);
 	}
 
@@ -162,73 +174,130 @@ public class SpringMvcPortletModuleWizardStep extends ModuleWizardStep implement
 		}
 	}
 
+	private String[] _getLables(String[] values) {
+		List<String> labelList = new ArrayList<>();
+
+		Map<String, String> frameworkDependeices = SpringMVCPortletProjectConstants.springFrameworkDependeices;
+		Map<String, String> frameworks = SpringMVCPortletProjectConstants.springFrameworks;
+		Map<String, String> viewTypes = SpringMVCPortletProjectConstants.springViewTypes;
+
+		Set<Map.Entry<String, String>> lableMapSet = new HashSet<>();
+
+		lableMapSet.addAll(frameworkDependeices.entrySet());
+		lableMapSet.addAll(frameworks.entrySet());
+		lableMapSet.addAll(viewTypes.entrySet());
+
+		for (String value : values) {
+			boolean found = false;
+
+			for (Map.Entry<String, String> entry : lableMapSet) {
+				if (value.equals(entry.getValue())) {
+					labelList.add(entry.getKey());
+
+					found = true;
+
+					break;
+				}
+			}
+
+			if (!found) {
+				labelList.add(value);
+			}
+		}
+
+		return labelList.toArray(new String[0]);
+	}
+
+	private String[] _getSpringFrameworks() {
+		JSONObject frameworksObject = _getSpringFrameworksJsonObject();
+
+		if (frameworksObject != null) {
+			Set<?> frameworkskeySet = frameworksObject.keySet();
+
+			return _getLables(frameworkskeySet.toArray(new String[0]));
+		}
+
+		return new String[0];
+	}
+
+	private JSONObject _getSpringFrameworksJsonObject() {
+		try (InputStream inputStream = SpringMvcPortletModuleWizardStep.class.getResourceAsStream(
+				"/configurations/springmvc.json")) {
+
+			String jsonContent = CoreUtil.readStreamToString(inputStream);
+
+			JSONParser parser = new JSONParser();
+
+			JSONObject contentObject = (JSONObject)parser.parse(jsonContent);
+
+			return (JSONObject)contentObject.get(_liferayVersion);
+		}
+		catch (Exception exception) {
+		}
+
+		return null;
+	}
+
 	private void _initializeSpringConfigurationData() {
 		_clearSpringConfigurationData();
 
-		if (_liferayVersion.equals(WorkspaceConstants.LIFERAY_VERSIONS[3])) {
-			_frameworkCombo.addItem(SpringMVCPortletProjectConstants.SPRING_FRAMEWORK[1]);
-		}
-		else {
-			_addComboItems(SpringMVCPortletProjectConstants.SPRING_FRAMEWORK, _frameworkCombo);
-		}
+		_addComboItems(_getSpringFrameworks(), _frameworkCombo);
 
-		if (_liferayVersion.equals(WorkspaceConstants.LIFERAY_VERSIONS[0])) {
-			_addComboItems(SpringMVCPortletProjectConstants.SPRING_FRAMEWORK_DEPENDENCIES, _frameworkDependenciesCombo);
-		}
-		else {
-			_frameworkDependenciesCombo.addItem(SpringMVCPortletProjectConstants.SPRING_FRAMEWORK_DEPENDENCIES[0]);
-		}
+		_frameworkCombo.addActionListener(
+			e -> {
+				if (_frameworkCombo.getSelectedItem() != null) {
+					_rendererFrameworkDependenciesComboItems();
+				}
+			});
 
-		_addComboItems(SpringMVCPortletProjectConstants.SPRING_VIEW_TYPE, _viewTypeCombo);
 		_frameworkCombo.setSelectedIndex(0);
-		_frameworkDependenciesCombo.setSelectedIndex(0);
-		_viewTypeCombo.setSelectedIndex(0);
 	}
 
 	private void _rendererFrameworkComboItems() {
 		_clearSpringConfigurationData();
 
-		if (_liferayVersion.equals(WorkspaceConstants.LIFERAY_VERSIONS[3])) {
-			_frameworkCombo.addItem(SpringMVCPortletProjectConstants.SPRING_FRAMEWORK[1]);
-		}
-		else {
-			_addComboItems(SpringMVCPortletProjectConstants.SPRING_FRAMEWORK, _frameworkCombo);
-		}
-
-		_addComboItems(SpringMVCPortletProjectConstants.SPRING_VIEW_TYPE, _viewTypeCombo);
+		_addComboItems(_getSpringFrameworks(), _frameworkCombo);
 	}
 
 	private void _rendererFrameworkDependenciesComboItems() {
 		_frameworkDependenciesCombo.removeAllItems();
 
-		String frameworkSelectedItem = (String)_frameworkCombo.getSelectedItem();
+		JSONObject frameworksObject = _getSpringFrameworksJsonObject();
 
-		if (frameworkSelectedItem.equals(SpringMVCPortletProjectConstants.SPRING_FRAMEWORK[0])) {
-			_frameworkDependenciesCombo.removeAllItems();
+		if (frameworksObject != null) {
+			Map<String, String> frameworks = SpringMVCPortletProjectConstants.springFrameworks;
 
-			if (_liferayVersion.equals(WorkspaceConstants.LIFERAY_VERSIONS[0])) {
-				_addComboItems(
-					SpringMVCPortletProjectConstants.SPRING_FRAMEWORK_DEPENDENCIES, _frameworkDependenciesCombo);
+			JSONObject dependencyObject = (JSONObject)frameworksObject.get(
+				frameworks.get((String)_frameworkCombo.getSelectedItem()));
+
+			Set<?> dependencyKeySet = dependencyObject.keySet();
+
+			_addComboItems(_getLables(dependencyKeySet.toArray(new String[0])), _frameworkDependenciesCombo);
+
+			_frameworkDependenciesCombo.setSelectedIndex(0);
+
+			_viewTypeCombo.removeAllItems();
+
+			Map<String, String> frameworkDependeices = SpringMVCPortletProjectConstants.springFrameworkDependeices;
+
+			String dependency = frameworkDependeices.get((String)_frameworkDependenciesCombo.getSelectedItem());
+
+			JSONArray viewTypeJSONArray = (JSONArray)dependencyObject.get(dependency);
+
+			List<String> viewTypeList = new ArrayList<>();
+
+			for (Object o : viewTypeJSONArray) {
+				viewTypeList.add((String)o);
 			}
-			else {
-				_frameworkDependenciesCombo.addItem(SpringMVCPortletProjectConstants.SPRING_FRAMEWORK_DEPENDENCIES[0]);
-			}
+
+			String[] viewTypes = new String[viewTypeList.size()];
+
+			viewTypeList.toArray(viewTypes);
+
+			_addComboItems(_getLables(viewTypes), _viewTypeCombo);
+
+			_viewTypeCombo.setSelectedIndex(0);
 		}
-		else if (frameworkSelectedItem.equals(SpringMVCPortletProjectConstants.SPRING_FRAMEWORK[1])) {
-			_frameworkDependenciesCombo.removeAllItems();
-
-			if (_liferayVersion.equals(WorkspaceConstants.LIFERAY_VERSIONS[1]) ||
-				_liferayVersion.equals(WorkspaceConstants.LIFERAY_VERSIONS[2])) {
-
-				_addComboItems(
-					SpringMVCPortletProjectConstants.SPRING_FRAMEWORK_DEPENDENCIES, _frameworkDependenciesCombo);
-			}
-			else {
-				_frameworkDependenciesCombo.addItem(SpringMVCPortletProjectConstants.SPRING_FRAMEWORK_DEPENDENCIES[0]);
-			}
-		}
-
-		_frameworkDependenciesCombo.setSelectedIndex(0);
 	}
 
 	private SpringMVCPortletModuleBuilder _builder;
