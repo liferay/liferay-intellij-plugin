@@ -47,6 +47,7 @@ import com.intellij.psi.search.GlobalSearchScopes;
 import com.intellij.util.xmlb.XmlSerializer;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 
+import com.liferay.ide.idea.core.LiferayCore;
 import com.liferay.ide.idea.server.portal.PortalBundle;
 import com.liferay.ide.idea.util.CoreUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
@@ -142,10 +143,18 @@ public class LiferayServerConfiguration
 			if (moduleSdk != null) {
 				clone.setAlternativeJrePath(moduleSdk.getHomePath());
 			}
+		}
 
-			Project project = getProject();
+		Project project = getProject();
 
-			Path bundlePath = Paths.get(project.getBasePath(), getHomeDir(project));
+		if (Objects.nonNull(LiferayCore.getWorkspaceProvider(project))) {
+			String homeDir = getHomeDir(project);
+
+			if (Objects.isNull(homeDir)) {
+				return clone;
+			}
+
+			Path bundlePath = Paths.get(project.getBasePath(), homeDir);
 
 			clone.setBundleLocation(bundlePath.toString());
 

@@ -37,6 +37,8 @@ import com.liferay.ide.idea.util.ServerUtil;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import java.util.Objects;
+
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -137,13 +139,17 @@ public class LiferayServerConfigurable
 
 			String basePath = project.getBasePath();
 
-			Path path = Paths.get(getHomeDir(project));
+			String bundleDir = getHomeDir(project);
 
-			if (!path.isAbsolute()) {
-				path = Paths.get(basePath, getHomeDir(project));
+			if (Objects.nonNull(bundleDir)) {
+				Path path = Paths.get(bundleDir);
+
+				if (!path.isAbsolute()) {
+					path = Paths.get(basePath, getHomeDir(project));
+				}
+
+				_liferayServer.setText(path.toString());
 			}
-
-			_liferayServer.setText(path.toString());
 		}
 
 		_gogoShellPort.setText(configuration.getGogoShellPort());
