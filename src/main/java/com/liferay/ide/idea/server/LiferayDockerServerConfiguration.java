@@ -66,6 +66,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.swing.SwingUtilities;
 
@@ -100,6 +101,12 @@ public class LiferayDockerServerConfiguration
 		ProgramParametersUtil.checkWorkingDirectoryExist(this, getProject(), null);
 
 		WorkspaceProvider workspaceProvider = LiferayCore.getWorkspaceProvider(_project);
+
+		if (Objects.isNull(workspaceProvider)) {
+			throw new RuntimeConfigurationException(
+				"Can only create Liferay Docker server within liferay workspace project",
+				"Invalid liferay workspace project type");
+		}
 
 		if (!workspaceProvider.isGradleWorkspace()) {
 			throw new RuntimeConfigurationException(
