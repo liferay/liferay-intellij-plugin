@@ -31,6 +31,14 @@
 	</p>
 	<p>
 		<ul>
+			<li>1.9.3</li>
+			<ul>
+				<li>INTELLIJ-189 improve validation for package name in new spring mvc wizard</li>
+				<li>INTELLIJ-190 bug fix for rerun a docker server</li>
+				<li>INTELLIJ-192 improvements on creating liferay spring mvc portlet project</li>
+				<li>INTELLIJ-200 support creating a liferay server outside of liferay workspace</li>
+				<li>INTELLIJ-201 add validtion to only support new docker server in liferay workspae</li>
+			</ul>
 			<li>1.9.2</li>
 			<ul>
 				<li>INTELLIJ-89 enable docker suppport</li>
