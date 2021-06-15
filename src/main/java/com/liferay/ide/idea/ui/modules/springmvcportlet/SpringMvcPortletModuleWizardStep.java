@@ -40,9 +40,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * @author Terry Jia
@@ -226,9 +225,7 @@ public class SpringMvcPortletModuleWizardStep extends ModuleWizardStep implement
 
 			String jsonContent = CoreUtil.readStreamToString(inputStream);
 
-			JSONParser parser = new JSONParser();
-
-			JSONObject contentObject = (JSONObject)parser.parse(jsonContent);
+			JSONObject contentObject = new JSONObject(jsonContent);
 
 			return (JSONObject)contentObject.get(_liferayVersion);
 		}
