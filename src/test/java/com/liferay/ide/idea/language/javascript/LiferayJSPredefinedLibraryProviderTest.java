@@ -27,6 +27,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.gradle.internal.impldep.org.junit.BeforeClass;
 import org.jetbrains.plugins.gradle.util.GradleConstants;
 
 /**
@@ -35,6 +36,8 @@ import org.jetbrains.plugins.gradle.util.GradleConstants;
 public class LiferayJSPredefinedLibraryProviderTest extends LightJavaCodeInsightFixtureTestCase {
 
 	public void setUp() throws Exception {
+		super.setUp();
+
 		File testFile = new File(_TEST_DATA_PATH);
 
 		final String testDataPath = PathUtil.toSystemIndependentName(testFile.getAbsolutePath());
@@ -68,7 +71,7 @@ public class LiferayJSPredefinedLibraryProviderTest extends LightJavaCodeInsight
 	public void testAuiScriptTagLiferay() {
 		myFixture.configureByFiles("aui.jsp", "liferay-aui.tld");
 
-		myFixture.complete(CompletionType.BASIC, 1);
+		myFixture.complete(CompletionType.SMART, 1);
 
 		List<String> lookupElementStrings = myFixture.getLookupElementStrings();
 
@@ -82,7 +85,7 @@ public class LiferayJSPredefinedLibraryProviderTest extends LightJavaCodeInsight
 		//See bug report here https://youtrack.jetbrains.com/issue/WEB-37355
 		myFixture.configureByFiles("view.jsp");
 
-		myFixture.complete(CompletionType.BASIC, 1);
+		myFixture.complete(CompletionType.SMART, 1);
 
 		List<String> lookupElementStrings = myFixture.getLookupElementStrings();
 
@@ -92,7 +95,7 @@ public class LiferayJSPredefinedLibraryProviderTest extends LightJavaCodeInsight
 	public void testJavascriptLiferay() {
 		myFixture.configureByFiles("main.js");
 
-		myFixture.complete(CompletionType.BASIC, 1);
+		myFixture.complete(CompletionType.SMART, 1);
 
 		List<String> lookupElementStrings = myFixture.getLookupElementStrings();
 

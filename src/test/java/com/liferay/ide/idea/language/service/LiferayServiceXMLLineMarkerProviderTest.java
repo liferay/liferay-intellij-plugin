@@ -19,6 +19,7 @@ import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
 import com.intellij.navigation.GotoRelatedItem;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.LanguageLevelModuleExtension;
@@ -102,6 +103,11 @@ public class LiferayServiceXMLLineMarkerProviderTest extends LightJavaCodeInsigh
 		public void configureModule(
 			@NotNull Module module, @NotNull ModifiableRootModel modifiableRootModel,
 			@NotNull ContentEntry contentEntry) {
+
+			ProjectJdkTable.getInstance(
+			).addJdk(
+				SdkUtil.getTestJdk()
+			);
 
 			LanguageLevelModuleExtension languageLevelModuleExtension = modifiableRootModel.getModuleExtension(
 				LanguageLevelModuleExtension.class);

@@ -121,7 +121,6 @@ public class LiferayJSPredefinedLibraryProvider extends JSPredefinedLibraryProvi
 	}
 
 	@NotNull
-	@SuppressWarnings("rawtypes")
 	private static Set<VirtualFile> _getJavascriptFilesFromJarRoot(@NotNull VirtualFile jarRoot) {
 		Set<VirtualFile> virtualFiles = new HashSet<>();
 

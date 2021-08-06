@@ -403,7 +403,7 @@ public class GradleUtil {
 
 		boolean needToCopy = true;
 
-		try (InputStream inputStream = classLoader.getResourceAsStream("/libs/" + fullFileName)) {
+		try (InputStream inputStream = classLoader.getResourceAsStream("libs/" + fullFileName)) {
 			if (toolingJar.exists()) {
 				Version urlJarVersion = Version.parseVersion(_getJarVersion(inputStream));
 
