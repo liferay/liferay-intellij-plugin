@@ -19,6 +19,7 @@ import com.intellij.javaee.facet.JavaeeFacet;
 import com.intellij.openapi.externalSystem.model.project.LibraryData;
 import com.intellij.openapi.externalSystem.model.project.LibraryPathType;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.LanguageLevelModuleExtension;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -113,6 +114,11 @@ public class LiferayJspDebuggerSourceFinderAdapterTest extends LightJavaCodeInsi
 		public void configureModule(
 			@NotNull Module module, @NotNull ModifiableRootModel modifiableRootModel,
 			@NotNull ContentEntry contentEntry) {
+
+			ProjectJdkTable.getInstance(
+			).addJdk(
+				SdkUtil.getTestJdk()
+			);
 
 			LanguageLevelModuleExtension extension = modifiableRootModel.getModuleExtension(
 				LanguageLevelModuleExtension.class);

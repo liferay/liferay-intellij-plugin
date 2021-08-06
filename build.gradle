@@ -74,9 +74,10 @@ configurations.all {
 }
 
 dependencies {
+	//	compile group: "com.github.docker-java", name: "docker-java-api", version: "3.2.11"
+
 	compile files( "libs/gradle-tooling.jar")
 	compile group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.4.0"
-	compile group: "com.github.docker-java", name: "docker-java", version: "3.1.5"
 	compile group: "commons-configuration", name: "commons-configuration", version: "1.10"
 	compile group: "commons-lang", name: "commons-lang", version: "2.6"
 	compile group: "org.apache.ant", name: "ant", version: "1.10.1"

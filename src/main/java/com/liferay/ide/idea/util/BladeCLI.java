@@ -120,7 +120,7 @@ public class BladeCLI {
 
 		ClassLoader bladeClassLoader = BladeCLI.class.getClassLoader();
 
-		try (InputStream inputStream = bladeClassLoader.getResourceAsStream("/libs/" + jarName)) {
+		try (InputStream inputStream = bladeClassLoader.getResourceAsStream("libs/" + jarName)) {
 			if (bladeJar.exists()) {
 				Version newBladeVersion = Version.parseVersion(_getBladeVersion(inputStream));
 
@@ -136,7 +136,7 @@ public class BladeCLI {
 		catch (IOException ioException) {
 		}
 
-		try (InputStream inputStream = bladeClassLoader.getResourceAsStream("/libs/" + jarName)) {
+		try (InputStream inputStream = bladeClassLoader.getResourceAsStream("libs/" + jarName)) {
 			if (needToCopy) {
 				bladeJar.delete();
 
