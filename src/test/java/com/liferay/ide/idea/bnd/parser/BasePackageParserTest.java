@@ -16,6 +16,7 @@ package com.liferay.ide.idea.bnd.parser;
 
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.LanguageLevelModuleExtension;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -116,6 +117,11 @@ public class BasePackageParserTest extends LightJavaCodeInsightFixtureTestCase {
 		public void configureModule(
 			@NotNull Module module, @NotNull ModifiableRootModel modifiableRootModel,
 			@NotNull ContentEntry contentEntry) {
+
+			ProjectJdkTable.getInstance(
+			).addJdk(
+				SdkUtil.getTestJdk()
+			);
 
 			LanguageLevelModuleExtension extension = modifiableRootModel.getModuleExtension(
 				LanguageLevelModuleExtension.class);
