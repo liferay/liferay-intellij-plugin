@@ -8,7 +8,7 @@ env:
 jobs:
   CheckSourceFormatting:
     name: Check source formatting
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -29,7 +29,7 @@ jobs:
           ./gradlew --no-daemon checkSourceFormatting
   #LinuxJDK8:
   #  name: Linux JDK8
-  #  runs-on: ubuntu-18.04
+  #  runs-on: ubuntu-20.04
   #  steps:
   #    - name: Checkout
   #      uses: actions/checkout@v1
@@ -50,7 +50,7 @@ jobs:
   #        ./gradlew --no-daemon --scan clean test verifyPlugin
   LinuxJDK11:
     name: Linux JDK11
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -71,7 +71,7 @@ jobs:
           ./gradlew --no-daemon --scan clean test verifyPlugin
   CompatibilityChecking:
     name: Check compatibility
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - name : Checkout
         uses: actions/checkout@v1

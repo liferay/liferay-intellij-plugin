@@ -15,6 +15,7 @@
 package com.liferay.ide.idea.bnd.psi.impl;
 
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.LanguageLevelModuleExtension;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -95,6 +96,11 @@ public class BndHeaderValuePartManipulatorTest extends LightJavaCodeInsightFixtu
 			if (extension != null) {
 				extension.setLanguageLevel(LanguageLevel.JDK_1_8);
 			}
+
+			ProjectJdkTable.getInstance(
+			).addJdk(
+				SdkUtil.getTestJdk()
+			);
 
 			modifiableRootModel.setSdk(SdkUtil.getTestJdk());
 
