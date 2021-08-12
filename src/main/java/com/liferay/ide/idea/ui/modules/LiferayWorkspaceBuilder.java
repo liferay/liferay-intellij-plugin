@@ -232,7 +232,7 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 		sb.append("-v ");
 
 		if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_MAVEN_WORKSPACE)) {
-			sb.append(_liferayVersion);
+			sb.append(_targetPlatform);
 		}
 		else if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_GRADLE_WORKSPACE)) {
 			sb.append(_productVersion);
