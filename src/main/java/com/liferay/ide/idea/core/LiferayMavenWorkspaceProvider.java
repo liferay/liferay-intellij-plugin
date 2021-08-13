@@ -47,13 +47,7 @@ public class LiferayMavenWorkspaceProvider extends AbstractWorkspaceProvider {
 
 	@Override
 	public String getTargetPlatformVersion() {
-		String targetPlatformVersion = getWorkspaceProperty(WorkspaceConstants.WORKSPACE_BOM_VERSION, null);
-
-		if (Objects.nonNull(targetPlatformVersion) && targetPlatformVersion.contains("-")) {
-			targetPlatformVersion = targetPlatformVersion.substring(0, targetPlatformVersion.indexOf("-"));
-		}
-
-		return targetPlatformVersion;
+		return getWorkspaceProperty(WorkspaceConstants.WORKSPACE_BOM_VERSION, null);
 	}
 
 	@Override

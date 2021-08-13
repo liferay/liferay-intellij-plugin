@@ -206,6 +206,19 @@ public class SpringMVCPortletModuleBuilder extends ModuleBuilder implements Life
 		if (Objects.equals(typeId, LiferayProjectType.LIFERAY_MAVEN_WORKSPACE)) {
 			sb.append("-b ");
 			sb.append("maven ");
+
+			String targetPlatformVersion = getTargetPlatformVersion(project);
+
+			if (targetPlatformVersion != null) {
+				sb.append("-v ");
+				sb.append(targetPlatformVersion);
+				sb.append(" ");
+			}
+		}
+		else {
+			sb.append("-v ");
+			sb.append(_liferayVersion);
+			sb.append(" ");
 		}
 
 		sb.append("--base \"");
@@ -224,9 +237,6 @@ public class SpringMVCPortletModuleBuilder extends ModuleBuilder implements Life
 		sb.append(" ");
 		sb.append("--view-type ");
 		sb.append(_viewType);
-		sb.append(" ");
-		sb.append("-v ");
-		sb.append(_liferayVersion);
 
 		if (!CoreUtil.isNullOrEmpty(_packageName)) {
 			sb.append(" ");
