@@ -21,8 +21,10 @@ import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.JavaRunConfigurationExtensionManager;
+import com.intellij.execution.RunManager;
 import com.intellij.execution.configuration.EnvironmentVariablesComponent;
 import com.intellij.execution.configurations.ConfigurationFactory;
+import com.intellij.execution.configurations.ConfigurationType;
 import com.intellij.execution.configurations.JavaRunConfigurationModule;
 import com.intellij.execution.configurations.LocatableConfigurationBase;
 import com.intellij.execution.configurations.RunConfiguration;
@@ -124,6 +126,25 @@ public class LiferayDockerServerConfiguration
 
 			throw new RuntimeConfigurationException(
 				"Please set correct docker container id", "Invalid docker container id");
+		}
+
+		RunManager runManager = RunManager.getInstance(_project);
+
+		List<RunConfiguration> configurationList = runManager.getAllConfigurationsList();
+
+		for (RunConfiguration runConfiguration : configurationList) {
+			ConfigurationType configurationType = runConfiguration.getType();
+
+			if (Objects.equals(LiferayDockerServerConfigurationType.id, configurationType.getId())) {
+				LiferayDockerServerConfiguration configuration = (LiferayDockerServerConfiguration)runConfiguration;
+
+				if (Objects.equals(configuration.getDockerImageId(), _liferayDockerServerConfig.dockerImageId) &&
+					!Objects.equals(configuration.getName(), getName())) {
+
+					throw new RuntimeConfigurationException(
+						"Another docker image has the same image id", "Invalid docker image id");
+				}
+			}
 		}
 	}
 
