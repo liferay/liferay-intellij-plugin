@@ -18,6 +18,7 @@ import com.intellij.execution.RunManager;
 import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.actions.RunConfigurationProducer;
 import com.intellij.execution.configurations.ConfigurationType;
+import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.executors.DefaultRunExecutor;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -68,10 +69,24 @@ public class InitDockerBundleAction extends AbstractLiferayGradleTaskAction impl
 					configurationType, project.getName() + "-docker-server");
 
 				if (configuration == null) {
-					configuration = runManager.createConfiguration(
-						project.getName() + "-docker-server", producer.getConfigurationFactory());
+					List<RunConfiguration> configurationList = runManager.getAllConfigurationsList();
 
-					runManager.addConfiguration(configuration);
+					for (RunConfiguration runConfiguration : configurationList) {
+						ConfigurationType type = runConfiguration.getType();
+
+						if (Objects.equals(LiferayDockerServerConfigurationType.id, type.getId())) {
+							configuration = runManager.findSettings(runConfiguration);
+
+							break;
+						}
+					}
+
+					if (configuration == null) {
+						configuration = runManager.createConfiguration(
+							project.getName() + "-docker-server", producer.getConfigurationFactory());
+
+						runManager.addConfiguration(configuration);
+					}
 				}
 
 				runManager.setSelectedConfiguration(configuration);
