@@ -50,7 +50,7 @@ public class LiferayServerRunner extends DefaultJavaProgramRunner {
 	@NotNull
 	@Override
 	public String getRunnerId() {
-		return "LiferayBundleRunner";
+		return "LiferayServerRunner";
 	}
 
 	@Nullable

@@ -66,7 +66,7 @@ public class LiferayDockerServerDebuggerRunner
 	@NotNull
 	@Override
 	public String getRunnerId() {
-		return "LiferayDockerServerDebugger";
+		return "LiferayDockerServerDebuggerRunner";
 	}
 
 	@Nullable
