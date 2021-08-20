@@ -61,6 +61,8 @@ import com.liferay.ide.idea.core.LiferayCore;
 import com.liferay.ide.idea.core.WorkspaceProvider;
 import com.liferay.ide.idea.util.CoreUtil;
 import com.liferay.ide.idea.util.GradleUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
+import com.liferay.ide.idea.util.ListUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,6 +73,8 @@ import java.util.Map;
 import java.util.Objects;
 
 import javax.swing.SwingUtilities;
+
+import org.gradle.tooling.model.GradleProject;
 
 import org.jdom.Element;
 
@@ -84,7 +88,7 @@ import org.jetbrains.plugins.gradle.util.GradleConstants;
 @SuppressWarnings("unchecked")
 public class LiferayDockerServerConfiguration
 	extends LocatableConfigurationBase
-	implements CommonProgramRunConfigurationParameters, SearchScopeProvidingRunProfile {
+	implements CommonProgramRunConfigurationParameters, LiferayWorkspaceSupport, SearchScopeProvidingRunProfile {
 
 	public LiferayDockerServerConfiguration(Project project, ConfigurationFactory factory, String name) {
 		super(project, factory, name);
@@ -255,8 +259,34 @@ public class LiferayDockerServerConfiguration
 
 		List<String> taskNames = new ArrayList<>();
 
+		taskNames.add("removeDockerContainer");
+		taskNames.add("cleanDockerImage");
 		taskNames.add("startDockerContainer");
 		taskNames.add("logsDockerContainer");
+
+		List<Module> warCoreExtProjects = getWarCoreExtProjects(_project);
+
+		if (ListUtil.isNotEmpty(warCoreExtProjects)) {
+			for (Module module : warCoreExtProjects) {
+				GradleProject gradleProject = GradleUtil.getGradleProject(module);
+
+				if (Objects.nonNull(gradleProject)) {
+					StringBuilder scriptParameters = new StringBuilder();
+
+					scriptParameters.append("-x ");
+					scriptParameters.append(gradleProject.getPath());
+					scriptParameters.append(":buildExtInfo");
+					scriptParameters.append(" -x ");
+					scriptParameters.append(gradleProject.getPath());
+					scriptParameters.append(":deploy");
+					scriptParameters.append(" -x ");
+					scriptParameters.append(gradleProject.getPath());
+					scriptParameters.append(":dockerDeploy");
+
+					settings.setScriptParameters(scriptParameters.toString());
+				}
+			}
+		}
 
 		settings.setTaskNames(taskNames);
 

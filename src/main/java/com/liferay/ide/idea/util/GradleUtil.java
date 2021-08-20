@@ -233,13 +233,11 @@ public class GradleUtil {
 
 			ModifiableModuleModel modifiableModel = moduleManager.getModifiableModel();
 
-			String[] moduleGroupPath = modifiableModel.getModuleGroupPath(module);
+			String actualName = modifiableModel.getActualName(module);
 
-			if (ListUtil.isEmpty(moduleGroupPath)) {
-				return null;
+			if (actualName.contains(".")) {
+				actualName = actualName.substring(actualName.lastIndexOf(".") + 1);
 			}
-
-			String actualName = moduleGroupPath[moduleGroupPath.length - 1];
 
 			String projectName = gradleProject.getName();
 
