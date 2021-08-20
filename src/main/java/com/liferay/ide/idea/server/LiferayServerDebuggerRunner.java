@@ -51,7 +51,7 @@ public class LiferayServerDebuggerRunner extends GenericDebuggerRunner {
 	@NotNull
 	@Override
 	public String getRunnerId() {
-		return "LiferayServerDebugger";
+		return "LiferayServerDebuggerRunner";
 	}
 
 	@Nullable
