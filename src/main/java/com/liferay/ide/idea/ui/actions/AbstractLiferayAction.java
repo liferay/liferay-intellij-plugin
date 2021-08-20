@@ -250,6 +250,8 @@ public abstract class AbstractLiferayAction extends AnAction implements LiferayW
 					@NotNull ProcessHandler processHandler, int exitCode) {
 
 					handleProcessTerminated(project);
+
+					messageBusConnection.disconnect();
 				}
 
 			});
