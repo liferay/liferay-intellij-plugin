@@ -260,8 +260,6 @@ public class LiferayDockerServerConfiguration
 
 		settings.setTaskNames(taskNames);
 
-		settings.setScriptParameters("-x createDockerContainer");
-
 		ExternalSystemRunnableState runnableState = new ExternalSystemRunnableState(
 			settings, getProject(), debugExecutorId.equals(executor.getId()), externalSystemRunConfiguration, env);
 

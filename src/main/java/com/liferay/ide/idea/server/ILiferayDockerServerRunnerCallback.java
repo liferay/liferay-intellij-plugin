@@ -77,7 +77,8 @@ public interface ILiferayDockerServerRunnerCallback {
 										CommandLineParser gradleCmdParser = new CommandLineParser();
 
 										ParsedCommandLine parsedCommandLine = gradleCmdParser.parse(
-											ParametersListUtil.parse("stopDockerContainer", true));
+											ParametersListUtil.parse(
+												"stopDockerContainer removeDockerContainer cleanDockerImage", true));
 
 										settings.setExternalProjectPath(project.getBasePath());
 										settings.setExternalSystemIdString(GradleConstants.SYSTEM_ID.toString());
