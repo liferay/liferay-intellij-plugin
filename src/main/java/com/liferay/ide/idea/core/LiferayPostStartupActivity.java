@@ -14,26 +14,39 @@
 
 package com.liferay.ide.idea.core;
 
+import com.intellij.execution.RunManagerListener;
+import com.intellij.execution.RunnerAndConfigurationSettings;
+import com.intellij.execution.configurations.ConfigurationType;
+import com.intellij.execution.executors.DefaultRunExecutor;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
+import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode;
 import com.intellij.openapi.externalSystem.service.project.manage.ProjectDataImportListener;
+import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.StartupActivity;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.util.execution.ParametersListUtil;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 
+import com.liferay.ide.idea.server.LiferayDockerServerConfigurationType;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 import com.liferay.ide.idea.util.ProjectConfigurationUtil;
 
 import java.util.stream.Stream;
 
+import org.gradle.cli.CommandLineParser;
+import org.gradle.cli.ParsedCommandLine;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.project.MavenImportListener;
 import org.jetbrains.idea.maven.project.MavenProjectsManager;
+import org.jetbrains.plugins.gradle.util.GradleConstants;
 
 /**
  * @author Simon Jiang
@@ -98,6 +111,36 @@ public class LiferayPostStartupActivity implements DumbAware, LiferayWorkspaceSu
 							});
 					}
 				);
+			});
+
+		messageBusConnection.subscribe(
+			RunManagerListener.TOPIC,
+			new RunManagerListener() {
+
+				@Override
+				public void runConfigurationRemoved(@NotNull RunnerAndConfigurationSettings settings) {
+					ConfigurationType configurationType = settings.getType();
+
+					if (LiferayDockerServerConfigurationType.id.equals(configurationType.getId())) {
+						ExternalSystemTaskExecutionSettings externalSystemTaskExecutionSettings =
+							new ExternalSystemTaskExecutionSettings();
+
+						CommandLineParser gradleCmdParser = new CommandLineParser();
+
+						ParsedCommandLine parsedCommandLine = gradleCmdParser.parse(
+							ParametersListUtil.parse("removeDockerContainer", true));
+
+						externalSystemTaskExecutionSettings.setExternalProjectPath(project.getBasePath());
+						externalSystemTaskExecutionSettings.setExternalSystemIdString(
+							GradleConstants.SYSTEM_ID.toString());
+						externalSystemTaskExecutionSettings.setTaskNames(parsedCommandLine.getExtraArguments());
+
+						ExternalSystemUtil.runTask(
+							externalSystemTaskExecutionSettings, DefaultRunExecutor.EXECUTOR_ID, project,
+							GradleConstants.SYSTEM_ID, null, ProgressExecutionMode.IN_BACKGROUND_ASYNC, false);
+					}
+				}
+
 			});
 	}
 
