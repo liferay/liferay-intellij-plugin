@@ -22,6 +22,8 @@ import com.intellij.openapi.externalSystem.service.notification.ExternalSystemNo
 import com.intellij.openapi.externalSystem.service.notification.NotificationCategory;
 import com.intellij.openapi.externalSystem.service.notification.NotificationData;
 import com.intellij.openapi.externalSystem.service.notification.NotificationSource;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -35,6 +37,8 @@ import java.io.File;
 
 import java.nio.file.Files;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -45,6 +49,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.model.MavenPlugin;
 import org.jetbrains.idea.maven.project.MavenProject;
 import org.jetbrains.idea.maven.project.MavenProjectsManager;
+import org.jetbrains.plugins.gradle.settings.GradleExtensionsSettings;
 import org.jetbrains.plugins.gradle.util.GradleConstants;
 
 /**
@@ -255,6 +260,36 @@ public interface LiferayWorkspaceSupport {
 		}
 
 		return workspaceProvider.getTargetPlatformVersion();
+	}
+
+	public default List<Module> getWarCoreExtProjects(Project project) {
+		List<Module> warCoreExtProjects = new ArrayList<>();
+
+		VirtualFile moduleExtDirFile = getModuleExtDirFile(project);
+
+		if (Objects.isNull(moduleExtDirFile)) {
+			return warCoreExtProjects;
+		}
+
+		VirtualFile[] children = moduleExtDirFile.getChildren();
+
+		for (VirtualFile virtualFile : children) {
+			Module module = ModuleUtil.findModuleForFile(virtualFile, project);
+
+			GradleExtensionsSettings.Settings settings = GradleExtensionsSettings.getInstance(project);
+
+			GradleExtensionsSettings.GradleExtensionsData gradleExtensionsData = settings.getExtensionsFor(module);
+
+			Map<String, GradleExtensionsSettings.GradleTask> tasksMap = gradleExtensionsData.tasksMap;
+
+			GradleExtensionsSettings.GradleTask value = tasksMap.get("buildExtInfo");
+
+			if (Objects.nonNull(value)) {
+				warCoreExtProjects.add(module);
+			}
+		}
+
+		return warCoreExtProjects;
 	}
 
 	public default String getWorkspaceModuleDir(Project project) {
