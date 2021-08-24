@@ -14,6 +14,8 @@
 
 package com.liferay.ide.idea.core;
 
+import com.google.common.collect.Lists;
+
 import com.intellij.execution.RunManagerListener;
 import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.configurations.ConfigurationType;
@@ -38,6 +40,8 @@ import com.liferay.ide.idea.server.LiferayDockerServerConfigurationType;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 import com.liferay.ide.idea.util.ProjectConfigurationUtil;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.gradle.cli.CommandLineParser;
@@ -127,8 +131,18 @@ public class LiferayPostStartupActivity implements DumbAware, LiferayWorkspaceSu
 
 						CommandLineParser gradleCmdParser = new CommandLineParser();
 
-						ParsedCommandLine parsedCommandLine = gradleCmdParser.parse(
-							ParametersListUtil.parse("removeDockerContainer", true));
+						List<String> taskNames = Lists.newArrayList("removeDockerContainer", "cleanDockerImage");
+
+						final List<String> tasks = taskNames.stream(
+						).flatMap(
+							s -> ParametersListUtil.parse(
+								s, false, true
+							).stream()
+						).collect(
+							Collectors.toList()
+						);
+
+						ParsedCommandLine parsedCommandLine = gradleCmdParser.parse(tasks);
 
 						externalSystemTaskExecutionSettings.setExternalProjectPath(project.getBasePath());
 						externalSystemTaskExecutionSettings.setExternalSystemIdString(
