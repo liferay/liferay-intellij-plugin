@@ -16,6 +16,8 @@ package com.liferay.ide.idea.ui.actions;
 
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.module.Module;
+import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 
@@ -45,8 +47,11 @@ public class DeployDockerModuleAction extends AbstractLiferayGradleTaskAction im
 
 			VirtualFile virtualFile = getVirtualFile(anActionEvent);
 
+			Module module = ModuleUtil.findModuleForFile(virtualFile, project);
+
 			if ((virtualFile != null) && ProjectRootsUtil.isModuleContentRoot(virtualFile, project) &&
-				!baseDir.equals(virtualFile) && ServerUtil.isDockerServerExist(project)) {
+				!baseDir.equals(virtualFile) && ServerUtil.isDockerServerExist(project) &&
+				!LiferayWorkspaceSupport.isWarCoreExtProject(project, module)) {
 
 				return true;
 			}
