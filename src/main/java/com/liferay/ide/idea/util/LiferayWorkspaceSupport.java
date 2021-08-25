@@ -183,6 +183,18 @@ public interface LiferayWorkspaceSupport {
 		return false;
 	}
 
+	public static boolean isWarCoreExtProject(Project project, Module module) {
+		GradleExtensionsSettings.Settings settings = GradleExtensionsSettings.getInstance(project);
+
+		GradleExtensionsSettings.GradleExtensionsData gradleExtensionsData = settings.getExtensionsFor(module);
+
+		Map<String, GradleExtensionsSettings.GradleTask> tasksMap = gradleExtensionsData.tasksMap;
+
+		GradleExtensionsSettings.GradleTask value = tasksMap.get("buildExtInfo");
+
+		return Objects.nonNull(value);
+	}
+
 	public default String getHomeDir(Project project) {
 		WorkspaceProvider workspaceProvider = LiferayCore.getWorkspaceProvider(project);
 
@@ -276,15 +288,7 @@ public interface LiferayWorkspaceSupport {
 		for (VirtualFile virtualFile : children) {
 			Module module = ModuleUtil.findModuleForFile(virtualFile, project);
 
-			GradleExtensionsSettings.Settings settings = GradleExtensionsSettings.getInstance(project);
-
-			GradleExtensionsSettings.GradleExtensionsData gradleExtensionsData = settings.getExtensionsFor(module);
-
-			Map<String, GradleExtensionsSettings.GradleTask> tasksMap = gradleExtensionsData.tasksMap;
-
-			GradleExtensionsSettings.GradleTask value = tasksMap.get("buildExtInfo");
-
-			if (Objects.nonNull(value)) {
+			if (isWarCoreExtProject(project, module)) {
 				warCoreExtProjects.add(module);
 			}
 		}
