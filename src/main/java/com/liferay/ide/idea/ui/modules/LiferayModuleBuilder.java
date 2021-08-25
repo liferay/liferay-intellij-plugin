@@ -103,7 +103,9 @@ public class LiferayModuleBuilder extends ModuleBuilder implements LiferayWorksp
 	public ModuleWizardStep[] createWizardSteps(
 		@NotNull WizardContext wizardContext, @NotNull ModulesProvider modulesProvider) {
 
-		return new ModuleWizardStep[] {new LiferayProjectSettingsStep(wizardContext)};
+		return new ModuleWizardStep[] {
+			new LiferayProjectTypesStep(this, wizardContext.getProject()), new LiferayProjectSettingsStep(wizardContext)
+		};
 	}
 
 	@Override
