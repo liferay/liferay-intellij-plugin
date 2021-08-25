@@ -267,12 +267,12 @@ public class LiferayDockerServerConfiguration
 		List<Module> warCoreExtProjects = getWarCoreExtProjects(_project);
 
 		if (ListUtil.isNotEmpty(warCoreExtProjects)) {
+			StringBuilder scriptParameters = new StringBuilder();
+
 			for (Module module : warCoreExtProjects) {
 				GradleProject gradleProject = GradleUtil.getGradleProject(module);
 
 				if (Objects.nonNull(gradleProject)) {
-					StringBuilder scriptParameters = new StringBuilder();
-
 					scriptParameters.append("-x ");
 					scriptParameters.append(gradleProject.getPath());
 					scriptParameters.append(":buildExtInfo");
@@ -281,11 +281,11 @@ public class LiferayDockerServerConfiguration
 					scriptParameters.append(":deploy");
 					scriptParameters.append(" -x ");
 					scriptParameters.append(gradleProject.getPath());
-					scriptParameters.append(":dockerDeploy");
-
-					settings.setScriptParameters(scriptParameters.toString());
+					scriptParameters.append(":dockerDeploy ");
 				}
 			}
+
+			settings.setScriptParameters(scriptParameters.toString());
 		}
 
 		settings.setTaskNames(taskNames);
