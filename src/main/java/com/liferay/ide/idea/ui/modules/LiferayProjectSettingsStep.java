@@ -23,6 +23,7 @@ import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.ide.wizard.CommitStepException;
 import com.intellij.openapi.components.StorageScheme;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.platform.templates.TemplateModuleBuilder;
 import com.intellij.projectImport.ProjectFormatPanel;
 import com.intellij.ui.HideableDecorator;
@@ -66,42 +67,35 @@ public class LiferayProjectSettingsStep extends ModuleWizardStep {
 		panel.add(field, gridBagConstraints);
 	}
 
+	public LiferayProjectSettingsStep(LiferayModuleBuilder liferayModuleBuilder, WizardContext context) {
+		_context = context;
+
+		_initProjectSettingsStep(context);
+	}
+
 	public LiferayProjectSettingsStep(WizardContext context) {
 		_context = context;
 
-		_formatPanel = new ProjectFormatPanel();
+		_initProjectSettingsStep(context);
 
-		_namePathComponent = LiferayNamePathComponent.initNamePathComponent(context);
-
-		_namePathComponent.setShouldBeAbsolute(true);
-
-		JPanel modulePanel = _getModulePanel();
-
-		if (context.isCreatingNewProject()) {
-			_settingsPanel.add(_namePathComponent, BorderLayout.NORTH);
-		}
-		else {
-			_settingsPanel.add(modulePanel, BorderLayout.NORTH);
-		}
-
-		_moduleNameLocationComponent.bindModuleSettings(_namePathComponent);
-		_expertDecorator = new HideableDecorator(_expertPlaceholder, "Mor&e Settings", false);
-		_expertPanel.setBorder(JBUI.Borders.empty(0, IdeBorderFactory.TITLED_BORDER_INDENT, 5, 0));
-
-		_expertDecorator.setContentComponent(_expertPanel);
-
-		if (_context.isCreatingNewProject()) {
-			_addProjectFormat(modulePanel);
-		}
+		_liferayProjectTypesComponent.hideComponent();
 	}
 
 	@Override
 	public void _init() {
-		_moduleNameLocationComponent.updateLocations();
+		JTextField moduleNameField = _moduleNameLocationComponent.getModuleNameField();
+
+		if (StringUtil.isNotEmpty(moduleNameField.getText())) {
+			_moduleNameLocationComponent.updateLocations(moduleNameField.getText());
+		}
+		else {
+			_moduleNameLocationComponent.updateLocations();
+		}
 	}
 
 	public void createUIComponents() {
 		_moduleNameLocationComponent = new LiferayModuleNameLocationComponent(_context);
+		_liferayProjectTypesComponent = new LiferayProjectTypesComponent(_context);
 	}
 
 	@Override
@@ -160,6 +154,9 @@ public class LiferayProjectSettingsStep extends ModuleWizardStep {
 		if (moduleBuilder instanceof TemplateModuleBuilder) {
 			_context.setProjectStorageFormat(StorageScheme.DIRECTORY_BASED);
 		}
+		else if (moduleBuilder instanceof LiferayModuleBuilder) {
+			_liferayProjectTypesComponent.updateDataModel();
+		}
 
 		if (_settingsStep != null) {
 			_settingsStep.updateDataModel();
@@ -187,6 +184,12 @@ public class LiferayProjectSettingsStep extends ModuleWizardStep {
 			return false;
 		}
 
+		if ((_context.getProjectBuilder() instanceof LiferayModuleBuilder) &&
+			!_liferayProjectTypesComponent.validatComponent()) {
+
+			return false;
+		}
+
 		if (_settingsStep != null) {
 			return _settingsStep.validate();
 		}
@@ -208,6 +211,36 @@ public class LiferayProjectSettingsStep extends ModuleWizardStep {
 		}
 
 		return _moduleNameLocationComponent.getModuleNameField();
+	}
+
+	private void _initProjectSettingsStep(WizardContext context) {
+		_formatPanel = new ProjectFormatPanel();
+
+		_namePathComponent = LiferayNamePathComponent.initNamePathComponent(context);
+
+		_namePathComponent.setShouldBeAbsolute(true);
+
+		JPanel modulePanel = _getModulePanel();
+
+		if (context.isCreatingNewProject()) {
+			_settingsPanel.add(_namePathComponent, BorderLayout.NORTH);
+		}
+		else {
+			_settingsPanel.add(modulePanel, BorderLayout.NORTH);
+		}
+
+		_moduleNameLocationComponent.bindModuleSettings(_namePathComponent);
+
+		_expertDecorator = new HideableDecorator(_expertPlaceholder, "Mor&e Settings", false);
+		_expertPanel.setBorder(JBUI.Borders.empty(0, IdeBorderFactory.TITLED_BORDER_INDENT, 5, 0));
+
+		_expertDecorator.setContentComponent(_expertPanel);
+
+		if (_context.isCreatingNewProject()) {
+			_addProjectFormat(modulePanel);
+		}
+
+		_liferayProjectTypesComponent.initProjectTypeComponent(_moduleNameLocationComponent, _context);
 	}
 
 	private void _restorePanel(JPanel component, int i) {
@@ -241,6 +274,7 @@ public class LiferayProjectSettingsStep extends ModuleWizardStep {
 	private JPanel _expertPanel;
 	private JPanel _expertPlaceholder;
 	private ProjectFormatPanel _formatPanel;
+	private LiferayProjectTypesComponent _liferayProjectTypesComponent;
 	private JPanel _mainPanel;
 	private LiferayModuleNameLocationComponent _moduleNameLocationComponent;
 	private LiferayNamePathComponent _namePathComponent;

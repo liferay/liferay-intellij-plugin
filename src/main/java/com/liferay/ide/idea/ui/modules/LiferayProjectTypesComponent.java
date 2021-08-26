@@ -17,7 +17,7 @@ package com.liferay.ide.idea.ui.modules;
 import aQute.bnd.version.Version;
 import aQute.bnd.version.VersionRange;
 
-import com.intellij.ide.util.projectWizard.ModuleWizardStep;
+import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.ConfigurationException;
@@ -49,14 +49,15 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import org.apache.commons.io.IOUtils;
@@ -66,18 +67,52 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Seiphon Wang
  */
-public class LiferayProjectTypesStep extends ModuleWizardStep implements LiferayWorkspaceSupport {
+public class LiferayProjectTypesComponent extends JPanel implements LiferayWorkspaceSupport {
 
-	public LiferayProjectTypesStep(LiferayModuleBuilder builder, Project project) {
+	public LiferayProjectTypesComponent() {
+	}
+
+	public LiferayProjectTypesComponent(WizardContext context) {
 		UIUtil.invokeLaterIfNeeded(
 			() -> {
 				Application application = ApplicationManager.getApplication();
 
 				application.executeOnPooledThread(this::_loadSupportedVersionRanges);
 			});
+	}
 
-		_builder = builder;
-		_project = project;
+	public LiferayModuleBuilder getModuleBuilder() {
+		if (_context.getProjectBuilder() instanceof LiferayModuleBuilder) {
+			return (LiferayModuleBuilder)_context.getProjectBuilder();
+		}
+
+		return null;
+	}
+
+	@Nullable
+	public String getSelectedType() {
+		Object selectedType = _typesTree.getLastSelectedPathComponent();
+
+		if (selectedType != null) {
+			return selectedType.toString();
+		}
+
+		return null;
+	}
+
+	public void hideComponent() {
+		_liferayVersionLabel.setVisible(false);
+		_liferayVersionCombo.setVisible(false);
+		_typesPanel.setVisible(false);
+		_projectTypeLable.setVisible(false);
+	}
+
+	public void initProjectTypeComponent(
+		LiferayModuleNameLocationComponent moduleNameLocationComponent, WizardContext context) {
+
+		_context = context;
+
+		_project = context.getProject();
 
 		_typesTree = new Tree();
 
@@ -88,6 +123,21 @@ public class LiferayProjectTypesStep extends ModuleWizardStep implements Liferay
 		TreeSelectionModel treeSelectionModel = _typesTree.getSelectionModel();
 
 		treeSelectionModel.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+
+		treeSelectionModel.addTreeSelectionListener(
+			event -> {
+				LiferayModuleBuilder builder = getModuleBuilder();
+
+				if (Objects.nonNull(builder)) {
+					TreePath treePath = event.getNewLeadSelectionPath();
+
+					JTextField moduleNameField = moduleNameLocationComponent.getModuleNameField();
+
+					builder.setType(String.valueOf(treePath.getLastPathComponent()));
+
+					moduleNameLocationComponent.updateLocations(moduleNameField.getText());
+				}
+			});
 
 		JScrollPane typesScrollPane = ScrollPaneFactory.createScrollPane(_typesTree);
 
@@ -141,30 +191,18 @@ public class LiferayProjectTypesStep extends ModuleWizardStep implements Liferay
 			});
 	}
 
-	@Override
-	public JComponent getComponent() {
-		return _mainPanel;
-	}
+	public void updateDataModel() {
+		LiferayModuleBuilder liferayModuleBuilder = getModuleBuilder();
 
-	@Nullable
-	public String getSelectedType() {
-		Object selectedType = _typesTree.getLastSelectedPathComponent();
-
-		if (selectedType != null) {
-			return selectedType.toString();
+		if (Objects.isNull(liferayModuleBuilder)) {
+			return;
 		}
 
-		return null;
+		liferayModuleBuilder.setType(getSelectedType());
+		liferayModuleBuilder.setLiferayVersion(_liferayVersion);
 	}
 
-	@Override
-	public void updateDataModel() {
-		_builder.setType(getSelectedType());
-		_builder.setLiferayVersion(_liferayVersion);
-	}
-
-	@Override
-	public boolean validate() throws ConfigurationException {
+	public boolean validatComponent() throws ConfigurationException {
 		String validationTitle = "Validation Error";
 
 		String type = getSelectedType();
@@ -298,12 +336,13 @@ public class LiferayProjectTypesStep extends ModuleWizardStep implements Liferay
 
 	private static Map<String, VersionRange> _projectTemplateVersionRangeMap = new HashMap<>();
 
-	private LiferayModuleBuilder _builder;
+	private WizardContext _context;
 	private String _liferayVersion;
 	private JComboBox<String> _liferayVersionCombo;
 	private JLabel _liferayVersionLabel;
 	private JPanel _mainPanel;
-	private final Project _project;
+	private Project _project;
+	private JLabel _projectTypeLable;
 	private JPanel _typesPanel;
 	private Tree _typesTree;
 
