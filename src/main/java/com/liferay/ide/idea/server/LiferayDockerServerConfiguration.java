@@ -264,7 +264,7 @@ public class LiferayDockerServerConfiguration
 		taskNames.add("startDockerContainer");
 		taskNames.add("logsDockerContainer");
 
-		List<Module> warCoreExtProjects = getWarCoreExtProjects(_project);
+		List<Module> warCoreExtProjects = getWarCoreExtModules(_project);
 
 		if (ListUtil.isNotEmpty(warCoreExtProjects)) {
 			StringBuilder scriptParameters = new StringBuilder();
