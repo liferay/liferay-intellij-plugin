@@ -183,7 +183,7 @@ public class InitDockerBundleAction extends AbstractLiferayGradleTaskAction impl
 	@Nullable
 	@Override
 	protected RunnerAndConfigurationSettings processRunnerConfiguration(AnActionEvent anActionEvent) {
-		List<Module> warCoreExtProjects = getWarCoreExtProjects(anActionEvent.getProject());
+		List<Module> warCoreExtProjects = getWarCoreExtModules(anActionEvent.getProject());
 
 		StringBuilder scriptParameters = new StringBuilder();
 

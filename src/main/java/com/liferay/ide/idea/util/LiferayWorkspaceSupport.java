@@ -274,26 +274,26 @@ public interface LiferayWorkspaceSupport {
 		return workspaceProvider.getTargetPlatformVersion();
 	}
 
-	public default List<Module> getWarCoreExtProjects(Project project) {
-		List<Module> warCoreExtProjects = new ArrayList<>();
+	public default List<Module> getWarCoreExtModules(Project project) {
+		List<Module> warCoreExtModules = new ArrayList<>();
 
 		VirtualFile moduleExtDirFile = getModuleExtDirFile(project);
 
 		if (Objects.isNull(moduleExtDirFile)) {
-			return warCoreExtProjects;
+			return warCoreExtModules;
 		}
 
-		VirtualFile[] children = moduleExtDirFile.getChildren();
+		VirtualFile[] extDirVirtualFiles = moduleExtDirFile.getChildren();
 
-		for (VirtualFile virtualFile : children) {
-			Module module = ModuleUtil.findModuleForFile(virtualFile, project);
+		for (VirtualFile extVirtualFile : extDirVirtualFiles) {
+			Module module = ModuleUtil.findModuleForFile(extVirtualFile, project);
 
 			if (isWarCoreExtProject(project, module)) {
-				warCoreExtProjects.add(module);
+				warCoreExtModules.add(module);
 			}
 		}
 
-		return warCoreExtProjects;
+		return warCoreExtModules;
 	}
 
 	public default String getWorkspaceModuleDir(Project project) {

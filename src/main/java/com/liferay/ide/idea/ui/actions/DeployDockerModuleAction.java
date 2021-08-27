@@ -52,7 +52,7 @@ public class DeployDockerModuleAction extends AbstractLiferayGradleTaskAction im
 
 			Module module = ModuleUtil.findModuleForFile(virtualFile, project);
 
-			List<Module> unSupportModules = getWarCoreExtProjects(project);
+			List<Module> unSupportModules = getWarCoreExtModules(project);
 
 			if (Objects.nonNull(getModuleExtDirFile(project))) {
 				unSupportModules.add(ModuleUtil.findModuleForFile(getModuleExtDirFile(project), project));
