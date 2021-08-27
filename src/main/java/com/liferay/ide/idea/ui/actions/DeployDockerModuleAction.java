@@ -25,6 +25,9 @@ import com.liferay.ide.idea.core.LiferayIcons;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 import com.liferay.ide.idea.util.ServerUtil;
 
+import java.util.List;
+import java.util.Objects;
+
 /**
  * @author Seiphon Wang
  */
@@ -49,9 +52,15 @@ public class DeployDockerModuleAction extends AbstractLiferayGradleTaskAction im
 
 			Module module = ModuleUtil.findModuleForFile(virtualFile, project);
 
+			List<Module> unSupportModules = getWarCoreExtProjects(project);
+
+			if (Objects.nonNull(getModuleExtDirFile(project))) {
+				unSupportModules.add(ModuleUtil.findModuleForFile(getModuleExtDirFile(project), project));
+			}
+
 			if ((virtualFile != null) && ProjectRootsUtil.isModuleContentRoot(virtualFile, project) &&
 				!baseDir.equals(virtualFile) && ServerUtil.isDockerServerExist(project) &&
-				!LiferayWorkspaceSupport.isWarCoreExtProject(project, module)) {
+				!unSupportModules.contains(module)) {
 
 				return true;
 			}
