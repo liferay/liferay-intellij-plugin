@@ -109,16 +109,8 @@ public class IntellijUtil {
 			for (Module moduleItem : modules) {
 				String moduleItemName = moduleItem.getName();
 
-				String[] fragments = {moduleItemName};
-
-				if (moduleItemName.contains(".")) {
-					fragments = moduleItemName.split("[.]");
-				}
-
-				for (String fragment : fragments) {
-					if (fragment.equals(moduleName)) {
-						return moduleItem;
-					}
+				if (moduleItemName.equals(moduleName)) {
+					return moduleItem;
 				}
 			}
 		}
