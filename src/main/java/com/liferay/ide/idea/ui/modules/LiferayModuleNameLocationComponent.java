@@ -25,6 +25,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.DocumentAdapter;
 
@@ -238,6 +239,14 @@ public class LiferayModuleNameLocationComponent implements LiferayWorkspaceSuppo
 	}
 
 	public void updateLocations() {
+		updateLocations("untitled");
+	}
+
+	public void updateLocations(String preferredName) {
+		if (StringUtil.isEmpty(preferredName)) {
+			preferredName = "untitled";
+		}
+
 		Project project = _context.getProject();
 
 		assert project != null;
@@ -252,7 +261,7 @@ public class LiferayModuleNameLocationComponent implements LiferayWorkspaceSuppo
 			String moduleName;
 
 			if (Objects.isNull(_getTargetFolderName())) {
-				moduleName = ProjectWizardUtil.findNonExistingFileName(baseDirPath, "untitled", "");
+				moduleName = ProjectWizardUtil.findNonExistingFileName(baseDirPath, preferredName, "");
 
 				setModuleName(moduleName);
 
@@ -261,7 +270,7 @@ public class LiferayModuleNameLocationComponent implements LiferayWorkspaceSuppo
 			else {
 				Path targetFolderPath = Paths.get(baseDirPath, _getTargetFolderName());
 
-				moduleName = ProjectWizardUtil.findNonExistingFileName(targetFolderPath.toString(), "untitled", "");
+				moduleName = ProjectWizardUtil.findNonExistingFileName(targetFolderPath.toString(), preferredName, "");
 
 				setModuleName(moduleName);
 
