@@ -14,9 +14,13 @@
 
 package com.liferay.ide.idea.util;
 
+import com.intellij.execution.RunManager;
+import com.intellij.execution.configurations.ConfigurationType;
+import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.openapi.project.Project;
 
 import com.liferay.ide.idea.core.WorkspaceConstants;
+import com.liferay.ide.idea.server.LiferayDockerServerConfigurationType;
 import com.liferay.ide.idea.server.portal.PortalBundle;
 import com.liferay.ide.idea.server.portal.PortalBundleFactory;
 import com.liferay.ide.idea.server.portal.PortalTomcatBundleFactory;
@@ -235,7 +239,17 @@ public class ServerUtil {
 				File imageIdFile = new File(dotDockerFolder, "buildDockerImage-imageId.txt");
 
 				if (FileUtil.exists(imageIdFile) && (imageIdFile.length() != 0)) {
-					return true;
+					RunManager runManager = RunManager.getInstance(project);
+
+					List<RunConfiguration> configurationList = runManager.getAllConfigurationsList();
+
+					for (RunConfiguration runConfiguration : configurationList) {
+						ConfigurationType configurationType = runConfiguration.getType();
+
+						if (Objects.equals(LiferayDockerServerConfigurationType.id, configurationType.getId())) {
+							return true;
+						}
+					}
 				}
 			}
 		}
