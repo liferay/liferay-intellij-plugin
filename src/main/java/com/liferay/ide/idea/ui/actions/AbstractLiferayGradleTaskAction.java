@@ -108,6 +108,10 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 		return Lists.newArrayList(_taskName);
 	}
 
+	protected String getScriptParameters() {
+		return null;
+	}
+
 	@Override
 	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
 		Project project = anActionEvent.getProject();
@@ -156,8 +160,14 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 			return null;
 		}
 
+		ExternalSystemTaskExecutionSettings settings = externalTaskExecutionInfo.getSettings();
+
+		if (StringUtil.isNotEmpty(getScriptParameters())) {
+			settings.setScriptParameters(getScriptParameters());
+		}
+
 		return ExternalSystemUtil.createExternalSystemRunnerAndConfigurationSettings(
-			externalTaskExecutionInfo.getSettings(), project, GradleConstants.SYSTEM_ID);
+			settings, project, GradleConstants.SYSTEM_ID);
 	}
 
 	protected ExternalTaskExecutionInfo externalTaskExecutionInfo;

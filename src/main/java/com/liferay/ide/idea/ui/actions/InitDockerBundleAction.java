@@ -27,6 +27,7 @@ import com.intellij.openapi.externalSystem.model.execution.ExternalSystemTaskExe
 import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode;
 import com.intellij.openapi.externalSystem.task.TaskCallback;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
+import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.execution.ParametersListUtil;
@@ -34,13 +35,16 @@ import com.intellij.util.execution.ParametersListUtil;
 import com.liferay.ide.idea.core.LiferayIcons;
 import com.liferay.ide.idea.server.LiferayDockerServerConfigurationProducer;
 import com.liferay.ide.idea.server.LiferayDockerServerConfigurationType;
+import com.liferay.ide.idea.util.GradleUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
+import com.liferay.ide.idea.util.ListUtil;
 
 import java.util.List;
 import java.util.Objects;
 
 import org.gradle.cli.CommandLineParser;
 import org.gradle.cli.ParsedCommandLine;
+import org.gradle.tooling.model.GradleProject;
 
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.gradle.util.GradleConstants;
@@ -155,6 +159,11 @@ public class InitDockerBundleAction extends AbstractLiferayGradleTaskAction impl
 	}
 
 	@Override
+	protected String getScriptParameters() {
+		return _scriptParameters;
+	}
+
+	@Override
 	protected boolean isEnabledAndVisible(AnActionEvent anActionEvent) {
 		if (super.isEnabledAndVisible(anActionEvent)) {
 			VirtualFile baseDir = LiferayWorkspaceSupport.getWorkspaceVirtualFile(anActionEvent.getProject());
@@ -171,6 +180,38 @@ public class InitDockerBundleAction extends AbstractLiferayGradleTaskAction impl
 		return false;
 	}
 
+	@Nullable
+	@Override
+	protected RunnerAndConfigurationSettings processRunnerConfiguration(AnActionEvent anActionEvent) {
+		List<Module> warCoreExtProjects = getWarCoreExtModules(anActionEvent.getProject());
+
+		StringBuilder scriptParameters = new StringBuilder();
+
+		if (ListUtil.isNotEmpty(warCoreExtProjects)) {
+			for (Module module : warCoreExtProjects) {
+				GradleProject gradleProject = GradleUtil.getGradleProject(module);
+
+				if (Objects.nonNull(gradleProject)) {
+					scriptParameters.append("-x ");
+					scriptParameters.append(gradleProject.getPath());
+					scriptParameters.append(":buildExtInfo");
+					scriptParameters.append(" -x ");
+					scriptParameters.append(gradleProject.getPath());
+					scriptParameters.append(":deploy");
+					scriptParameters.append(" -x ");
+					scriptParameters.append(gradleProject.getPath());
+					scriptParameters.append(":dockerDeploy ");
+				}
+			}
+		}
+
+		_scriptParameters = scriptParameters.toString();
+
+		return super.processRunnerConfiguration(anActionEvent);
+	}
+
 	private static final Logger _logger = Logger.getInstance(InitDockerBundleAction.class);
+
+	private String _scriptParameters = null;
 
 }

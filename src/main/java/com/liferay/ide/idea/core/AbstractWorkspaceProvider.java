@@ -56,21 +56,21 @@ public abstract class AbstractWorkspaceProvider implements WorkspaceProvider {
 		String moduleExtDir = getWorkspaceProperty(
 			WorkspaceConstants.EXT_DIR_PROPERTY, WorkspaceConstants.EXT_DIR_DEFAULT);
 
-		File file = new File(project.getBasePath(), moduleExtDir);
+		File extDir = new File(project.getBasePath(), moduleExtDir);
 
-		if (!file.isAbsolute()) {
+		if (!extDir.isAbsolute()) {
 			String projectBasePath = project.getBasePath();
 
 			if (projectBasePath == null) {
 				return null;
 			}
 
-			file = new File(projectBasePath, moduleExtDir);
+			extDir = new File(projectBasePath, moduleExtDir);
 		}
 
 		LocalFileSystem localFileSystem = LocalFileSystem.getInstance();
 
-		return localFileSystem.findFileByPath(file.getPath());
+		return localFileSystem.findFileByPath(extDir.getPath());
 	}
 
 	protected Project project;
