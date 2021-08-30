@@ -14,6 +14,8 @@
 
 package com.liferay.ide.idea.server;
 
+import com.intellij.debugger.DebuggerManager;
+import com.intellij.debugger.engine.DebugProcess;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.executors.DefaultRunExecutor;
 import com.intellij.execution.process.ProcessAdapter;
@@ -91,10 +93,12 @@ public interface ILiferayDockerServerRunnerCallback {
 
 												@Override
 												public void onFailure() {
+													_cleanDockerContainerAndImage(project);
 												}
 
 												@Override
 												public void onSuccess() {
+													_cleanDockerContainerAndImage(project);
 												}
 
 											},
@@ -106,6 +110,7 @@ public interface ILiferayDockerServerRunnerCallback {
 					}
 				}
 				catch (Exception exception) {
+					exception.printStackTrace();
 				}
 			});
 
@@ -122,12 +127,40 @@ public interface ILiferayDockerServerRunnerCallback {
 						String executionName = exProcessHandler.getExecutionName();
 
 						if (executionName.contains("Liferay Docker")) {
-							processHandler.destroyProcess();
+							Project environmentProject = environment.getProject();
+
+							DebuggerManager debuggerManagerInstance = DebuggerManager.getInstance(environmentProject);
+
+							DebugProcess debugProcess = debuggerManagerInstance.getDebugProcess(processHandler);
+
+							if (debugProcess != null) {
+								debugProcess.stop(true);
+							}
+
+							exProcessHandler.forceProcessDetach();
+
+							exProcessHandler.destroyProcess();
 						}
 					}
 				}
 
 			});
+	}
+
+	private void _cleanDockerContainerAndImage(Project project) {
+		ExternalSystemTaskExecutionSettings settings = new ExternalSystemTaskExecutionSettings();
+
+		CommandLineParser gradleCmdParser = new CommandLineParser();
+
+		ParsedCommandLine parsedCommandLine = gradleCmdParser.parse(
+			ParametersListUtil.parse("removeDockerContainer cleanDockerImage", true));
+
+		settings.setExternalProjectPath(project.getBasePath());
+		settings.setExternalSystemIdString(GradleConstants.SYSTEM_ID.toString());
+
+		settings.setTaskNames(parsedCommandLine.getExtraArguments());
+
+		ExternalSystemUtil.runTask(settings, DefaultRunExecutor.EXECUTOR_ID, project, GradleConstants.SYSTEM_ID);
 	}
 
 }
