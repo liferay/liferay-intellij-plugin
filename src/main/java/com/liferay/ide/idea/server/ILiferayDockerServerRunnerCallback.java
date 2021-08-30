@@ -28,6 +28,10 @@ import com.intellij.openapi.externalSystem.model.execution.ExternalSystemTaskExe
 import com.intellij.openapi.externalSystem.service.execution.ExternalSystemProcessHandler;
 import com.intellij.openapi.externalSystem.service.execution.ExternalSystemRunnableState;
 import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode;
+import com.intellij.openapi.externalSystem.service.notification.ExternalSystemNotificationManager;
+import com.intellij.openapi.externalSystem.service.notification.NotificationCategory;
+import com.intellij.openapi.externalSystem.service.notification.NotificationData;
+import com.intellij.openapi.externalSystem.service.notification.NotificationSource;
 import com.intellij.openapi.externalSystem.task.TaskCallback;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import com.intellij.openapi.project.Project;
@@ -44,6 +48,36 @@ import org.jetbrains.plugins.gradle.util.GradleConstants;
  * @author Seiphon Wang
  */
 public interface ILiferayDockerServerRunnerCallback {
+
+	public default void cleanDockerContainerAndImage(Project project) {
+		try {
+			ExternalSystemTaskExecutionSettings settings = new ExternalSystemTaskExecutionSettings();
+
+			CommandLineParser gradleCmdParser = new CommandLineParser();
+
+			ParsedCommandLine parsedCommandLine = gradleCmdParser.parse(
+				ParametersListUtil.parse("removeDockerContainer cleanDockerImage", true));
+
+			settings.setExternalProjectPath(project.getBasePath());
+			settings.setExternalSystemIdString(GradleConstants.SYSTEM_ID.toString());
+
+			settings.setTaskNames(parsedCommandLine.getExtraArguments());
+
+			ExternalSystemUtil.runTask(settings, DefaultRunExecutor.EXECUTOR_ID, project, GradleConstants.SYSTEM_ID);
+		}
+		catch (Exception exception) {
+			NotificationData notificationData = new NotificationData(
+				"<b>Failed to execute remove and clean container image tasks</b>", "<i>" + exception.getMessage(),
+				NotificationCategory.ERROR, NotificationSource.TASK_EXECUTION);
+
+			notificationData.setBalloonNotification(true);
+
+			ExternalSystemNotificationManager externalSystemNotificationManager =
+				ExternalSystemNotificationManager.getInstance(project);
+
+			externalSystemNotificationManager.showNotification(GradleConstants.SYSTEM_ID, notificationData);
+		}
+	}
 
 	public default void registerDockerSeverStopHandler(
 		ProcessHandler processHandler, @NotNull RunProfileState runProfileState,
@@ -79,8 +113,7 @@ public interface ILiferayDockerServerRunnerCallback {
 										CommandLineParser gradleCmdParser = new CommandLineParser();
 
 										ParsedCommandLine parsedCommandLine = gradleCmdParser.parse(
-											ParametersListUtil.parse(
-												"stopDockerContainer removeDockerContainer cleanDockerImage", true));
+											ParametersListUtil.parse("stopDockerContainer", true));
 
 										settings.setExternalProjectPath(project.getBasePath());
 										settings.setExternalSystemIdString(GradleConstants.SYSTEM_ID.toString());
@@ -93,12 +126,12 @@ public interface ILiferayDockerServerRunnerCallback {
 
 												@Override
 												public void onFailure() {
-													_cleanDockerContainerAndImage(project);
+													cleanDockerContainerAndImage(project);
 												}
 
 												@Override
 												public void onSuccess() {
-													_cleanDockerContainerAndImage(project);
+													cleanDockerContainerAndImage(project);
 												}
 
 											},
@@ -110,7 +143,6 @@ public interface ILiferayDockerServerRunnerCallback {
 					}
 				}
 				catch (Exception exception) {
-					exception.printStackTrace();
 				}
 			});
 
@@ -137,7 +169,7 @@ public interface ILiferayDockerServerRunnerCallback {
 								debugProcess.stop(true);
 							}
 
-							exProcessHandler.forceProcessDetach();
+							exProcessHandler.detachProcess();
 
 							exProcessHandler.destroyProcess();
 						}
@@ -145,22 +177,6 @@ public interface ILiferayDockerServerRunnerCallback {
 				}
 
 			});
-	}
-
-	private void _cleanDockerContainerAndImage(Project project) {
-		ExternalSystemTaskExecutionSettings settings = new ExternalSystemTaskExecutionSettings();
-
-		CommandLineParser gradleCmdParser = new CommandLineParser();
-
-		ParsedCommandLine parsedCommandLine = gradleCmdParser.parse(
-			ParametersListUtil.parse("removeDockerContainer cleanDockerImage", true));
-
-		settings.setExternalProjectPath(project.getBasePath());
-		settings.setExternalSystemIdString(GradleConstants.SYSTEM_ID.toString());
-
-		settings.setTaskNames(parsedCommandLine.getExtraArguments());
-
-		ExternalSystemUtil.runTask(settings, DefaultRunExecutor.EXECUTOR_ID, project, GradleConstants.SYSTEM_ID);
 	}
 
 }
