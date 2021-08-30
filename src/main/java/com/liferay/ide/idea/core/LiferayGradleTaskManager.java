@@ -23,10 +23,8 @@ import com.intellij.util.execution.ParametersListUtil;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -61,6 +59,7 @@ public class LiferayGradleTaskManager implements GradleTaskManagerExtension {
 
 		if (cancellationTokenSource != null) {
 			cancellationTokenSource.cancel();
+			_cancellationMap.remove(id);
 
 			return true;
 		}
@@ -87,17 +86,13 @@ public class LiferayGradleTaskManager implements GradleTaskManagerExtension {
 		if (tasks.contains("stopDockerContainer")) {
 			BuildLauncher buildLauncher = _gerBuilderLauncher(id, tasks, projectPath, settings, listener);
 
-			_runStopDockerContainerTask(buildLauncher);
+			_runStopDockerContainerTask(id, buildLauncher);
 
 			return true;
 		}
 
 		if (tasks.contains("startDockerContainer") && tasks.contains("logsDockerContainer")) {
 			BuildLauncher buildLauncher = _gerBuilderLauncher(id, tasks, projectPath, settings, listener);
-
-			if (_stateSet.isEmpty()) {
-				_runStartDockerContainerTask(id, buildLauncher);
-			}
 
 			while (true) {
 				if (_isStopped.get()) {
@@ -152,8 +147,6 @@ public class LiferayGradleTaskManager implements GradleTaskManagerExtension {
 
 		buildLauncher.withCancellationToken(cancellationTokenSource.token());
 
-		_stateSet.add("start");
-
 		try {
 			buildLauncher.run();
 		}
@@ -161,13 +154,11 @@ public class LiferayGradleTaskManager implements GradleTaskManagerExtension {
 			throw new ExternalSystemException(exception);
 		}
 		finally {
-			_cancellationMap.remove(id);
-
 			_isStopped.set(false);
 		}
 	}
 
-	private void _runStopDockerContainerTask(BuildLauncher buildLauncher) {
+	private void _runStopDockerContainerTask(ExternalSystemTaskId id, BuildLauncher buildLauncher) {
 		try {
 			buildLauncher.run(
 				new ResultHandler<Void>() {
@@ -175,6 +166,7 @@ public class LiferayGradleTaskManager implements GradleTaskManagerExtension {
 					@Override
 					public void onComplete(Void unused) {
 						_isStopped.set(true);
+						_cancellationMap.remove(id);
 					}
 
 					@Override
@@ -189,7 +181,6 @@ public class LiferayGradleTaskManager implements GradleTaskManagerExtension {
 	}
 
 	private final Map<ExternalSystemTaskId, CancellationTokenSource> _cancellationMap = new ConcurrentHashMap<>();
-	private AtomicBoolean _isStopped = new AtomicBoolean(false);
-	private Set<String> _stateSet = new HashSet<>();
+	private AtomicBoolean _isStopped = new AtomicBoolean(true);
 
 }
