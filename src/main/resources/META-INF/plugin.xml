@@ -33,12 +33,13 @@
 		<ul>
 			<li>1.9.4</li>
 			<ul>
+				<li>INTELLIJ-203 improvements on new liferay module wizards</li>
 				<li>INTELLIJ-206 upgrade sinceBuild to 212 and fix compatibility problems</li>
 				<li>INTELLIJ-208 create maven workspace using specific target platform version</li>
 				<li>INTELLIJ-209 add validation on only support one docker server per workspace</li>
 				<li>INTELLIJ-210 bug fix for rerun server button inside of a maven workspace</li>
 				<li>INTELLIJ-211 improvements on removing a docker server</li>
-				<li>INTELLIJ-212 bug fix for add a docker server throug add new configuration</li>
+				<li>INTELLIJ-212 bug fix for add and debug to start a docker server</li>
 			</ul>
 			<li>1.9.3</li>
 			<ul>
