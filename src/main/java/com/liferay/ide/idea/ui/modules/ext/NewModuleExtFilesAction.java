@@ -133,7 +133,9 @@ public class NewModuleExtFilesAction extends AnAction implements DumbAware, Life
 			application.executeOnPooledThread(this::_setOriginalModuleText);
 
 			_overrideFilesPanel.function = () -> _libraryData;
+
 			_overrideFilesPanel.prepareRefreshButton(_refreshButton, true, this::_setOriginalModuleText);
+
 			_overrideFilesPanel.setProject(_project);
 
 			super.show();
