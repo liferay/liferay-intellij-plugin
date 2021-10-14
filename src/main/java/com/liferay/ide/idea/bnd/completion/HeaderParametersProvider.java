@@ -65,6 +65,7 @@ public class HeaderParametersProvider extends CompletionProvider<CompletionParam
 		context.setAddCompletionChar(false);
 
 		EditorModificationUtil.insertStringAtCaret(context.getEditor(), "=");
+
 		context.commitDocument();
 	};
 
@@ -72,6 +73,7 @@ public class HeaderParametersProvider extends CompletionProvider<CompletionParam
 		context.setAddCompletionChar(false);
 
 		EditorModificationUtil.insertStringAtCaret(context.getEditor(), ":=");
+
 		context.commitDocument();
 	};
 

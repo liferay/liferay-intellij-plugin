@@ -112,6 +112,7 @@ public class BndCompletionContributor extends CompletionContributor {
 			context.setAddCompletionChar(false);
 
 			EditorModificationUtil.insertStringAtCaret(context.getEditor(), ": ");
+
 			context.commitDocument();
 		}
 
