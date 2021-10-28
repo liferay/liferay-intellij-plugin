@@ -128,9 +128,7 @@ public class LiferayServerConfigurable
 		PortalBundle portalBundle = ServerUtil.getPortalBundle(FileUtil.getPath(configuration.getBundleLocation()));
 
 		if (portalBundle != null) {
-			Path appServerDir = portalBundle.getAppServerDir();
-
-			_liferayServer.setText(appServerDir.toString());
+			_liferayServer.setText(String.valueOf(portalBundle.getAppServerDir()));
 
 			_bundleType.setText(portalBundle.getType());
 		}
