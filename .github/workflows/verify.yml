@@ -90,3 +90,4 @@ jobs:
          ide-versions: |
           ideaIU:2021.2
           ideaIU:2021.2.1
+          ideaIU:2021.3
