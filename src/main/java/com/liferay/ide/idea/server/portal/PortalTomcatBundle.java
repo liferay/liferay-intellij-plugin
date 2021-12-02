@@ -14,7 +14,6 @@
 
 package com.liferay.ide.idea.server.portal;
 
-import com.intellij.openapi.projectRoots.JdkUtil;
 import com.intellij.openapi.projectRoots.Sdk;
 
 import com.liferay.ide.idea.util.CoreUtil;
@@ -24,7 +23,8 @@ import java.nio.file.Path;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.jar.Attributes;
+
+import org.jetbrains.jps.model.java.JdkVersionDetector;
 
 import org.osgi.framework.Version;
 
@@ -95,7 +95,11 @@ public class PortalTomcatBundle extends AbstractPortalBundle {
 		args.add("-Dcatalina.home=" + bundlePath);
 		args.add("-Dfile.encoding=UTF8");
 
-		String jdkVersionString = JdkUtil.getJdkMainAttribute(sdk, Attributes.Name.SPECIFICATION_VERSION);
+		JdkVersionDetector jdkVersionDetector = JdkVersionDetector.getInstance();
+
+		JdkVersionDetector.JdkVersionInfo jdkVersionInfo = jdkVersionDetector.detectJdkVersionInfo(sdk.getHomePath());
+
+		String jdkVersionString = String.valueOf(jdkVersionInfo.version);
 
 		if (!CoreUtil.isNullOrEmpty(jdkVersionString)) {
 			Version jdkVersion = Version.parseVersion(jdkVersionString);

@@ -63,11 +63,9 @@ public class LiferayNamePathComponent extends JPanel {
 	public static LiferayNamePathComponent initNamePathComponent(WizardContext context) {
 		String nameLabel = IdeBundle.message("label.project.name");
 		String filesLocationLabel = IdeBundle.message("label.project.files.location");
-		String fileDirectoryTitle = IdeBundle.message(
-			"title.select.project.file.directory", IdeBundle.message("project.new.wizard.project.identification"));
+		String fileDirectoryTitle = IdeBundle.message("title.select.project.file.directory", "project");
 		String fileDirectoryDescription = MessagesBundle.message(
-			"description.select.project.file.directory",
-			StringUtil.capitalize(IdeBundle.message("project.new.wizard.project.identification")));
+			"description.select.project.file.directory", StringUtil.capitalize("project"));
 
 		LiferayNamePathComponent component = new LiferayNamePathComponent(
 			nameLabel, filesLocationLabel, fileDirectoryTitle, fileDirectoryDescription, true, false);
