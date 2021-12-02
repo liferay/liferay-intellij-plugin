@@ -47,16 +47,16 @@ jobs:
           plugin: './build/distributions/*.zip'
           versions: |
             213.5744.223
-            213.5744.202
-            213.5744.125
-            213.5744.18
-            213.5605.12
-            213.5499.25
-            213.5281.15
-            213.4928.7
-            213.4631.20
-            213.4293.20
-            213.3714.440
+            IU-213.5744.202
+            IU-213.5744.125
+            IU-213.5744.18
+            IU-213.5605.12
+            IU-213.5499.25
+            IU-213.5281.15
+            IU-213.4928.7
+            IU-213.4631.20
+            IU-213.4293.20
+            IU-213.3714.440
 #        uses: ChrisCarini/intellij-platform-plugin-verifier-action@latest
 #        with:
 #         plugin-location: './build/distributions/*.zip'
