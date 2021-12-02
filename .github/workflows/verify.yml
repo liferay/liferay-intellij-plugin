@@ -84,7 +84,7 @@ jobs:
         run: |
           ./gradlew --no-daemon clean -x test build
       - name: Verify compatibility
-        uses: thepieterdc/intellij-plugin-verifier-action@v1.3.0
+        uses: thepieterdc/intellij-plugin-verifier-action@1.3.0
         with:
           plugin: './build/distributions/*.zip'
           versions: |
