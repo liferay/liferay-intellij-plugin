@@ -214,6 +214,17 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 				validationTitle);
 		}
 
+		if (type.equals("war-core-ext")) {
+			Version notSupportFromPortalVersion = new Version("7.3");
+
+			Version currentVersion = Version.parseVersion(_liferayVersion);
+
+			if (currentVersion.compareTo(notSupportFromPortalVersion) >= 0) {
+				throw new ConfigurationException(
+					"War Core Ext project is only supported starting from portal 7.0 to 7.2", validationTitle);
+			}
+		}
+
 		ProjectManager projectManager = ProjectManager.getInstance();
 
 		Project workspaceProject = projectManager.getOpenProjects()[0];
