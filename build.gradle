@@ -9,17 +9,17 @@ buildscript {
 			url "https://www.jetbrains.com/intellij-repository/snapshots"
 		}
 		maven {
-			url "https://repository-cdn.liferay.com/nexus/content/groups/public"
+			url "https://oss.sonatype.org/content/repositories/snapshots/"
 		}
 		maven {
-			url "https://oss.sonatype.org/content/repositories/snapshots/"
+			url "https://repository-cdn.liferay.com/nexus/content/groups/public"
 		}
 	}
 }
 
 plugins {
 	id "de.undercouch.download" version "4.0.0"
-	id "org.jetbrains.intellij" version "1.1.3"
+	id "org.jetbrains.intellij" version "1.3.0"
 }
 
 apply plugin: "com.liferay.source.formatter"
@@ -140,46 +140,57 @@ downloadDtds {
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-hook_7_1_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-hook_7_2_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-hook_7_3_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-hook_7_4_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-layout-templates_7_0_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-layout-templates_7_1_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-layout-templates_7_2_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-layout-templates_7_3_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-layout-templates_7_4_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-look-and-feel_7_0_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-look-and-feel_7_1_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-look-and-feel_7_2_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-look-and-feel_7_3_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-look-and-feel_7_4_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-plugin-package_7_0_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-plugin-package_7_1_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-plugin-package_7_2_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-plugin-package_7_3_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-plugin-package_7_4_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-plugin-repository_7_0_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-plugin-repository_7_1_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-plugin-repository_7_2_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-plugin-repository_7_3_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-plugin-repository_7_4_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-portlet-app_7_0_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-portlet-app_7_1_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-portlet-app_7_2_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-portlet-app_7_3_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-portlet-app_7_4_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-resource-action-mapping_7_0_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-resource-action-mapping_7_1_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-resource-action-mapping_7_2_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-resource-action-mapping_7_3_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-resource-action-mapping_7_4_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-service-builder_7_0_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-service-builder_7_1_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-service-builder_7_2_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-service-builder_7_3_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-service-builder_7_4_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-social_7_0_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-social_7_1_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-social_7_2_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-social_7_3_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-social_7_4_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-theme-loader_7_0_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-theme-loader_7_1_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-theme-loader_7_2_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-theme-loader_7_3_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-theme-loader_7_4_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-user-notification-definitions_7_0_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-user-notification-definitions_7_1_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-user-notification-definitions_7_2_0.dtd",
-			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-user-notification-definitions_7_3_0.dtd"
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-user-notification-definitions_7_3_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-user-notification-definitions_7_4_0.dtd"
 		])
 
 	dest target
@@ -210,6 +221,7 @@ downloadXsds {
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-workflow-definition_7_1_0.xsd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-workflow-definition_7_2_0.xsd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-workflow-definition_7_3_0.xsd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-workflow-definition_7_4_0.xsd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/portlet-app_2_0.xsd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/portlet-app_3_0.xsd"
 		])
@@ -225,11 +237,11 @@ formatSource {
 intellij {
 	plugins = ["java", "CSS", "DatabaseTools", "gradle", "Groovy", "java-i18n", "JavaEE", "Web", "JavaScriptLanguage", "jsp", "junit", "maven", "PersistenceSupport", "properties", "sass"]
 	pluginName = "liferay-intellij-plugin"
-	version = "IU-2021.2"
+	version = "IU-2021.3"
 }
 
 patchPluginXml {
-	sinceBuild = "212"
+	sinceBuild = "213"
 	untilBuild = ""
 }
 
@@ -283,4 +295,4 @@ verifyBladeLatest {
 	checksum bladeLatestMD5
 }
 
-version = "1.9.4"
+version = "2.0.0"

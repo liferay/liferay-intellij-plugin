@@ -42,8 +42,8 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.search.ExecutionSearchScopes;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.GlobalSearchScopes;
 import com.intellij.util.xmlb.XmlSerializer;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 
@@ -251,7 +251,7 @@ public class LiferayServerConfiguration
 	@Nullable
 	@Override
 	public GlobalSearchScope getSearchScope() {
-		return GlobalSearchScopes.executionScope(Arrays.asList(getModules()));
+		return ExecutionSearchScopes.executionScope(Arrays.asList(getModules()));
 	}
 
 	@Nullable

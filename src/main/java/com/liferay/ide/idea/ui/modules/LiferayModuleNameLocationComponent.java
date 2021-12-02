@@ -30,7 +30,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.DocumentAdapter;
 
 import com.liferay.ide.idea.core.LiferayCore;
-import com.liferay.ide.idea.core.MessagesBundle;
 import com.liferay.ide.idea.core.WorkspaceConstants;
 import com.liferay.ide.idea.core.WorkspaceProvider;
 import com.liferay.ide.idea.ui.modules.ext.LiferayModuleExtBuilder;
@@ -442,11 +441,9 @@ public class LiferayModuleNameLocationComponent implements LiferayWorkspaceSuppo
 		File moduleFile = new File(moduleFileDirectory, moduleName + ModuleFileType.DOT_DEFAULT_EXTENSION);
 
 		if (moduleFile.exists()) {
-			String identification = IdeBundle.message("project.new.wizard.module.identification");
 			String existsTitle = IdeBundle.message("title.file.already.exists");
 
-			String filePrompt = MessagesBundle.message(
-				"prompt.overwrite.project.file", moduleFile.getAbsolutePath(), identification);
+			String filePrompt = "The {1} file \\n''{0}''\\nalready exists.\\nWould you like to overwrite it?";
 
 			int answer = Messages.showYesNoDialog(filePrompt, existsTitle, Messages.getQuestionIcon());
 
