@@ -17,6 +17,7 @@ package com.liferay.ide.idea.server;
 import com.intellij.build.BuildView;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;
+import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.executors.DefaultRunExecutor;
@@ -33,7 +34,8 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author Simon Jiang
  */
-public class LiferayDockerServerRunner extends GenericProgramRunner implements ILiferayDockerServerRunnerCallback {
+public class LiferayDockerServerRunner
+	extends GenericProgramRunner implements ILiferayDockerServerRunnerCallback, ServerRunnerChecker {
 
 	@Override
 	public boolean canRun(@NotNull String executorId, @NotNull RunProfile runProfile) {
@@ -50,6 +52,11 @@ public class LiferayDockerServerRunner extends GenericProgramRunner implements I
 	@Override
 	public String getRunnerId() {
 		return "LiferayDockerServerRunner";
+	}
+
+	@Override
+	public boolean isLiferayServerRunConfiguration(RunConfiguration runConfiguration) {
+		return runConfiguration instanceof LiferayDockerServerConfiguration;
 	}
 
 	@Override
