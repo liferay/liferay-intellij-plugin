@@ -18,6 +18,7 @@ import com.intellij.debugger.impl.GenericDebuggerRunner;
 import com.intellij.debugger.settings.DebuggerSettings;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionManager;
+import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.executors.DefaultDebugExecutor;
@@ -37,7 +38,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Terry Jia
  * @author Simon Jiang
  */
-public class LiferayServerDebuggerRunner extends GenericDebuggerRunner {
+public class LiferayServerDebuggerRunner extends GenericDebuggerRunner implements ServerRunnerChecker {
 
 	@Override
 	public boolean canRun(@NotNull String executorId, @NotNull RunProfile runProfile) {
@@ -54,11 +55,18 @@ public class LiferayServerDebuggerRunner extends GenericDebuggerRunner {
 		return "LiferayServerDebuggerRunner";
 	}
 
+	@Override
+	public boolean isLiferayServerRunConfiguration(RunConfiguration runConfiguration) {
+		return runConfiguration instanceof LiferayServerConfiguration;
+	}
+
 	@Nullable
 	@Override
 	protected RunContentDescriptor doExecute(
 			@NotNull RunProfileState runProfileState, @NotNull ExecutionEnvironment executionEnvironment)
 		throws ExecutionException {
+
+		verifyRunningServer(executionEnvironment);
 
 		DebuggerSettings debuggerSettings = DebuggerSettings.getInstance();
 

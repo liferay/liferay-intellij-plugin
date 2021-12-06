@@ -16,6 +16,7 @@ package com.liferay.ide.idea.server;
 
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionManager;
+import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.executors.DefaultRunExecutor;
@@ -36,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Terry Jia
  * @author Simon Jiang
  */
-public class LiferayServerRunner extends DefaultJavaProgramRunner {
+public class LiferayServerRunner extends DefaultJavaProgramRunner implements ServerRunnerChecker {
 
 	@Override
 	public boolean canRun(@NotNull String executorId, @NotNull RunProfile runProfile) {
@@ -53,10 +54,17 @@ public class LiferayServerRunner extends DefaultJavaProgramRunner {
 		return "LiferayServerRunner";
 	}
 
+	@Override
+	public boolean isLiferayServerRunConfiguration(RunConfiguration runConfiguration) {
+		return runConfiguration instanceof LiferayServerConfiguration;
+	}
+
 	@Nullable
 	@Override
 	protected RunContentDescriptor doExecute(@NotNull RunProfileState state, @NotNull ExecutionEnvironment environment)
 		throws ExecutionException {
+
+		verifyRunningServer(environment);
 
 		RunContentDescriptor runContentDescriptor = super.doExecute(state, environment);
 

@@ -25,6 +25,7 @@ import com.intellij.debugger.impl.DebuggerSession;
 import com.intellij.debugger.impl.GenericDebuggerRunnerSettings;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.RemoteConnection;
+import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.configurations.RunnerSettings;
@@ -50,7 +51,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Simon Jiang
  */
 public class LiferayDockerServerDebuggerRunner
-	extends ExternalSystemTaskDebugRunner implements ILiferayDockerServerRunnerCallback {
+	extends ExternalSystemTaskDebugRunner implements ILiferayDockerServerRunnerCallback, ServerRunnerChecker {
 
 	@Override
 	public boolean canRun(@NotNull String executorId, @NotNull RunProfile runProfile) {
@@ -67,6 +68,11 @@ public class LiferayDockerServerDebuggerRunner
 	@Override
 	public String getRunnerId() {
 		return "LiferayDockerServerDebuggerRunner";
+	}
+
+	@Override
+	public boolean isLiferayServerRunConfiguration(RunConfiguration runConfiguration) {
+		return runConfiguration instanceof LiferayDockerServerConfiguration;
 	}
 
 	@Nullable

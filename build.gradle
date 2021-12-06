@@ -1,18 +1,19 @@
 buildscript {
 	dependencies {
 		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.source.formatter", version: "latest.release"
+		classpath group: "de.undercouch", name: "gradle-download-task", version: "4.0.0"
 		classpath group: "nu.studer", name: "gradle-credentials-plugin", version: "2.1"
 	}
 
 	repositories {
 		maven {
+			url "https://repository-cdn.liferay.com/nexus/content/groups/public"
+		}
+		maven {
 			url "https://www.jetbrains.com/intellij-repository/snapshots"
 		}
 		maven {
 			url "https://oss.sonatype.org/content/repositories/snapshots/"
-		}
-		maven {
-			url "https://repository-cdn.liferay.com/nexus/content/groups/public"
 		}
 	}
 }
