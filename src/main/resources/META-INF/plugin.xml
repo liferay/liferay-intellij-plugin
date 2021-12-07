@@ -31,6 +31,14 @@
 	</p>
 	<p>
 		<ul>
+			<li>2.0.0</li>
+			<ul>
+				<li>INTELLIJ-214 add validation when starting another server</li>
+				<li>INTELLIJ-215 update default version to 74 on new maven workspace wizard</li>
+				<li>INTELLIJ-217 update to blade 4.0.10 release</li>
+				<li>INTELLIJ-219 add validation when creating war core ext project</li>
+				<li>INTELLIJ-220 upgrade sinceBuild to 213</li>
+			</ul>
 			<li>1.9.4</li>
 			<ul>
 				<li>INTELLIJ-203 improvements on new liferay module wizards</li>
