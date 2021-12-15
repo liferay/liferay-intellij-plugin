@@ -15,8 +15,8 @@
 package com.liferay.ide.idea.server.portal;
 
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.util.lang.JavaVersion;
 
-import com.liferay.ide.idea.util.CoreUtil;
 import com.liferay.ide.idea.util.FileUtil;
 
 import java.nio.file.Path;
@@ -25,8 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jetbrains.jps.model.java.JdkVersionDetector;
-
-import org.osgi.framework.Version;
 
 /**
  * @author Simon Jiang
@@ -99,12 +97,9 @@ public class PortalTomcatBundle extends AbstractPortalBundle {
 
 		JdkVersionDetector.JdkVersionInfo jdkVersionInfo = jdkVersionDetector.detectJdkVersionInfo(sdk.getHomePath());
 
-		String jdkVersionString = String.valueOf(jdkVersionInfo.version);
-
-		if (!CoreUtil.isNullOrEmpty(jdkVersionString)) {
-			Version jdkVersion = Version.parseVersion(jdkVersionString);
-
-			Version jdk8Version = Version.parseVersion("1.8");
+		if (jdkVersionInfo != null) {
+			JavaVersion jdkVersion = jdkVersionInfo.version;
+			JavaVersion jdk8Version = JavaVersion.compose(8);
 
 			if (jdkVersion.compareTo(jdk8Version) <= 0) {
 				args.add("-Djava.endorsed.dirs=" + endorsedPath);
