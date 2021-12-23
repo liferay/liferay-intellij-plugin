@@ -25,6 +25,7 @@ You can install this using _Preferences > Plugins > Install plugin from disk... 
 ## Key features
 
 ### Liferay Workspace
+
 1. Create a Liferay Workspace Project from Start menu > click *Create New Project* or click *File* > *New* > *Project*
 2. Choose *Liferay Workspace* from left list
 3. Click *Next* button
@@ -33,6 +34,7 @@ You can install this using _Preferences > Plugins > Install plugin from disk... 
 6. Click *OK* to finish
 
 ### Liferay Server
+
 You must have one Liferay Workspace Project to do the following steps:
 1. Right click on the root of your Liferay Workspace Project
 2. Click Liferay > InitBundle
@@ -46,6 +48,7 @@ You must have one Liferay Workspace Project to do the following steps:
 10. After you add a new *Liferay Server*, you can *start* or *debug* it
 
 ### Liferay Module
+
 You must have one Liferay Workspace Project to do the following steps:
 1. Right click on existing Liferay Workspace Project and choose *New* > *Liferay Module*
 2. Choose *Liferay Modules*
@@ -55,12 +58,14 @@ You must have one Liferay Workspace Project to do the following steps:
 6. Click *Finish* Button
 
 ### Deployment
+
 After you get the Liferay Modules you can deploy them to running or debugging Liferay Server:
 1. Right Click on your *Liferay Module*
 2. Choose Liferay > Deploy
 3. When you see the log showing in the console view, you get your module successful deploying
 
 ### Watch
+
 After you get the Liferay Modules you can *watch* them on running or debugging Liferay Server:
 1. Right Click on your *Liferay Module* or the folders like modules or the root of Liferay Workspace.
 2. Choose Liferay > Watch
@@ -69,6 +74,7 @@ After you get the Liferay Modules you can *watch* them on running or debugging L
 5. You could click red button to cancel the running watch task in Gradle Task view.
 
 ### Better Editors for Liferay Files
+
 1. service.xml
 2. custom-sql/default.xml
 3. portlet-model-hints.xml
