@@ -26,12 +26,13 @@ You can install this using _Preferences > Plugins > Install plugin from disk... 
 
 ### Liferay Workspace
 
-1. Create a Liferay Workspace Project from Start menu > click *Create New Project* or click *File* > *New* > *Project*
-2. Choose *Liferay Workspace* from left list
-3. Click *Next* button
-4. Type your Liferay Workspace *Project Name* and choose a *Project Location* or leave it default.
-5. Click *Finish* button and there will be one popup show up.
-6. Click *OK* to finish
+1. Create a Liferay Workspace Project from Start menu
+2. Click *Create New Project* or click *File* > *New* > *Project*
+3. Choose *Liferay Workspace* from left list
+4. Click *Next* button
+5. Type your Liferay Workspace *Project Name* and choose a *Project Location* or leave it default.
+6. Click *Finish* button and there will be one popup show up.
+7. Click *OK* to finish
 
 ### Liferay Server
 
