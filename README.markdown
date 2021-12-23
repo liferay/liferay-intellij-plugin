@@ -1,4 +1,5 @@
 # Liferay IntelliJ Plugin
+# Liferay IntelliJ Plugin
 
 ## Install from jetbrains offical link
 https://plugins.jetbrains.com/plugin/10739-liferay-intellij-plugin
