@@ -1,8 +1,8 @@
 package com.liferay.ide.model;
 
-public class MyOuter {
+public interface MyOuter {
 
-    public class MyInner {
+    interface MyInner {
 
     }
 }
