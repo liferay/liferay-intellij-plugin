@@ -280,6 +280,8 @@ test {
 	testLogging {
 		exceptionFormat = "full"
 	}
+	scanForTestClasses false
+	include "**/*Test.class"
 }
 
 verifyBlade392 {
