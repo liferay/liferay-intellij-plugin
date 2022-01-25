@@ -16,15 +16,15 @@ package com.liferay.ide.idea.language.tag;
 
 import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.LanguageLevelModuleExtension;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.pom.java.LanguageLevel;
+import com.intellij.testFramework.IdeaTestUtil;
 import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.DefaultLightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
-
-import com.liferay.ide.idea.util.SdkUtil;
 
 import java.util.List;
 
@@ -42,6 +42,15 @@ public class LiferayTaglibClassNameReferenceContributorTest extends LightJavaCod
 		List<String> strings = myFixture.getLookupElementStrings();
 
 		assertTrue(strings.contains("MyObject"));
+	}
+
+	public void testCompletionInnerClass() {
+		myFixture.configureByFiles("inner.jsp", "liferay-aui.tld", "com/liferay/ide/model/MyOuter.java");
+		myFixture.complete(CompletionType.BASIC, 1);
+
+		List<String> strings = myFixture.getLookupElementStrings();
+
+		assertTrue("className attribute should suggest inner class \"MyInner\".", strings.contains("MyInner"));
 	}
 
 	@NotNull
@@ -68,8 +77,11 @@ public class LiferayTaglibClassNameReferenceContributorTest extends LightJavaCod
 			if (languageLevelModuleExtension != null) {
 				languageLevelModuleExtension.setLanguageLevel(LanguageLevel.JDK_1_8);
 			}
+		}
 
-			modifiableRootModel.setSdk(SdkUtil.getTestJdk());
+		@Override
+		public Sdk getSdk() {
+			return IdeaTestUtil.getMockJdk(LanguageLevel.JDK_1_8.toJavaVersion());
 		}
 
 	};
