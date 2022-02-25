@@ -25,6 +25,8 @@ import com.liferay.ide.idea.server.portal.PortalBundle;
 import com.liferay.ide.idea.server.portal.PortalBundleFactory;
 import com.liferay.ide.idea.server.portal.PortalTomcatBundleFactory;
 import com.liferay.ide.idea.server.portal.PortalWildFlyBundleFactory;
+import com.liferay.ide.idea.server.portal.PortalJBossBundleFactory;
+import com.liferay.ide.idea.server.portal.PortalJBossEapBundleFactory;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -303,7 +305,8 @@ public class ServerUtil {
 	}
 
 	private static PortalBundleFactory[] _bundleFactories = {
-		new PortalTomcatBundleFactory(), new PortalWildFlyBundleFactory()
+		new PortalTomcatBundleFactory(), new PortalWildFlyBundleFactory(), new PortalJBossBundleFactory(),
+			new PortalJBossEapBundleFactory()
 	};
 	private static String[] _osgiBundleDirs = {"core", "modules", "portal", "static"};
 
