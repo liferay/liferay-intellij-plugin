@@ -16,177 +16,185 @@ package com.liferay.ide.idea.server.portal;
 
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.util.lang.JavaVersion;
+
 import com.liferay.ide.idea.util.FileUtil;
-import com.liferay.ide.idea.util.JavaUtil;
 import com.liferay.ide.idea.util.ListUtil;
-import org.apache.commons.io.FileUtils;
-import org.jetbrains.jps.model.java.JdkVersionDetector;
 
 import java.io.File;
 import java.io.FileFilter;
+
 import java.nio.file.Path;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
+import org.apache.commons.io.FileUtils;
+
+import org.jetbrains.jps.model.java.JdkVersionDetector;
+
 /**
  * @author Seiphon Wang
  */
 public class PortalJBossBundle extends AbstractPortalBundle {
-    public PortalJBossBundle(Path path) {
-        super(path);
-    }
 
-    @Override
-    public String getMainClass() {
-        return "org.jboss.modules.Main";
-    }
+	public static final int DEFAULT_JMX_PORT = 2099;
 
-    @Override
-    public Path[] getRuntimeClasspath() {
-        List<Path> paths = new ArrayList<>();
+	public PortalJBossBundle(Path path) {
+		super(path);
+	}
 
-        if (FileUtil.exists(bundlePath)) {
-            paths.add(FileUtil.pathAppend(bundlePath, "jboss-modules.jar"));
+	public int getJmxRemotePort() {
+		return getDefaultJMXRemotePort();
+	}
 
-            Path loggManagerPath =
-                    FileUtil.pathAppend(bundlePath, "modules/system/layers/base/org/jboss/logmanager/main");
+	@Override
+	public String getMainClass() {
+		return "org.jboss.modules.Main";
+	}
 
-            File loggManagerFile = loggManagerPath.toFile();
+	@Override
+	public Path[] getRuntimeClasspath() {
+		List<Path> paths = new ArrayList<>();
 
-            if (FileUtil.exists(loggManagerFile)) {
-                File[] libFiles = loggManagerFile.listFiles(
-                        new FileFilter() {
+		if (FileUtil.exists(bundlePath)) {
+			paths.add(FileUtil.pathAppend(bundlePath, "jboss-modules.jar"));
 
-                            @Override
-                            public boolean accept(File libFile) {
-                                String libFileName = libFile.getName();
+			Path loggManagerPath = FileUtil.pathAppend(
+				bundlePath, "modules/system/layers/base/org/jboss/logmanager/main");
 
-                                if (libFile.isFile() && libFileName.endsWith(".jar")) {
-                                    return true;
-                                }
+			File loggManagerFile = loggManagerPath.toFile();
 
-                                return false;
-                            }
+			if (FileUtil.exists(loggManagerFile)) {
+				File[] libFiles = loggManagerFile.listFiles(
+					new FileFilter() {
 
-                        });
+						@Override
+						public boolean accept(File libFile) {
+							String libFileName = libFile.getName();
 
-                if (libFiles != null) {
-                    for (File libFile : libFiles) {
-                        paths.add(FileUtil.pathAppend(loggManagerPath, libFile.getName()));
-                    }
-                }
-            }
-        }
+							if (libFile.isFile() && libFileName.endsWith(".jar")) {
+								return true;
+							}
 
-        return paths.toArray(new Path[0]);
-    }
+							return false;
+						}
 
-    @Override
-    public String[] getRuntimeStartProgArgs() {
-        List<String> args = new ArrayList<>();
+					});
 
-        args.add("-mp");
+				if (libFiles != null) {
+					for (File libFile : libFiles) {
+						paths.add(FileUtil.pathAppend(loggManagerPath, libFile.getName()));
+					}
+				}
+			}
+		}
 
-        Path modulesPath = FileUtil.pathAppend(bundlePath, "modules");
+		return paths.toArray(new Path[0]);
+	}
 
-        args.add(modulesPath.toString());
+	@Override
+	public String[] getRuntimeStartProgArgs() {
+		List<String> args = new ArrayList<>();
 
-        args.add("-jaxpmodule");
-        args.add("javax.xml.jaxp-provider");
-        args.add("org.jboss.as.standalone");
-        args.add("-b");
-        args.add("localhost");
-        args.add("--server-config=standalone.xml");
-        args.add("-Djboss.server.base.dir=\"" + FileUtil.pathAppend(bundlePath, "standalone"));
+		args.add("-mp");
 
-        return args.toArray(new String[0]);
-    }
+		Path modulesPath = FileUtil.pathAppend(bundlePath, "modules");
 
-    @Override
-    public String[] getRuntimeStartVMArgs(Sdk sdk) {
-        List<String> args = new ArrayList<>();
+		args.add(modulesPath.toString());
 
-        args.add("-Dcom.sun.management.jmxremote");
-        args.add("-Dcom.sun.management.jmxremote.authenticate=false");
-        args.add("-Dcom.sun.management.jmxremote.port=" + getJmxRemotePort());
-        args.add("-Dcom.sun.management.jmxremote.ssl=false");
-        args.add("-Dorg.jboss.resolver.warning=true");
-        args.add("-Djava.net.preferIPv4Stack=true");
-        args.add("-Dsun.rmi.dgc.client.gcInterval=3600000");
-        args.add("-Dsun.rmi.dgc.server.gcInterval=3600000");
-        args.add("-Djboss.modules.system.pkgs=org.jboss.byteman");
-        args.add("-Djava.awt.headless=true");
-        args.add("-Dfile.encoding=UTF8");
-        args.add("-server");
-        args.add("-Djava.util.logging.manager=org.jboss.logmanager.LogManager");
+		args.add("-jaxpmodule");
+		args.add("javax.xml.jaxp-provider");
+		args.add("org.jboss.as.standalone");
+		args.add("-b");
+		args.add("localhost");
+		args.add("--server-config=standalone.xml");
+		args.add("-Djboss.server.base.dir=" + FileUtil.pathAppend(bundlePath, "standalone"));
 
-        JdkVersionDetector jdkVersionDetector = JdkVersionDetector.getInstance();
+		return args.toArray(new String[0]);
+	}
 
-        JdkVersionDetector.JdkVersionInfo jdkVersionInfo = jdkVersionDetector.detectJdkVersionInfo(sdk.getHomePath());
+	@Override
+	public String[] getRuntimeStartVMArgs(Sdk sdk) {
+		List<String> args = new ArrayList<>();
 
-        if (jdkVersionInfo != null) {
-            JavaVersion jdkVersion = jdkVersionInfo.version;
-            JavaVersion jdk8Version = JavaVersion.compose(8);
+		args.add("-Dcom.sun.management.jmxremote");
+		args.add("-Dcom.sun.management.jmxremote.authenticate=false");
+		args.add("-Dcom.sun.management.jmxremote.port=" + getJmxRemotePort());
+		args.add("-Dcom.sun.management.jmxremote.ssl=false");
+		args.add("-Dorg.jboss.resolver.warning=true");
+		args.add("-Djava.net.preferIPv4Stack=true");
+		args.add("-Dsun.rmi.dgc.client.gcInterval=3600000");
+		args.add("-Dsun.rmi.dgc.server.gcInterval=3600000");
+		args.add("-Djboss.modules.system.pkgs=org.jboss.byteman");
+		args.add("-Djava.awt.headless=true");
+		args.add("-Dfile.encoding=UTF8");
+		args.add("-server");
+		args.add("-Djava.util.logging.manager=org.jboss.logmanager.LogManager");
 
-            if (jdkVersion.compareTo(jdk8Version) <= 0) {
-                File jbossLogmanagerJarFile = getJbossLib(bundlePath, "/modules/org/jboss/logmanager/main/");
+		JdkVersionDetector jdkVersionDetector = JdkVersionDetector.getInstance();
 
-                if (Objects.nonNull(jbossLogmanagerJarFile)) {
-                    args.add("-Xbootclasspath/p:\"" + jbossLogmanagerJarFile.getAbsolutePath() + "\"");
-                }
+		JdkVersionDetector.JdkVersionInfo jdkVersionInfo = jdkVersionDetector.detectJdkVersionInfo(sdk.getHomePath());
 
-                File jbossLogmanagerLog4jJarFile = getJbossLib(bundlePath, "/modules/org/jboss/logmanager/log4j/main/");
+		if (jdkVersionInfo != null) {
+			JavaVersion jdkVersion = jdkVersionInfo.version;
+			JavaVersion jdk8Version = JavaVersion.compose(8);
 
-                if (Objects.nonNull(jbossLogmanagerLog4jJarFile)) {
-                    args.add("-Xbootclasspath/p:\"" + jbossLogmanagerLog4jJarFile.getAbsolutePath() + "\"");
-                }
+			if (jdkVersion.compareTo(jdk8Version) <= 0) {
+				File jbossLogmanagerJarFile = getJbossLib(bundlePath, "/modules/org/jboss/logmanager/main/");
 
-                File jbosslog4jJarFile = getJbossLib(bundlePath, "/modules/org/apache/log4j/main/");
+				if (Objects.nonNull(jbossLogmanagerJarFile)) {
+					args.add("-Xbootclasspath/p:" + jbossLogmanagerJarFile.getAbsolutePath());
+				}
 
-                if (Objects.nonNull(jbosslog4jJarFile)) {
-                    args.add("-Xbootclasspath/p:\"" + jbosslog4jJarFile.getAbsolutePath() + "\"");
-                }
-            }
-        }
+				File jbossLogmanagerLog4jJarFile = getJbossLib(bundlePath, "/modules/org/jboss/logmanager/log4j/main/");
 
-        args.add("-Djboss.modules.system.pkgs=org.jboss.logmanager");
-        args.add("-Dorg.jboss.boot.log.file=\"" + FileUtil.pathAppend(bundlePath, "/standalone/log/boot.log") + "\"");
-        args.add("-Dlogging.configuration=file:\"" + bundlePath + "/standalone/configuration/logging.properties\"");
-        args.add("-Djboss.home.dir=\"" + bundlePath + "\"");
-        args.add("-Djboss.bind.address.management=localhost");
-        args.add("-Duser.timezone=GMT");
+				if (Objects.nonNull(jbossLogmanagerLog4jJarFile)) {
+					args.add("-Xbootclasspath/p:" + jbossLogmanagerLog4jJarFile.getAbsolutePath());
+				}
 
-        return args.toArray(new String[0]);
-    }
+				File jbosslog4jJarFile = getJbossLib(bundlePath, "/modules/org/apache/log4j/main/");
 
-    protected File getJbossLib(Path bundlePath, String libPathValue) {
-        Path libIPath = FileUtil.pathAppend(bundlePath, libPathValue);
+				if (Objects.nonNull(jbosslog4jJarFile)) {
+					args.add("-Xbootclasspath/p:" + jbosslog4jJarFile.getAbsolutePath());
+				}
+			}
+		}
 
-        Collection<File> libJars = FileUtils.listFiles(libIPath.toFile(), new String[] {"jar"}, true);
+		args.add("-Djboss.modules.system.pkgs=org.jboss.logmanager");
+		args.add("-Dorg.jboss.boot.log.file=" + FileUtil.pathAppend(bundlePath, "standalone/log/boot.log"));
+		args.add(
+			"-Dlogging.configuration=file:" +
+				FileUtil.pathAppend(bundlePath, "standalone/configuration/logging.properties"));
+		args.add("-Djboss.home.dir=" + bundlePath);
+		args.add("-Djboss.bind.address.management=localhost");
+		args.add("-Duser.timezone=GMT");
 
-        File[] jarArray = libJars.toArray(new File[0]);
+		return args.toArray(new String[0]);
+	}
 
-        if (ListUtil.isNotEmpty(jarArray)) {
-            return jarArray[0];
-        }
+	@Override
+	public String getType() {
+		return "jboss";
+	}
 
-        return null;
-    }
+	protected int getDefaultJMXRemotePort() {
+		return DEFAULT_JMX_PORT;
+	}
 
-    public int getJmxRemotePort() {
-        return getDefaultJMXRemotePort();
-    }
+	protected File getJbossLib(Path bundlePath, String libPathValue) {
+		Path libIPath = FileUtil.pathAppend(bundlePath, libPathValue);
 
-    protected int getDefaultJMXRemotePort() {
-        return DEFAULT_JMX_PORT;
-    }
+		Collection<File> libJars = FileUtils.listFiles(libIPath.toFile(), new String[] {"jar"}, true);
 
-    @Override
-    public String getType() {
-        return "jboss";
-    }
+		File[] jarArray = libJars.toArray(new File[0]);
 
-    public static final int DEFAULT_JMX_PORT = 2099;
+		if (ListUtil.isNotEmpty(jarArray)) {
+			return jarArray[0];
+		}
+
+		return null;
+	}
+
 }

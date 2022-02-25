@@ -18,46 +18,49 @@ import com.liferay.ide.idea.util.FileUtil;
 import com.liferay.ide.idea.util.JavaUtil;
 
 import java.io.File;
+
 import java.nio.file.Path;
 
 /**
  * @author Seiphon Wang
  */
 public class PortalJBossBundleFactory extends AbstractPortalBundleFactory {
-    @Override
-    protected boolean detectAppServerPath(Path path) {
-        if (FileUtil.notExists(path)) {
-            return false;
-        }
 
-        Path bundlesPath = FileUtil.pathAppend(path, "bundles");
-        Path modulesPath = FileUtil.pathAppend(path, "modules");
-        Path standalonePath = FileUtil.pathAppend(path, "standalone");
-        Path binPath = FileUtil.pathAppend(path, "bin");
+	@Override
+	public PortalBundle create(Path location) {
+		return new PortalJBossBundle(location);
+	}
 
-        if (FileUtil.exists(bundlesPath) && FileUtil.exists(modulesPath) && FileUtil.exists(standalonePath) &&
-                FileUtil.exists(binPath)) {
+	@Override
+	public String getType() {
+		return "jboss";
+	}
 
-            Path mainFolderPath = new File("modules/org/jboss/as/server/main").toPath();
+	@Override
+	protected boolean detectAppServerPath(Path path) {
+		if (FileUtil.notExists(path)) {
+			return false;
+		}
 
-            String mainFolder =mainFolderPath.toString();
+		Path bundlesPath = FileUtil.pathAppend(path, "bundles");
+		Path modulesPath = FileUtil.pathAppend(path, "modules");
+		Path standalonePath = FileUtil.pathAppend(path, "standalone");
+		Path binPath = FileUtil.pathAppend(path, "bin");
 
-            return JavaUtil.scanFolderJarsForManifestProp(path.toFile(), mainFolder, _JBAS7_RELEASE_VERSION, "7.");
-        }
+		if (FileUtil.exists(bundlesPath) && FileUtil.exists(modulesPath) && FileUtil.exists(standalonePath) &&
+			FileUtil.exists(binPath)) {
 
-        return false;
-    }
+			File mainFolder = new File("modules/org/jboss/as/server/main");
 
-    @Override
-    public PortalBundle create(Path location) {
-        return new PortalJBossBundle(location);
-    }
+			Path mainFolderPath = mainFolder.toPath();
 
-    @Override
-    public String getType() {
-        return "jboss";
-    }
+			return JavaUtil.scanFolderJarsForManifestProp(
+				path.toFile(), mainFolderPath.toString(), _JBAS7_RELEASE_VERSION, "7.");
+		}
 
-    private static final String _JBAS7_RELEASE_VERSION = "JBossAS-Release-Version";
+		return false;
+	}
+
+	private static final String _JBAS7_RELEASE_VERSION = "JBossAS-Release-Version";
 
 }

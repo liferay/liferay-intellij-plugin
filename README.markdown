@@ -27,39 +27,38 @@ You can install this using _Preferences > Plugins > Install plugin from disk... 
 
 - Create a Liferay Workspace Project from Start menu > click *Create New Project* or click *File* > *New* > *Project*
 
-- Choose *Liferay Workspace* from left list
+1. Choose *Liferay Workspace* from left list
 
-- Click *Next* button
+1. Click *Next* button
 
-- Type your Liferay Workspace *Project Name* and choose a *Project Location* or leave it default.
+1. Type your Liferay Workspace *Project Name* and choose a *Project Location* or leave it default.
 
-- Click *Finish* button and there will be one popup show up.
+1. Click *Finish* button and there will be one popup show up.
 
-- Click *OK* to finish
+1. Click *OK* to finish
 
 ### Liferay Server
 
 You must have one Liferay Workspace Project to do the following steps:
 
 - Right click on the root of your Liferay Workspace Project
+1. Click Liferay > InitBundle
 
-- Click Liferay > InitBundle
+1. Then the gradle will run *initBundle* task
 
-- Then the gradle will run *initBundle* task
+1. It will take several minutes to download the latest Liferay Server from remote if you don't have the local cache
 
-- It will take several minutes to download the latest Liferay Server from remote if you don't have the local cache
+1. Click *Edit configruration...* on the right top corner
 
-- Click *Edit configruration...* on the right top corner
+1. Click the plus icon
 
-- Click the plus icon
+1. Choose *Liferay Server*
 
-- Choose *Liferay Server*
+1. You can leave the config values by default or change to what you want
 
-- You can leave the config values by default or change to what you want
+1. Click *OK* Bundle
 
-- Click *OK* Bundle
-
-- After you add a new *Liferay Server*, you can *start* or *debug* it
+1. After you add a new *Liferay Server*, you can *start* or *debug* it
 
 ### Liferay Module
 
@@ -67,15 +66,15 @@ You must have one Liferay Workspace Project to do the following steps:
 
 - Right click on existing Liferay Workspace Project and choose *New* > *Liferay Module*
 
-- Choose *Liferay Modules*
+1. Choose *Liferay Modules*
 
-- Depends on what template you choose, you can type *Package Name*, *Class Name* and *Service Name*
+1. Depends on what template you choose, you can type *Package Name*, *Class Name* and *Service Name*
 
-- Click *Next* Button
+1. Click *Next* Button
 
-- Type *Project Name* and the *location* is not able to customize.
+1. Type *Project Name* and the *location* is not able to customize.
 
-- Click *Finish* Button
+1. Click *Finish* Button
 
 ### Deployment
 
@@ -83,9 +82,9 @@ After you get the Liferay Modules you can deploy them to running or debugging Li
 
 - Right Click on your *Liferay Module*
 
-- Choose Liferay > Deploy
+1. Choose Liferay > Deploy
 
-- When you see the log showing in the console view, you get your module successful deploying
+1. When you see the log showing in the console view, you get your module successful deploying
 
 ### Watch
 
@@ -93,25 +92,25 @@ After you get the Liferay Modules you can *watch* them on running or debugging L
 
 - Right Click on your *Liferay Module* or the folders like modules or the root of Liferay Workspace.
 
-- Choose Liferay > Watch
+1. Choose Liferay > Watch
 
-- When you see the gradle console output and the deplog log showing in the console view, you get your module successful deploying.
+1. When you see the gradle console output and the deplog log showing in the console view, you get your module successful deploying.
 
-- You could keep the watch task running and it will listen on the changes of your coding.
+1. You could keep the watch task running and it will listen on the changes of your coding.
 
-- You could click red button to cancel the running watch task in Gradle Task view.
+1. You could click red button to cancel the running watch task in Gradle Task view.
 
 ### Better Editors for Liferay Files
 
 - service.xml
 
-- custom-sql/default.xml
+1. custom-sql/default.xml
 
-- portlet-model-hints.xml
+1. portlet-model-hints.xml
 
-- Liferay Taglib Support for Jsp files(Ultimate Only)
+1. Liferay Taglib Support for Jsp files(Ultimate Only)
 
-- etc.
+1. etc.
 
 ## License
 

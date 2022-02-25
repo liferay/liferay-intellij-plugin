@@ -1,86 +1,117 @@
+/**
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+
 package com.liferay.ide.idea.server.portal;
 
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.util.lang.JavaVersion;
+
 import com.liferay.ide.idea.util.FileUtil;
-import org.jetbrains.jps.model.java.JdkVersionDetector;
 
 import java.io.File;
+
 import java.nio.file.Path;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.jetbrains.jps.model.java.JdkVersionDetector;
+
+/**
+ * @author Seiphon Wang
+ */
 public class PortalJBossEapBundle extends PortalJBossBundle {
-    public PortalJBossEapBundle(Path path) {
-        super(path);
-    }
 
-    @Override
-    public String[] getRuntimeStartVMArgs(Sdk sdk) {
-        List<String> args = new ArrayList<>();
+	public PortalJBossEapBundle(Path path) {
+		super(path);
+	}
 
-        args.add("-Dcom.sun.management.jmxremote");
-        args.add("-Dcom.sun.management.jmxremote.authenticate=false");
-        args.add("-Dcom.sun.management.jmxremote.port=" + getJmxRemotePort());
-        args.add("-Dcom.sun.management.jmxremote.ssl=false");
-        args.add("-Dorg.jboss.resolver.warning=true");
-        args.add("-Djava.net.preferIPv4Stack=true");
-        args.add("-Dsun.rmi.dgc.client.gcInterval=3600000");
-        args.add("-Dsun.rmi.dgc.server.gcInterval=3600000");
-        args.add("-Djboss.modules.system.pkgs=org.jboss.byteman");
-        args.add("-Djava.awt.headless=true");
-        args.add("-Dfile.encoding=UTF8");
+	@Override
+	public String[] getRuntimeStartVMArgs(Sdk sdk) {
+		List<String> args = new ArrayList<>();
 
-        args.add("-server");
-        args.add("-Djava.util.logging.manager=org.jboss.logmanager.LogManager");
+		args.add("-Dcom.sun.management.jmxremote");
+		args.add("-Dcom.sun.management.jmxremote.authenticate=false");
+		args.add("-Dcom.sun.management.jmxremote.port=" + getJmxRemotePort());
+		args.add("-Dcom.sun.management.jmxremote.ssl=false");
+		args.add("-Dorg.jboss.resolver.warning=true");
+		args.add("-Djava.net.preferIPv4Stack=true");
+		args.add("-Dsun.rmi.dgc.client.gcInterval=3600000");
+		args.add("-Dsun.rmi.dgc.server.gcInterval=3600000");
+		args.add("-Djboss.modules.system.pkgs=org.jboss.byteman");
+		args.add("-Djava.awt.headless=true");
+		args.add("-Dfile.encoding=UTF8");
 
-        JdkVersionDetector jdkVersionDetector = JdkVersionDetector.getInstance();
+		args.add("-server");
+		args.add("-Djava.util.logging.manager=org.jboss.logmanager.LogManager");
 
-        JdkVersionDetector.JdkVersionInfo jdkVersionInfo = jdkVersionDetector.detectJdkVersionInfo(sdk.getHomePath());
+		JdkVersionDetector jdkVersionDetector = JdkVersionDetector.getInstance();
 
-        if (jdkVersionInfo != null) {
-            JavaVersion jdkVersion = jdkVersionInfo.version;
-            JavaVersion jdk8Version = JavaVersion.compose(8);
+		JdkVersionDetector.JdkVersionInfo jdkVersionInfo = jdkVersionDetector.detectJdkVersionInfo(sdk.getHomePath());
 
-            File wildflyCommonLib = getJbossLib(bundlePath, "/modules/system/layers/base/org/wildfly/common/main/");
+		if (jdkVersionInfo != null) {
+			JavaVersion jdkVersion = jdkVersionInfo.version;
+			JavaVersion jdk9Version = JavaVersion.compose(9);
 
-            if (jdkVersion.compareTo(jdk8Version) <= 0) {
-                args.add(
-                        "-Xbootclasspath/p:\"" + bundlePath +
-                                "/modules/system/layers/base/org/jboss/logmanager/main/jboss-logmanager-1.5.4.Final-redhat-" +
-                                "1.jar\"");
-                args.add(
-                        "-Xbootclasspath/p:\"" + bundlePath +
-                                "/modules/system/layers/base/org/jboss/log4j/logmanager/main/log4j-jboss-logmanager-1.1.1.Final-" +
-                                "redhat-1.jar\"");
+			File wildflyCommonLib = getJbossLib(bundlePath, "/modules/system/layers/base/org/wildfly/common/main/");
 
-                if (Objects.nonNull(wildflyCommonLib)) {
-                    args.add("-Xbootclasspath/p:\"" + wildflyCommonLib.getAbsolutePath() + "\"");
-                }
+			if (jdkVersion.compareTo(jdk9Version) < 0) {
+				String jbossLogmanager =
+					"modules/system/layers/base/org/jboss/logmanager/main/jboss-logmanager-1.5.4.Final-redhat-1.jar";
 
-                File jbossLogManagerLib = getJbossLib(bundlePath, "/modules/system/layers/base/org/jboss/logmanager/main/");
+				String log4jJbossLogmanager =
+					"modules/system/layers/base/org/jboss/log4j/logmanager/main/log4j-jboss-logmanager-1.1.1.Final-" +
+						"redhat-1.jar";
 
-                if (Objects.nonNull(jbossLogManagerLib)) {
-                    args.add("-Xbootclasspath/p:\"" + jbossLogManagerLib.getAbsolutePath() + "\"");
-                }
-            }else {
-                if (Objects.nonNull(wildflyCommonLib)) {
-                    args.add("-Xbootclasspath/a:\"" + wildflyCommonLib.getAbsolutePath() + "\"");
-                }
-                args.add("--add-modules java.se");
-            }
-        }
+				args.add("-Xbootclasspath/p:" + FileUtil.pathAppend(bundlePath, jbossLogmanager));
 
-        args.add("-Djboss.modules.system.pkgs=org.jboss.logmanager");
+				args.add("-Xbootclasspath/p:" + FileUtil.pathAppend(bundlePath, log4jJbossLogmanager));
 
-        args.add("-Dorg.jboss.boot.log.file=\"" + FileUtil.pathAppend(bundlePath, "/standalone/log/boot.log") + "\"");
-        args.add("-Dlogging.configuration=file:\"" + bundlePath + "/standalone/configuration/logging.properties\"");
-        args.add("-Djboss.home.dir=\"" + bundlePath + "\"");
-        args.add("-Djboss.bind.address.management=localhost");
-        args.add("-Duser.timezone=GMT");
-        args.add("-Dorg.jboss.logmanager.nocolor=true");
+				if (Objects.nonNull(wildflyCommonLib)) {
+					args.add("-Xbootclasspath/p:" + wildflyCommonLib.getAbsolutePath());
+				}
 
-        return args.toArray(new String[0]);
-    }
+				File jbossLogManagerLib = getJbossLib(
+					bundlePath, "/modules/system/layers/base/org/jboss/logmanager/main/");
+
+				if (Objects.nonNull(jbossLogManagerLib)) {
+					args.add("-Xbootclasspath/p:" + jbossLogManagerLib.getAbsolutePath());
+				}
+			}
+			else if (Objects.nonNull(wildflyCommonLib)) {
+				args.add("-Xbootclasspath/a:" + wildflyCommonLib.getAbsolutePath());
+			}
+		}
+
+		args.add("-Djboss.modules.system.pkgs=org.jboss.logmanager");
+
+		args.add("-Dorg.jboss.boot.log.file=" + FileUtil.pathAppend(bundlePath, "standalone/log/boot.log"));
+		args.add(
+			"-Dlogging.configuration=file:" +
+				FileUtil.pathAppend(bundlePath, "standalone/configuration/logging.properties"));
+		args.add("-Djboss.home.dir=" + bundlePath);
+		args.add("-Djboss.bind.address.management=localhost");
+		args.add("-Duser.timezone=GMT");
+		args.add("-Dorg.jboss.logmanager.nocolor=true");
+
+		return args.toArray(new String[0]);
+	}
+
+	@Override
+	public String getType() {
+		return "jboss_eap";
+	}
+
 }

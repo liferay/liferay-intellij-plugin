@@ -1,3 +1,17 @@
+/**
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+
 package com.liferay.ide.idea.server.portal;
 
 import com.liferay.ide.idea.util.FileUtil;
@@ -5,88 +19,99 @@ import com.liferay.ide.idea.util.JavaUtil;
 import com.liferay.ide.idea.util.PropertiesUtil;
 
 import java.io.File;
+
 import java.nio.file.Path;
+
 import java.util.Properties;
 
+/**
+ * @author Seiphon Wang
+ */
 public class PortalJBossEapBundleFactory extends PortalJBossBundleFactory {
-    @Override
-    protected boolean detectAppServerPath(Path path) {
-        if (FileUtil.notExists(path)) {
-            return false;
-        }
 
-        Path modulesPath = FileUtil.pathAppend(path, "modules");
-        Path standalonePath = FileUtil.pathAppend(path, "standalone");
-        Path binPath = FileUtil.pathAppend(path,"bin");
+	public static String getEAPVersionNoSlotCheck(
+		File location, String metaInfPath, String[] versionPrefixs, String releaseName) {
 
-        if (FileUtil.exists(modulesPath) && FileUtil.exists(standalonePath) && FileUtil.exists(binPath)) {
-            String eapVersion = _getEAPVersion(
-                    path.toFile(), _EAP_DIR_META_INF, new String[] {"6.", "7."}, "eap", "EAP");
+		Path rootPath = location.toPath();
 
-            if (eapVersion != null) {
-                return true;
-            }
+		Path eapDir = FileUtil.pathAppend(rootPath, metaInfPath);
 
-            return super.detectAppServerPath(path);
-        }
+		if (FileUtil.exists(eapDir)) {
+			Path manifest = FileUtil.pathAppend(eapDir, "MANIFEST.MF");
 
-        return false;
-    }
+			String type = JavaUtil.getManifestProperty(manifest.toFile(), "JBoss-Product-Release-Name");
+			String version = JavaUtil.getManifestProperty(manifest.toFile(), "JBoss-Product-Release-Version");
 
-    private String _getEAPVersion(
-            File location, String metaInfPath, String[] versionPrefix, String slot, String releaseName) {
+			boolean matchesName = type.contains(releaseName);
 
-        Path rootPath = location.toPath();
+			for (String prefixVersion : versionPrefixs) {
+				boolean matchesVersion = version.startsWith(prefixVersion);
 
-        Path productConf = FileUtil.pathAppend(rootPath, "bin/product.conf");
+				if (matchesName && matchesVersion) {
+					return version;
+				}
+			}
+		}
 
-        if (FileUtil.exists(productConf)) {
-            Properties p = PropertiesUtil.loadProperties(productConf.toFile());
+		return null;
+	}
 
-            if (p != null) {
-                String product = (String)p.get("slot");
+	@Override
+	public PortalBundle create(Path location) {
+		return new PortalJBossEapBundle(location);
+	}
 
-                if (slot.equals(product)) {
-                    return getEAPVersionNoSlotCheck(location, metaInfPath, versionPrefix, releaseName);
-                }
-            }
-        }
+	@Override
+	public String getType() {
+		return "jboss_eap";
+	}
 
-        return null;
-    }
+	@Override
+	protected boolean detectAppServerPath(Path path) {
+		if (FileUtil.notExists(path)) {
+			return false;
+		}
 
-    public static String getEAPVersionNoSlotCheck(
-            File location, String metaInfPath, String[] versionPrefixs, String releaseName) {
+		Path modulesPath = FileUtil.pathAppend(path, "modules");
+		Path standalonePath = FileUtil.pathAppend(path, "standalone");
+		Path binPath = FileUtil.pathAppend(path, "bin");
 
-        Path rootPath = location.toPath();
+		if (FileUtil.exists(modulesPath) && FileUtil.exists(standalonePath) && FileUtil.exists(binPath)) {
+			String eapVersion = _getEAPVersion(
+				path.toFile(), _EAP_DIR_META_INF, new String[] {"6.", "7."}, "eap", "EAP");
 
-        Path eapDir = FileUtil.pathAppend(rootPath, metaInfPath);
+			if (eapVersion != null) {
+				return true;
+			}
 
-        if (FileUtil.exists(eapDir)) {
-            Path manifest = FileUtil.pathAppend(eapDir, "MANIFEST.MF");
+			return super.detectAppServerPath(path);
+		}
 
-            String type = JavaUtil.getManifestProperty(manifest.toFile(), "JBoss-Product-Release-Name");
-            String version = JavaUtil.getManifestProperty(manifest.toFile(), "JBoss-Product-Release-Version");
+		return false;
+	}
 
-            boolean matchesName = type.contains(releaseName);
+	private String _getEAPVersion(
+		File location, String metaInfPath, String[] versionPrefix, String slot, String releaseName) {
 
-            for (String prefixVersion : versionPrefixs) {
-                boolean matchesVersion = version.startsWith(prefixVersion);
+		Path rootPath = location.toPath();
 
-                if (matchesName && matchesVersion) {
-                    return version;
-                }
-            }
-        }
+		Path productConf = FileUtil.pathAppend(rootPath, "bin/product.conf");
 
-        return null;
-    }
+		if (FileUtil.exists(productConf)) {
+			Properties p = PropertiesUtil.loadProperties(productConf.toFile());
 
-    @Override
-    public PortalBundle create(Path location) {
-        return new PortalJBossEapBundle(location);
-    }
+			if (p != null) {
+				String product = (String)p.get("slot");
 
-    private static final String _EAP_DIR_META_INF = "modules/system/layers/base/org/jboss/as/product/eap/dir/META-INF";
+				if (slot.equals(product)) {
+					return getEAPVersionNoSlotCheck(location, metaInfPath, versionPrefix, releaseName);
+				}
+			}
+		}
+
+		return null;
+	}
+
+	private static final String _EAP_DIR_META_INF = "modules/system/layers/base/org/jboss/as/product/eap/dir/META-INF";
 
 }
