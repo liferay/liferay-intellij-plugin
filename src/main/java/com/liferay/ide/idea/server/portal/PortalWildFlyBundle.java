@@ -14,10 +14,12 @@
 
 package com.liferay.ide.idea.server.portal;
 
+import com.intellij.openapi.projectRoots.JdkUtil;
 import com.intellij.openapi.projectRoots.Sdk;
 
 import com.liferay.ide.idea.util.FileUtil;
 import com.liferay.ide.idea.util.ListUtil;
+import org.osgi.framework.Version;
 
 import java.io.File;
 
@@ -102,9 +104,17 @@ public class PortalWildFlyBundle extends AbstractPortalBundle {
 		args.add("-server");
 		args.add("-Djava.util.logging.manager=org.jboss.logmanager.LogManager");
 
-		addBootClasspath(bundlePath.toString(), "org.jboss.logmanager", args, "-Xbootclasspath/p:");
-		addBootClasspath(bundlePath.toString(), "org.jboss.log4j.logmanager", args, "-Xbootclasspath/p:");
-		addBootClasspath(bundlePath.toString(), "org.wildfly.common", args, "-Xbootclasspath/p:");
+		Version jdkVersion = Version.parseVersion(JdkUtil.suggestJdkName(sdk.getVersionString()));
+		Version jdk8Version = Version.parseVersion("1.8");
+
+		if(jdkVersion.compareTo(jdk8Version) <= 0){
+			addBootClasspath(bundlePath.toString(), "org.jboss.logmanager", args, "-Xbootclasspath/p:");
+			addBootClasspath(bundlePath.toString(), "org.jboss.log4j.logmanager", args, "-Xbootclasspath/p:");
+			addBootClasspath(bundlePath.toString(), "org.wildfly.common", args, "-Xbootclasspath/p:");
+		}else {
+			addBootClasspath(bundlePath.toString(), "org.wildfly.common", args, "-Xbootclasspath/a:");
+		}
+
 
 		args.add("-Dorg.jboss.boot.log.file=" + FileUtil.pathAppend(bundlePath, "standalone/log/boot.log"));
 		args.add(

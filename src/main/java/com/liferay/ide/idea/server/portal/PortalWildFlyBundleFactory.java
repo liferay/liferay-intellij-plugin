@@ -51,7 +51,7 @@ public class PortalWildFlyBundleFactory extends AbstractPortalBundleFactory {
 
 		if (FileUtil.exists(modulesPath) && FileUtil.exists(standalonePath) && FileUtil.exists(binPath)) {
 			String versions = getManifestPropFromJBossModulesFolder(
-				new File[] {new File(path.toString(), "modules")}, "org.jboss.as.product", "wildfly-full/dir/META-INF",
+				new File[] {new File(path.toString(), "modules")}, "org.jboss.as.product", new String[]{"wildfly-full/dir/META-INF","main/dir/META-INF"},
 				JBOSS_RELEASE_VERSION);
 
 			if (versions != null) {
@@ -71,13 +71,13 @@ public class PortalWildFlyBundleFactory extends AbstractPortalBundleFactory {
 	}
 
 	protected String getManifestPropFromJBossModulesFolder(
-		File[] moduleRoots, String moduleId, String slot, String property) {
+		File[] moduleRoots, String moduleId, String[] slots, String property) {
 
 		File[] layeredRoots = LayeredModulePathFactory.resolveLayeredModulePath(moduleRoots);
 
 		for (File layeredFile : layeredRoots) {
 			File[] manifests = LayeredModulePathFactory.getFilesForModule(
-				layeredFile, moduleId, slot, (dir, name) -> name.equalsIgnoreCase("manifest.mf"));
+				layeredFile, moduleId, slots, (dir, name) -> name.equalsIgnoreCase("manifest.mf"));
 
 			if (ListUtil.isNotEmpty(manifests)) {
 				String value = JavaUtil.getManifestProperty(manifests[0], property);
