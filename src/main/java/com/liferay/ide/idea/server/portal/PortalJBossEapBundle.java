@@ -23,7 +23,6 @@ import java.io.File;
 
 import java.nio.file.Path;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -40,22 +39,7 @@ public class PortalJBossEapBundle extends PortalJBossBundle {
 
 	@Override
 	public String[] getRuntimeStartVMArgs(Sdk sdk) {
-		List<String> args = new ArrayList<>();
-
-		args.add("-Dcom.sun.management.jmxremote");
-		args.add("-Dcom.sun.management.jmxremote.authenticate=false");
-		args.add("-Dcom.sun.management.jmxremote.port=" + getJmxRemotePort());
-		args.add("-Dcom.sun.management.jmxremote.ssl=false");
-		args.add("-Dorg.jboss.resolver.warning=true");
-		args.add("-Djava.net.preferIPv4Stack=true");
-		args.add("-Dsun.rmi.dgc.client.gcInterval=3600000");
-		args.add("-Dsun.rmi.dgc.server.gcInterval=3600000");
-		args.add("-Djboss.modules.system.pkgs=org.jboss.byteman");
-		args.add("-Djava.awt.headless=true");
-		args.add("-Dfile.encoding=UTF8");
-
-		args.add("-server");
-		args.add("-Djava.util.logging.manager=org.jboss.logmanager.LogManager");
+		List<String> args = getDefaultRuntimeStartVMArgs();
 
 		JdkVersionDetector jdkVersionDetector = JdkVersionDetector.getInstance();
 
@@ -95,15 +79,6 @@ public class PortalJBossEapBundle extends PortalJBossBundle {
 			}
 		}
 
-		args.add("-Djboss.modules.system.pkgs=org.jboss.logmanager");
-
-		args.add("-Dorg.jboss.boot.log.file=" + FileUtil.pathAppend(bundlePath, "standalone/log/boot.log"));
-		args.add(
-			"-Dlogging.configuration=file:" +
-				FileUtil.pathAppend(bundlePath, "standalone/configuration/logging.properties"));
-		args.add("-Djboss.home.dir=" + bundlePath);
-		args.add("-Djboss.bind.address.management=localhost");
-		args.add("-Duser.timezone=GMT");
 		args.add("-Dorg.jboss.logmanager.nocolor=true");
 
 		return args.toArray(new String[0]);

@@ -27,7 +27,7 @@ import org.osgi.framework.Version;
 /**
  * @author Simon Jiang
  */
-public class PortalWildFlyBundleFactory extends AbstractPortalBundleFactory {
+public class PortalWildFlyBundleFactory extends PortalJBossBundleFactory {
 
 	@Override
 	public PortalBundle create(Path location) {
@@ -63,8 +63,6 @@ public class PortalWildFlyBundleFactory extends AbstractPortalBundleFactory {
 
 				return detectAppServerPath(path);
 			}
-
-			return detectAppServerPath(path);
 		}
 
 		return false;
