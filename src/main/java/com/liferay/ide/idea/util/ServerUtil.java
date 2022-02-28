@@ -23,6 +23,8 @@ import com.liferay.ide.idea.core.WorkspaceConstants;
 import com.liferay.ide.idea.server.LiferayDockerServerConfigurationType;
 import com.liferay.ide.idea.server.portal.PortalBundle;
 import com.liferay.ide.idea.server.portal.PortalBundleFactory;
+import com.liferay.ide.idea.server.portal.PortalJBossBundleFactory;
+import com.liferay.ide.idea.server.portal.PortalJBossEapBundleFactory;
 import com.liferay.ide.idea.server.portal.PortalTomcatBundleFactory;
 import com.liferay.ide.idea.server.portal.PortalWildFlyBundleFactory;
 
@@ -303,7 +305,8 @@ public class ServerUtil {
 	}
 
 	private static PortalBundleFactory[] _bundleFactories = {
-		new PortalTomcatBundleFactory(), new PortalWildFlyBundleFactory()
+		new PortalTomcatBundleFactory(), new PortalJBossBundleFactory(), new PortalJBossEapBundleFactory(),
+		new PortalWildFlyBundleFactory()
 	};
 	private static String[] _osgiBundleDirs = {"core", "modules", "portal", "static"};
 

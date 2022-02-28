@@ -78,7 +78,7 @@ public class LiferayServerConfigurable
 					PortalBundle portalBundle = ServerUtil.getPortalBundle(FileUtil.getPath(_liferayServer.getText()));
 
 					if (portalBundle != null) {
-						_bundleType.setText(portalBundle.getType());
+						_bundleType.setText(portalBundle.getDisplayName());
 					}
 					else {
 						_bundleType.setText("");
@@ -94,12 +94,21 @@ public class LiferayServerConfigurable
 
 	@Override
 	public void applyEditorTo(@NotNull LiferayServerConfiguration configuration) throws ConfigurationException {
-		ModulesComboBox modulesComboBox = _modules.getComponent();
-
 		configuration.setAlternativeJrePath(_jrePath.getJrePathOrName());
 		configuration.setAlternativeJrePathEnabled(_jrePath.isAlternativeJreSelected());
 		configuration.setBundleLocation(_liferayServer.getText());
-		configuration.setBundleType(_bundleType.getText());
+
+		PortalBundle portalBundle = ServerUtil.getPortalBundle(Paths.get(_liferayServer.getText()));
+
+		if (portalBundle != null) {
+			configuration.setBundleType(portalBundle.getType());
+		}
+		else {
+			throw new ConfigurationException("Portal bundle type is invalid");
+		}
+
+		ModulesComboBox modulesComboBox = _modules.getComponent();
+
 		configuration.setDeveloperMode(_developerMode.isSelected());
 		configuration.setModule(modulesComboBox.getSelectedModule());
 		configuration.setVMParameters(_vmParams.getText());
@@ -130,7 +139,7 @@ public class LiferayServerConfigurable
 		if (portalBundle != null) {
 			_liferayServer.setText(String.valueOf(portalBundle.getAppServerDir()));
 
-			_bundleType.setText(portalBundle.getType());
+			_bundleType.setText(portalBundle.getDisplayName());
 		}
 		else {
 			Project project = configuration.getProject();

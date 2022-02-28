@@ -37,7 +37,7 @@ import org.osgi.framework.Version;
 /**
  * @author Simon Jiang
  */
-public class PortalWildFlyBundle extends AbstractPortalBundle {
+public class PortalWildFlyBundle extends PortalJBossBundle {
 
 	public static final int DEFAULT_JMX_PORT = 2099;
 
@@ -46,8 +46,8 @@ public class PortalWildFlyBundle extends AbstractPortalBundle {
 	}
 
 	@Override
-	public String getMainClass() {
-		return "org.jboss.modules.Main";
+	public String getDisplayName() {
+		return "JBoss Wildfly";
 	}
 
 	@Override
@@ -67,27 +67,6 @@ public class PortalWildFlyBundle extends AbstractPortalBundle {
 		}
 
 		return paths.toArray(new Path[0]);
-	}
-
-	@Override
-	public String[] getRuntimeStartProgArgs() {
-		List<String> args = new ArrayList<>();
-
-		args.add("-mp");
-
-		Path modulesPath = FileUtil.pathAppend(bundlePath, "modules");
-
-		args.add(modulesPath.toString());
-
-		args.add("-jaxpmodule");
-		args.add("javax.xml.jaxp-provider");
-		args.add("org.jboss.as.standalone");
-		args.add("-b");
-		args.add("localhost");
-		args.add("--server-config=standalone.xml");
-		args.add("-Djboss.server.base.dir=" + FileUtil.pathAppend(bundlePath, "standalone"));
-
-		return args.toArray(new String[0]);
 	}
 
 	@Override

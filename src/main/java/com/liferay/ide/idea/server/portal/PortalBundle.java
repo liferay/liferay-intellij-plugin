@@ -25,6 +25,8 @@ public interface PortalBundle {
 
 	public Path getAppServerDir();
 
+	public String getDisplayName();
+
 	public Path getLiferayHome();
 
 	public String getMainClass();

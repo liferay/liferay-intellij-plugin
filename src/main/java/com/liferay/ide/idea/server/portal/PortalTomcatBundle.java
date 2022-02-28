@@ -36,6 +36,11 @@ public class PortalTomcatBundle extends AbstractPortalBundle {
 	}
 
 	@Override
+	public String getDisplayName() {
+		return "Tomcat";
+	}
+
+	@Override
 	public String getMainClass() {
 		return "org.apache.catalina.startup.Bootstrap";
 	}
