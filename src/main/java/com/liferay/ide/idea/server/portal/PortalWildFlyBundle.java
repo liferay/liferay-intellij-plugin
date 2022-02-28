@@ -108,6 +108,11 @@ public class PortalWildFlyBundle extends PortalJBossBundle {
 		return "wildfly";
 	}
 
+	@Override
+	public String getDisplayName() {
+		return "JBoss Wildfly";
+	}
+
 	protected void addBootClasspath(String bundleLocation, String moduleId, List<String> args, String prefix) {
 		File[] jars = _getJarsFromModules(bundleLocation, moduleId);
 

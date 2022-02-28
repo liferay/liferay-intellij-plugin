@@ -84,6 +84,11 @@ public class PortalTomcatBundle extends AbstractPortalBundle {
 		return "tomcat";
 	}
 
+	@Override
+	public String getDisplayName() {
+		return "Tomcat";
+	}
+
 	private String[] _getRuntimeVMArgs(Sdk sdk) {
 		List<String> args = new ArrayList<>();
 		Path tempPath = FileUtil.pathAppend(bundlePath, "temp");

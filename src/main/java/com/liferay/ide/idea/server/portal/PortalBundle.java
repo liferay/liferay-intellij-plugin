@@ -37,4 +37,6 @@ public interface PortalBundle {
 
 	public String getType();
 
+	public String getDisplayName();
+
 }

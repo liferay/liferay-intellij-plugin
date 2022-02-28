@@ -156,6 +156,11 @@ public class PortalJBossBundle extends AbstractPortalBundle {
 		return "jboss";
 	}
 
+	@Override
+	public String getDisplayName() {
+		return "JBoss AS";
+	}
+
 	protected int getDefaultJMXRemotePort() {
 		return DEFAULT_JMX_PORT;
 	}
