@@ -17,8 +17,6 @@ package com.liferay.ide.idea.server.portal;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.util.lang.JavaVersion;
 
-import com.liferay.ide.idea.util.FileUtil;
-
 import java.io.File;
 
 import java.nio.file.Path;
@@ -38,6 +36,11 @@ public class PortalJBossEapBundle extends PortalJBossBundle {
 	}
 
 	@Override
+	public String getDisplayName() {
+		return "JBoss EAP";
+	}
+
+	@Override
 	public String[] getRuntimeStartVMArgs(Sdk sdk) {
 		List<String> args = getDefaultRuntimeStartVMArgs();
 
@@ -53,7 +56,7 @@ public class PortalJBossEapBundle extends PortalJBossBundle {
 
 			if (jdkVersion.compareTo(jdk9Version) < 0) {
 				File log4jJbossLogmanager = getJbossLib(
-						bundlePath, "/modules/system/layers/base/org/jboss/log4j/logmanager/main/");
+					bundlePath, "/modules/system/layers/base/org/jboss/log4j/logmanager/main/");
 
 				if (Objects.nonNull(log4jJbossLogmanager)) {
 					args.add("-Xbootclasspath/p:" + log4jJbossLogmanager.getAbsolutePath());
@@ -87,8 +90,4 @@ public class PortalJBossEapBundle extends PortalJBossBundle {
 		return "jboss_eap";
 	}
 
-	@Override
-	public String getDisplayName() {
-		return "JBoss EAP";
-	}
 }

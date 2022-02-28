@@ -42,6 +42,7 @@ You can install this using _Preferences > Plugins > Install plugin from disk... 
 You must have one Liferay Workspace Project to do the following steps:
 
 - Right click on the root of your Liferay Workspace Project
+
 1. Click Liferay > InitBundle
 
 1. Then the gradle will run *initBundle* task

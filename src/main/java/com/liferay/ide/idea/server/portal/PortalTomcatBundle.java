@@ -36,6 +36,11 @@ public class PortalTomcatBundle extends AbstractPortalBundle {
 	}
 
 	@Override
+	public String getDisplayName() {
+		return "Tomcat";
+	}
+
+	@Override
 	public String getMainClass() {
 		return "org.apache.catalina.startup.Bootstrap";
 	}
@@ -82,11 +87,6 @@ public class PortalTomcatBundle extends AbstractPortalBundle {
 	@Override
 	public String getType() {
 		return "tomcat";
-	}
-
-	@Override
-	public String getDisplayName() {
-		return "Tomcat";
 	}
 
 	private String[] _getRuntimeVMArgs(Sdk sdk) {

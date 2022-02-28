@@ -94,19 +94,21 @@ public class LiferayServerConfigurable
 
 	@Override
 	public void applyEditorTo(@NotNull LiferayServerConfiguration configuration) throws ConfigurationException {
-		ModulesComboBox modulesComboBox = _modules.getComponent();
-
 		configuration.setAlternativeJrePath(_jrePath.getJrePathOrName());
 		configuration.setAlternativeJrePathEnabled(_jrePath.isAlternativeJreSelected());
 		configuration.setBundleLocation(_liferayServer.getText());
+
 		PortalBundle portalBundle = ServerUtil.getPortalBundle(Paths.get(_liferayServer.getText()));
 
 		if (portalBundle != null) {
 			configuration.setBundleType(portalBundle.getType());
 		}
-		else{
-			throw new ConfigurationException("Portal bundle type is invalid.");
+		else {
+			throw new ConfigurationException("Portal bundle type is invalid");
 		}
+
+		ModulesComboBox modulesComboBox = _modules.getComponent();
+
 		configuration.setDeveloperMode(_developerMode.isSelected());
 		configuration.setModule(modulesComboBox.getSelectedModule());
 		configuration.setVMParameters(_vmParams.getText());

@@ -46,6 +46,11 @@ public class PortalWildFlyBundle extends PortalJBossBundle {
 	}
 
 	@Override
+	public String getDisplayName() {
+		return "JBoss Wildfly";
+	}
+
+	@Override
 	public Path[] getRuntimeClasspath() {
 		List<Path> paths = new ArrayList<>();
 
@@ -106,11 +111,6 @@ public class PortalWildFlyBundle extends PortalJBossBundle {
 	@Override
 	public String getType() {
 		return "wildfly";
-	}
-
-	@Override
-	public String getDisplayName() {
-		return "JBoss Wildfly";
 	}
 
 	protected void addBootClasspath(String bundleLocation, String moduleId, List<String> args, String prefix) {

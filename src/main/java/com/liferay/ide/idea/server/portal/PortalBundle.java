@@ -25,6 +25,8 @@ public interface PortalBundle {
 
 	public Path getAppServerDir();
 
+	public String getDisplayName();
+
 	public Path getLiferayHome();
 
 	public String getMainClass();
@@ -36,7 +38,5 @@ public interface PortalBundle {
 	public String[] getRuntimeStartVMArgs(Sdk sdk);
 
 	public String getType();
-
-	public String getDisplayName();
 
 }

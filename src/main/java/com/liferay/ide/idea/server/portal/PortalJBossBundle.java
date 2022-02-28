@@ -45,6 +45,11 @@ public class PortalJBossBundle extends AbstractPortalBundle {
 		super(path);
 	}
 
+	@Override
+	public String getDisplayName() {
+		return "JBoss AS";
+	}
+
 	public int getJmxRemotePort() {
 		return getDefaultJMXRemotePort();
 	}
@@ -154,11 +159,6 @@ public class PortalJBossBundle extends AbstractPortalBundle {
 	@Override
 	public String getType() {
 		return "jboss";
-	}
-
-	@Override
-	public String getDisplayName() {
-		return "JBoss AS";
 	}
 
 	protected int getDefaultJMXRemotePort() {
