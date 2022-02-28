@@ -40,22 +40,22 @@ import java.util.stream.Stream;
  */
 public class LayeredModulePathFactory {
 
-	public static File[] getFilesForModule(File modulesFolder, String moduleName, String[] slots, FilenameFilter filter) {
+	public static File[] getFilesForModule(
+		File modulesFolder, String moduleName, String[] slots, FilenameFilter filter) {
+
 		String slashed = moduleName.replaceAll("\\.", "/");
 
-		if(Objects.isNull(slots) || slots.length < 1){
-			return _getFiles(modulesFolder, Paths.get(slashed, "main"), filter);
-		}
+		slots = (slots == null) ? new String[] {"main"} : slots;
 
 		return Stream.of(
-				slots
+			slots
 		).map(
-				slot -> Objects.isNull(slot) ? "main" : slot
+			slot -> Objects.isNull(slot) ? "main" : slot
 		).flatMap(
-				slot -> Stream.of(
-						_getFiles(modulesFolder, Paths.get(slashed, slot), filter )
-				)
-		).toArray(File[]::new);
+			slot -> Stream.of(_getFiles(modulesFolder, Paths.get(slashed, slot), filter))
+		).toArray(
+			File[]::new
+		);
 	}
 
 	/**
