@@ -33,18 +33,29 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 /**
  * @author Brian Stansberry
  */
 public class LayeredModulePathFactory {
 
-	public static File[] getFilesForModule(File modulesFolder, String moduleName, String slot, FilenameFilter filter) {
+	public static File[] getFilesForModule(
+		File modulesFolder, String moduleName, String[] slots, FilenameFilter filter) {
+
 		String slashed = moduleName.replaceAll("\\.", "/");
 
-		slot = (slot == null) ? "main" : slot;
+		slots = (slots == null) ? new String[] {"main"} : slots;
 
-		return _getFiles(modulesFolder, Paths.get(slashed, slot), filter);
+		return Stream.of(
+			slots
+		).map(
+			slot -> Objects.isNull(slot) ? "main" : slot
+		).flatMap(
+			slot -> Stream.of(_getFiles(modulesFolder, Paths.get(slashed, slot), filter))
+		).toArray(
+			File[]::new
+		);
 	}
 
 	/**
