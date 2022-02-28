@@ -19,11 +19,14 @@ import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 
 import java.util.List;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  */
 public class LiferayTaglibCSSClassAttributeReferenceContributorTest extends LightJavaCodeInsightFixtureTestCase {
 
+	@Test
 	public void testCompletionCSS() {
 		myFixture.configureByFiles("view.jsp", "main.css", "liferay-aui.tld");
 		myFixture.complete(CompletionType.BASIC, 1);

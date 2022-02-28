@@ -16,6 +16,7 @@ package com.liferay.ide.idea.language.tag;
 
 import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.LanguageLevelModuleExtension;
@@ -32,11 +33,14 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  */
 public class LiferayTaglibSearchContainerJavaBeanReferenceContributorTest extends LightJavaCodeInsightFixtureTestCase {
 
+	@Test
 	public void testJavaBeanReferenceLookup() {
 		myFixture.configureByFiles("view.jsp", "liferay-ui.tld", "com/liferay/ide/model/MyModel.java");
 		myFixture.complete(CompletionType.BASIC, 1);
@@ -65,12 +69,27 @@ public class LiferayTaglibSearchContainerJavaBeanReferenceContributorTest extend
 			@NotNull Module module, @NotNull ModifiableRootModel modifiableRootModel,
 			@NotNull ContentEntry contentEntry) {
 
+			ProjectJdkTable.getInstance(
+			).addJdk(
+				SdkUtil.getTestJdk()
+			);
+
 			LanguageLevelModuleExtension languageLevelModuleExtension = modifiableRootModel.getModuleExtension(
 				LanguageLevelModuleExtension.class);
 
 			if (languageLevelModuleExtension != null) {
 				languageLevelModuleExtension.setLanguageLevel(LanguageLevel.JDK_1_8);
 			}
+
+			//			JavaAwareProjectJdkTableImpl javaAwareProjectJdkTableImpl =
+			//			JavaAwareProjectJdkTableImpl.getInstanceEx();
+
+			//			Sdk[] allJdks = javaAwareProjectJdkTableImpl.getAllJdks();
+			//
+			//			ProjectJdkTable.getInstance(
+			//			).addJdk(
+			//				SdkUtil.getTestJdk()
+			//			);
 
 			modifiableRootModel.setSdk(SdkUtil.getTestJdk());
 		}

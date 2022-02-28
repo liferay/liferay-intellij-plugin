@@ -17,11 +17,14 @@ package com.liferay.ide.idea.language.resourcebundle;
 import com.intellij.lang.properties.codeInspection.unused.UnusedPropertyInspection;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  */
 public class LiferayResourceBundlePropertiesImplicitUsageProviderTest extends BasePlatformTestCase {
 
+	@Test
 	public void testImplicitUsageArbitraryPropertyInLanguageProperties() {
 		myFixture.configureByFiles("Language_unused.properties");
 
@@ -29,6 +32,7 @@ public class LiferayResourceBundlePropertiesImplicitUsageProviderTest extends Ba
 		myFixture.checkHighlighting();
 	}
 
+	@Test
 	public void testImplicitUsageJavaxPortletTitleInLanguageProperties() {
 		myFixture.configureByFiles("Language.properties");
 

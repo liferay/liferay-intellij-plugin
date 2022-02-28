@@ -20,11 +20,14 @@ import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 import java.util.List;
 import java.util.Objects;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  */
 public class LiferayServiceXMLDuplicateEntityInspectionTest extends LightJavaCodeInsightFixtureTestCase {
 
+	@Test
 	public void testDuplicateEntityInspection() {
 		myFixture.configureByFiles("service.xml");
 

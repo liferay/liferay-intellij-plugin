@@ -21,11 +21,14 @@ import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import com.intellij.util.containers.ContainerUtil;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  */
 public class BndFormattingTest extends BasePlatformTestCase {
 
+	@Test
 	public void testFormatter() {
 		myFixture.configureByFiles("bnd.bnd");
 

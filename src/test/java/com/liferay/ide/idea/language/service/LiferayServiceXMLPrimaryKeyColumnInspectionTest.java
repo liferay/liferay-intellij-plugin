@@ -16,17 +16,21 @@ package com.liferay.ide.idea.language.service;
 
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  */
 public class LiferayServiceXMLPrimaryKeyColumnInspectionTest extends LightJavaCodeInsightFixtureTestCase {
 
+	@Test
 	public void testInvalidPrimaryKeyInspection() {
 		myFixture.configureByFiles("service_invalid.xml");
 
 		myFixture.checkHighlighting();
 	}
 
+	@Test
 	public void testValidPrimaryKeyInspection() {
 		myFixture.configureByFiles("service_valid.xml");
 

@@ -33,11 +33,14 @@ import java.io.File;
 
 import org.jetbrains.annotations.NotNull;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  */
 public class BndHeaderValuePartManipulatorTest extends LightJavaCodeInsightFixtureTestCase {
 
+	@Test
 	public void testRenameClassInsideBnd() {
 		myFixture.configureByFiles("testRenameClassInsideBnd/bnd.bnd", "com/liferay/test/Foo.java");
 
@@ -46,6 +49,7 @@ public class BndHeaderValuePartManipulatorTest extends LightJavaCodeInsightFixtu
 		myFixture.checkResultByFile("com/liferay/test/Bar.java", "com/liferay/test/Bar_Renamed.java", false);
 	}
 
+	@Test
 	public void testRenameClassInsideClass() {
 		myFixture.configureByFiles("com/liferay/test/Baz.java", "testRenameClassInsideClass/bnd.bnd");
 
@@ -55,6 +59,7 @@ public class BndHeaderValuePartManipulatorTest extends LightJavaCodeInsightFixtu
 			"testRenameClassInsideClass/bnd.bnd", "testRenameClassInsideClass/bnd_renamed.bnd", false);
 	}
 
+	@Test
 	public void testRenamePackageInsideBnd() {
 		myFixture.configureByFiles("testRenamePackageInsideBnd/bnd.bnd", "com/liferay/test/Foo.java");
 
@@ -63,6 +68,7 @@ public class BndHeaderValuePartManipulatorTest extends LightJavaCodeInsightFixtu
 		myFixture.checkResultByFile("com/liferay/renamed/Foo.java", "com/liferay/test/Foo_Renamed.java", false);
 	}
 
+	@Test
 	public void testRenamePackageInsideClass() {
 		myFixture.configureByFiles("com/liferay/test/Bar.java", "testRenamePackageInsideClass/bnd.bnd");
 

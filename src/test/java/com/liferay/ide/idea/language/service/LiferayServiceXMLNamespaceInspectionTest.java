@@ -16,17 +16,21 @@ package com.liferay.ide.idea.language.service;
 
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  */
 public class LiferayServiceXMLNamespaceInspectionTest extends LightJavaCodeInsightFixtureTestCase {
 
+	@Test
 	public void testInvalidNamespaceInspection() {
 		myFixture.configureByFiles("service_invalid.xml");
 
 		myFixture.checkHighlighting();
 	}
 
+	@Test
 	public void testValidNamespaceInspection() {
 		myFixture.configureByFiles("service_valid.xml");
 

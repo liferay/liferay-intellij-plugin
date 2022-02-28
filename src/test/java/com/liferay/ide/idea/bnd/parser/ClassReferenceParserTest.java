@@ -41,11 +41,14 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  */
 public class ClassReferenceParserTest extends LightJavaCodeInsightFixtureTestCase {
 
+	@Test
 	public void testClassReferenceContributor() {
 		myFixture.configureByFiles("classReferenceContributor/bnd.bnd", "com/liferay/test/Foo.java");
 
@@ -56,6 +59,7 @@ public class ClassReferenceParserTest extends LightJavaCodeInsightFixtureTestCas
 		assertTrue(strings.contains("Foo"));
 	}
 
+	@Test
 	public void testInvalidClassReferenceHighlighting() {
 		myFixture.configureByFiles("invalidClassReference/bnd.bnd", "com/liferay/test/Foo.java");
 
@@ -68,6 +72,7 @@ public class ClassReferenceParserTest extends LightJavaCodeInsightFixtureTestCas
 		assertEquals(highlightInfo.getDescription(), "Cannot resolve class 'com.liferay.test.NonExisting'");
 	}
 
+	@Test
 	public void testResolveClass() {
 		myFixture.configureByFiles("resolveClass/bnd.bnd", "com/liferay/test/Foo.java");
 
@@ -93,6 +98,7 @@ public class ClassReferenceParserTest extends LightJavaCodeInsightFixtureTestCas
 		assertEquals("Foo", psiClass.getName());
 	}
 
+	@Test
 	public void testValidClassReferenceHighlighting() {
 		myFixture.configureByFiles("validClassReference/bnd.bnd", "com/liferay/test/Foo.java");
 

@@ -20,11 +20,14 @@ import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 import java.util.List;
 import java.util.Objects;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  */
 public class LiferayServiceXMLExceptionNameInspectionTest extends LightJavaCodeInsightFixtureTestCase {
 
+	@Test
 	public void testExceptionNameInspection() {
 		myFixture.configureByFiles("service.xml");
 

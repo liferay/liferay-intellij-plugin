@@ -16,11 +16,14 @@ package com.liferay.ide.idea.language.blade;
 
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  */
 public class LiferayBladePropertiesImplicitUsageProviderTest extends BasePlatformTestCase {
 
+	@Test
 	public void testImplicitUsageJavaxPortletTitleInLanguageProperties() {
 		myFixture.configureByFiles(".blade.properties");
 

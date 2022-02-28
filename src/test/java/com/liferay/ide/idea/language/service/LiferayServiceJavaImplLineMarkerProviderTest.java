@@ -40,6 +40,8 @@ import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  * @author Gregory Amerson
@@ -47,6 +49,7 @@ import org.jetbrains.annotations.NotNull;
 public class LiferayServiceJavaImplLineMarkerProviderTest extends LightJavaCodeInsightFixtureTestCase {
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
+	@Test
 	public void testExceptionNameInspection() {
 		myFixture.configureByFiles("com/liferay/ide/model/impl/MyModelImpl.java", "service.xml");
 

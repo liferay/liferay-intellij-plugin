@@ -22,11 +22,14 @@ import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 
 import java.util.List;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  */
 public class LiferayTaglibResourceBundleReferenceContributorTest extends LightJavaCodeInsightFixtureTestCase {
 
+	@Test
 	public void testCompletion() {
 		myFixture.configureByFiles("view.jsp", "liferay-ui.tld", "Language.properties", "foo.properties");
 		myFixture.complete(CompletionType.BASIC, 1);

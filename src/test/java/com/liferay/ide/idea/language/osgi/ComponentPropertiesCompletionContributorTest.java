@@ -36,11 +36,14 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  */
 public class ComponentPropertiesCompletionContributorTest extends LightJavaCodeInsightFixtureTestCase {
 
+	@Test
 	public void testComponentPropertiesCompletion() {
 		myFixture.configureByFile("MyComponent.java");
 
@@ -51,6 +54,7 @@ public class ComponentPropertiesCompletionContributorTest extends LightJavaCodeI
 		assertTrue(strings.contains("osgi.command.scope"));
 	}
 
+	@Test
 	public void testMultiServiceComponentPropertiesCompletion() {
 		myFixture.configureByFiles(
 			"MultiServiceComponent.java", "com/liferay/portal/kernel/portlet/bridges/mvc/MVCActionCommand.java",
@@ -64,6 +68,7 @@ public class ComponentPropertiesCompletionContributorTest extends LightJavaCodeI
 		assertTrue("should contain properties from MVCActionCommand", strings.contains("mvc.command.name"));
 	}
 
+	@Test
 	public void testSinglePropertyComponentPropertiesCompletion() {
 		myFixture.configureByFile("SinglePropertyComponent.java");
 

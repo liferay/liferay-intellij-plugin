@@ -19,11 +19,14 @@ import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 
 import java.util.List;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  */
 public class LiferayXmlSchemaProviderTest extends LightJavaCodeInsightFixtureTestCase {
 
+	@Test
 	public void testCompletion() {
 		myFixture.configureByFiles("portlet-model-hints.xml");
 		myFixture.complete(CompletionType.BASIC, 1);

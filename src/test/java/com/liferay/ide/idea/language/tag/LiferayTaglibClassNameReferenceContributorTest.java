@@ -30,11 +30,14 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  */
 public class LiferayTaglibClassNameReferenceContributorTest extends LightJavaCodeInsightFixtureTestCase {
 
+	@Test
 	public void testCompletion() {
 		myFixture.configureByFiles("view.jsp", "liferay-aui.tld", "MyObject.java");
 		myFixture.complete(CompletionType.BASIC, 1);

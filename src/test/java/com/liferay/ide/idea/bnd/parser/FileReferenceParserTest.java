@@ -24,11 +24,14 @@ import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 
 import java.util.List;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  */
 public class FileReferenceParserTest extends BasePlatformTestCase {
 
+	@Test
 	public void testFileReferenceContributor() {
 		myFixture.configureByFiles("fileReferenceContributor/bnd.bnd", "configs/main.js");
 
@@ -39,6 +42,7 @@ public class FileReferenceParserTest extends BasePlatformTestCase {
 		assertTrue(strings.contains("configs"));
 	}
 
+	@Test
 	public void testInvalidFileReferenceHighlighting() {
 		myFixture.configureByFiles("invalidFileReference/bnd.bnd", "configs/main.js");
 
@@ -51,6 +55,7 @@ public class FileReferenceParserTest extends BasePlatformTestCase {
 		assertEquals(highlightInfo.getDescription(), "Cannot resolve file '/non/existing.js'");
 	}
 
+	@Test
 	public void testResolveFile() {
 		myFixture.configureByFiles("resolveFile/bnd.bnd", "configs/main.js");
 
@@ -76,6 +81,7 @@ public class FileReferenceParserTest extends BasePlatformTestCase {
 		assertEquals("main.js", targetPsiFile.getName());
 	}
 
+	@Test
 	public void testValidFileReferenceHighlighting() {
 		myFixture.configureByFiles("validFileReference/bnd.bnd", "configs/main.js");
 

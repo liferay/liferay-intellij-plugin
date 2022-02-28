@@ -16,11 +16,14 @@ package com.liferay.ide.idea.language.gradle;
 
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  */
 public class LiferayGradlePropertiesImplicitUsageProviderTest extends BasePlatformTestCase {
 
+	@Test
 	public void testImplicitUsageJavaxPortletTitleInLanguageProperties() {
 		myFixture.configureByFiles("gradle.properties");
 

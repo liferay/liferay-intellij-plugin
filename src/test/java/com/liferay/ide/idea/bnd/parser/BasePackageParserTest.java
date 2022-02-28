@@ -40,11 +40,14 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  */
 public class BasePackageParserTest extends LightJavaCodeInsightFixtureTestCase {
 
+	@Test
 	public void testInvalidImportPackageHighlighting() {
 		myFixture.configureByFiles("invalidImportPackage/bnd.bnd", "com/liferay/test/Foo.java");
 
@@ -57,6 +60,7 @@ public class BasePackageParserTest extends LightJavaCodeInsightFixtureTestCase {
 		assertEquals(highlightInfo.getDescription(), "Cannot resolve package com.liferay.non.existing");
 	}
 
+	@Test
 	public void testResolvePackage() {
 		myFixture.configureByFiles("resolvePackage/bnd.bnd", "com/liferay/test/Foo.java");
 
@@ -92,6 +96,7 @@ public class BasePackageParserTest extends LightJavaCodeInsightFixtureTestCase {
 		assertEquals("test", package3.getName());
 	}
 
+	@Test
 	public void testValidImportPackageHighlighting() {
 		myFixture.configureByFiles("validImportPackage/bnd.bnd", "com/liferay/test/Foo.java");
 

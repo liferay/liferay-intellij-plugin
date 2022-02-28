@@ -45,11 +45,14 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.gradle.util.GradleConstants;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  */
 public class LiferayJspDebuggerSourceFinderAdapterTest extends LightJavaCodeInsightFixtureTestCase {
 
+	@Test
 	public void testSourceFinderInLibrary() {
 		SourcesFinder<JavaeeFacet[]> sourcesFinder = new LiferayJspDebuggerSourceFinderAdapter();
 
@@ -58,6 +61,7 @@ public class LiferayJspDebuggerSourceFinderAdapterTest extends LightJavaCodeInsi
 		assertNotNull("SourcesFinder should have found \"init.jsp\" inside \"com.liferay.login.web.jar\"", sourceFile);
 	}
 
+	@Test
 	public void testSourceFinderInTargetPlatformArtifacts() {
 		SourcesFinder<JavaeeFacet[]> sourcesFinder = new LiferayJspDebuggerSourceFinderAdapter();
 
