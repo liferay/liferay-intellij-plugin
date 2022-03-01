@@ -22,7 +22,6 @@ import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ui.UIUtil;
@@ -214,11 +213,7 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 				validationTitle);
 		}
 
-		ProjectManager projectManager = ProjectManager.getInstance();
-
-		Project workspaceProject = projectManager.getOpenProjects()[0];
-
-		if (LiferayWorkspaceSupport.isValidMavenWorkspaceProject(workspaceProject)) {
+		if (LiferayWorkspaceSupport.isValidMavenWorkspaceProject(_project)) {
 			if (Objects.equals(type, "form-field")) {
 				VersionRange requiredVersionRange = new VersionRange(
 					true, new Version("7.0"), new Version("7.2"), false);

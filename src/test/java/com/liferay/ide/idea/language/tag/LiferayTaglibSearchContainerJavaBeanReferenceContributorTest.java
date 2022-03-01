@@ -81,16 +81,6 @@ public class LiferayTaglibSearchContainerJavaBeanReferenceContributorTest extend
 				languageLevelModuleExtension.setLanguageLevel(LanguageLevel.JDK_1_8);
 			}
 
-			//			JavaAwareProjectJdkTableImpl javaAwareProjectJdkTableImpl =
-			//			JavaAwareProjectJdkTableImpl.getInstanceEx();
-
-			//			Sdk[] allJdks = javaAwareProjectJdkTableImpl.getAllJdks();
-			//
-			//			ProjectJdkTable.getInstance(
-			//			).addJdk(
-			//				SdkUtil.getTestJdk()
-			//			);
-
 			modifiableRootModel.setSdk(SdkUtil.getTestJdk());
 		}
 
