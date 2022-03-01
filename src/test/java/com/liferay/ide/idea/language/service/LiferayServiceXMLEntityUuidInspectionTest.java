@@ -16,17 +16,21 @@ package com.liferay.ide.idea.language.service;
 
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  */
 public class LiferayServiceXMLEntityUuidInspectionTest extends LightJavaCodeInsightFixtureTestCase {
 
+	@Test
 	public void testInvalidUuidInspection() {
 		myFixture.configureByFiles("service_invalid.xml");
 
 		myFixture.checkHighlighting();
 	}
 
+	@Test
 	public void testValidUuidInspection() {
 		myFixture.configureByFiles("service_valid.xml");
 

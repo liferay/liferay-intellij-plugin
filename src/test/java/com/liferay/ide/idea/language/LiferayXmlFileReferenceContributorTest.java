@@ -19,11 +19,14 @@ import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 
 import java.util.List;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  */
 public class LiferayXmlFileReferenceContributorTest extends LightJavaCodeInsightFixtureTestCase {
 
+	@Test
 	public void testXmlAttributeFileReference() {
 		myFixture.configureByFiles("default.xml", "my_resources.xml");
 

@@ -33,11 +33,14 @@ import java.util.Objects;
 
 import org.jetbrains.annotations.NotNull;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  */
 public class LiferayTaglibStringConcatInspectionTest extends LightJavaCodeInsightFixtureTestCase {
 
+	@Test
 	public void testStringConcatInspection() {
 		myFixture.configureByFiles("view.jsp", "liferay-aui.tld");
 		myFixture.checkHighlighting();

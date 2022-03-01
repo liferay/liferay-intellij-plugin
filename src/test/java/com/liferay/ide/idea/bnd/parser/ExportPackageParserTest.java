@@ -40,11 +40,14 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  */
 public class ExportPackageParserTest extends LightJavaCodeInsightFixtureTestCase {
 
+	@Test
 	public void testInvalidExportPackageHighlighting() {
 		myFixture.configureByFiles("invalidExportPackage/bnd.bnd", "com/liferay/test/Foo.java");
 
@@ -57,6 +60,7 @@ public class ExportPackageParserTest extends LightJavaCodeInsightFixtureTestCase
 		assertEquals(highlightInfo.getDescription(), "Cannot resolve package com.liferay.non.existing");
 	}
 
+	@Test
 	public void testInvalidExportPackageUsesHighlighting() {
 		myFixture.configureByFiles(
 			"invalidExportPackageUses/bnd.bnd", "com/liferay/test/Foo.java", "com/liferay/foo/Bar.java");
@@ -70,6 +74,7 @@ public class ExportPackageParserTest extends LightJavaCodeInsightFixtureTestCase
 		assertEquals(highlightInfo.getDescription(), "Cannot resolve package com.liferay.non.existing");
 	}
 
+	@Test
 	public void testResolvePackage() {
 		myFixture.configureByFiles("resolvePackage/bnd.bnd", "com/liferay/test/Foo.java");
 
@@ -105,6 +110,7 @@ public class ExportPackageParserTest extends LightJavaCodeInsightFixtureTestCase
 		assertEquals("test", package3.getName());
 	}
 
+	@Test
 	public void testResolvePackageUses() {
 		myFixture.configureByFiles(
 			"resolvePackageUses/bnd.bnd", "com/liferay/test/Foo.java", "com/liferay/foo/Bar.java");
@@ -141,6 +147,7 @@ public class ExportPackageParserTest extends LightJavaCodeInsightFixtureTestCase
 		assertEquals("foo", package3.getName());
 	}
 
+	@Test
 	public void testValidExportPackageHighlighting() {
 		myFixture.configureByFiles("validExportPackage/bnd.bnd", "com/liferay/test/Foo.java");
 
@@ -152,6 +159,7 @@ public class ExportPackageParserTest extends LightJavaCodeInsightFixtureTestCase
 			highlightInfos.isEmpty());
 	}
 
+	@Test
 	public void testValidExportPackageUsesHighlighting() {
 		myFixture.configureByFiles(
 			"validExportPackageUses/bnd.bnd", "com/liferay/test/Foo.java", "com/liferay/foo/Bar.java");

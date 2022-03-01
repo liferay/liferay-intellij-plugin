@@ -31,6 +31,8 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.gradle.util.GradleConstants;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  */
@@ -68,6 +70,7 @@ public class LiferayJSPredefinedLibraryProviderTest extends LightJavaCodeInsight
 		super.setUp();
 	}
 
+	@Test
 	public void testAuiScriptTagLiferay() {
 		myFixture.configureByFiles("aui.jsp", "liferay-aui.tld");
 
@@ -80,6 +83,7 @@ public class LiferayJSPredefinedLibraryProviderTest extends LightJavaCodeInsight
 			lookupElementStrings.contains("Liferay"));
 	}
 
+	@Test
 	public void testHtmlScriptTagLiferay() {
 		//Does not work in <script>-Tags inside JSPs in IntelliJ 2018.3.x
 		//See bug report here https://youtrack.jetbrains.com/issue/WEB-37355
@@ -92,6 +96,7 @@ public class LiferayJSPredefinedLibraryProviderTest extends LightJavaCodeInsight
 		assertTrue(lookupElementStrings.contains("Liferay"));
 	}
 
+	@Test
 	public void testJavascriptLiferay() {
 		myFixture.configureByFiles("main.js");
 

@@ -33,11 +33,14 @@ import java.util.Objects;
 
 import org.jetbrains.annotations.NotNull;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  */
 public class LiferayTaglibStrictQuoteEscapingInspectionTest extends LightJavaCodeInsightFixtureTestCase {
 
+	@Test
 	public void testStrictQuoteEscapingInspection() {
 		myFixture.configureByFiles("view.jsp", "liferay-ui.tld");
 		myFixture.checkHighlighting();

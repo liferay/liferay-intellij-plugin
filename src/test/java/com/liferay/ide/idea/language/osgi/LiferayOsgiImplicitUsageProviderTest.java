@@ -35,6 +35,7 @@ import java.io.File;
 import org.jetbrains.annotations.NotNull;
 
 import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  * @author Dominik Marks
@@ -42,6 +43,7 @@ import org.junit.Ignore;
 @Ignore
 public class LiferayOsgiImplicitUsageProviderTest extends LightJavaCodeInsightFixtureTestCase {
 
+	@Test
 	public void testOsgiImplicitUsage() {
 		myFixture.configureByFile("MyComponent.java");
 		myFixture.checkHighlighting();

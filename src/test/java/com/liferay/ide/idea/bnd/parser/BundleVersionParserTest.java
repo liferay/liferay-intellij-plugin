@@ -19,11 +19,14 @@ import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 
 import java.util.List;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  */
 public class BundleVersionParserTest extends BasePlatformTestCase {
 
+	@Test
 	public void testInvalidBundleVersionHighlighting() {
 		myFixture.configureByText("bnd.bnd", "Bundle-Version: foo.bar\n");
 
@@ -36,6 +39,7 @@ public class BundleVersionParserTest extends BasePlatformTestCase {
 		assertEquals(highlightInfo.getDescription(), "invalid version \"foo.bar\": non-numeric \"foo\"");
 	}
 
+	@Test
 	public void testValidBundleVersionHighlighting() {
 		myFixture.configureByText("bnd.bnd", "Bundle-Version: 1.0.0\n");
 

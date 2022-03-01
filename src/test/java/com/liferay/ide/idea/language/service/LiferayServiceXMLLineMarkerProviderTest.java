@@ -40,12 +40,15 @@ import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  */
 public class LiferayServiceXMLLineMarkerProviderTest extends LightJavaCodeInsightFixtureTestCase {
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
+	@Test
 	public void testExceptionNameInspection() {
 		myFixture.configureByFiles("service.xml", "com/liferay/ide/model/impl/MyModelImpl.java");
 

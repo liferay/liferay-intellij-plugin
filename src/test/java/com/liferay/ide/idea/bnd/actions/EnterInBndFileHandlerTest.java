@@ -16,11 +16,14 @@ package com.liferay.ide.idea.bnd.actions;
 
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  */
 public class EnterInBndFileHandlerTest extends BasePlatformTestCase {
 
+	@Test
 	public void testEnterInBndFileHandler() {
 		myFixture.configureByFiles("bnd.bnd");
 

@@ -35,11 +35,14 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 
+import org.junit.Test;
+
 /**
  * @author Dominik Marks
  */
 public class BundleActivatorParserTest extends LightJavaCodeInsightFixtureTestCase {
 
+	@Test
 	public void testInvalidBundleActivatorHighlighting() {
 		myFixture.configureByFiles(
 			"invalid/bnd.bnd", "com/liferay/test/Foo.java", "org/osgi/framework/BundleActivator.java");
@@ -53,6 +56,7 @@ public class BundleActivatorParserTest extends LightJavaCodeInsightFixtureTestCa
 		assertEquals(highlightInfo.getDescription(), "Activator class does not inherit from BundleActivator");
 	}
 
+	@Test
 	public void testValidBundleActivatorHighlighting() {
 		myFixture.configureByFiles(
 			"valid/bnd.bnd", "com/liferay/test/MyBundleActivator.java", "org/osgi/framework/BundleActivator.java");
