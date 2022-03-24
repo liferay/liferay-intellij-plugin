@@ -183,7 +183,6 @@ public class ServerUtil {
 			}
 		}
 		catch (Exception exception) {
-			exception.printStackTrace();
 		}
 
 		File[] files = getMarketplaceLpkgFiles(runtime);
