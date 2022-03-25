@@ -37,7 +37,7 @@ public class WorkspaceConstants {
 
 	public static final String DEFAULT_PRODUCT_VERSION = "portal-7.4-ga1";
 
-	public static final String DEFAULT_TARGET_PLATFORM_VERSION = "7.4.3.4";
+	public static final String DEFAULT_TARGET_PLATFORM_VERSION = "7.4.3.16";
 
 	public static final String EXT_DIR_DEFAULT = "ext";
 
