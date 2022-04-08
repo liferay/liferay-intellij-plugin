@@ -185,7 +185,7 @@ public class LiferayProjectSettingsStep extends ModuleWizardStep {
 		}
 
 		if ((_context.getProjectBuilder() instanceof LiferayModuleBuilder) &&
-			!_liferayProjectTypesComponent.validatComponent()) {
+			!_liferayProjectTypesComponent.validateComponent()) {
 
 			return false;
 		}

@@ -244,7 +244,7 @@ public class SpringMVCPortletModuleBuilder extends ModuleBuilder implements Life
 			sb.append(_packageName);
 		}
 
-		BladeCLI.execute(sb.toString());
+		BladeCLI.execute(project, sb.toString());
 	}
 
 	private void _refreshProject(Project project) {

@@ -76,7 +76,15 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 			() -> {
 				Application application = ApplicationManager.getApplication();
 
-				application.executeOnPooledThread(this::_loadSupportedVersionRanges);
+				application.executeOnPooledThread(
+					new Runnable() {
+
+						@Override
+						public void run() {
+							_loadSupportedVersionRanges(context.getProject());
+						}
+
+					});
 			});
 	}
 
@@ -170,7 +178,7 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 			() -> {
 				DefaultMutableTreeNode root = new DefaultMutableTreeNode("root", true);
 
-				for (String type : BladeCLI.getProjectTemplates()) {
+				for (String type : BladeCLI.getProjectTemplates(_project)) {
 					if (Objects.equals("fragment", type) || Objects.equals("modules-ext", type) ||
 						Objects.equals("spring-mvc-portlet", type)) {
 
@@ -201,7 +209,7 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 		liferayModuleBuilder.setLiferayVersion(_liferayVersion);
 	}
 
-	public boolean validatComponent() throws ConfigurationException {
+	public boolean validateComponent() throws ConfigurationException {
 		String validationTitle = "Validation Error";
 
 		String type = getSelectedType();
@@ -269,8 +277,8 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 		return true;
 	}
 
-	private void _loadSupportedVersionRanges() {
-		File bladeJar = BladeCLI.getBladeJar(BladeCLI.getBladeJarVersion());
+	private void _loadSupportedVersionRanges(Project project) {
+		File bladeJar = BladeCLI.getBladeJar(BladeCLI.getBladeJarVersion(project));
 
 		if (bladeJar != null) {
 			try (ZipFile zipFile = new ZipFile(bladeJar)) {

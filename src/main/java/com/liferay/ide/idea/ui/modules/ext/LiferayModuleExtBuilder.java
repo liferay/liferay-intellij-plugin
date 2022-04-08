@@ -194,7 +194,7 @@ public class LiferayModuleExtBuilder extends ModuleBuilder implements LiferayWor
 		sb.append(projectRoot.getName());
 		sb.append("\"");
 
-		BladeCLI.execute(sb.toString());
+		BladeCLI.execute(project, sb.toString());
 	}
 
 	private void _refreshProject(Project project) {
