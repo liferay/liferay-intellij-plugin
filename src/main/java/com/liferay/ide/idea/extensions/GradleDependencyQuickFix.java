@@ -77,7 +77,7 @@ public class GradleDependencyQuickFix
 		String moduleName = _module.getName();
 		PsiFile gradleFile = null;
 
-		//presume it's a gradle source set module
+		// presume it's a gradle source set module
 
 		if (moduleName.contains("main")) {
 			Module parentModule = IntellijUtil.getParentModule(_module);

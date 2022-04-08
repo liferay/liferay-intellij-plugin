@@ -122,7 +122,7 @@ public class BndHeaderParser {
 			if (tokenText != null) {
 				tokenText = tokenText.trim();
 
-				//do not parse single backslashes as clause
+				// do not parse single backslashes as clause
 
 				if (tokenText.equals("\\")) {
 					psiBuilder.advanceLexer();
