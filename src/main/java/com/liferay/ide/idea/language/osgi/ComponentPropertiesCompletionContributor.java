@@ -688,7 +688,8 @@ public class ComponentPropertiesCompletionContributor extends CompletionContribu
 
 			put("com.liferay.wiki.importer.WikiImporter", new String[][] {{"importer", "String"}, {"page", "String"}});
 
-			//OSGi default commands
+			// OSGi default commands
+
 			put(
 				"java.lang.Object",
 				new String[][] {

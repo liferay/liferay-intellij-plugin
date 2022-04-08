@@ -77,7 +77,9 @@ public class LiferayTaglibResourceBundlePropertyReference extends PropertyRefere
 			IProperty property = (IProperty)propertyObject;
 
 			if (_isLanguageFile(property.getPropertiesFile())) {
-				//only add properties from Language files during code completion
+
+				// only add properties from Language files during code completion
+
 				super.addKey(propertyObject, variants);
 			}
 		}

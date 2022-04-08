@@ -92,7 +92,7 @@ public class LiferayGradleWorkspaceBuilder extends LiferayWorkspaceBuilder {
 				DumbService dumbService = DumbService.getInstance(project);
 
 				dumbService.runWhenSmart(
-					() -> ExternalSystemUtil.ensureToolWindowInitialized(project, GradleConstants.SYSTEM_ID));
+					() -> ExternalSystemUtil.ensureToolWindowContentInitialized(project, GradleConstants.SYSTEM_ID));
 			});
 
 		ExternalSystemUtil.invokeLater(project, ModalityState.NON_MODAL, runnable);
