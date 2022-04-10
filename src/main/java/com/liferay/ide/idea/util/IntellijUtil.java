@@ -25,10 +25,14 @@ import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.ArrayUtil;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -163,7 +167,18 @@ public class IntellijUtil {
 	}
 
 	public static PsiFile[] getProjectPsiFilesByName(Project project, String name) {
-		return FilenameIndex.getFilesByName(project, name, GlobalSearchScope.projectScope(project));
+		Collection<VirtualFile> virtualFiles = FilenameIndex.getVirtualFilesByName(
+			name, GlobalSearchScope.projectScope(project));
+
+		PsiManager psiManager = PsiManager.getInstance(project);
+
+		List<PsiFile> psiFiles = new ArrayList<>();
+
+		for (VirtualFile virtualFile : virtualFiles) {
+			psiFiles.add(psiManager.findFile(virtualFile));
+		}
+
+		return psiFiles.toArray(new PsiFile[0]);
 	}
 
 	public static boolean validateExistingModuleName(String moduleName) {

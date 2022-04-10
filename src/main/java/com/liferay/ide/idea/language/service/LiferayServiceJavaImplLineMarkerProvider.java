@@ -18,16 +18,15 @@ import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider;
 import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder;
 import com.intellij.icons.AllIcons;
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiIdentifier;
 import com.intellij.psi.PsiJavaFile;
-import com.intellij.psi.search.FilenameIndex;
-import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
+
+import com.liferay.ide.idea.util.IntellijUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -64,10 +63,8 @@ public class LiferayServiceJavaImplLineMarkerProvider extends RelatedItemLineMar
 
 							Collection<PsiElement> targetPsiElements = new ArrayList<>();
 
-							Project project = psiElement.getProject();
-
-							PsiFile[] psiFiles = FilenameIndex.getFilesByName(
-								project, "service.xml", GlobalSearchScope.allScope(project));
+							PsiFile[] psiFiles = IntellijUtil.getProjectPsiFilesByName(
+								psiElement.getProject(), "service.xml");
 
 							for (PsiFile psiFile : psiFiles) {
 								if (psiFile instanceof XmlFile) {

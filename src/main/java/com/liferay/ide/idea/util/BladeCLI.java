@@ -14,8 +14,6 @@
 
 package com.liferay.ide.idea.util;
 
-import com.intellij.openapi.project.ProjectManager;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -101,8 +99,8 @@ public class BladeCLI {
 		return lines.toArray(new String[0]);
 	}
 
-	public static String[] execute(String args) {
-		return execute(getBladeJar(getBladeJarVersion()), args);
+	public static String[] execute(com.intellij.openapi.project.Project liferayProject, String args) {
+		return execute(getBladeJar(getBladeJarVersion(liferayProject)), args);
 	}
 
 	public static String[] executeWithLatestBlade(String args) {
@@ -149,11 +147,7 @@ public class BladeCLI {
 		return bladeJar;
 	}
 
-	public static synchronized String getBladeJarVersion() {
-		ProjectManager projectManager = ProjectManager.getInstance();
-
-		com.intellij.openapi.project.Project workspaceProject = projectManager.getOpenProjects()[0];
-
+	public static synchronized String getBladeJarVersion(com.intellij.openapi.project.Project workspaceProject) {
 		if (Objects.nonNull(workspaceProject)) {
 			if (LiferayWorkspaceSupport.isFlexibleLiferayWorkspace(workspaceProject)) {
 				_bladeJarName = BLADE_LATEST;
@@ -169,10 +163,10 @@ public class BladeCLI {
 		return _bladeJarName;
 	}
 
-	public static synchronized String[] getProjectTemplates() {
+	public static synchronized String[] getProjectTemplates(com.intellij.openapi.project.Project liferayProject) {
 		List<String> templateNames = new ArrayList<>();
 
-		String[] executeResult = execute("create -l");
+		String[] executeResult = execute(liferayProject, "create -l");
 
 		for (String name : executeResult) {
 			String trimmedName = name.trim();

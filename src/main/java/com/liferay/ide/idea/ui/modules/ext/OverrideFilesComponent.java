@@ -106,7 +106,8 @@ public class OverrideFilesComponent implements LiferayWorkspaceSupport {
 					ZipUtil.unzip(
 						new File(_sourceJar), sourcePath.toFile(),
 						path -> {
-							//choose the folder where the file should go
+
+							// choose the folder where the file should go
 
 							if (relativePaths.contains(path)) {
 								if (path.startsWith("com/")) {
@@ -246,7 +247,8 @@ public class OverrideFilesComponent implements LiferayWorkspaceSupport {
 					super.getListCellRendererComponent(list, _getItemText(value), index, selected, cellHasFocus);
 
 					if (selected) {
-						//noinspection deprecation
+
+						// noinspection deprecation
 
 						setForeground(UIUtil.getListSelectionForeground(false));
 					}

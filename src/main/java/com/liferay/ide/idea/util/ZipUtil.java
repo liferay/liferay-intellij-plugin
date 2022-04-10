@@ -61,7 +61,8 @@ public class ZipUtil {
 
 					for (Map.Entry<String, File> e : folders.entrySet()) {
 						if (entryName.startsWith(e.getKey())) {
-							//if the entry folder is accepted that means the sub-nodes should be accepted too
+
+							// if the entry folder is accepted that means the sub-nodes should be accepted too
 
 							_copyEntry(zipFile, entry, e.getValue());
 							hasCopied = true;
