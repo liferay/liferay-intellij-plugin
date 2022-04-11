@@ -39,6 +39,7 @@
 				<li>INTELLIJ-230 improve deployment on multiple intellij windows</li>
 				<li>INTELLIJ-231 add support for more jboss wildfly servers</li>
 				<li>INTELLIJ-232 add support for more jboss eap servers</li>
+				<li>INTELLIJ-234 Fix compatibility problems for IC-221.5080.93</li>
 			</ul>
 			<li>2.0.0</li>
 			<ul>
