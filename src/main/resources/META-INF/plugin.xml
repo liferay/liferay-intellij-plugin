@@ -31,6 +31,10 @@
 	</p>
 	<p>
 		<ul>
+			<li>2.0.2</li>
+			<ul>
+				<li>INTELLIJ-235 Fix compatibility problems for 2022.1</li>
+			</ul>
 			<li>2.0.1</li>
 			<ul>
 				<li>INTELLIJ-223 bug fix for starting tomcat using java 1.8</li>
