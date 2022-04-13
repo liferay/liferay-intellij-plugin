@@ -75,8 +75,6 @@ configurations.all {
 }
 
 dependencies {
-	//	compile group: "com.github.docker-java", name: "docker-java-api", version: "3.2.11"
-
 	compile files( "libs/gradle-tooling.jar")
 	compile group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.4.0"
 	compile group: "commons-configuration", name: "commons-configuration", version: "1.10"
@@ -238,11 +236,11 @@ formatSource {
 intellij {
 	plugins = ["java", "CSS", "DatabaseTools", "gradle", "Groovy", "java-i18n", "JavaEE", "Web", "JavaScriptLanguage", "jsp", "junit", "maven", "PersistenceSupport", "properties", "sass"]
 	pluginName = "liferay-intellij-plugin"
-	version = "IU-2021.3"
+	version = "IU-2022.1"
 }
 
 patchPluginXml {
-	sinceBuild = "213"
+	sinceBuild = "221"
 	untilBuild = ""
 }
 
@@ -298,4 +296,4 @@ verifyBladeLatest {
 	checksum bladeLatestMD5
 }
 
-version = "2.0.1"
+version = "2.0.2"
