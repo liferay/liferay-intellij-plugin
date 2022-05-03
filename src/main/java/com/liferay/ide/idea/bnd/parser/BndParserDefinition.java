@@ -30,6 +30,7 @@ import com.intellij.psi.util.PsiUtilCore;
 import com.liferay.ide.idea.bnd.BndLanguage;
 import com.liferay.ide.idea.bnd.lexer.BndLexer;
 import com.liferay.ide.idea.bnd.psi.BndElementType;
+import com.liferay.ide.idea.bnd.psi.BndTokenType;
 import com.liferay.ide.idea.bnd.psi.impl.BndFileImpl;
 
 import org.jetbrains.annotations.NotNull;
@@ -40,6 +41,8 @@ import org.jetbrains.annotations.NotNull;
 public class BndParserDefinition implements ParserDefinition {
 
 	public static final IFileElementType BND_FILE_ELEMENT_TYPE = new IFileElementType("BndFile", BndLanguage.INSTANCE);
+
+	public static final TokenSet COMMENTS = TokenSet.create(BndTokenType.COMMENT);
 
 	@NotNull
 	@Override
@@ -74,7 +77,7 @@ public class BndParserDefinition implements ParserDefinition {
 	@NotNull
 	@Override
 	public TokenSet getCommentTokens() {
-		return TokenSet.EMPTY;
+		return COMMENTS;
 	}
 
 	@Override

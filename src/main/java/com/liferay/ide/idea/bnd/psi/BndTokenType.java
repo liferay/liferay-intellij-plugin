@@ -39,6 +39,8 @@ public class BndTokenType extends IElementType implements ILeafElementType {
 
 	public static final BndTokenType COMMA = new BndTokenType("COMMA_TOKEN");
 
+	public static final BndTokenType COMMENT = new BndTokenType("COMMENT_TOKEN");
+
 	public static final BndTokenType EQUALS = new BndTokenType("EQUALS_TOKEN");
 
 	public static final BndTokenType HEADER_NAME = new BndTokenType("HEADER_NAME_TOKEN");
