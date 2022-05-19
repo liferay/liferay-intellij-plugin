@@ -119,6 +119,22 @@ public class BndLexer extends LexerBase {
 				_tokenType = BndTokenType.SECTION_END;
 				_tokenEnd = _tokenStart + 1;
 			}
+			else if (c1 == '#') {
+				int commentEnd = _tokenStart + 1;
+
+				while (commentEnd < _endOffset) {
+					c1 = _buffer.charAt(commentEnd);
+
+					if (c1 == '\n') {
+						break;
+					}
+
+					++commentEnd;
+				}
+
+				_tokenType = BndTokenType.COMMENT;
+				_tokenEnd = commentEnd;
+			}
 			else {
 				int headerEnd = _tokenStart + 1;
 
@@ -155,8 +171,17 @@ public class BndLexer extends LexerBase {
 			IElementType special;
 
 			if (c1 == '\n') {
-				_tokenType = BndTokenType.NEWLINE;
-				_tokenEnd = _tokenStart + 1;
+				if (_tokenType == BndTokenType.COMMENT) {
+
+					// end of comment
+
+					_tokenType = BndTokenType.SECTION_END;
+					_tokenEnd = _tokenStart + 1;
+				}
+				else {
+					_tokenType = BndTokenType.NEWLINE;
+					_tokenEnd = _tokenStart + 1;
+				}
 			}
 			else if ((special = _specialCharactersTokenMap.get(c1)) != null) {
 				_tokenType = special;

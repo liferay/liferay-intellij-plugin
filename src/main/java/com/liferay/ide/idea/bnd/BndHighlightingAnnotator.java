@@ -95,6 +95,9 @@ public class BndHighlightingAnnotator implements Annotator {
 			else if ((psiElement.getParent() instanceof BndHeader) && (type == BndTokenType.COMMA)) {
 				_annotate(psiElement, OsgiManifestColorsAndFonts.CLAUSE_SEPARATOR_KEY, annotationHolder);
 			}
+			else if (type == BndTokenType.COMMENT) {
+				_annotate(psiElement, OsgiManifestColorsAndFonts.LINE_COMMENT_KEY, annotationHolder);
+			}
 		}
 	}
 

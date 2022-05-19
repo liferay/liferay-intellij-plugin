@@ -18,7 +18,9 @@ initscript {
 	File deps = file('%deps%')
 
 	dependencies {
-		classpath files { deps.listFiles() }
+		classpath files {
+			deps.listFiles()
+		}
 	}
 }
 

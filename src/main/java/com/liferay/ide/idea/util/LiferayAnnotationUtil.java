@@ -20,6 +20,7 @@ import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.text.StringUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -51,7 +52,14 @@ public class LiferayAnnotationUtil {
 		AnnotationHolder annotationHolder, @NotNull HighlightSeverity severity, String message,
 		@NotNull TextAttributesKey textAttributes) {
 
-		AnnotationBuilder annotationBuilder = annotationHolder.newAnnotation(severity, message);
+		AnnotationBuilder annotationBuilder;
+
+		if (StringUtil.isEmpty(message)) {
+			annotationBuilder = annotationHolder.newSilentAnnotation(severity);
+		}
+		else {
+			annotationBuilder = annotationHolder.newAnnotation(severity, message);
+		}
 
 		annotationBuilder.textAttributes(textAttributes);
 
