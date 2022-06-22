@@ -241,7 +241,7 @@ intellij {
 
 patchPluginXml {
 	sinceBuild = "221"
-	untilBuild = "221.*"
+	untilBuild = ""
 }
 
 processResources {
