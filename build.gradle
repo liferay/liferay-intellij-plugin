@@ -236,7 +236,7 @@ formatSource {
 intellij {
 	plugins = ["java", "CSS", "DatabaseTools", "gradle", "Groovy", "java-i18n", "JavaEE", "Web", "JavaScriptLanguage", "jsp", "junit", "maven", "PersistenceSupport", "properties", "sass"]
 	pluginName = "liferay-intellij-plugin"
-	version = "IU-2022.1.2"
+	version = "IU-2022.1.3"
 }
 
 patchPluginXml {
