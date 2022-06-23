@@ -180,7 +180,7 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 
 				for (String type : BladeCLI.getProjectTemplates(_project)) {
 					if (Objects.equals("fragment", type) || Objects.equals("modules-ext", type) ||
-						Objects.equals("spring-mvc-portlet", type)) {
+						Objects.equals("spring-mvc-portlet", type) || Objects.equals("client-extension", type)) {
 
 						continue;
 					}
