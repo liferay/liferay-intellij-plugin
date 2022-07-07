@@ -16,7 +16,9 @@ package com.liferay.ide.idea.language.osgi;
 
 import com.intellij.codeInsight.AnnotationUtil;
 import com.intellij.codeInsight.daemon.ImplicitUsageProvider;
+import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiModifierListOwner;
 
 import java.util.Arrays;
@@ -42,6 +44,24 @@ public class LiferayOsgiImplicitUsageProvider implements ImplicitUsageProvider {
 	@Override
 	public boolean isImplicitWrite(PsiElement psiElement) {
 		if (psiElement instanceof PsiModifierListOwner) {
+			if (psiElement instanceof PsiMethod) {
+				PsiMethod psiMethod = (PsiMethod)psiElement;
+
+				if (psiMethod.isConstructor()) {
+					PsiClass containingClass = psiMethod.getContainingClass();
+
+					if ((containingClass != null) &&
+						AnnotationUtil.isAnnotated(
+							containingClass, "org.osgi.service.component.annotations.Component",
+							AnnotationUtil.CHECK_TYPE)) {
+
+						return true;
+					}
+
+					return false;
+				}
+			}
+
 			PsiModifierListOwner psiModifierListOwner = (PsiModifierListOwner)psiElement;
 
 			boolean annotated = AnnotationUtil.isAnnotated(
