@@ -101,7 +101,7 @@ public class LiferayGradleProjectResolverExtension extends AbstractProjectResolv
 
 						Collection<ExternalDependency> dependencies = sourceSet.getDependencies();
 
-						if (ideProjectFileDirectoryPath.equals(moduleDir.getAbsolutePath())) {
+						if (ideProjectFileDirectoryPath.equals(moduleDir.getPath())) {
 							DomainObjectSet<? extends IdeaDependency> moduleDependencies = ideaModule.getDependencies();
 
 							for (IdeaDependency dependency : moduleDependencies) {
