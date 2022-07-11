@@ -16,6 +16,7 @@ package com.liferay.ide.idea.language.osgi;
 
 import com.intellij.codeInspection.deadCode.UnusedDeclarationInspection;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.LanguageLevelModuleExtension;
@@ -30,22 +31,27 @@ import com.intellij.testFramework.fixtures.DefaultLightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 import com.intellij.util.PathUtil;
 
+import com.liferay.ide.idea.util.SdkUtil;
+
 import java.io.File;
 
 import org.jetbrains.annotations.NotNull;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * @author Dominik Marks
  */
-@Ignore
 public class LiferayOsgiImplicitUsageProviderTest extends LightJavaCodeInsightFixtureTestCase {
 
-	@Test
-	public void testOsgiImplicitUsage() {
+	public void ignoreTestOsgiImplicitUsage() {
 		myFixture.configureByFile("MyComponent.java");
+		myFixture.checkHighlighting();
+	}
+
+	@Test
+	public void testOsgiComponentConstructorImplicitUsage() {
+		myFixture.configureByFiles("MyServiceWrapper.java", "com/liferay/portal/kernel/service/ServiceWrapper.java");
 		myFixture.checkHighlighting();
 	}
 
@@ -74,13 +80,22 @@ public class LiferayOsgiImplicitUsageProviderTest extends LightJavaCodeInsightFi
 
 		@Override
 		public void configureModule(
-			@NotNull Module module, @NotNull ModifiableRootModel model, @NotNull ContentEntry contentEntry) {
+			@NotNull Module module, @NotNull ModifiableRootModel modifiableRootModel,
+			@NotNull ContentEntry contentEntry) {
 
-			LanguageLevelModuleExtension extension = model.getModuleExtension(LanguageLevelModuleExtension.class);
+			ProjectJdkTable.getInstance(
+			).addJdk(
+				SdkUtil.getTestJdk()
+			);
 
-			if (extension != null) {
-				extension.setLanguageLevel(LanguageLevel.JDK_1_8);
+			LanguageLevelModuleExtension languageLevelModuleExtension = modifiableRootModel.getModuleExtension(
+				LanguageLevelModuleExtension.class);
+
+			if (languageLevelModuleExtension != null) {
+				languageLevelModuleExtension.setLanguageLevel(LanguageLevel.JDK_1_8);
 			}
+
+			modifiableRootModel.setSdk(SdkUtil.getTestJdk());
 
 			File testDataDir = new File(_TEST_DATA_PATH);
 
@@ -88,7 +103,7 @@ public class LiferayOsgiImplicitUsageProviderTest extends LightJavaCodeInsightFi
 
 			VfsRootAccess.allowRootAccess(Disposer.newDisposable(), testDataPath);
 
-			PsiTestUtil.addLibrary(model, "OSGi", testDataPath, "osgi.jar");
+			PsiTestUtil.addLibrary(modifiableRootModel, "OSGi", testDataPath, "osgi.jar");
 		}
 
 		@Override
