@@ -33,7 +33,11 @@
 		<ul>
 			<li>2.0.2</li>
 			<ul>
-				<li>INTELLIJ-235 Fix compatibility problems for 2022.1</li>
+				<li>INTELLIJ-226 improve comments display in bnd.bnd file(community contribution)</li>
+				<li>INTELLIJ-235 fix compatibility problems for 2022.1</li>
+				<li>INTELLIJ-236 better OSGi component support for constructors(community contribution)</li>
+				<li>INTELLIJ-237 update to latest blade 4.1.0 SNAPSHOT</li>
+				<li>INTELLIJ-246 bug fix for index target platform source on WSL2 distrbution</li>
 			</ul>
 			<li>2.0.1</li>
 			<ul>
