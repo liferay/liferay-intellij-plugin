@@ -37,7 +37,12 @@
 				<li>INTELLIJ-235 fix compatibility problems for 2022.1</li>
 				<li>INTELLIJ-236 better OSGi component support for constructors(community contribution)</li>
 				<li>INTELLIJ-237 update to latest blade 4.1.0 SNAPSHOT</li>
+				<li>INTELLIJ-240 Fix compatibility problem on 2022.1.3</li>
+				<li>INTELLIJ-242 use latest blade 4.1.0-snapshot</li>
+				<li>INTELLIJ-243 Disable client-extension in project template list when creating a module project</li>
 				<li>INTELLIJ-246 bug fix for index target platform source on WSL2 distrbution</li>
+				<li>INTELLIJ-248 update target platform version to latest u32 for Maven workspace</li>
+				<li>INTELLIJ-249 add -XX:MaxMetaspaceSize as default vm parameters for portal server</li>
 			</ul>
 			<li>2.0.1</li>
 			<ul>
