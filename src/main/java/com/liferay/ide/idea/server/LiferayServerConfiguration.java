@@ -81,7 +81,7 @@ public class LiferayServerConfiguration
 
 		_javaRunConfigurationModule = new JavaRunConfigurationModule(project, true);
 
-		_liferayServerConfig.vmParameters = "-Xmx2560m";
+		_liferayServerConfig.vmParameters = "-Xmx2560m -XX:MaxMetaspaceSize=768m -XX:MetaspaceSize=768m";
 
 		_liferayServerConfig.gogoShellPort = ServerUtil.getGogoShellPort(_liferayServerConfig.bundleLocation);
 
