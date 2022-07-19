@@ -14,9 +14,9 @@
 
 package com.liferay.ide.idea.ui.actions;
 
+import com.intellij.ide.actions.NonTrivialActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.DumbService;
 
@@ -26,7 +26,12 @@ import java.util.stream.Stream;
 /**
  * @author Andy Wu
  */
-public class LiferayActionGroup extends DefaultActionGroup {
+public class LiferayActionGroup extends NonTrivialActionGroup {
+
+	@Override
+	public boolean isDumbAware() {
+		return false;
+	}
 
 	public void update(AnActionEvent event) {
 		Presentation presentation = event.getPresentation();
