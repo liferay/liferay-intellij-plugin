@@ -3,5 +3,7 @@
         <properties.implicitPropertyUsageProvider implementation="com.liferay.ide.idea.language.resourcebundle.LiferayResourceBundlePropertiesImplicitUsageProvider" />
         <properties.implicitPropertyUsageProvider implementation="com.liferay.ide.idea.language.gradle.LiferayGradlePropertiesImplicitUsageProvider" />
         <properties.implicitPropertyUsageProvider implementation="com.liferay.ide.idea.language.blade.LiferayBladePropertiesImplicitUsageProvider" />
+
+        <psi.referenceContributor implementation="com.liferay.ide.idea.language.resourcebundle.ResourceBundleReferenceContributor" />
     </extensions>
 </idea-plugin>
