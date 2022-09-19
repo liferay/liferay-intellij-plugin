@@ -1,7 +1,7 @@
 buildscript {
 	dependencies {
 		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.source.formatter", version: "latest.release"
-		classpath group: "de.undercouch", name: "gradle-download-task", version: "4.0.0"
+		classpath group: "de.undercouch", name: "gradle-download-task", version: "5.0.0"
 		classpath group: "nu.studer", name: "gradle-credentials-plugin", version: "2.1"
 	}
 
@@ -19,8 +19,8 @@ buildscript {
 }
 
 plugins {
-	id "de.undercouch.download" version "4.0.0"
-	id "org.jetbrains.intellij" version "1.7.0"
+	id "de.undercouch.download" version "5.0.0"
+	id "org.jetbrains.intellij" version "1.8.0"
 }
 
 apply plugin: "com.liferay.source.formatter"

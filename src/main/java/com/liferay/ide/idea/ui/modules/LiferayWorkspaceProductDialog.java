@@ -185,7 +185,7 @@ public class LiferayWorkspaceProductDialog extends DialogWrapper {
 				public void run() {
 					List<String> allWorkspaceProducts = Arrays.asList(BladeCLI.getWorkspaceProducts(showAll));
 
-					if (!ListUtil.isEmpty(allWorkspaceProducts)) {
+					if (ListUtil.isNotEmpty(allWorkspaceProducts)) {
 						_productVersionComboBox.removeAllItems();
 					}
 

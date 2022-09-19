@@ -296,7 +296,7 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 			() -> {
 				List<String> allWorkspaceProducts = Arrays.asList(BladeCLI.getWorkspaceProducts(showAllProductVersion));
 
-				if (!ListUtil.isEmpty(allWorkspaceProducts)) {
+				if (ListUtil.isNotEmpty(allWorkspaceProducts)) {
 					productVersionComboBox.removeAllItems();
 				}
 
