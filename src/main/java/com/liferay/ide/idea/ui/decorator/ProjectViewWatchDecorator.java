@@ -26,8 +26,6 @@ import com.intellij.openapi.externalSystem.service.internal.ExternalSystemExecut
 import com.intellij.openapi.externalSystem.service.internal.ExternalSystemProcessingManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.packageDependencies.ui.PackageDependenciesNode;
-import com.intellij.ui.ColoredTreeCellRenderer;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -38,10 +36,6 @@ import org.jetbrains.plugins.gradle.util.GradleConstants;
  * @author Simon Jiang
  */
 public class ProjectViewWatchDecorator implements ProjectViewNodeDecorator {
-
-	@Override
-	public void decorate(PackageDependenciesNode node, ColoredTreeCellRenderer cellRenderer) {
-	}
 
 	@Override
 	@SuppressWarnings("rawtypes")
