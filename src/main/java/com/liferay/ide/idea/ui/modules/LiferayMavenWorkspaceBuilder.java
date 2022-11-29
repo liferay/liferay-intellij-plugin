@@ -69,7 +69,7 @@ public class LiferayMavenWorkspaceBuilder extends LiferayWorkspaceBuilder {
 
 			messageBusConnection.subscribe(
 				MavenImportListener.TOPIC,
-				(projects, list) -> {
+				(MavenImportListener)(projects, list) -> {
 					Stream<Module> modulesStream = list.stream();
 
 					modulesStream.map(

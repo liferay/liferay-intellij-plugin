@@ -76,7 +76,7 @@ public class LiferayPostStartupActivity implements DumbAware, LiferayWorkspaceSu
 		startupManager.runWhenProjectIsInitialized(
 			() -> messageBusConnection.subscribe(
 				ProjectDataImportListener.TOPIC,
-				projectPath -> {
+				(ProjectDataImportListener)projectPath -> {
 					Application application = ApplicationManager.getApplication();
 
 					application.runReadAction(
@@ -89,7 +89,7 @@ public class LiferayPostStartupActivity implements DumbAware, LiferayWorkspaceSu
 
 		messageBusConnection.subscribe(
 			MavenImportListener.TOPIC,
-			(projects, list) -> {
+			(MavenImportListener)(projects, list) -> {
 				Stream<Module> modulesStream = list.stream();
 
 				modulesStream.map(
