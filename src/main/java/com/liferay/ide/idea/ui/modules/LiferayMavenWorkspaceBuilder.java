@@ -69,19 +69,19 @@ public class LiferayMavenWorkspaceBuilder extends LiferayWorkspaceBuilder {
 
 			messageBusConnection.subscribe(
 				MavenImportListener.TOPIC,
-					(MavenImportListener) (projects, list) -> {
-						Stream<Module> modulesStream = list.stream();
+				(MavenImportListener)(projects, list) -> {
+					Stream<Module> modulesStream = list.stream();
 
-						modulesStream.map(
-							mavenModule -> mavenModule.getProject()
-						).forEach(
-							moduleProject -> {
-								MavenProjectsManager mvnManager = MavenProjectsManager.getInstance(moduleProject);
+					modulesStream.map(
+						mavenModule -> mavenModule.getProject()
+					).forEach(
+						moduleProject -> {
+							MavenProjectsManager mvnManager = MavenProjectsManager.getInstance(moduleProject);
 
-								mvnManager.forceUpdateAllProjectsOrFindAllAvailablePomFiles();
-							}
-						);
-					});
+							mvnManager.forceUpdateAllProjectsOrFindAllAvailablePomFiles();
+						}
+					);
+				});
 		}
 
 	}
