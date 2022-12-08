@@ -236,12 +236,12 @@ formatSource {
 intellij {
 	plugins = ["java", "CSS", "DatabaseTools", "gradle", "Groovy", "java-i18n", "JavaEE", "Web", "JavaScriptLanguage", "jsp", "junit", "maven", "PersistenceSupport", "properties", "sass"]
 	pluginName = "liferay-intellij-plugin"
-	version = "IU-2022.2.3"
+	version = "IU-2022.2.4"
 }
 
 patchPluginXml {
 	sinceBuild = "222"
-	untilBuild = ""
+	untilBuild = "222.*"
 }
 
 processResources {
@@ -294,6 +294,23 @@ verifyBladeLatest {
 	src file("${bladeBuildOutputDir}/blade-latest.jar")
 	algorithm "MD5"
 	checksum bladeLatestMD5
+}
+
+tasks {
+	runPluginVerifier {
+		ideVersions = [
+			"IC-2022.2",
+			"IU-2022.2",
+			"IC-2022.2.1",
+			"IU-2022.2.1",
+			"IC-2022.2.2",
+			"IU-2022.2.2",
+			"IC-2022.2.3",
+			"IU-2022.2.3",
+			"IC-2022.2.4",
+			"IU-2022.2.4",
+		]
+	}
 }
 
 version = "2.0.2"
