@@ -48,6 +48,7 @@ import org.gradle.cli.CommandLineParser;
 import org.gradle.cli.ParsedCommandLine;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.project.MavenImportListener;
 import org.jetbrains.idea.maven.project.MavenProjectsManager;
 import org.jetbrains.plugins.gradle.util.GradleConstants;
@@ -75,17 +76,33 @@ public class LiferayPostStartupActivity implements DumbAware, LiferayWorkspaceSu
 
 		startupManager.runWhenProjectIsInitialized(
 			() -> messageBusConnection.subscribe(
-				ProjectDataImportListener.TOPIC,
-				(ProjectDataImportListener)projectPath -> {
-					Application application = ApplicationManager.getApplication();
+					ProjectDataImportListener.TOPIC, new ProjectDataImportListener() {
+						@Override
+						public void onImportFinished(@Nullable String projectPath) {
+							Application application = ApplicationManager.getApplication();
 
-					application.runReadAction(
-						() -> {
-							if (projectPath.equals(project.getBasePath())) {
-								ProjectConfigurationUtil.configExcludedFolder(project, getHomeDir(project));
-							}
-						});
-				}));
+							application.runReadAction(
+									() -> {
+										if (projectPath.equals(project.getBasePath())) {
+											ProjectConfigurationUtil.configExcludedFolder(project, getHomeDir(project));
+										}
+									});
+						}
+					}));
+
+//		startupManager.runWhenProjectIsInitialized(
+//			() -> messageBusConnection.subscribe(
+//					ProjectDataImportListener.TOPIC,
+//					(ProjectDataImportListener) projectPath -> {
+//						Application application = ApplicationManager.getApplication();
+//
+//						application.runReadAction(
+//								() -> {
+//									if (projectPath.equals(project.getBasePath())) {
+//										ProjectConfigurationUtil.configExcludedFolder(project, getHomeDir(project));
+//									}
+//								});
+//					}));
 
 		messageBusConnection.subscribe(
 			MavenImportListener.TOPIC,
