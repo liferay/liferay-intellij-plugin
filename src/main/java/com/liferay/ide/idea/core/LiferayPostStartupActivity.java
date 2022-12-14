@@ -74,21 +74,21 @@ public class LiferayPostStartupActivity implements DumbAware, LiferayWorkspaceSu
 
 		StartupManager startupManager = StartupManager.getInstance(project);
 
-		startupManager.runWhenProjectIsInitialized(
-			() -> messageBusConnection.subscribe(
-					ProjectDataImportListener.TOPIC, new ProjectDataImportListener() {
-						@Override
-						public void onImportFinished(@Nullable String projectPath) {
-							Application application = ApplicationManager.getApplication();
+		startupManager.runAfterOpened(
+				() -> messageBusConnection.subscribe(
+						ProjectDataImportListener.TOPIC, new ProjectDataImportListener() {
+							@Override
+							public void onImportFinished(@Nullable String projectPath) {
+								Application application = ApplicationManager.getApplication();
 
-							application.runReadAction(
-									() -> {
-										if (projectPath.equals(project.getBasePath())) {
-											ProjectConfigurationUtil.configExcludedFolder(project, getHomeDir(project));
-										}
-									});
-						}
-					}));
+								application.runReadAction(
+										() -> {
+											if (projectPath.equals(project.getBasePath())) {
+												ProjectConfigurationUtil.configExcludedFolder(project, getHomeDir(project));
+											}
+										});
+							}
+						}));
 
 //		startupManager.runWhenProjectIsInitialized(
 //			() -> messageBusConnection.subscribe(

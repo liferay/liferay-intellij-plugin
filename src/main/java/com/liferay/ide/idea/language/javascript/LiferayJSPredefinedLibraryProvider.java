@@ -24,6 +24,7 @@ import com.intellij.openapi.externalSystem.model.project.LibraryData;
 import com.intellij.openapi.externalSystem.model.project.LibraryPathType;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.RootsChangeRescanningInfo;
 import com.intellij.openapi.roots.ModuleRootEvent;
 import com.intellij.openapi.roots.ModuleRootListener;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -113,7 +114,7 @@ public class LiferayJSPredefinedLibraryProvider extends JSPredefinedLibraryProvi
 							() -> {
 								liferayScriptingLibraryModel.setSourceFiles(
 									VfsUtilCore.toVirtualFileArray(javascriptFiles));
-								scriptingLibraryManager.commitChanges();
+								scriptingLibraryManager.commitChanges(RootsChangeRescanningInfo.TOTAL_RESCAN);
 							});
 					}
 				}
