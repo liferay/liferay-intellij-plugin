@@ -40,6 +40,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import com.liferay.ide.idea.util.FileUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
@@ -72,13 +73,15 @@ public class LiferayWebFacetPostStartupActivity
 				new ModuleListener() {
 
 					@Override
-					public void moduleAdded(@NotNull Project project, @NotNull Module module) {
+					public void modulesAdded(@NotNull Project project, @NotNull List<Module> modules) {
 						Application application = ApplicationManager.getApplication();
 
 						application.runWriteAction(
 							() -> {
 								if (LiferayWorkspaceSupport.isValidWorkspaceLocation(project)) {
-									_addWebRoot(module);
+									for (Module module : modules) {
+										_addWebRoot(module);
+									}
 								}
 							});
 					}
