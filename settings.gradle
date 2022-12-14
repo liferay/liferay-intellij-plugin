@@ -1,6 +1,6 @@
 buildscript {
 	dependencies {
-		classpath group: "com.gradle", name: "gradle-enterprise-gradle-plugin", version: "3.6.3"
+		classpath group: "com.gradle", name: "gradle-enterprise-gradle-plugin", version: "3.12"
 	}
 
 	repositories {
@@ -17,5 +17,5 @@ buildscript {
 }
 
 plugins {
-	id "com.gradle.enterprise" version "3.6.3"
+	id "com.gradle.enterprise" version "3.12"
 }
