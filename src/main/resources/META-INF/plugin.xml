@@ -31,6 +31,14 @@
 	</p>
 	<p>
 		<ul>
+			<li>2.0.3</li>
+			<ul>
+				<li>INTELLIJ-238 Liferay intellij has 2 usage of deprecated API for 2022.2.3</li>
+				<li>INTELLIJ-251 Add Hyperlink to Language Property files</li>
+				<li>INTELLIJ-253 Rename parameter '--product' as '--liferay-product'</li>
+				<li>INTELLIJ-254 use latest blade version</li>
+				<li>INTELLIJ-255 update target platform version form intellij maven workspace</li>
+			</ul>
 			<li>2.0.2</li>
 			<ul>
 				<li>INTELLIJ-226 improve comments display in bnd.bnd file(community contribution)</li>
