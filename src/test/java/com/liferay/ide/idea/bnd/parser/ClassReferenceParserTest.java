@@ -18,6 +18,8 @@ import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.codeInsight.daemon.impl.HighlightInfo;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.LanguageLevelModuleExtension;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -32,8 +34,6 @@ import com.intellij.testFramework.LightProjectDescriptor;
 import com.intellij.testFramework.fixtures.DefaultLightProjectDescriptor;
 import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 import com.intellij.util.PathUtil;
-
-import com.liferay.ide.idea.util.SdkUtil;
 
 import java.io.File;
 
@@ -132,7 +132,12 @@ public class ClassReferenceParserTest extends LightJavaCodeInsightFixtureTestCas
 				extension.setLanguageLevel(LanguageLevel.JDK_1_8);
 			}
 
-			modifiableRootModel.setSdk(SdkUtil.getTestJdk());
+			ProjectJdkTable projectJdkTableInstance = ProjectJdkTable.getInstance();
+
+			Sdk mostRecentSdk = projectJdkTableInstance.findMostRecentSdkOfType(
+				projectJdkTableInstance.getDefaultSdkType());
+
+			modifiableRootModel.setSdk(mostRecentSdk);
 
 			File testDataDir = new File(_TEST_DATA_PATH);
 
