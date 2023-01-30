@@ -278,7 +278,7 @@ public class LiferayServerConfiguration
 
 	@Override
 	public boolean isPassParentEnvs() {
-		return _liferayServerConfig.passParentEnvironments;
+		return false;
 	}
 
 	@Override
