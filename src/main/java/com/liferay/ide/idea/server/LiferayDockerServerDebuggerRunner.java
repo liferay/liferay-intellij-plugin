@@ -42,6 +42,8 @@ import com.intellij.openapi.externalSystem.service.execution.ExternalSystemTaskD
 import com.intellij.openapi.project.Project;
 import com.intellij.util.net.NetUtils;
 
+import com.liferay.ide.idea.util.IntellijUtil;
+
 import java.util.Collection;
 
 import org.jetbrains.annotations.NotNull;
@@ -50,8 +52,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Simon Jiang
  */
-public class LiferayDockerServerDebuggerRunner
-	extends ExternalSystemTaskDebugRunner implements ILiferayDockerServerRunnerCallback, ServerRunnerChecker {
+public class LiferayDockerServerDebuggerRunner extends ExternalSystemTaskDebugRunner implements ServerRunnerChecker {
 
 	@Override
 	public boolean canRun(@NotNull String executorId, @NotNull RunProfile runProfile) {
@@ -131,7 +132,7 @@ public class LiferayDockerServerDebuggerRunner
 				return runContentDescriptor;
 			}
 
-			registerDockerSeverStopHandler(processHandler, runProfileState, executionEnvironment);
+			IntellijUtil.registerDockerSeverStopHandler(processHandler, runProfileState, executionEnvironment);
 		}
 
 		return runContentDescriptor;

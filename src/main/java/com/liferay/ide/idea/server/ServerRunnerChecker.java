@@ -25,9 +25,9 @@ import com.intellij.execution.ui.RunContentManager;
 
 import java.text.MessageFormat;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -36,27 +36,22 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface ServerRunnerChecker {
 
-	public default List<String> getServerRunConfigurationNames(@NotNull ExecutionEnvironment environment) {
-		RunManager runManager = RunManager.getInstance(environment.getProject());
-
-		List<RunConfiguration> allConfigurationsList = runManager.getAllConfigurationsList();
-
-		return allConfigurationsList.stream(
-		).filter(
-			runConfiguration -> isLiferayServerRunConfiguration(runConfiguration)
-		).map(
-			runConfiguration -> runConfiguration.getName()
-		).collect(
-			Collectors.toList()
-		);
-	}
-
 	public boolean isLiferayServerRunConfiguration(RunConfiguration runConfiguration);
 
 	public default void verifyRunningServer(@NotNull ExecutionEnvironment environment) throws ExecutionException {
 		RunContentManager runContentManager = RunContentManager.getInstance(environment.getProject());
 
-		List<String> runConfigurationNames = getServerRunConfigurationNames(environment);
+		RunManager runManager = RunManager.getInstance(environment.getProject());
+
+		List<RunConfiguration> allConfigurationsList = runManager.getAllConfigurationsList();
+
+		List<String> runConfigurationNames = new ArrayList<>();
+
+		for (RunConfiguration configuration : allConfigurationsList) {
+			if (isLiferayServerRunConfiguration(configuration)) {
+				runConfigurationNames.add(configuration.getName());
+			}
+		}
 
 		ExecutionManager executionManager = ExecutionManager.getInstance(environment.getProject());
 
