@@ -51,6 +51,9 @@ jobs:
   LinuxJDK11:
     name: Linux JDK17
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.properties.outputs.version }}
+      changelog: ${{ steps.properties.outputs.changelog }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
@@ -62,11 +65,18 @@ jobs:
           distribution: 'zulu'
           cache: gradle
 
+      # Set environment variables
+      - name: Set environment variables
+        id: environment
+        shell: bash
+        run: |
+          ./gradlew listBundledPlugins
+
       - name: Cache
         uses: actions/cache@v3
         with:
           path: ~/.gradle/caches
-          key: plugin-verifier-${{ hashFiles('build/listProductsReleases.txt') }}
+          key: plugin-build-${{ hashFiles('build/listBundledPlugins.txt') }}
 
       - name: Build
         shell: bash
