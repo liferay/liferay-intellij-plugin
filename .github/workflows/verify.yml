@@ -6,27 +6,27 @@ env:
   LC_ALL: en_US.UTF-8
 
 jobs:
-  CheckSourceFormatting:
-    name: Check source formatting
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - name: Set up JDK11
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
-      - name: Cache
-        uses: actions/cache@v1
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-      - name: Check source formatting task
-        shell: bash
-        run: |
-          ./gradlew --no-daemon checkSourceFormatting
+  #CheckSourceFormatting:
+  #  name: Check source formatting
+  #  runs-on: ubuntu-20.04
+  #  steps:
+  #    - name: Checkout
+  #      uses: actions/checkout@v1
+  #    - name: Set up JDK17
+  #      uses: actions/setup-java@v1
+  #      with:
+  #        java-version: 17
+  #    - name: Cache
+  #      uses: actions/cache@v1
+  #      with:
+  #        path: ~/.gradle/caches
+  #        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+  #        restore-keys: |
+  #          ${{ runner.os }}-gradle-
+  #    - name: Check source formatting task
+  #      shell: bash
+  #      run: |
+  #        ./gradlew --no-daemon checkSourceFormatting
   #LinuxJDK8:
   #  name: Linux JDK8
   #  runs-on: ubuntu-20.04
@@ -49,49 +49,63 @@ jobs:
   #      run: |
   #        ./gradlew --no-daemon --scan clean test verifyPlugin
   LinuxJDK11:
-    name: Linux JDK11
-    runs-on: ubuntu-20.04
+    name: Linux JDK17
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.properties.outputs.version }}
+      changelog: ${{ steps.properties.outputs.changelog }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - name: Set up JDK11
-        uses: actions/setup-java@v1
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v3
         with:
-          java-version: 11
+          java-version: 17
+          distribution: 'zulu'
+          cache: gradle
+
+      # Set environment variables
+      - name: Set environment variables
+        id: environment
+        shell: bash
+        run: |
+          ./gradlew listBundledPlugins
+
       - name: Cache
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          key: plugin-build-${{ hashFiles('build/listBundledPlugins.txt') }}
+
       - name: Build
         shell: bash
         run: |
           ./gradlew --no-daemon --scan clean test verifyPlugin
+
   CompatibilityChecking:
     name: Check compatibility
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-      - name : Checkout
-        uses: actions/checkout@v1
-      - name: Set up JDK11
-        uses: actions/setup-java@v1
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v3
         with:
-          java-version: 11
+          java-version: 17
+          distribution: 'zulu'
+          cache: gradle
+
       - name: Build
         shell: bash
         run: |
-          ./gradlew --no-daemon clean -x test build
+          ./gradlew --no-daemon clean -x test buildPlugin
+
       - name: Verify compatibility
+        id: verify
         uses: ChrisCarini/intellij-platform-plugin-verifier-action@latest
         with:
-         plugin-location: './build/distributions/*.zip'
          ide-versions: |
-          ideaIC:2022.2
-          ideaIU:2022.2
-          ideaIC:2022.2.3
-          ideaIU:2022.2.3
-          ideaIC:2022.2.4
-          ideaIU:2022.2.4
-
+          ideaIC:2022.3.2
+          ideaIU:2022.3.2

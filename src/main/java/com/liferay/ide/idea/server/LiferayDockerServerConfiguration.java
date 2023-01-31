@@ -306,7 +306,7 @@ public class LiferayDockerServerConfiguration
 
 	@Override
 	public boolean isPassParentEnvs() {
-		return _liferayDockerServerConfig.passParentEnvironments;
+		return false;
 	}
 
 	@Override

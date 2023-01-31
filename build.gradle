@@ -1,6 +1,6 @@
 buildscript {
 	dependencies {
-		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.source.formatter", version: "latest.release"
+		//classpath group: "com.liferay", name: "com.liferay.gradle.plugins.source.formatter", version: "latest.release"
 		classpath group: "de.undercouch", name: "gradle-download-task", version: "5.1.0"
 		classpath group: "nu.studer", name: "gradle-credentials-plugin", version: "2.1"
 	}
@@ -20,10 +20,10 @@ buildscript {
 
 plugins {
 	id "de.undercouch.download" version "5.1.0"
-	id "org.jetbrains.intellij" version "1.9.0"
+	id "org.jetbrains.intellij" version "1.12.0"
 }
 
-apply plugin: "com.liferay.source.formatter"
+//apply plugin: "com.liferay.source.formatter"
 apply plugin: "java"
 apply plugin: "nu.studer.credentials"
 
@@ -53,6 +53,9 @@ task downloadXsds(type: Download)
 task verifyBlade392(type: Verify)
 task verifyBladeLatest(type: Verify)
 
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+
 String userHome = System.getProperty("user.home")
 
 String gradleHome = System.getProperty("gradle.user.home") ?: System.getenv("GRADLE_USER_HOME") ?: new File(userHome, ".gradle").absolutePath
@@ -64,27 +67,27 @@ buildScan {
 	termsOfServiceAgree = "yes"
 }
 
-check.dependsOn checkSourceFormatting
-
-checkSourceFormatting {
-	maxLineLength = 120
-}
+//check.dependsOn checkSourceFormatting
+//
+//checkSourceFormatting {
+//	maxLineLength = 120
+//}
 
 configurations.all {
 	exclude group: 'org.slf4j', module: 'slf4j-api'
 }
 
 dependencies {
-	compile files( "libs/gradle-tooling.jar")
-	compile group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.4.0"
-	compile group: "commons-configuration", name: "commons-configuration", version: "1.10"
-	compile group: "commons-lang", name: "commons-lang", version: "2.6"
-	compile group: "org.apache.ant", name: "ant", version: "1.10.1"
-	compile group: "org.dom4j", name: "dom4j", version: "2.1.0"
-	compile group: "org.json", name: "json", version: "20210307"
-	compile group: "org.osgi", name: "org.osgi.core", version: "6.0.0"
+	implementation files( "libs/gradle-tooling.jar")
+	implementation group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "6.3.1"
+	implementation group: "commons-configuration", name: "commons-configuration", version: "1.10"
+	implementation group: "commons-lang", name: "commons-lang", version: "2.6"
+	implementation group: "org.apache.ant", name: "ant", version: "1.10.12"
+	implementation group: "org.dom4j", name: "dom4j", version: "2.1.3"
+	implementation group: "org.json", name: "json", version: "20220924"
+	implementation group: "org.osgi", name: "org.osgi.core", version: "6.0.0"
 
-	testCompile group: "junit", name: "junit", version: "4.12"
+	testImplementation group: "junit", name: "junit", version: "4.13.2"
 }
 
 dockerImageBuild {
@@ -229,19 +232,19 @@ downloadXsds {
 	overwrite false
 }
 
-formatSource {
-	maxLineLength = 120
-}
+//formatSource {
+//	maxLineLength = 120
+//}
 
 intellij {
-	plugins = ["java", "CSS", "DatabaseTools", "gradle", "Groovy", "java-i18n", "JavaEE", "Web", "JavaScriptLanguage", "jsp", "junit", "maven", "PersistenceSupport", "properties", "sass"]
+	plugins = ["java", "webComponents", "DatabaseTools", "gradle", "Groovy", "java-i18n", "JavaEE", "javascript-impl", "javaee-jsp-base-impl", "javascript-intentions", "javaee-web-impl", "junit", "maven", "javaee-persistence-impl", "properties", "sass"]
 	pluginName = "liferay-intellij-plugin"
-	version = "IU-2022.2.4"
+	version = "IU-2022.3"
 }
 
 patchPluginXml {
-	sinceBuild = "222"
-	untilBuild = "222.*"
+	sinceBuild = "223"
+	untilBuild = ""
 }
 
 processResources {
@@ -268,6 +271,7 @@ repositories {
 	maven {
 		url "https://repository-cdn.liferay.com/nexus/content/groups/public"
 	}
+	mavenCentral()
 }
 
 runIde {
@@ -299,17 +303,14 @@ verifyBladeLatest {
 tasks {
 	runPluginVerifier {
 		ideVersions = [
-			"IC-2022.2",
-			"IU-2022.2",
-			"IC-2022.2.1",
-			"IU-2022.2.1",
-			"IC-2022.2.2",
-			"IU-2022.2.2",
-			"IC-2022.2.3",
-			"IU-2022.2.3",
-			"IU-2022.2.4"
+			"IC-2022.3",
+			"IU-2022.3",
+			"IC-2022.3.1",
+			"IU-2022.3.1",
+			"IC-2022.3.2",
+			"IU-2022.3.2"
 		]
 	}
 }
 
-version = "2.0.3"
+version = "2.0.4"

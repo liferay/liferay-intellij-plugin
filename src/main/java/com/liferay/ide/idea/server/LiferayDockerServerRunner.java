@@ -29,13 +29,14 @@ import com.intellij.execution.ui.ExecutionConsole;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.externalSystem.service.execution.ExternalSystemRunnableState;
 
+import com.liferay.ide.idea.util.IntellijUtil;
+
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Simon Jiang
  */
-public class LiferayDockerServerRunner
-	extends GenericProgramRunner implements ILiferayDockerServerRunnerCallback, ServerRunnerChecker {
+public class LiferayDockerServerRunner extends GenericProgramRunner implements ServerRunnerChecker {
 
 	@Override
 	public boolean canRun(@NotNull String executorId, @NotNull RunProfile runProfile) {
@@ -80,7 +81,7 @@ public class LiferayDockerServerRunner
 					return runContentDescriptor;
 				}
 
-				registerDockerSeverStopHandler(processHandler, runProfileState, environment);
+				IntellijUtil.registerDockerSeverStopHandler(processHandler, runProfileState, environment);
 			}
 
 			ExecutionConsole executionConsole = runContentDescriptor.getExecutionConsole();
