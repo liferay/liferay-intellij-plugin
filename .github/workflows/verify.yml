@@ -48,7 +48,7 @@ jobs:
   #      shell: bash
   #      run: |
   #        ./gradlew --no-daemon --scan clean test verifyPlugin
-  LinuxJDK11:
+  LinuxJDK17:
     name: Linux JDK17
     runs-on: ubuntu-latest
     outputs:
@@ -65,18 +65,13 @@ jobs:
           distribution: 'zulu'
           cache: gradle
 
-      # Set environment variables
-      - name: Set environment variables
-        id: environment
-        shell: bash
-        run: |
-          ./gradlew listBundledPlugins
-
       - name: Cache
         uses: actions/cache@v3
         with:
           path: ~/.gradle/caches
-          key: plugin-build-${{ hashFiles('build/listBundledPlugins.txt') }}
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       - name: Build
         shell: bash
@@ -96,6 +91,14 @@ jobs:
           java-version: 17
           distribution: 'zulu'
           cache: gradle
+
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       - name: Build
         shell: bash
