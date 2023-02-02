@@ -20,7 +20,6 @@ import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.ProjectBuilder;
 import com.intellij.ide.util.projectWizard.WizardContext;
-import com.intellij.ide.wizard.CommitStepException;
 import com.intellij.openapi.components.StorageScheme;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.util.text.StringUtil;
@@ -132,13 +131,6 @@ public class LiferayProjectSettingsStep extends ModuleWizardStep {
 		SelectTemplateSettings selectTemplateSettings = SelectTemplateSettings.getInstance();
 
 		selectTemplateSettings.EXPERT_MODE = _expertDecorator.isExpanded();
-	}
-
-	@Override
-	public void onWizardFinished() throws CommitStepException {
-		ModuleBuilder moduleBuilder = (ModuleBuilder)_context.getProjectBuilder();
-
-		moduleBuilder.commit(_context.getProject());
 	}
 
 	@Override
