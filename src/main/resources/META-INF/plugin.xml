@@ -34,6 +34,8 @@
 			<li>2.0.4</li>
 			<ul>
 				<li>INTELLIJ-256 Liferay intellij support Intellij 2022.3</li>
+				<li>INTELLIJ-257 support latest liferay portal target platform version and bundle url</li>
+				<li>INTELLIJ-258 fix frozen UI issue while create a liferay module</li>
 			</ul>
 			<li>2.0.3</li>
 			<ul>

@@ -14,7 +14,12 @@
 
 package com.liferay.ide.idea.ui.modules;
 
+import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
+import com.intellij.ide.util.projectWizard.WizardContext;
+import com.intellij.ide.wizard.CommitStepException;
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -40,8 +45,9 @@ import org.jetbrains.annotations.Nullable;
  */
 public class LiferayModuleWizardStep extends ModuleWizardStep {
 
-	public LiferayModuleWizardStep(LiferayModuleBuilder builder, Project project) {
+	public LiferayModuleWizardStep(LiferayModuleBuilder builder, WizardContext context) {
 		_builder = builder;
+		_context = context;
 	}
 
 	public String getClassName() {
@@ -83,6 +89,23 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 		}
 
 		return null;
+	}
+
+	@Override
+	public void onWizardFinished() throws CommitStepException {
+		Application application = ApplicationManager.getApplication();
+
+		application.invokeLater(
+			new Runnable() {
+
+				@Override
+				public void run() {
+					ModuleBuilder moduleBuilder = (ModuleBuilder)_context.getProjectBuilder();
+
+					moduleBuilder.commit(_context.getProject());
+				}
+
+			});
 	}
 
 	@Override
@@ -217,6 +240,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 
 	private LiferayModuleBuilder _builder;
 	private JTextField _className;
+	private WizardContext _context;
 	private JTextField _contributorType;
 	private JPanel _mainPanel;
 	private JTextField _packageName;
