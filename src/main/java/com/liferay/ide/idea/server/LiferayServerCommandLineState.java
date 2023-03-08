@@ -36,6 +36,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.FileUtils;
@@ -65,6 +67,12 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 		if (liferayServerConfiguration.isAlternativeJrePathEnabled()) {
 			jrePath = liferayServerConfiguration.getAlternativeJrePath();
 		}
+
+		Map<String, String> myEnv = new HashMap<>();
+
+		myEnv.put("JAVA_HOME", jrePath);
+
+		javaParameters.setEnv(myEnv);
 
 		javaParameters.setJdk(JavaParametersUtil.createProjectJdk(liferayServerConfiguration.getProject(), jrePath));
 

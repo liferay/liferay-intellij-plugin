@@ -123,7 +123,13 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction imp
 		if (super.isEnabledAndVisible(anActionEvent)) {
 			Project project = anActionEvent.getProject();
 
-			Path bundlePath = Paths.get(project.getBasePath(), getHomeDir(project));
+			String homeDir = getHomeDir(project);
+
+			Path bundlePath = Paths.get(homeDir);
+
+			if (!bundlePath.isAbsolute()) {
+				bundlePath = Paths.get(project.getBasePath(), homeDir);
+			}
 
 			PortalBundle portalBundle = ServerUtil.getPortalBundle(bundlePath);
 
