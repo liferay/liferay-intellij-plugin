@@ -57,6 +57,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -127,22 +128,10 @@ public class LiferayServerConfiguration
 
 		clone.setGogoShellPort(_liferayServerConfig.gogoShellPort);
 
-		Module module = getModule();
+		String moduleSdkPathString = _getModuleSdkPath();
 
-		if (module != null) {
-			ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(getModule());
-
-			Sdk moduleSdk = moduleRootManager.getSdk();
-
-			if (moduleSdk == null) {
-				ProjectRootManager projectRootInstance = ProjectRootManager.getInstance(getProject());
-
-				moduleSdk = projectRootInstance.getProjectSdk();
-			}
-
-			if (moduleSdk != null) {
-				clone.setAlternativeJrePath(moduleSdk.getHomePath());
-			}
+		if (Objects.nonNull(moduleSdkPathString)) {
+			clone.setAlternativeJrePath(moduleSdkPathString);
 		}
 
 		Project project = getProject();
@@ -154,9 +143,16 @@ public class LiferayServerConfiguration
 				return clone;
 			}
 
-			Path bundlePath = Paths.get(project.getBasePath(), homeDir);
+			Path bundlePath = Paths.get(homeDir);
 
-			clone.setBundleLocation(bundlePath.toString());
+			if (bundlePath.isAbsolute()) {
+				clone.setBundleLocation(homeDir);
+			}
+			else {
+				bundlePath = Paths.get(project.getBasePath(), homeDir);
+
+				clone.setBundleLocation(bundlePath.toString());
+			}
 
 			PortalBundle portalBundle = ServerUtil.getPortalBundle(bundlePath);
 
@@ -208,7 +204,16 @@ public class LiferayServerConfiguration
 	@NotNull
 	@Override
 	public Map<String, String> getEnvs() {
-		return _envs;
+		Map<String, String> myEnv = new HashMap<>();
+
+		String moduleSdkPath = _getModuleSdkPath();
+
+		if (moduleSdkPath != null) {
+			myEnv.put("JAVA_HOME", moduleSdkPath);
+			myEnv.put("PATH", moduleSdkPath + "/bin/");
+		}
+
+		return myEnv;
 	}
 
 	public String getGogoShellPort() {
@@ -338,9 +343,13 @@ public class LiferayServerConfiguration
 	}
 
 	@Override
-	public void setEnvs(@NotNull Map<String, String> envs) {
-		_envs.clear();
-		_envs.putAll(envs);
+	public void setEnvs(@NotNull Map<String, String> myEnv) {
+		String moduleSdkPath = _getModuleSdkPath();
+
+		if (moduleSdkPath != null) {
+			myEnv.put("JAVA_HOME", moduleSdkPath);
+			myEnv.put("PATH", moduleSdkPath + "/bin/");
+		}
 	}
 
 	public void setGogoShellPort(String gogoShellPort) {
@@ -386,6 +395,28 @@ public class LiferayServerConfiguration
 		}
 	}
 
+	private String _getModuleSdkPath() {
+		Module module = getModule();
+
+		if (module != null) {
+			ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(getModule());
+
+			Sdk moduleSdk = moduleRootManager.getSdk();
+
+			if (moduleSdk == null) {
+				ProjectRootManager projectRootInstance = ProjectRootManager.getInstance(getProject());
+
+				moduleSdk = projectRootInstance.getProjectSdk();
+			}
+
+			if (moduleSdk != null) {
+				return moduleSdk.getHomePath();
+			}
+		}
+
+		return null;
+	}
+
 	private boolean _isCorrectGogoShellPort(String gogoShellPort) {
 		String extGogoShellPort = ServerUtil.getGogoShellPort(_liferayServerConfig.bundleLocation);
 
@@ -396,7 +427,6 @@ public class LiferayServerConfiguration
 		return false;
 	}
 
-	private Map<String, String> _envs = new LinkedHashMap<>();
 	private JavaRunConfigurationModule _javaRunConfigurationModule;
 	private LiferayServerConfig _liferayServerConfig = new LiferayServerConfig();
 

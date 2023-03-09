@@ -31,6 +31,11 @@
 	</p>
 	<p>
 		<ul>
+			<li>2.0.5</li>
+			<ul>
+				<li>INTELLIJ-260 LiferayServerConfiguration did not support an absolute liferay home path</li>
+				<li>INTELLIJ-259 fix intellij github repo and jira issue link error in plugin.xml</li>
+			</ul>
 			<li>2.0.4</li>
 			<ul>
 				<li>INTELLIJ-256 Liferay intellij support Intellij 2022.3</li>
