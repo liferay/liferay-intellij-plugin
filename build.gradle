@@ -20,7 +20,7 @@ buildscript {
 
 plugins {
 	id "de.undercouch.download" version "5.1.0"
-	id "org.jetbrains.intellij" version "1.12.0"
+	id "org.jetbrains.intellij" version "1.13.1"
 }
 
 //apply plugin: "com.liferay.source.formatter"
@@ -239,7 +239,7 @@ downloadXsds {
 intellij {
 	plugins = ["java", "webComponents", "DatabaseTools", "gradle", "Groovy", "java-i18n", "JavaEE", "javascript-impl", "javaee-jsp-base-impl", "javascript-intentions", "javaee-web-impl", "junit", "maven", "javaee-persistence-impl", "properties", "sass"]
 	pluginName = "liferay-intellij-plugin"
-	version = "IU-2022.3"
+	version = "IU-2022.3.2"
 }
 
 patchPluginXml {
