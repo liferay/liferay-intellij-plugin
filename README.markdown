@@ -4,7 +4,7 @@
 https://plugins.jetbrains.com/plugin/10739-liferay-intellij-plugin
 
 ## Confiugre plugin develop environment
-This project need Java JDK version 11.
+This project need Java JDK version 17.
 
 ## Building from source
 If you would like to build from source, use this following command:
@@ -65,7 +65,7 @@ You must have one Liferay Workspace Project to do the following steps:
 
 You must have one Liferay Workspace Project to do the following steps:
 
-- Right click on existing Liferay Workspace Project and choose *New* > *Liferay Module*
+- Right click on existing Liferay Workspace Project or click File menu, then choose *New* > Module > *Liferay Module*
 
 1. Choose *Liferay Modules*
 
