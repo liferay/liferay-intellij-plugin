@@ -204,16 +204,7 @@ public class LiferayServerConfiguration
 	@NotNull
 	@Override
 	public Map<String, String> getEnvs() {
-		Map<String, String> myEnv = new HashMap<>();
-
-		String moduleSdkPath = _getModuleSdkPath();
-
-		if (moduleSdkPath != null) {
-			myEnv.put("JAVA_HOME", moduleSdkPath);
-			myEnv.put("PATH", moduleSdkPath + "/bin/");
-		}
-
-		return myEnv;
+		return _myEnv;
 	}
 
 	public String getGogoShellPort() {
@@ -344,11 +335,13 @@ public class LiferayServerConfiguration
 
 	@Override
 	public void setEnvs(@NotNull Map<String, String> myEnv) {
+		_myEnv.putAll(myEnv);
+
 		String moduleSdkPath = _getModuleSdkPath();
 
 		if (moduleSdkPath != null) {
-			myEnv.put("JAVA_HOME", moduleSdkPath);
-			myEnv.put("PATH", moduleSdkPath + "/bin/");
+			_myEnv.put("JAVA_HOME", moduleSdkPath);
+			_myEnv.put("PATH", moduleSdkPath + "/bin/");
 		}
 	}
 
@@ -429,7 +422,7 @@ public class LiferayServerConfiguration
 
 	private JavaRunConfigurationModule _javaRunConfigurationModule;
 	private LiferayServerConfig _liferayServerConfig = new LiferayServerConfig();
-
+	private Map<String, String> _myEnv = new HashMap<>();
 	private static class LiferayServerConfig {
 
 		public String alternativeJrePath = "";
