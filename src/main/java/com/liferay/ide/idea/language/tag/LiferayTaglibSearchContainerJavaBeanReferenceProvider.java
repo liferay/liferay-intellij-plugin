@@ -38,7 +38,7 @@ public class LiferayTaglibSearchContainerJavaBeanReferenceProvider
 					XmlTag xmlTag = (XmlTag)psiElement;
 
 					if (LiferayTaglibs.TAGLIB_URI_LIFERAY_UI.equals(xmlTag.getNamespace())) {
-						return Objects.equals("search-container-row", xmlTag.getLocalName());
+						return Objects.equals(xmlTag.getLocalName(), "search-container-row");
 					}
 				}
 

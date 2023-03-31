@@ -212,7 +212,7 @@ public class BladeCLI {
 			do {
 				zipEntry = zipInput.getNextEntry();
 
-				if (Objects.equals("META-INF/MANIFEST.MF", zipEntry.getName())) {
+				if (Objects.equals(zipEntry.getName(), "META-INF/MANIFEST.MF")) {
 					Manifest manifest = new Manifest(zipInput);
 
 					Attributes mainAttributes = manifest.getMainAttributes();

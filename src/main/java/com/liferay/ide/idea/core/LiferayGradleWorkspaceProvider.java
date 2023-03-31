@@ -338,9 +338,9 @@ public class LiferayGradleWorkspaceProvider extends AbstractWorkspaceProvider {
 
 				return artifacts.stream(
 				).filter(
-					artifact -> Objects.equals("com.liferay", artifact.getGroup())
+					artifact -> Objects.equals(artifact.getGroup(), "com.liferay")
 				).filter(
-					artifact -> Objects.equals("com.liferay.gradle.plugins.workspace", artifact.getName())
+					artifact -> Objects.equals(artifact.getName(), "com.liferay.gradle.plugins.workspace")
 				).filter(
 					artifact -> !CoreUtil.isNullOrEmpty(artifact.getVersion())
 				).map(

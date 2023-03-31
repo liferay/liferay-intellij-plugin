@@ -423,6 +423,7 @@ public class LiferayServerConfiguration
 	private JavaRunConfigurationModule _javaRunConfigurationModule;
 	private LiferayServerConfig _liferayServerConfig = new LiferayServerConfig();
 	private Map<String, String> _myEnv = new HashMap<>();
+
 	private static class LiferayServerConfig {
 
 		public String alternativeJrePath = "";

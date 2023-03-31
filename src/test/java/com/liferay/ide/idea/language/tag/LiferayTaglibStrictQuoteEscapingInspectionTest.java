@@ -48,7 +48,7 @@ public class LiferayTaglibStrictQuoteEscapingInspectionTest extends LightJavaCod
 		List<IntentionAction> allQuickFixeIntentionActions = myFixture.getAllQuickFixes();
 
 		for (IntentionAction quickFixIntentionAction : allQuickFixeIntentionActions) {
-			if (Objects.equals("Use single quotes", quickFixIntentionAction.getFamilyName())) {
+			if (Objects.equals(quickFixIntentionAction.getFamilyName(), "Use single quotes")) {
 				myFixture.launchAction(quickFixIntentionAction);
 			}
 		}

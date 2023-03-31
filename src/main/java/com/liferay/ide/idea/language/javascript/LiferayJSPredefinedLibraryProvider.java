@@ -135,7 +135,7 @@ public class LiferayJSPredefinedLibraryProvider extends JSPredefinedLibraryProvi
 						return true;
 					}
 
-					if (Objects.equals("js", virtualFile.getExtension())) {
+					if (Objects.equals(virtualFile.getExtension(), "js")) {
 						virtualFiles.add(virtualFile);
 					}
 
@@ -178,11 +178,11 @@ public class LiferayJSPredefinedLibraryProvider extends JSPredefinedLibraryProvi
 		Stream<LibraryData> stream = targetPlatformArtifacts.stream();
 
 		return stream.filter(
-			libraryData -> Objects.equals("com.liferay", libraryData.getGroupId())
+			libraryData -> Objects.equals(libraryData.getGroupId(), "com.liferay")
 		).filter(
 			libraryData ->
-				Objects.equals("com.liferay.frontend.js.web", libraryData.getArtifactId()) ||
-				Objects.equals("com.liferay.frontend.js.aui.web", libraryData.getArtifactId())
+				Objects.equals(libraryData.getArtifactId(), "com.liferay.frontend.js.web") ||
+				Objects.equals(libraryData.getArtifactId(), "com.liferay.frontend.js.aui.web")
 		).map(
 			LiferayJSPredefinedLibraryProvider::_getJavascriptFilesFromLibraryData
 		).flatMap(

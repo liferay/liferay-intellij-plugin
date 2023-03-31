@@ -86,7 +86,7 @@ public class LiferayTaglibJavascriptLanguageInjector implements JSTargetedInject
 						return key.equals(localName);
 					}
 				).filter(
-					attribute -> Objects.equals("", attribute.getValue())
+					attribute -> Objects.equals(attribute.getValue(), "")
 				).forEach(
 					attribute -> _injectIntoBody(multiHostRegistrar, (XmlTag)psiElement)
 				);
@@ -158,11 +158,11 @@ public class LiferayTaglibJavascriptLanguageInjector implements JSTargetedInject
 				String suffixWrapper = null;
 
 				if (LiferayTaglibs.TAGLIB_URI_LIFERAY_AUI.equals(xmlTag.getNamespace()) &&
-					Objects.equals("validator", xmlTag.getLocalName())) {
+					Objects.equals(xmlTag.getLocalName(), "validator")) {
 
 					String attributeValue = xmlTag.getAttributeValue("name");
 
-					if (Objects.equals("custom", attributeValue) || Objects.equals("required", attributeValue)) {
+					if (Objects.equals(attributeValue, "custom") || Objects.equals(attributeValue, "required")) {
 						prefixWrapper = "(";
 						suffixWrapper = ")();";
 					}

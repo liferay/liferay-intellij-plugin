@@ -36,7 +36,7 @@ public class LiferayServiceXMLExceptionNameInspectionTest extends LightJavaCodeI
 		List<IntentionAction> allQuickFixes = myFixture.getAllQuickFixes();
 
 		for (IntentionAction quickFix : allQuickFixes) {
-			if (Objects.equals("Remove Exception suffix", quickFix.getFamilyName())) {
+			if (Objects.equals(quickFix.getFamilyName(), "Remove Exception suffix")) {
 				myFixture.launchAction(quickFix);
 			}
 		}

@@ -123,7 +123,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 	public void updateStep() {
 		String type = _builder.getType();
 
-		if (Objects.equals("theme", type) || Objects.equals("layout-template", type)) {
+		if (Objects.equals(type, "theme") || Objects.equals(type, "layout-template")) {
 			_packageName.setEditable(false);
 			_packageName.setEnabled(false);
 			_className.setEditable(false);
@@ -133,7 +133,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 			_contributorType.setEditable(false);
 			_contributorType.setEnabled(false);
 		}
-		else if (Objects.equals("theme-contributor", type)) {
+		else if (Objects.equals(type, "theme-contributor")) {
 			_packageName.setEditable(false);
 			_packageName.setEnabled(false);
 			_className.setEditable(false);
@@ -143,7 +143,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 			_contributorType.setEditable(true);
 			_contributorType.setEnabled(true);
 		}
-		else if (Objects.equals("service-builder", type)) {
+		else if (Objects.equals(type, "service-builder")) {
 			_packageName.setEditable(true);
 			_packageName.setEnabled(true);
 			_className.setEditable(false);
@@ -153,7 +153,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 			_contributorType.setEditable(false);
 			_contributorType.setEnabled(false);
 		}
-		else if (Objects.equals("service", type)) {
+		else if (Objects.equals(type, "service")) {
 			_packageName.setEditable(true);
 			_packageName.setEnabled(true);
 			_className.setEditable(true);
@@ -163,7 +163,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 			_contributorType.setEditable(false);
 			_contributorType.setEnabled(false);
 		}
-		else if (Objects.equals("service-wrapper", type)) {
+		else if (Objects.equals(type, "service-wrapper")) {
 			_packageName.setEditable(true);
 			_packageName.setEnabled(true);
 			_className.setEditable(true);

@@ -77,7 +77,7 @@ public class LiferayServiceJavaImplLineMarkerProvider extends RelatedItemLineMar
 											continue;
 										}
 
-										if (Objects.equals("service-builder", rootXmlTag.getLocalName())) {
+										if (Objects.equals(rootXmlTag.getLocalName(), "service-builder")) {
 											String packagePath = rootXmlTag.getAttributeValue("package-path");
 
 											if (targetPackage.equals(packagePath)) {

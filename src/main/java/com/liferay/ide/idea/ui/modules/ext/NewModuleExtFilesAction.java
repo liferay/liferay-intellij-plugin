@@ -100,7 +100,7 @@ public class NewModuleExtFilesAction extends AnAction implements DumbAware, Life
 
 		for (VirtualFile contentRoot : moduleRootManager.getContentRoots()) {
 			for (VirtualFile child : contentRoot.getChildren()) {
-				if (Objects.equals("build.gradle", child.getName()) && child.exists()) {
+				if (Objects.equals(child.getName(), "build.gradle") && child.exists()) {
 					_gradleVirtualFile = child;
 					presentation.setEnabledAndVisible(true);
 

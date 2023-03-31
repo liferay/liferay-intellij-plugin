@@ -44,7 +44,7 @@ public class FindAllDependenciesVisitor extends CodeVisitorSupport {
 	 */
 	@Override
 	public void visitArgumentlistExpression(ArgumentListExpression expression) {
-		if (Objects.equals("", _configurationName)) {
+		if (Objects.equals(_configurationName, "")) {
 			super.visitArgumentlistExpression(expression);
 		}
 		else {
@@ -78,7 +78,7 @@ public class FindAllDependenciesVisitor extends CodeVisitorSupport {
 	 */
 	@Override
 	public void visitMapExpression(MapExpression expression) {
-		if (Objects.equals("", _configurationName)) {
+		if (Objects.equals(_configurationName, "")) {
 			super.visitMapExpression(expression);
 		}
 		else {
@@ -100,13 +100,13 @@ public class FindAllDependenciesVisitor extends CodeVisitorSupport {
 
 	@Override
 	public void visitMethodCallExpression(MethodCallExpression call) {
-		if (Objects.equals("dependencies", call.getMethodAsString())) {
+		if (Objects.equals(call.getMethodAsString(), "dependencies")) {
 			_dependenciesClosure = true;
 			super.visitMethodCallExpression(call);
 
 			_dependenciesClosure = false;
 		}
-		else if (Objects.equals("buildscript", call.getMethodAsString())) {
+		else if (Objects.equals(call.getMethodAsString(), "buildscript")) {
 			super.visitMethodCallExpression(call);
 		}
 		else if (_dependenciesClosure && _dependencyStatement) {
