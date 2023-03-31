@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -73,19 +74,19 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 
 	public LiferayProjectTypesComponent(WizardContext context) {
 		UIUtil.invokeLaterIfNeeded(
-			() -> {
-				Application application = ApplicationManager.getApplication();
+				() -> {
+					Application application = ApplicationManager.getApplication();
 
-				application.executeOnPooledThread(
-					new Runnable() {
+					application.executeOnPooledThread(
+							new Runnable() {
 
-						@Override
-						public void run() {
-							_loadSupportedVersionRanges(context.getProject());
-						}
+								@Override
+								public void run() {
+									_loadSupportedVersionRanges(context.getProject());
+								}
 
-					});
-			});
+							});
+				});
 	}
 
 	public LiferayModuleBuilder getModuleBuilder() {
@@ -115,7 +116,7 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 	}
 
 	public void initProjectTypeComponent(
-		LiferayModuleNameLocationComponent moduleNameLocationComponent, WizardContext context) {
+			LiferayModuleNameLocationComponent moduleNameLocationComponent, WizardContext context) {
 
 		_context = context;
 
@@ -132,19 +133,19 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 		treeSelectionModel.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
 		treeSelectionModel.addTreeSelectionListener(
-			event -> {
-				LiferayModuleBuilder builder = getModuleBuilder();
+				event -> {
+					LiferayModuleBuilder builder = getModuleBuilder();
 
-				if (Objects.nonNull(builder)) {
-					TreePath treePath = event.getNewLeadSelectionPath();
+					if (Objects.nonNull(builder)) {
+						TreePath treePath = event.getNewLeadSelectionPath();
 
-					JTextField moduleNameField = moduleNameLocationComponent.getModuleNameField();
+						JTextField moduleNameField = moduleNameLocationComponent.getModuleNameField();
 
-					builder.setType(String.valueOf(treePath.getLastPathComponent()));
+						builder.setType(String.valueOf(treePath.getLastPathComponent()));
 
-					moduleNameLocationComponent.updateLocations(moduleNameField.getText());
-				}
-			});
+						moduleNameLocationComponent.updateLocations(moduleNameField.getText());
+					}
+				});
 
 		JScrollPane typesScrollPane = ScrollPaneFactory.createScrollPane(_typesTree);
 
@@ -164,7 +165,7 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 			_liferayVersionCombo.setSelectedItem(_liferayVersion);
 
 			_liferayVersionCombo.addActionListener(
-				e -> _liferayVersion = (String)_liferayVersionCombo.getSelectedItem());
+					e -> _liferayVersion = (String)_liferayVersionCombo.getSelectedItem());
 		}
 		else {
 			_mainPanel.remove(_liferayVersionLabel);
@@ -175,27 +176,44 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 		}
 
 		SwingUtilities.invokeLater(
-			() -> {
-				DefaultMutableTreeNode root = new DefaultMutableTreeNode("root", true);
+				() -> {
+					DefaultMutableTreeNode root = new DefaultMutableTreeNode("root", true);
+					TreeModel model = new DefaultTreeModel(root);
+					root.add(new DefaultMutableTreeNode());
+					DefaultMutableTreeNode loadingNode = (DefaultMutableTreeNode) root.getChildAt(0);
+					loadingNode.setUserObject("Loading Module Project Template Type List......");
 
-				for (String type : BladeCLI.getProjectTemplates(_project)) {
-					if (Objects.equals("fragment", type) || Objects.equals("modules-ext", type) ||
-						Objects.equals("spring-mvc-portlet", type) || Objects.equals("client-extension", type)) {
+					_typesTree.setModel(model);
 
-						continue;
-					}
+					((DefaultTreeModel) model).nodeStructureChanged(root);
 
-					DefaultMutableTreeNode node = new DefaultMutableTreeNode(type, true);
+					CompletableFuture<String[]> future = CompletableFuture.supplyAsync(() -> {
+						return BladeCLI.getProjectTemplates(_project);
+					});
 
-					root.add(node);
-				}
+					future.thenAccept(projectTemplates -> {
+						root.removeAllChildren();
+						for (String type : projectTemplates) {
+							if (Objects.equals("fragment", type) || Objects.equals("modules-ext", type) ||
+									Objects.equals("spring-mvc-portlet", type) || Objects.equals("client-extension", type)) {
 
-				TreeModel model = new DefaultTreeModel(root);
+								continue;
+							}
 
-				_typesTree.setModel(model);
+							DefaultMutableTreeNode node = new DefaultMutableTreeNode(type, true);
 
-				_typesTree.setSelectionRow(0);
-			});
+							root.add(node);
+						}
+
+						_typesTree.setModel(model);
+
+						((DefaultTreeModel) model).nodeStructureChanged(root);
+
+						_typesTree.setSelectionRow(0);
+					});
+
+
+				});
 	}
 
 	public void updateDataModel() {
@@ -214,27 +232,32 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 
 		String type = getSelectedType();
 
+		if (Objects.isNull(type)){
+			throw new ConfigurationException(
+				"The module project type is invalid. You must choose a valid project type.", validationTitle);
+		}
+
 		if (type.equals("js-theme") || type.equals("js-widget")) {
 			throw new ConfigurationException(
-				"This wizard does not support creating this type of module. Create it using the CLI first and then " +
-					"import here.",
-				validationTitle);
+					"This wizard does not support creating this type of module. Create it using the CLI first and then " +
+							"import here.",
+					validationTitle);
 		}
 
 		if (LiferayWorkspaceSupport.isValidMavenWorkspaceProject(_project)) {
 			if (Objects.equals(type, "form-field")) {
 				VersionRange requiredVersionRange = new VersionRange(
-					true, new Version("7.0"), new Version("7.2"), false);
+						true, new Version("7.0"), new Version("7.2"), false);
 
 				if (!requiredVersionRange.includes(new Version(_liferayVersion))) {
 					throw new ConfigurationException(
-						"Form Field project is only supported for versions 7.0 and 7.1 with Maven", validationTitle);
+							"Form Field project is only supported for versions 7.0 and 7.1 with Maven", validationTitle);
 				}
 			}
 
 			if (Objects.equals(type, "war-core-ext")) {
 				throw new ConfigurationException(
-					"Creating war-core-ext project with Maven is not supported", validationTitle);
+						"Creating war-core-ext project with Maven is not supported", validationTitle);
 			}
 		}
 
@@ -245,7 +268,7 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 
 			if (currentVersion.compareTo(notSupportFromPortalVersion) >= 0) {
 				throw new ConfigurationException(
-					"War Core Ext project is only supported starting from portal 7.0 to 7.2", validationTitle);
+						"War Core Ext project is only supported starting from portal 7.0 to 7.2", validationTitle);
 			}
 		}
 
@@ -261,13 +284,13 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 
 				if (npm) {
 					throw new ConfigurationException(
-						"NPM portlet project templates generated from this tool are not supported for specified " +
-							"Liferay version. See LPS-97950 for full details.",
-						validationTitle);
+							"NPM portlet project templates generated from this tool are not supported for specified " +
+									"Liferay version. See LPS-97950 for full details.",
+							validationTitle);
 				}
 
 				throw new ConfigurationException(
-					"Specified Liferay version is invalid. Must be in range " + versionRange, validationTitle);
+						"Specified Liferay version is invalid. Must be in range " + versionRange, validationTitle);
 			}
 		}
 		else {
@@ -310,21 +333,21 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 									if (tempEntryName.equals("META-INF/MANIFEST.MF")) {
 										try (InputStream manifestInput = tempZipFile.getInputStream(tempEntry)) {
 											List<String> lines = IOUtils.readLines(
-												manifestInput, Charset.defaultCharset());
+													manifestInput, Charset.defaultCharset());
 
 											for (String line : lines) {
 												String liferayVersionString = "Liferay-Versions:";
 
 												if (line.startsWith(liferayVersionString)) {
 													String versionRangeValue = line.substring(
-														liferayVersionString.length());
+															liferayVersionString.length());
 
 													String projectTemplateName = entryName.substring(
-														"com.liferay.project.templates.".length(),
-														entryName.indexOf("-"));
+															"com.liferay.project.templates.".length(),
+															entryName.indexOf("-"));
 
 													_projectTemplateVersionRangeMap.put(
-														projectTemplateName, new VersionRange(versionRangeValue));
+															projectTemplateName, new VersionRange(versionRangeValue));
 
 													break;
 												}
