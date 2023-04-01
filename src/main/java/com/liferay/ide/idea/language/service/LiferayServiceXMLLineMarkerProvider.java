@@ -63,7 +63,7 @@ public class LiferayServiceXMLLineMarkerProvider extends RelatedItemLineMarkerPr
 				).map(
 					xmlToken -> PsiTreeUtil.getParentOfType(xmlToken, XmlAttribute.class)
 				).filter(
-					xmlAttribute -> Objects.equals("name", xmlAttribute.getLocalName())
+					xmlAttribute -> Objects.equals(xmlAttribute.getLocalName(), "name")
 				);
 
 				nameXmlAttribute.map(
@@ -75,7 +75,7 @@ public class LiferayServiceXMLLineMarkerProvider extends RelatedItemLineMarkerPr
 				).map(
 					XmlTag.class::cast
 				).filter(
-					parentXmlTag -> Objects.equals("service-builder", parentXmlTag.getLocalName())
+					parentXmlTag -> Objects.equals(parentXmlTag.getLocalName(), "service-builder")
 				).ifPresent(
 					serviceBuilderXmlTag -> {
 						XmlAttribute xmlAttribute = nameXmlAttribute.get();

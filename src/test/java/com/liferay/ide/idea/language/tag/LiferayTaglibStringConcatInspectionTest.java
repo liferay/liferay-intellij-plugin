@@ -48,7 +48,7 @@ public class LiferayTaglibStringConcatInspectionTest extends LightJavaCodeInsigh
 		List<IntentionAction> allQuickFixeIntentionActions = myFixture.getAllQuickFixes();
 
 		for (IntentionAction quickFix : allQuickFixeIntentionActions) {
-			if (Objects.equals("Wrap in JSP expression", quickFix.getFamilyName())) {
+			if (Objects.equals(quickFix.getFamilyName(), "Wrap in JSP expression")) {
 				myFixture.launchAction(quickFix);
 			}
 		}

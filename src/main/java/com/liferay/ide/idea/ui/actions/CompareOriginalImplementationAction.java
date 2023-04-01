@@ -127,7 +127,7 @@ public class CompareOriginalImplementationAction extends AnAction implements Lif
 		VirtualFile extModuleVirtualFile = moduleRootManagerContentRootParent.getParent();
 
 		for (VirtualFile child : extModuleVirtualFile.getChildren()) {
-			if (Objects.equals("build.gradle", child.getName()) && child.exists()) {
+			if (Objects.equals(child.getName(), "build.gradle") && child.exists()) {
 				File sourceJar = _getSourceJar(child);
 
 				if (Objects.isNull(sourceJar)) {

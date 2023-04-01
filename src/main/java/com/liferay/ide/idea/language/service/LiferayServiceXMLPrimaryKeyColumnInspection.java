@@ -48,7 +48,7 @@ public class LiferayServiceXMLPrimaryKeyColumnInspection extends XmlSuppressable
 				if (LiferayServiceXMLUtil.isColumnPrimaryAttribute(value)) {
 					String text = value.getValue();
 
-					if (Objects.equals("true", text)) {
+					if (Objects.equals(text, "true")) {
 						XmlTag xmlTag = PsiTreeUtil.getParentOfType(value, XmlTag.class);
 
 						if (xmlTag != null) {

@@ -51,20 +51,20 @@ public class LiferayXmlSchemaProvider extends XmlSchemaProvider {
 
 		String fileName = psiFile.getName();
 
-		if (Objects.equals("portal-model-hints.xml", fileName) || Objects.equals("ext-model-hints.xml", fileName) ||
-			Objects.equals("portlet-model-hints.xml", fileName) ||
-			Objects.equals("portlet-model-hints-ext.xml", fileName)) {
+		if (Objects.equals(fileName, "portal-model-hints.xml") || Objects.equals(fileName, "ext-model-hints.xml") ||
+			Objects.equals(fileName, "portlet-model-hints.xml") ||
+			Objects.equals(fileName, "portlet-model-hints-ext.xml")) {
 
 			schemaFileURL = LiferayXmlSchemaProvider.class.getResource(
 				"/definitions/xsd/liferay-portlet-model-hints_7_0_0.xsd");
 		}
-		else if (Objects.equals("default.xml", fileName)) {
+		else if (Objects.equals(fileName, "default.xml")) {
 			PsiDirectory psiDirectory = psiFile.getParent();
 
 			if (psiDirectory != null) {
 				String psiDirectoryName = psiDirectory.getName();
 
-				if (Objects.equals("custom-sql", psiDirectoryName)) {
+				if (Objects.equals(psiDirectoryName, "custom-sql")) {
 					schemaFileURL = LiferayXmlSchemaProvider.class.getResource(
 						"/definitions/xsd/liferay-custom-sql_7_0_0.xsd");
 				}
@@ -102,20 +102,20 @@ public class LiferayXmlSchemaProvider extends XmlSchemaProvider {
 
 		String fileName = psiFile.getName();
 
-		if (Objects.equals("portal-model-hints.xml", fileName) || Objects.equals("ext-model-hints.xml", fileName) ||
-			Objects.equals("portlet-model-hints.xml", fileName) ||
-			Objects.equals("portlet-model-hints-ext.xml", fileName)) {
+		if (Objects.equals(fileName, "portal-model-hints.xml") || Objects.equals(fileName, "ext-model-hints.xml") ||
+			Objects.equals(fileName, "portlet-model-hints.xml") ||
+			Objects.equals(fileName, "portlet-model-hints-ext.xml")) {
 
 			return true;
 		}
 
-		if (Objects.equals("default.xml", fileName)) {
+		if (Objects.equals(fileName, "default.xml")) {
 			PsiDirectory psiDirectory = psiFile.getParent();
 
 			if (psiDirectory != null) {
 				String psiDirectoryName = psiDirectory.getName();
 
-				if (Objects.equals("custom-sql", psiDirectoryName)) {
+				if (Objects.equals(psiDirectoryName, "custom-sql")) {
 					return true;
 				}
 			}

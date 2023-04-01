@@ -36,7 +36,7 @@ public class LiferayServiceXMLDuplicateFinderInspectionTest extends LightJavaCod
 		List<IntentionAction> allQuickFixes = myFixture.getAllQuickFixes();
 
 		for (IntentionAction quickFix : allQuickFixes) {
-			if (Objects.equals("Remove entry", quickFix.getFamilyName())) {
+			if (Objects.equals(quickFix.getFamilyName(), "Remove entry")) {
 				myFixture.launchAction(quickFix);
 
 				break;

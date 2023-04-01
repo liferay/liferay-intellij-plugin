@@ -106,7 +106,7 @@ public class GradleUtil {
 					call -> {
 						GrExpression grExpression = call.getInvokedExpression();
 
-						return Objects.equals("dependencies", grExpression.getText());
+						return Objects.equals(grExpression.getText(), "dependencies");
 					});
 
 				if (dependenciesBlock == null) {
@@ -339,9 +339,9 @@ public class GradleUtil {
 
 				return artifacts.stream(
 				).filter(
-					artifact -> Objects.equals("com.liferay", artifact.getGroup())
+					artifact -> Objects.equals(artifact.getGroup(), "com.liferay")
 				).filter(
-					artifact -> Objects.equals("com.liferay.gradle.plugins.workspace", artifact.getName())
+					artifact -> Objects.equals(artifact.getName(), "com.liferay.gradle.plugins.workspace")
 				).filter(
 					artifact -> !CoreUtil.isNullOrEmpty(artifact.getVersion())
 				).map(
@@ -385,7 +385,7 @@ public class GradleUtil {
 		).map(
 			entry -> entry.getValue()
 		).filter(
-			task -> Objects.equals("watch", task.name)
+			task -> Objects.equals(task.name, "watch")
 		).filter(
 			task -> Objects.deepEquals("com.liferay.gradle.plugins.tasks.WatchTask", task.typeFqn)
 		).findAny(
@@ -431,7 +431,7 @@ public class GradleUtil {
 			do {
 				zipEntry = zipInput.getNextEntry();
 
-				if (Objects.equals("META-INF/MANIFEST.MF", zipEntry.getName())) {
+				if (Objects.equals(zipEntry.getName(), "META-INF/MANIFEST.MF")) {
 					Manifest manifest = new Manifest(zipInput);
 
 					Attributes mainAttributes = manifest.getMainAttributes();

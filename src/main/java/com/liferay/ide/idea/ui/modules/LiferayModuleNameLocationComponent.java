@@ -366,11 +366,11 @@ public class LiferayModuleNameLocationComponent implements LiferayWorkspaceSuppo
 				}
 			}
 
-			if (Objects.equals("js-theme", templateType)) {
+			if (Objects.equals(templateType, "js-theme")) {
 				targetFolderName = getWorkspaceProperty(
 					project, WorkspaceConstants.THEMES_DIR_PROPERTY, WorkspaceConstants.THEMES_DIR_DEFAULT);
 			}
-			else if (Objects.equals("war-core-ext", templateType)) {
+			else if (Objects.equals(templateType, "war-core-ext")) {
 				targetFolderName = getWorkspaceProperty(
 					project, WorkspaceConstants.EXT_DIR_PROPERTY, WorkspaceConstants.EXT_DIR_DEFAULT);
 			}

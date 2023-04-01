@@ -44,6 +44,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -55,7 +57,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -178,23 +179,51 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 			() -> {
 				DefaultMutableTreeNode root = new DefaultMutableTreeNode("root", true);
 
-				for (String type : BladeCLI.getProjectTemplates(_project)) {
-					if (Objects.equals("fragment", type) || Objects.equals("modules-ext", type) ||
-						Objects.equals("spring-mvc-portlet", type) || Objects.equals("client-extension", type)) {
+				DefaultTreeModel model = new DefaultTreeModel(root);
 
-						continue;
-					}
+				root.add(new DefaultMutableTreeNode());
 
-					DefaultMutableTreeNode node = new DefaultMutableTreeNode(type, true);
+				DefaultMutableTreeNode loadingNode = (DefaultMutableTreeNode)root.getChildAt(0);
 
-					root.add(node);
-				}
-
-				TreeModel model = new DefaultTreeModel(root);
+				loadingNode.setUserObject("Loading Module Project Template Types......");
 
 				_typesTree.setModel(model);
 
-				_typesTree.setSelectionRow(0);
+				model.nodeStructureChanged(root);
+
+				CompletableFuture<String[]> future = CompletableFuture.supplyAsync(
+					new Supplier<String[]>() {
+
+						@Override
+						public String[] get() {
+							return BladeCLI.getProjectTemplates(_project);
+						}
+
+					});
+
+				future.thenAccept(
+					projectTemplates -> {
+						root.removeAllChildren();
+
+						for (String type : projectTemplates) {
+							if (Objects.equals(type, "fragment") || Objects.equals(type, "modules-ext") ||
+								Objects.equals(type, "spring-mvc-portlet") ||
+								Objects.equals(type, "client-extension")) {
+
+								continue;
+							}
+
+							DefaultMutableTreeNode node = new DefaultMutableTreeNode(type, true);
+
+							root.add(node);
+						}
+
+						_typesTree.setModel(model);
+
+						model.nodeStructureChanged(root);
+
+						_typesTree.setSelectionRow(0);
+					});
 			});
 	}
 
@@ -213,6 +242,11 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 		String validationTitle = "Validation Error";
 
 		String type = getSelectedType();
+
+		if (Objects.isNull(type)) {
+			throw new ConfigurationException(
+				"The module project type is invalid. Please choose a valid project type.", validationTitle);
+		}
 
 		if (type.equals("js-theme") || type.equals("js-widget")) {
 			throw new ConfigurationException(

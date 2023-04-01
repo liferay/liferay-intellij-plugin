@@ -150,7 +150,7 @@ public class LiferayTaglibStringConcatInspection extends XmlSuppressableInspecti
 				if (name.equals(attributeName)) {
 					String rtexprvalue = attributeXmlTag.getSubTagText("rtexprvalue");
 
-					return Objects.equals("true", rtexprvalue);
+					return Objects.equals(rtexprvalue, "true");
 				}
 			}
 		}

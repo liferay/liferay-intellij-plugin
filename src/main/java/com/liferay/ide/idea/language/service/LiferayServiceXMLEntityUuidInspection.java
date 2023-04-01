@@ -47,7 +47,7 @@ public class LiferayServiceXMLEntityUuidInspection extends XmlSuppressableInspec
 				if (LiferayServiceXMLUtil.isEntityUuidAttribute(value)) {
 					String text = value.getValue();
 
-					if (Objects.equals("true", text)) {
+					if (Objects.equals(text, "true")) {
 						XmlTag xmlTag = PsiTreeUtil.getParentOfType(value, XmlTag.class);
 
 						if (xmlTag != null) {
@@ -59,7 +59,7 @@ public class LiferayServiceXMLEntityUuidInspection extends XmlSuppressableInspec
 								hasPrimaryColumn = Stream.of(
 									childXmlTags
 								).filter(
-									child -> Objects.equals("column", child.getName())
+									child -> Objects.equals(child.getName(), "column")
 								).map(
 									primary -> primary.getAttributeValue("primary")
 								).anyMatch(

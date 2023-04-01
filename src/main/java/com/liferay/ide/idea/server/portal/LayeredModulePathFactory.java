@@ -324,7 +324,7 @@ public class LayeredModulePathFactory {
 				boolean hasBase = false;
 
 				for (String layerName : layerNames) {
-					if (Objects.equals("base", layerName)) {
+					if (Objects.equals(layerName, "base")) {
 						hasBase = true;
 					}
 
