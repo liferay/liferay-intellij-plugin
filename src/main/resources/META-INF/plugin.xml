@@ -37,6 +37,7 @@
 				<li>INTELLIJ-260 LiferayServerConfiguration did not support an absolute liferay home path</li>
 				<li>INTELLIJ-261 Update Readme</li>
 				<li>INTELLIJ-262 Elasticsearch Sidecar cannot start on Liferay DXP 7.3 when using IntelliJ plugin</li>
+				<li>INTELLIJ-263 use latest version blade</li>
 			</ul>
 			<li>2.0.4</li>
 			<ul>
