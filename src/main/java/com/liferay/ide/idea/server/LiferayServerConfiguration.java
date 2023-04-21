@@ -342,8 +342,10 @@ public class LiferayServerConfiguration
 
 		if (moduleSdkPath != null) {
 			_myEnv.put("JAVA_HOME", moduleSdkPath);
+
 			Map<String, String> systemEnv = System.getenv();
-			_myEnv.put("PATH", moduleSdkPath + "/bin" + ":" + systemEnv.get("PATH"));
+
+			_myEnv.put("PATH", moduleSdkPath + "/bin:" + systemEnv.get("PATH"));
 		}
 	}
 

@@ -43,7 +43,6 @@ import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.options.SettingsEditorGroup;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.io.FileUtil;
@@ -71,6 +70,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 import javax.swing.SwingUtilities;
 
@@ -399,33 +400,36 @@ public class LiferayDockerServerConfiguration
 
 				@Override
 				public void run() {
-					Computable<ProjectInfo> computable = new Computable<>() {
-
-						@Override
-						public ProjectInfo compute() {
+					CompletableFuture<ProjectInfo> future = CompletableFuture.supplyAsync(
+						() -> {
 							try {
 								return GradleUtil.getModel(ProjectInfo.class, ProjectUtil.guessProjectDir(_project));
 							}
 							catch (Exception exception) {
+								return null;
+							}
+						});
+
+					future.thenAccept(
+						new Consumer<ProjectInfo>() {
+
+							@Override
+							public void accept(ProjectInfo projectInfo) {
+								SwingUtilities.invokeLater(
+									() -> {
+										try {
+											if (projectInfo != null) {
+												_liferayDockerServerConfig.dockerImageId =
+													projectInfo.getDockerImageId();
+												_liferayDockerServerConfig.dockerContainerId =
+													projectInfo.getDockerContainerId();
+											}
+										}
+										catch (Exception exception) {
+										}
+									});
 							}
 
-							return null;
-						}
-
-					};
-
-					SwingUtilities.invokeLater(
-						() -> {
-							try {
-								ProjectInfo projectInfo = computable.get();
-
-								if (projectInfo != null) {
-									_liferayDockerServerConfig.dockerImageId = projectInfo.getDockerImageId();
-									_liferayDockerServerConfig.dockerContainerId = projectInfo.getDockerContainerId();
-								}
-							}
-							catch (Exception exception) {
-							}
 						});
 				}
 
