@@ -274,7 +274,7 @@ public class LiferayServerConfiguration
 
 	@Override
 	public boolean isPassParentEnvs() {
-		return false;
+		return _liferayServerConfig.passParentEnvironments;
 	}
 
 	@Override
@@ -335,13 +335,17 @@ public class LiferayServerConfiguration
 
 	@Override
 	public void setEnvs(@NotNull Map<String, String> myEnv) {
+		_myEnv.putAll(System.getenv());
 		_myEnv.putAll(myEnv);
 
 		String moduleSdkPath = _getModuleSdkPath();
 
 		if (moduleSdkPath != null) {
 			_myEnv.put("JAVA_HOME", moduleSdkPath);
-			_myEnv.put("PATH", moduleSdkPath + "/bin/");
+
+			Map<String, String> systemEnv = System.getenv();
+
+			_myEnv.put("PATH", moduleSdkPath + "/bin:" + systemEnv.get("PATH"));
 		}
 	}
 

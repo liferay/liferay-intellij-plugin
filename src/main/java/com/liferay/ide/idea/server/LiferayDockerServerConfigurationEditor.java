@@ -22,13 +22,15 @@ import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.ui.LabeledComponent;
-import com.intellij.openapi.util.Computable;
 import com.intellij.ui.PanelWithAnchor;
 import com.intellij.ui.UserActivityListener;
 import com.intellij.ui.UserActivityWatcher;
 
 import com.liferay.blade.gradle.tooling.ProjectInfo;
 import com.liferay.ide.idea.util.GradleUtil;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -67,34 +69,35 @@ public class LiferayDockerServerConfigurationEditor
 
 					@Override
 					public void run() {
-						Computable<ProjectInfo> computable = new Computable<>() {
-
-							@Override
-							public ProjectInfo compute() {
+						CompletableFuture<ProjectInfo> future = CompletableFuture.supplyAsync(
+							() -> {
 								try {
 									return GradleUtil.getModel(
 										ProjectInfo.class, ProjectUtil.guessProjectDir(_project));
 								}
 								catch (Exception exception) {
+									return null;
+								}
+							});
+
+						future.thenAccept(
+							new Consumer<ProjectInfo>() {
+
+								@Override
+								public void accept(ProjectInfo projectInfo) {
+									SwingUtilities.invokeLater(
+										() -> {
+											try {
+												if (projectInfo != null) {
+													_dockerImageId.setText(projectInfo.getDockerImageId());
+													_dockerContainerId.setText(projectInfo.getDockerContainerId());
+												}
+											}
+											catch (Exception exception) {
+											}
+										});
 								}
 
-								return null;
-							}
-
-						};
-
-						SwingUtilities.invokeLater(
-							() -> {
-								try {
-									ProjectInfo projectInfo = computable.get();
-
-									if (projectInfo != null) {
-										_dockerImageId.setText(projectInfo.getDockerImageId());
-										_dockerContainerId.setText(projectInfo.getDockerContainerId());
-									}
-								}
-								catch (Exception exception) {
-								}
 							});
 					}
 
