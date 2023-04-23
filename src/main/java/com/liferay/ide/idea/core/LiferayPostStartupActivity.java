@@ -29,7 +29,7 @@ import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.startup.StartupActivity;
+import com.intellij.openapi.startup.ProjectActivity;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.execution.ParametersListUtil;
@@ -44,6 +44,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import kotlin.Unit;
+
+import kotlin.coroutines.Continuation;
+
 import org.gradle.cli.CommandLineParser;
 import org.gradle.cli.ParsedCommandLine;
 
@@ -56,14 +60,15 @@ import org.jetbrains.plugins.gradle.util.GradleConstants;
 /**
  * @author Simon Jiang
  */
-public class LiferayPostStartupActivity implements DumbAware, LiferayWorkspaceSupport, StartupActivity.Background {
+public class LiferayPostStartupActivity implements DumbAware, LiferayWorkspaceSupport, ProjectActivity {
 
+	@Nullable
 	@Override
-	public void runActivity(@NotNull Project project) {
+	public Object execute(@NotNull Project project, @NotNull Continuation<? super Unit> continuation) {
 		VirtualFile projectDirVirtualFile = LiferayWorkspaceSupport.getWorkspaceVirtualFile(project);
 
 		if (projectDirVirtualFile == null) {
-			return;
+			return project;
 		}
 
 		projectDirVirtualFile.refresh(false, true);
@@ -162,6 +167,10 @@ public class LiferayPostStartupActivity implements DumbAware, LiferayWorkspaceSu
 				}
 
 			});
+
+		continuation.resumeWith(project);
+
+		return project;
 	}
 
 }

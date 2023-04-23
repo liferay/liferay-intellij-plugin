@@ -23,6 +23,8 @@ import com.intellij.util.containers.ContainerUtil;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+
 /**
  * @author Dominik Marks
  */
@@ -42,7 +44,7 @@ public class BndFormattingTest extends BasePlatformTestCase {
 
 				PsiFile psiFile = myFixture.getFile();
 
-				codeStyleManager.reformatText(psiFile, ContainerUtil.newArrayList(psiFile.getTextRange()));
+				codeStyleManager.reformatText(psiFile,  Arrays.asList(psiFile.getTextRange()));
 			});
 
 		myFixture.checkResultByFile("formatted.bnd");

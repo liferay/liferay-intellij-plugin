@@ -1,6 +1,6 @@
 buildscript {
 	dependencies {
-		//classpath group: "com.liferay", name: "com.liferay.gradle.plugins.source.formatter", version: "latest.release"
+//		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.source.formatter", version: "latest.release"
 		classpath group: "de.undercouch", name: "gradle-download-task", version: "5.1.0"
 		classpath group: "nu.studer", name: "gradle-credentials-plugin", version: "2.1"
 	}
@@ -20,7 +20,7 @@ buildscript {
 
 plugins {
 	id "de.undercouch.download" version "5.1.0"
-	id "org.jetbrains.intellij" version "1.13.1"
+	id "org.jetbrains.intellij" version "1.13.3"
 }
 
 //apply plugin: "com.liferay.source.formatter"
@@ -68,7 +68,6 @@ buildScan {
 }
 
 //check.dependsOn checkSourceFormatting
-//
 //checkSourceFormatting {
 //	maxLineLength = 120
 //}
@@ -239,11 +238,11 @@ downloadXsds {
 intellij {
 	plugins = ["java", "webComponents", "DatabaseTools", "gradle", "Groovy", "java-i18n", "JavaEE", "javascript-impl", "javaee-jsp-base-impl", "javascript-intentions", "javaee-web-impl", "junit", "maven", "javaee-persistence-impl", "properties", "sass"]
 	pluginName = "liferay-intellij-plugin"
-	version = "IU-2022.3.2"
+	version = "IU-2023.1"
 }
 
 patchPluginXml {
-	sinceBuild = "223"
+	sinceBuild = "231"
 	untilBuild = ""
 }
 
@@ -303,14 +302,6 @@ verifyBladeLatest {
 tasks {
 	runPluginVerifier {
 		ideVersions = [
-			"IC-2022.3",
-			"IU-2022.3",
-			"IC-2022.3.1",
-			"IU-2022.3.1",
-			"IC-2022.3.2",
-			"IU-2022.3.2",
-			"IC-2022.3.3",
-			"IU-2022.3.3",
 			"IC-2023.1",
 			"IU-2023.1"
 		]

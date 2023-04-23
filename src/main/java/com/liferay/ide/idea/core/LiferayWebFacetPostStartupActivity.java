@@ -30,7 +30,7 @@ import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.ModuleListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.startup.StartupActivity;
+import com.intellij.openapi.startup.ProjectActivity;
 import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -43,20 +43,25 @@ import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 import java.util.List;
 import java.util.stream.Stream;
 
+import kotlin.Unit;
+
+import kotlin.coroutines.Continuation;
+
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Dominik Marks
  */
-public class LiferayWebFacetPostStartupActivity
-	implements DumbAware, LiferayWorkspaceSupport, StartupActivity.Background {
+public class LiferayWebFacetPostStartupActivity implements DumbAware, LiferayWorkspaceSupport, ProjectActivity {
 
+	@Nullable
 	@Override
-	public void runActivity(@NotNull Project project) {
+	public Object execute(@NotNull Project project, @NotNull Continuation<? super Unit> continuation) {
 		VirtualFile projectDirVirtualFile = LiferayWorkspaceSupport.getWorkspaceVirtualFile(project);
 
 		if (projectDirVirtualFile == null) {
-			return;
+			return project;
 		}
 
 		projectDirVirtualFile.refresh(false, true);
@@ -73,7 +78,7 @@ public class LiferayWebFacetPostStartupActivity
 				new ModuleListener() {
 
 					@Override
-					public void modulesAdded(@NotNull Project project, @NotNull List<Module> modules) {
+					public void modulesAdded(@NotNull Project project, @NotNull List<? extends Module> modules) {
 						Application application = ApplicationManager.getApplication();
 
 						application.runWriteAction(
@@ -87,6 +92,10 @@ public class LiferayWebFacetPostStartupActivity
 					}
 
 				}));
+
+		continuation.resumeWith(project);
+
+		return project;
 	}
 
 	private void _addWebRoot(Module module) {

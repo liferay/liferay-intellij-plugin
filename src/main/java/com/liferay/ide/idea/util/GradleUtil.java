@@ -68,7 +68,6 @@ import org.gradle.tooling.ProjectConnection;
 import org.gradle.tooling.model.DomainObjectSet;
 import org.gradle.tooling.model.GradleProject;
 
-import org.gradle.util.GradleVersion;
 import org.jetbrains.plugins.gradle.settings.GradleExtensionsSettings;
 import org.jetbrains.plugins.gradle.settings.GradleProjectSettings;
 import org.jetbrains.plugins.gradle.settings.GradleSettings;
@@ -198,10 +197,6 @@ public class GradleUtil {
 			}
 
 			GradleConnector gradleConnector = GradleConnector.newConnector();
-
-			GradleVersion currentGradleVersion = GradleVersion.current();
-
-			gradleConnector.useGradleVersion(currentGradleVersion.getVersion());
 
 			Path virtualFilePath = Paths.get(virtualFile.getPath());
 
