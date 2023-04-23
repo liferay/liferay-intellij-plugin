@@ -198,6 +198,8 @@ public class GradleUtil {
 
 			GradleConnector gradleConnector = GradleConnector.newConnector();
 
+			gradleConnector.useGradleVersion("7.3.3");
+
 			Path virtualFilePath = Paths.get(virtualFile.getPath());
 
 			gradleConnector.forProjectDirectory(virtualFilePath.toFile());
