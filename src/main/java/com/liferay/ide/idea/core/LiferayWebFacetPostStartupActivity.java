@@ -93,8 +93,6 @@ public class LiferayWebFacetPostStartupActivity implements DumbAware, LiferayWor
 
 				}));
 
-		continuation.resumeWith(project);
-
 		return project;
 	}
 

@@ -168,8 +168,6 @@ public class LiferayPostStartupActivity implements DumbAware, LiferayWorkspaceSu
 
 			});
 
-		continuation.resumeWith(project);
-
 		return project;
 	}
 
