@@ -39,6 +39,7 @@
 				<li>INTELLIJ-262 Elasticsearch Sidecar cannot start on Liferay DXP 7.3 when using IntelliJ plugin</li>
 				<li>INTELLIJ-263 use latest version blade</li>
 				<li>INTELLIJ-264 System.getenv() returns a HashMap with a single variable</li>
+				<li>INTELLIJ-266 Fix compatibility problem on 2023.1</li>
 			</ul>
 			<li>2.0.4</li>
 			<ul>
