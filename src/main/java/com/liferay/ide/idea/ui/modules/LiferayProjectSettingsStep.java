@@ -14,7 +14,6 @@
 
 package com.liferay.ide.idea.ui.modules;
 
-import com.intellij.ide.util.newProjectWizard.SelectTemplateSettings;
 import com.intellij.ide.util.projectWizard.EmptyModuleBuilder;
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
@@ -25,8 +24,6 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.platform.templates.TemplateModuleBuilder;
 import com.intellij.projectImport.ProjectFormatPanel;
-import com.intellij.ui.HideableDecorator;
-import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.util.ui.JBUI;
 
@@ -128,9 +125,6 @@ public class LiferayProjectSettingsStep extends ModuleWizardStep {
 
 	@Override
 	public void onStepLeaving() {
-		SelectTemplateSettings selectTemplateSettings = SelectTemplateSettings.getInstance();
-
-		selectTemplateSettings.EXPERT_MODE = _expertDecorator.isExpanded();
 	}
 
 	@Override
@@ -157,10 +151,6 @@ public class LiferayProjectSettingsStep extends ModuleWizardStep {
 
 	@Override
 	public void updateStep() {
-		SelectTemplateSettings selectTemplateSettings = SelectTemplateSettings.getInstance();
-
-		_expertDecorator.setOn(selectTemplateSettings.EXPERT_MODE);
-
 		_setupPanels();
 	}
 
@@ -223,11 +213,6 @@ public class LiferayProjectSettingsStep extends ModuleWizardStep {
 
 		_moduleNameLocationComponent.bindModuleSettings(_namePathComponent);
 
-		_expertDecorator = new HideableDecorator(_expertPlaceholder, "Mor&e Settings", false);
-		_expertPanel.setBorder(JBUI.Borders.empty(0, IdeBorderFactory.TITLED_BORDER_INDENT, 5, 0));
-
-		_expertDecorator.setContentComponent(_expertPanel);
-
 		if (_context.isCreatingNewProject()) {
 			_addProjectFormat(modulePanel);
 		}
@@ -246,10 +231,6 @@ public class LiferayProjectSettingsStep extends ModuleWizardStep {
 
 		_restorePanel(_namePathComponent, 4);
 		_restorePanel(_getModulePanel(), _context.isCreatingNewProject() ? 8 : 6);
-		_restorePanel(_expertPanel, _context.isCreatingNewProject() ? 1 : 0);
-
-		_expertPlaceholder.setVisible(
-			!(moduleBuilder instanceof TemplateModuleBuilder) && (_expertPanel.getComponentCount() > 0));
 
 		for (int i = 0; i < 6; i++) {
 			Component component = _getModulePanel().getComponent(i);
@@ -262,9 +243,6 @@ public class LiferayProjectSettingsStep extends ModuleWizardStep {
 	}
 
 	private WizardContext _context;
-	private HideableDecorator _expertDecorator;
-	private JPanel _expertPanel;
-	private JPanel _expertPlaceholder;
 	private ProjectFormatPanel _formatPanel;
 	private LiferayProjectTypesComponent _liferayProjectTypesComponent;
 	private JPanel _mainPanel;

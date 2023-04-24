@@ -17,7 +17,6 @@ package com.liferay.ide.idea.ui.modules;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.popup.ListItemDescriptorAdapter;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
@@ -172,8 +171,7 @@ public class LiferayProjectTemplateList extends JPanel {
 	public void setTemplates(List<ProjectTemplate> list, boolean preserveSelection) {
 		Collections.sort(
 			list,
-			(o1, o2) -> Comparing.compare(
-				o1 instanceof ArchivedProjectTemplate, o2 instanceof ArchivedProjectTemplate));
+			(o1, o2) -> Boolean.compare(o1 instanceof ArchivedProjectTemplate, o2 instanceof ArchivedProjectTemplate));
 
 		int index = preserveSelection ? _templateList.getSelectedIndex() : -1;
 
