@@ -389,7 +389,7 @@ public class GradleUtil {
 		).filter(
 			task -> Objects.equals(task.name, "watch")
 		).filter(
-			task -> Objects.deepEquals("com.liferay.gradle.plugins.tasks.WatchTask", task.typeFqn)
+			task -> Objects.deepEquals("com.liferay.gradle.plugins.task.WatchTask", task.typeFqn)
 		).findAny(
 		).isPresent();
 	}
