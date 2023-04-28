@@ -18,6 +18,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.externalSystem.service.notification.ExternalSystemNotificationManager;
 import com.intellij.openapi.externalSystem.service.notification.NotificationCategory;
 import com.intellij.openapi.externalSystem.service.notification.NotificationData;
@@ -41,6 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -155,7 +158,17 @@ public interface LiferayWorkspaceSupport {
 				return false;
 			}
 
-			MavenProject mavenWorkspaceProject = mavenProjectsManager.findContainingProject(workspaceVirtualFile);
+			AtomicReference<MavenProject> mavenProjectRef = new AtomicReference<>();
+
+			Application application = ApplicationManager.getApplication();
+
+			application.runReadAction(() -> {
+				MavenProject mavenWorkspaceProject = mavenProjectsManager.findContainingProject(workspaceVirtualFile);
+
+				mavenProjectRef.set(mavenWorkspaceProject);
+			});
+
+			MavenProject mavenWorkspaceProject = mavenProjectRef.get();
 
 			if (mavenWorkspaceProject == null) {
 				return false;
