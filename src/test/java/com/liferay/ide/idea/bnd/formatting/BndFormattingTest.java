@@ -19,11 +19,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-import com.intellij.util.containers.ContainerUtil;
-
-import org.junit.Test;
 
 import java.util.Arrays;
+
+import org.junit.Test;
 
 /**
  * @author Dominik Marks
@@ -44,7 +43,7 @@ public class BndFormattingTest extends BasePlatformTestCase {
 
 				PsiFile psiFile = myFixture.getFile();
 
-				codeStyleManager.reformatText(psiFile,  Arrays.asList(psiFile.getTextRange()));
+				codeStyleManager.reformatText(psiFile, Arrays.asList(psiFile.getTextRange()));
 			});
 
 		myFixture.checkResultByFile("formatted.bnd");

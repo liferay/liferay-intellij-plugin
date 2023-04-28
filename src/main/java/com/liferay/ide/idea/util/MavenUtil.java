@@ -17,13 +17,12 @@ package com.liferay.ide.idea.util;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Computable;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
@@ -51,19 +50,18 @@ public class MavenUtil {
 	public static MavenProject getWorkspaceMavenProject(@NotNull Project project) {
 		MavenProjectsManager mavenProjectsManager = MavenProjectsManager.getInstance(project);
 
-		AtomicReference<MavenProject> mavenProjectRef = new AtomicReference<>();
-
 		Application application = ApplicationManager.getApplication();
 
-		application.runReadAction(() -> {
-			MavenProject mavenWorkspaceProject =
-				mavenProjectsManager.findContainingProject(
-					Objects.requireNonNull(LiferayWorkspaceSupport.getWorkspaceVirtualFile(project)));
+		return application.runReadAction(
+			new Computable<MavenProject>() {
 
-			mavenProjectRef.set(mavenWorkspaceProject);
-		});
+				@Override
+				public MavenProject compute() {
+					return mavenProjectsManager.findContainingProject(
+						LiferayWorkspaceSupport.getWorkspaceVirtualFile(project));
+				}
 
-		return mavenProjectRef.get();
+			});
 	}
 
 	public static void updateMavenPom(Model model, File file) throws IOException {

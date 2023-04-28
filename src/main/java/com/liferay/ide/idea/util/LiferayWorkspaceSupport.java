@@ -27,6 +27,7 @@ import com.intellij.openapi.externalSystem.service.notification.NotificationSour
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 
@@ -43,7 +44,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -158,17 +158,17 @@ public interface LiferayWorkspaceSupport {
 				return false;
 			}
 
-			AtomicReference<MavenProject> mavenProjectRef = new AtomicReference<>();
-
 			Application application = ApplicationManager.getApplication();
 
-			application.runReadAction(() -> {
-				MavenProject mavenWorkspaceProject = mavenProjectsManager.findContainingProject(workspaceVirtualFile);
+			MavenProject mavenWorkspaceProject = application.runReadAction(
+				new Computable<MavenProject>() {
 
-				mavenProjectRef.set(mavenWorkspaceProject);
-			});
+					@Override
+					public MavenProject compute() {
+						return mavenProjectsManager.findContainingProject(workspaceVirtualFile);
+					}
 
-			MavenProject mavenWorkspaceProject = mavenProjectRef.get();
+				});
 
 			if (mavenWorkspaceProject == null) {
 				return false;
