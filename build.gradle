@@ -78,12 +78,12 @@ configurations.all {
 
 dependencies {
 	implementation files( "libs/gradle-tooling.jar")
-	implementation group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: '6.4.0'
+	implementation group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "6.4.0"
 	implementation group: "commons-configuration", name: "commons-configuration", version: "1.10"
 	implementation group: "commons-lang", name: "commons-lang", version: "2.6"
-	implementation group: "org.apache.ant", name: "ant", version: '1.10.13'
-	implementation group: "org.dom4j", name: "dom4j", version: '2.1.4'
-	implementation group: "org.json", name: "json", version: '20230227'
+	implementation group: "org.apache.ant", name: "ant", version: "1.10.13"
+	implementation group: "org.dom4j", name: "dom4j", version: "2.1.4"
+	implementation group: "org.json", name: "json", version: "20230227"
 	implementation group: "org.osgi", name: "org.osgi.core", version: "6.0.0"
 
 	testImplementation group: "junit", name: "junit", version: "4.13.2"
