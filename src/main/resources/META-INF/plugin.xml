@@ -40,6 +40,10 @@
 				<li>INTELLIJ-263 use latest version blade</li>
 				<li>INTELLIJ-264 System.getenv() returns a HashMap with a single variable</li>
 				<li>INTELLIJ-266 Fix compatibility problem on 2023.1</li>
+				<li>INTELLIJ-267 update target maven support for latest release portal</li>
+				<li>INTELLIJ-268 watch action did not correctly show</li>
+				<li>INTELLIJ-269 Failed to create simulation panel entry project</li>
+				<li>INTELLIJ-270 Read access is allowed from inside read-action issue</li>
 			</ul>
 			<li>2.0.4</li>
 			<ul>

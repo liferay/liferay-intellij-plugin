@@ -258,18 +258,13 @@ public class LiferayModuleBuilder extends ModuleBuilder implements LiferayWorksp
 		if (typeId.equals(LiferayProjectType.LIFERAY_MAVEN_WORKSPACE)) {
 			sb.append("-b ");
 			sb.append("maven ");
-
-			String targetPlatformVersion = getTargetPlatformVersion(project);
-
-			if (targetPlatformVersion != null) {
-				sb.append("-v ");
-
-				sb.append(targetPlatformVersion);
-			}
 		}
-		else {
+
+		String targetPlatformVersion = getTargetPlatformVersion(project);
+
+		if (targetPlatformVersion != null) {
 			sb.append("-v ");
-			sb.append(_liferayVersion);
+			sb.append(targetPlatformVersion);
 		}
 
 		sb.append(" ");
