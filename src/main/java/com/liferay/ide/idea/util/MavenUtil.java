@@ -14,7 +14,10 @@
 
 package com.liferay.ide.idea.util;
 
+import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Computable;
 
 import java.io.File;
 import java.io.FileReader;
@@ -47,7 +50,18 @@ public class MavenUtil {
 	public static MavenProject getWorkspaceMavenProject(@NotNull Project project) {
 		MavenProjectsManager mavenProjectsManager = MavenProjectsManager.getInstance(project);
 
-		return mavenProjectsManager.findContainingProject(LiferayWorkspaceSupport.getWorkspaceVirtualFile(project));
+		Application application = ApplicationManager.getApplication();
+
+		return application.runReadAction(
+			new Computable<MavenProject>() {
+
+				@Override
+				public MavenProject compute() {
+					return mavenProjectsManager.findContainingProject(
+						LiferayWorkspaceSupport.getWorkspaceVirtualFile(project));
+				}
+
+			});
 	}
 
 	public static void updateMavenPom(Model model, File file) throws IOException {
