@@ -30,7 +30,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.startup.ProjectActivity;
-import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.execution.ParametersListUtil;
 import com.intellij.util.messages.MessageBus;
@@ -77,26 +76,35 @@ public class LiferayPostStartupActivity implements DumbAware, LiferayWorkspaceSu
 
 		MessageBusConnection messageBusConnection = messageBus.connect(project);
 
-		StartupManager startupManager = StartupManager.getInstance(project);
+		messageBusConnection.subscribe(
+			ProjectDataImportListener.TOPIC,
+			new ProjectDataImportListener() {
 
-		startupManager.runAfterOpened(
-			() -> messageBusConnection.subscribe(
-				ProjectDataImportListener.TOPIC,
-				new ProjectDataImportListener() {
+				@Override
+				public void onImportFinished(@Nullable String projectPath) {
+					Application application = ApplicationManager.getApplication();
 
-					@Override
-					public void onImportFinished(@Nullable String projectPath) {
-						Application application = ApplicationManager.getApplication();
+					application.runReadAction(
+						() -> {
+							if (projectPath.equals(project.getBasePath())) {
+								ProjectConfigurationUtil.configExcludedFolder(project, getHomeDir(project));
+							}
+						});
+				}
 
-						application.runReadAction(
-							() -> {
-								if (projectPath.equals(project.getBasePath())) {
-									ProjectConfigurationUtil.configExcludedFolder(project, getHomeDir(project));
-								}
-							});
-					}
+			});
 
-				}));
+		Application application = ApplicationManager.getApplication();
+
+		application.runReadAction(
+			new Runnable() {
+
+				@Override
+				public void run() {
+					ProjectConfigurationUtil.configExcludedFolder(project, getHomeDir(project));
+				}
+
+			});
 
 		messageBusConnection.subscribe(
 			MavenImportListener.TOPIC,
@@ -113,8 +121,6 @@ public class LiferayPostStartupActivity implements DumbAware, LiferayWorkspaceSu
 						MavenProjectsManager mvnManager = MavenProjectsManager.getInstance(project);
 
 						mvnManager.forceUpdateAllProjectsOrFindAllAvailablePomFiles();
-
-						Application application = ApplicationManager.getApplication();
 
 						application.runReadAction(
 							() -> {

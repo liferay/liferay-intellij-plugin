@@ -31,7 +31,6 @@ import com.intellij.openapi.project.ModuleListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.startup.ProjectActivity;
-import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.messages.MessageBus;
@@ -70,28 +69,25 @@ public class LiferayWebFacetPostStartupActivity implements DumbAware, LiferayWor
 
 		MessageBusConnection messageBusConnection = messageBus.connect(project);
 
-		StartupManager startupManager = StartupManager.getInstance(project);
+		messageBusConnection.subscribe(
+			ProjectTopics.MODULES,
+			new ModuleListener() {
 
-		startupManager.runAfterOpened(
-			() -> messageBusConnection.subscribe(
-				ProjectTopics.MODULES,
-				new ModuleListener() {
+				@Override
+				public void modulesAdded(@NotNull Project project, @NotNull List<? extends Module> modules) {
+					Application application = ApplicationManager.getApplication();
 
-					@Override
-					public void modulesAdded(@NotNull Project project, @NotNull List<? extends Module> modules) {
-						Application application = ApplicationManager.getApplication();
-
-						application.runWriteAction(
-							() -> {
-								if (LiferayWorkspaceSupport.isValidWorkspaceLocation(project)) {
-									for (Module module : modules) {
-										_addWebRoot(module);
-									}
+					application.runWriteAction(
+						() -> {
+							if (LiferayWorkspaceSupport.isValidWorkspaceLocation(project)) {
+								for (Module module : modules) {
+									_addWebRoot(module);
 								}
-							});
-					}
+							}
+						});
+				}
 
-				}));
+			});
 
 		return project;
 	}

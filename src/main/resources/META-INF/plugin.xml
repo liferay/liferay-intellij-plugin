@@ -44,6 +44,7 @@
 				<li>INTELLIJ-268 watch action did not correctly show</li>
 				<li>INTELLIJ-269 Failed to create simulation panel entry project</li>
 				<li>INTELLIJ-270 Read access is allowed from inside read-action issue</li>
+				<li>INTELLIJ-272 avoid using Intellij internal method</li>
 			</ul>
 			<li>2.0.4</li>
 			<ul>
