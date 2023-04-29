@@ -29,10 +29,7 @@ import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.startup.ProjectActivity;
-import com.intellij.openapi.startup.StartupManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.execution.ParametersListUtil;
 import com.intellij.util.messages.MessageBus;
@@ -100,79 +97,82 @@ public class LiferayPostStartupActivity implements DumbAware, LiferayWorkspaceSu
 		Application application = ApplicationManager.getApplication();
 
 		application.runReadAction(
-			() -> {
-				ProjectConfigurat	ionUtil.configExcludedFolder(project, getHomeDir(project));
+			new Runnable() {
+
+				@Override
+				public void run() {
+					ProjectConfigurationUtil.configExcludedFolder(project, getHomeDir(project));
+				}
+
 			});
 
 		messageBusConnection.subscribe(
-				MavenImportListener.TOPIC,
-				(MavenImportListener)(projects, list) -> {
-					Stream<Module> modulesStream = list.stream();
+			MavenImportListener.TOPIC,
+			(MavenImportListener)(projects, list) -> {
+				Stream<Module> modulesStream = list.stream();
 
-					modulesStream.map(
-							module -> module.getProject()
-					).filter(
-							moduleProject -> moduleProject.equals(project)
-					).distinct(
-					).forEach(
-							moduleProject -> {
-								MavenProjectsManager mvnManager = MavenProjectsManager.getInstance(project);
+				modulesStream.map(
+					module -> module.getProject()
+				).filter(
+					moduleProject -> moduleProject.equals(project)
+				).distinct(
+				).forEach(
+					moduleProject -> {
+						MavenProjectsManager mvnManager = MavenProjectsManager.getInstance(project);
 
-								mvnManager.forceUpdateAllProjectsOrFindAllAvailablePomFiles();
+						mvnManager.forceUpdateAllProjectsOrFindAllAvailablePomFiles();
 
-								//Application application = ApplicationManager.getApplication();
+						application.runReadAction(
+							() -> {
+								String homeDir = getMavenProperty(
+									moduleProject, WorkspaceConstants.MAVEN_HOME_DIR_PROPERTY,
+									WorkspaceConstants.HOME_DIR_DEFAULT);
 
-								application.runReadAction(
-										() -> {
-											String homeDir = getMavenProperty(
-													moduleProject, WorkspaceConstants.MAVEN_HOME_DIR_PROPERTY,
-													WorkspaceConstants.HOME_DIR_DEFAULT);
-
-											ProjectConfigurationUtil.configExcludedFolder(moduleProject, homeDir);
-										});
-							}
-					);
-				});
+								ProjectConfigurationUtil.configExcludedFolder(moduleProject, homeDir);
+							});
+					}
+				);
+			});
 
 		messageBusConnection.subscribe(
-				RunManagerListener.TOPIC,
-				new RunManagerListener() {
+			RunManagerListener.TOPIC,
+			new RunManagerListener() {
 
-					@Override
-					public void runConfigurationRemoved(@NotNull RunnerAndConfigurationSettings settings) {
-						ConfigurationType configurationType = settings.getType();
+				@Override
+				public void runConfigurationRemoved(@NotNull RunnerAndConfigurationSettings settings) {
+					ConfigurationType configurationType = settings.getType();
 
-						if (LiferayDockerServerConfigurationType.id.equals(configurationType.getId())) {
-							ExternalSystemTaskExecutionSettings externalSystemTaskExecutionSettings =
-									new ExternalSystemTaskExecutionSettings();
+					if (LiferayDockerServerConfigurationType.id.equals(configurationType.getId())) {
+						ExternalSystemTaskExecutionSettings externalSystemTaskExecutionSettings =
+							new ExternalSystemTaskExecutionSettings();
 
-							CommandLineParser gradleCmdParser = new CommandLineParser();
+						CommandLineParser gradleCmdParser = new CommandLineParser();
 
-							List<String> taskNames = Lists.newArrayList("removeDockerContainer", "cleanDockerImage");
+						List<String> taskNames = Lists.newArrayList("removeDockerContainer", "cleanDockerImage");
 
-							final List<String> tasks = taskNames.stream(
-							).flatMap(
-									s -> ParametersListUtil.parse(
-											s, false, true
-									).stream()
-							).collect(
-									Collectors.toList()
-							);
+						final List<String> tasks = taskNames.stream(
+						).flatMap(
+							s -> ParametersListUtil.parse(
+								s, false, true
+							).stream()
+						).collect(
+							Collectors.toList()
+						);
 
-							ParsedCommandLine parsedCommandLine = gradleCmdParser.parse(tasks);
+						ParsedCommandLine parsedCommandLine = gradleCmdParser.parse(tasks);
 
-							externalSystemTaskExecutionSettings.setExternalProjectPath(project.getBasePath());
-							externalSystemTaskExecutionSettings.setExternalSystemIdString(
-									GradleConstants.SYSTEM_ID.toString());
-							externalSystemTaskExecutionSettings.setTaskNames(parsedCommandLine.getExtraArguments());
+						externalSystemTaskExecutionSettings.setExternalProjectPath(project.getBasePath());
+						externalSystemTaskExecutionSettings.setExternalSystemIdString(
+							GradleConstants.SYSTEM_ID.toString());
+						externalSystemTaskExecutionSettings.setTaskNames(parsedCommandLine.getExtraArguments());
 
-							ExternalSystemUtil.runTask(
-									externalSystemTaskExecutionSettings, DefaultRunExecutor.EXECUTOR_ID, project,
-									GradleConstants.SYSTEM_ID, null, ProgressExecutionMode.IN_BACKGROUND_ASYNC, false);
-						}
+						ExternalSystemUtil.runTask(
+							externalSystemTaskExecutionSettings, DefaultRunExecutor.EXECUTOR_ID, project,
+							GradleConstants.SYSTEM_ID, null, ProgressExecutionMode.IN_BACKGROUND_ASYNC, false);
 					}
+				}
 
-				});
+			});
 
 		return project;
 	}
