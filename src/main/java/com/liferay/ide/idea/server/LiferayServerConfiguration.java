@@ -20,30 +20,26 @@ import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.Executor;
 import com.intellij.execution.JavaRunConfigurationExtensionManager;
 import com.intellij.execution.configuration.EnvironmentVariablesComponent;
-import com.intellij.execution.configurations.ConfigurationFactory;
-import com.intellij.execution.configurations.JavaRunConfigurationModule;
-import com.intellij.execution.configurations.LocatableConfigurationBase;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.execution.configurations.RunProfileState;
-import com.intellij.execution.configurations.RuntimeConfigurationException;
-import com.intellij.execution.configurations.RuntimeConfigurationWarning;
-import com.intellij.execution.configurations.SearchScopeProvidingRunProfile;
+import com.intellij.execution.configurations.*;
 import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.util.JavaParametersUtil;
-import com.intellij.execution.util.ProgramParametersUtil;
+import com.intellij.execution.util.*;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.options.SettingsEditorGroup;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectRootManager;
+import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.search.ExecutionSearchScopes;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.ui.components.fields.ExtendableTextField;
+import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.xmlb.XmlSerializer;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 
@@ -53,19 +49,19 @@ import com.liferay.ide.idea.util.CoreUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 import com.liferay.ide.idea.util.ServerUtil;
 
+import java.awt.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.List;
 
 import org.jdom.Element;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 
 /**
  * @author Terry Jia
@@ -187,6 +183,8 @@ public class LiferayServerConfiguration
 
 		group.addEditor(title, new LiferayServerConfigurable(getProject()));
 
+		group.addEditor(title, new LiferayServerJdkOptionConfigurationSettingsEditor());
+
 		JavaRunConfigurationExtensionManager javaRunConfigurationExtensionManager =
 			JavaRunConfigurationExtensionManager.getInstance();
 
@@ -196,6 +194,41 @@ public class LiferayServerConfiguration
 
 		return group;
 	}
+
+	private class LiferayServerJdkOptionConfigurationSettingsEditor<T extends RunConfigurationBase> extends SettingsEditor<RunConfiguration> {
+
+		private final EnvVariablesTable myEnvVariablesTable = new EnvVariablesTable();
+		@Override
+		protected void resetEditorFrom(@NotNull RunConfiguration s) {
+			final LiferayServerConfiguration config = (LiferayServerConfiguration)s;
+			myEnvVariablesTable.setValues(config._liferayServerConfig.javaJdkOption);
+			updateUI();
+		}
+
+		private void updateUI() {
+			myEnvVariablesTable.refreshValues();
+			fireEditorStateChanged();
+		}
+
+		@Override
+		protected void applyEditorTo(@NotNull RunConfiguration s) throws ConfigurationException {
+			final LiferayServerConfiguration config = (LiferayServerConfiguration)s;
+		}
+
+		@Override
+		protected @NotNull JComponent createEditor() {
+
+			final JPanel panel = new JPanel(new BorderLayout());
+			//panel.add(LabeledComponent.create(myTextField, AntBundle.message("label.ant.run.configuration.target.name"), BorderLayout.WEST), BorderLayout.NORTH);
+
+			String propertiesTableName = "EnvironmentVariables";
+			final LabeledComponent<JComponent> tableComponent = LabeledComponent.create(myEnvVariablesTable.getComponent(), propertiesTableName);
+			tableComponent.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+			panel.add(tableComponent, BorderLayout.CENTER);
+			return panel;
+		}
+	}
+
 
 	public boolean getDeveloperMode() {
 		return _liferayServerConfig.developerMode;
@@ -438,6 +471,7 @@ public class LiferayServerConfiguration
 		public String gogoShellPort = "";
 		public boolean passParentEnvironments = true;
 		public String vmParameters = "";
+		public List<? extends EnvironmentVariable> javaJdkOption = Collections.emptyList();
 
 	}
 
