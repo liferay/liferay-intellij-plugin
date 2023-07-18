@@ -31,7 +31,6 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 
-import com.liferay.ide.idea.server.LiferayDockerServerConfigurationProducer;
 import com.liferay.ide.idea.server.LiferayServerConfigurationType;
 
 import java.util.Collection;
@@ -98,9 +97,7 @@ public class ProjectConfigurationUtil {
 			});
 	}
 
-	public static void handleServerConfiguration(Project project) {
-		List<RunConfigurationProducer<?>> producers = LiferayDockerServerConfigurationProducer.getProducers(project);
-
+	public static void handleServerConfiguration(Project project, List<RunConfigurationProducer<?>> producers) {
 		for (RunConfigurationProducer producer : producers) {
 			ConfigurationType configurationType = producer.getConfigurationType();
 

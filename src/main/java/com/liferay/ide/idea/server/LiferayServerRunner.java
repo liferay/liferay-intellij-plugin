@@ -24,6 +24,7 @@ import com.intellij.execution.impl.DefaultJavaProgramRunner;
 import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
 import com.intellij.execution.process.ProcessHandler;
+import com.intellij.execution.process.ProcessTerminatedListener;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.externalSystem.service.execution.ExternalSystemProcessHandler;
@@ -79,6 +80,11 @@ public class LiferayServerRunner extends DefaultJavaProgramRunner implements Ser
 				new ProcessAdapter() {
 
 					@Override
+					public void processTerminated(@NotNull ProcessEvent event) {
+						processHandler.removeProcessListener(this);
+					}
+
+					@Override
 					public void processWillTerminate(@NotNull ProcessEvent event, boolean willBeDestroyed) {
 						ExecutionManager executionManager = ExecutionManager.getInstance(environment.getProject());
 
@@ -102,6 +108,8 @@ public class LiferayServerRunner extends DefaultJavaProgramRunner implements Ser
 					}
 
 				});
+
+			ProcessTerminatedListener.attach(processHandler, environment.getProject(), "Portal Bundle Stopped");
 		}
 
 		return runContentDescriptor;

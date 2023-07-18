@@ -20,6 +20,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 
 import com.liferay.ide.idea.core.LiferayIcons;
 import com.liferay.ide.idea.core.WorkspaceConstants;
+import com.liferay.ide.idea.server.LiferayServerConfigurationProducer;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 import com.liferay.ide.idea.util.ProjectConfigurationUtil;
 
@@ -46,7 +47,8 @@ public class InitBundleMavenAction extends AbstractLiferayMavenGoalAction implem
 
 		ProjectConfigurationUtil.configExcludedFolder(project, homeDir);
 
-		ProjectConfigurationUtil.handleServerConfiguration(project);
+		ProjectConfigurationUtil.handleServerConfiguration(
+			project, LiferayServerConfigurationProducer.getProducers(project));
 	}
 
 	@Override
