@@ -19,6 +19,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import com.liferay.ide.idea.core.LiferayIcons;
+import com.liferay.ide.idea.server.LiferayServerConfigurationProducer;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 import com.liferay.ide.idea.util.ProjectConfigurationUtil;
 
@@ -34,7 +35,8 @@ public class InitBundleGradleAction extends AbstractLiferayGradleTaskAction impl
 
 	@Override
 	protected void afterTask(Project project) {
-		ProjectConfigurationUtil.handleServerConfiguration(project);
+		ProjectConfigurationUtil.handleServerConfiguration(
+			project, LiferayServerConfigurationProducer.getProducers(project));
 	}
 
 	@Override

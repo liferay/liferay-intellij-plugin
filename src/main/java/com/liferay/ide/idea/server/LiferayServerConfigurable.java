@@ -43,6 +43,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -69,6 +71,19 @@ public class LiferayServerConfigurable
 			FileChooserDescriptorFactory.createSingleFolderDescriptor());
 
 		_jrePath.setDefaultJreSelector(DefaultJreSelector.fromModuleDependencies(modulesComboBox, true));
+
+		_userEnvironment.setEnabled(true);
+		_userEnvironment.setPassParentEnvs(false);
+
+		_userEnvironment.addChangeListener(
+			new ChangeListener() {
+
+				@Override
+				public void stateChanged(ChangeEvent event) {
+					_userEnvironment.getEnvs();
+				}
+
+			});
 
 		_userActivityListener = () -> {
 			Application application = ApplicationManager.getApplication();
@@ -113,6 +128,8 @@ public class LiferayServerConfigurable
 		configuration.setModule(modulesComboBox.getSelectedModule());
 		configuration.setVMParameters(_vmParams.getText());
 		configuration.setGogoShellPort(_gogoShellPort.getText());
+
+		configuration.setEnvs(_userEnvironment.getEnvs());
 
 		configuration.checkConfiguration();
 	}
@@ -164,6 +181,8 @@ public class LiferayServerConfigurable
 		_jrePath.setPathOrName(configuration.getAlternativeJrePath(), configuration.isAlternativeJrePathEnabled());
 		_developerMode.setSelected(configuration.getDeveloperMode());
 
+		_userEnvironment.setEnvs(configuration.getEnvs());
+
 		ModulesComboBox modulesComboBox = _modules.getComponent();
 
 		modulesComboBox.setSelectedModule(configuration.getModule());
@@ -192,6 +211,7 @@ public class LiferayServerConfigurable
 	private LabeledComponent<ModulesComboBox> _modules;
 	private UserActivityListener _userActivityListener;
 	private UserActivityWatcher _userActivityWatcher;
+	private LiferayEnvironmentVariablesTextFieldWithBrowseButton _userEnvironment;
 	private JTextField _vmParams;
 
 }

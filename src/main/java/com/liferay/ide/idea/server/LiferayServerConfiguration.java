@@ -19,29 +19,37 @@ import com.intellij.execution.CommonJavaRunConfigurationParameters;
 import com.intellij.execution.ExecutionBundle;
 import com.intellij.execution.Executor;
 import com.intellij.execution.JavaRunConfigurationExtensionManager;
+import com.intellij.execution.RunManager;
+import com.intellij.execution.RunManagerListener;
+import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.configuration.EnvironmentVariablesComponent;
-import com.intellij.execution.configurations.*;
+import com.intellij.execution.configurations.ConfigurationFactory;
+import com.intellij.execution.configurations.JavaRunConfigurationModule;
+import com.intellij.execution.configurations.LocatableConfigurationBase;
+import com.intellij.execution.configurations.RunConfiguration;
+import com.intellij.execution.configurations.RunProfileState;
+import com.intellij.execution.configurations.RuntimeConfigurationException;
+import com.intellij.execution.configurations.RuntimeConfigurationWarning;
+import com.intellij.execution.configurations.SearchScopeProvidingRunProfile;
 import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.util.*;
+import com.intellij.execution.util.JavaParametersUtil;
+import com.intellij.execution.util.ProgramParametersUtil;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.options.SettingsEditorGroup;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.ui.LabeledComponent;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.util.text.Strings;
 import com.intellij.psi.search.ExecutionSearchScopes;
 import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.ui.components.fields.ExtendableTextField;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.xmlb.XmlSerializer;
-import com.intellij.util.xmlb.XmlSerializerUtil;
+import com.intellij.util.messages.MessageBus;
+import com.intellij.util.messages.MessageBusConnection;
 
 import com.liferay.ide.idea.core.LiferayCore;
 import com.liferay.ide.idea.server.portal.PortalBundle;
@@ -49,19 +57,20 @@ import com.liferay.ide.idea.util.CoreUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 import com.liferay.ide.idea.util.ServerUtil;
 
-import java.awt.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import java.util.*;
-import java.util.List;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Objects;
 
 import org.jdom.Element;
+import org.jdom.Namespace;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 /**
  * @author Terry Jia
@@ -78,9 +87,9 @@ public class LiferayServerConfiguration
 
 		_javaRunConfigurationModule = new JavaRunConfigurationModule(project, true);
 
-		_liferayServerConfig.vmParameters = "-Xmx2560m -XX:MaxMetaspaceSize=768m -XX:MetaspaceSize=768m";
+		_vmParameters = "-Xmx2560m -XX:MaxMetaspaceSize=768m -XX:MetaspaceSize=768m";
 
-		_liferayServerConfig.gogoShellPort = ServerUtil.getGogoShellPort(_liferayServerConfig.bundleLocation);
+		_gogoShellPort = ServerUtil.getGogoShellPort(_bundleLocation);
 
 		_javaRunConfigurationModule.setModuleToAnyFirstIfNotSpecified();
 	}
@@ -91,15 +100,15 @@ public class LiferayServerConfiguration
 
 		ProgramParametersUtil.checkWorkingDirectoryExist(this, getProject(), null);
 
-		if (CoreUtil.isNullOrEmpty(_liferayServerConfig.bundleLocation)) {
+		if (CoreUtil.isNullOrEmpty(_bundleLocation)) {
 			throw new RuntimeConfigurationException("Please set correct bundle location", "Invalid bundle location");
 		}
 
-		if (CoreUtil.isNullOrEmpty(_liferayServerConfig.buildType)) {
+		if (CoreUtil.isNullOrEmpty(_buildType)) {
 			throw new RuntimeConfigurationException("Please check bundle location", "Invalid bundle type");
 		}
 
-		if (!_isCorrectGogoShellPort(_liferayServerConfig.gogoShellPort)) {
+		if (!_isCorrectGogoShellPort(_gogoShellPort)) {
 			throw new RuntimeConfigurationWarning(
 				"The customized gogo-shell port is not equals defined value in portal-ext.properties, " +
 					"portal-developer.properties or portal-setup-wizard.properties");
@@ -112,17 +121,15 @@ public class LiferayServerConfiguration
 	public RunConfiguration clone() {
 		LiferayServerConfiguration clone = (LiferayServerConfiguration)super.clone();
 
-		clone.setConfig(XmlSerializerUtil.createCopy(_liferayServerConfig));
-
 		JavaRunConfigurationModule configurationModule = new JavaRunConfigurationModule(getProject(), true);
 
 		configurationModule.setModule(_javaRunConfigurationModule.getModule());
 
 		clone.setConfigurationModule(configurationModule);
 
-		clone.setEnvs(new LinkedHashMap<>(clone.getEnvs()));
+		clone.setEnvs(new LinkedHashMap<>());
 
-		clone.setGogoShellPort(_liferayServerConfig.gogoShellPort);
+		clone.setGogoShellPort(_gogoShellPort);
 
 		String moduleSdkPathString = _getModuleSdkPath();
 
@@ -163,15 +170,15 @@ public class LiferayServerConfiguration
 	@Nullable
 	@Override
 	public String getAlternativeJrePath() {
-		return _liferayServerConfig.alternativeJrePath;
+		return _alternativeJrePath;
 	}
 
 	public String getBundleLocation() {
-		return _liferayServerConfig.bundleLocation;
+		return _bundleLocation;
 	}
 
 	public String getBundleType() {
-		return _liferayServerConfig.buildType;
+		return _buildType;
 	}
 
 	@NotNull
@@ -179,11 +186,9 @@ public class LiferayServerConfiguration
 	public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
 		SettingsEditorGroup<LiferayServerConfiguration> group = new SettingsEditorGroup<>();
 
-		String title = ExecutionBundle.message("run.configuration.configuration.tab.title");
+		String configurationTitle = ExecutionBundle.message("run.configuration.configuration.tab.title");
 
-		group.addEditor(title, new LiferayServerConfigurable(getProject()));
-
-		group.addEditor(title, new LiferayServerJdkOptionConfigurationSettingsEditor());
+		group.addEditor(configurationTitle, new LiferayServerConfigurable(getProject()));
 
 		JavaRunConfigurationExtensionManager javaRunConfigurationExtensionManager =
 			JavaRunConfigurationExtensionManager.getInstance();
@@ -195,53 +200,18 @@ public class LiferayServerConfiguration
 		return group;
 	}
 
-	private class LiferayServerJdkOptionConfigurationSettingsEditor<T extends RunConfigurationBase> extends SettingsEditor<RunConfiguration> {
-
-		private final EnvVariablesTable myEnvVariablesTable = new EnvVariablesTable();
-		@Override
-		protected void resetEditorFrom(@NotNull RunConfiguration s) {
-			final LiferayServerConfiguration config = (LiferayServerConfiguration)s;
-			myEnvVariablesTable.setValues(config._liferayServerConfig.javaJdkOption);
-			updateUI();
-		}
-
-		private void updateUI() {
-			myEnvVariablesTable.refreshValues();
-			fireEditorStateChanged();
-		}
-
-		@Override
-		protected void applyEditorTo(@NotNull RunConfiguration s) throws ConfigurationException {
-			final LiferayServerConfiguration config = (LiferayServerConfiguration)s;
-		}
-
-		@Override
-		protected @NotNull JComponent createEditor() {
-
-			final JPanel panel = new JPanel(new BorderLayout());
-			//panel.add(LabeledComponent.create(myTextField, AntBundle.message("label.ant.run.configuration.target.name"), BorderLayout.WEST), BorderLayout.NORTH);
-
-			String propertiesTableName = "EnvironmentVariables";
-			final LabeledComponent<JComponent> tableComponent = LabeledComponent.create(myEnvVariablesTable.getComponent(), propertiesTableName);
-			tableComponent.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
-			panel.add(tableComponent, BorderLayout.CENTER);
-			return panel;
-		}
-	}
-
-
 	public boolean getDeveloperMode() {
-		return _liferayServerConfig.developerMode;
+		return _developerMode;
 	}
 
 	@NotNull
 	@Override
 	public Map<String, String> getEnvs() {
-		return _myEnv;
+		return _userEnv;
 	}
 
 	public String getGogoShellPort() {
-		return _liferayServerConfig.gogoShellPort;
+		return _gogoShellPort;
 	}
 
 	public Module getModule() {
@@ -291,7 +261,7 @@ public class LiferayServerConfiguration
 
 	@Override
 	public String getVMParameters() {
-		return _liferayServerConfig.vmParameters;
+		return _vmParameters;
 	}
 
 	@Nullable
@@ -302,60 +272,76 @@ public class LiferayServerConfiguration
 
 	@Override
 	public boolean isAlternativeJrePathEnabled() {
-		return _liferayServerConfig.alternativeJrePathEnabled;
+		return _alternativeJrePathEnabled;
 	}
 
 	@Override
 	public boolean isPassParentEnvs() {
-		return _liferayServerConfig.passParentEnvironments;
+		return _passParentEnvironments;
 	}
 
 	@Override
 	public void onNewConfigurationCreated() {
-		super.onNewConfigurationCreated();
-
 		if (StringUtil.isEmpty(getWorkingDirectory())) {
 			String baseDir = FileUtil.toSystemIndependentName(StringUtil.notNullize(getProject().getBasePath()));
 
 			setWorkingDirectory(baseDir);
 		}
+
+		Project project = getProject();
+
+		RunManager runManager = RunManager.getInstance(project);
+
+		MessageBus messageBus = project.getMessageBus();
+
+		MessageBusConnection messageBusConnection = messageBus.connect(project);
+
+		messageBusConnection.subscribe(
+			RunManagerListener.TOPIC,
+			new RunManagerListener() {
+
+				public void runConfigurationRemoved(@NotNull RunnerAndConfigurationSettings settings) {
+					runManager.removeConfiguration(settings);
+					runManager.makeStable(settings);
+				}
+
+			});
 	}
 
 	@Override
 	public void readExternal(Element element) throws InvalidDataException {
 		super.readExternal(element);
 
-		JavaRunConfigurationExtensionManager javaRunConfigurationExtensionManager =
-			JavaRunConfigurationExtensionManager.getInstance();
+		Element configurationElement = element.getChild(getName());
 
-		javaRunConfigurationExtensionManager.readExternal(this, element);
-
-		XmlSerializer.deserializeInto(_liferayServerConfig, element);
-		EnvironmentVariablesComponent.readExternal(element, getEnvs());
-
-		_javaRunConfigurationModule.readExternal(element);
+		if (configurationElement != null) {
+			_bundleLocation = configurationElement.getAttributeValue("bundleLocation");
+			_buildType = configurationElement.getAttributeValue("bundleType");
+			_vmParameters = configurationElement.getAttributeValue("vmParameters");
+			_gogoShellPort = configurationElement.getAttributeValue("gogoShellPort");
+			_developerMode = Boolean.parseBoolean(configurationElement.getAttributeValue("developerMode"));
+			_alternativeJrePath = configurationElement.getAttributeValue("alternativeJrePath");
+			EnvironmentVariablesComponent.readExternal(configurationElement, _userEnv);
+			_javaRunConfigurationModule.readExternal(configurationElement);
+		}
 	}
 
 	@Override
 	public void setAlternativeJrePath(String path) {
-		_liferayServerConfig.alternativeJrePath = path;
+		_alternativeJrePath = path;
 	}
 
 	@Override
 	public void setAlternativeJrePathEnabled(boolean enabled) {
-		_liferayServerConfig.alternativeJrePathEnabled = enabled;
+		_alternativeJrePathEnabled = enabled;
 	}
 
 	public void setBundleLocation(String bundleLocation) {
-		_liferayServerConfig.bundleLocation = bundleLocation;
+		_bundleLocation = bundleLocation;
 	}
 
 	public void setBundleType(String bundleType) {
-		_liferayServerConfig.buildType = bundleType;
-	}
-
-	public void setConfig(LiferayServerConfig config) {
-		_liferayServerConfig = config;
+		_buildType = bundleType;
 	}
 
 	public void setConfigurationModule(JavaRunConfigurationModule configurationModule) {
@@ -363,27 +349,26 @@ public class LiferayServerConfiguration
 	}
 
 	public void setDeveloperMode(boolean developerMode) {
-		_liferayServerConfig.developerMode = developerMode;
+		_developerMode = developerMode;
 	}
 
 	@Override
 	public void setEnvs(@NotNull Map<String, String> myEnv) {
-		_myEnv.putAll(System.getenv());
-		_myEnv.putAll(myEnv);
+		_userEnv.putAll(myEnv);
 
 		String moduleSdkPath = _getModuleSdkPath();
 
 		if (moduleSdkPath != null) {
-			_myEnv.put("JAVA_HOME", moduleSdkPath);
+			_userEnv.put("JAVA_HOME", moduleSdkPath);
 
 			Map<String, String> systemEnv = System.getenv();
 
-			_myEnv.put("PATH", moduleSdkPath + "/bin:" + systemEnv.get("PATH"));
+			_userEnv.put("PATH", moduleSdkPath + "/bin:" + systemEnv.get("PATH"));
 		}
 	}
 
 	public void setGogoShellPort(String gogoShellPort) {
-		_liferayServerConfig.gogoShellPort = gogoShellPort;
+		_gogoShellPort = gogoShellPort;
 	}
 
 	public void setModule(Module module) {
@@ -392,7 +377,7 @@ public class LiferayServerConfiguration
 
 	@Override
 	public void setPassParentEnvs(boolean passParentEnvs) {
-		_liferayServerConfig.passParentEnvironments = passParentEnvs;
+		_passParentEnvironments = passParentEnvs;
 	}
 
 	@Override
@@ -401,7 +386,7 @@ public class LiferayServerConfiguration
 
 	@Override
 	public void setVMParameters(String value) {
-		_liferayServerConfig.vmParameters = value;
+		_vmParameters = value;
 	}
 
 	@Override
@@ -410,19 +395,34 @@ public class LiferayServerConfiguration
 
 	@Override
 	public void writeExternal(Element element) throws WriteExternalException {
-		super.writeExternal(element);
+		String configugrationName = getName();
 
-		JavaRunConfigurationExtensionManager javaRunConfigurationExtensionManager =
-			JavaRunConfigurationExtensionManager.getInstance();
+		if (Strings.isEmpty(configugrationName)) {
+			return;
+		}
 
-		javaRunConfigurationExtensionManager.writeExternal(this, element);
+		Element configurationElement = element.getChild(configugrationName, Namespace.NO_NAMESPACE);
 
-		XmlSerializer.serializeInto(_liferayServerConfig, element, null);
-		EnvironmentVariablesComponent.writeExternal(element, getEnvs());
+		if (configurationElement == null) {
+			configurationElement = new Element(configugrationName, Namespace.NO_NAMESPACE);
+		}
+
+		configurationElement.setAttribute("alternativeJrePath", _alternativeJrePath);
+		configurationElement.setAttribute("bundleLocation", _bundleLocation);
+		configurationElement.setAttribute("bundleType", _buildType);
+		configurationElement.setAttribute("developerMode", Boolean.toString(_developerMode));
+		configurationElement.setAttribute("gogoShellPort", _gogoShellPort);
+		configurationElement.setAttribute("vmParameters", _vmParameters);
+
+		EnvironmentVariablesComponent.writeExternal(configurationElement, getEnvs());
 
 		if (_javaRunConfigurationModule.getModule() != null) {
-			_javaRunConfigurationModule.writeExternal(element);
+			_javaRunConfigurationModule.writeExternal(configurationElement);
 		}
+
+		element.addContent(configurationElement);
+
+		super.writeExternal(element);
 	}
 
 	private String _getModuleSdkPath() {
@@ -448,7 +448,7 @@ public class LiferayServerConfiguration
 	}
 
 	private boolean _isCorrectGogoShellPort(String gogoShellPort) {
-		String extGogoShellPort = ServerUtil.getGogoShellPort(_liferayServerConfig.bundleLocation);
+		String extGogoShellPort = ServerUtil.getGogoShellPort(_bundleLocation);
 
 		if (Objects.equals(gogoShellPort, extGogoShellPort)) {
 			return true;
@@ -457,22 +457,15 @@ public class LiferayServerConfiguration
 		return false;
 	}
 
+	private String _alternativeJrePath = "";
+	private boolean _alternativeJrePathEnabled = true;
+	private String _buildType = "";
+	private String _bundleLocation = "";
+	private boolean _developerMode = true;
+	private String _gogoShellPort = "";
 	private JavaRunConfigurationModule _javaRunConfigurationModule;
-	private LiferayServerConfig _liferayServerConfig = new LiferayServerConfig();
-	private Map<String, String> _myEnv = new HashMap<>();
-
-	private static class LiferayServerConfig {
-
-		public String alternativeJrePath = "";
-		public boolean alternativeJrePathEnabled = true;
-		public String buildType = "";
-		public String bundleLocation = "";
-		public boolean developerMode = true;
-		public String gogoShellPort = "";
-		public boolean passParentEnvironments = true;
-		public String vmParameters = "";
-		public List<? extends EnvironmentVariable> javaJdkOption = Collections.emptyList();
-
-	}
+	private boolean _passParentEnvironments = true;
+	private Map<String, String> _userEnv = new HashMap<>();
+	private String _vmParameters = "";
 
 }
