@@ -37,6 +37,7 @@ import com.liferay.ide.idea.util.ServerUtil;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import java.util.Map;
 import java.util.Objects;
 
 import javax.swing.JCheckBox;
@@ -69,6 +70,9 @@ public class LiferayServerConfigurable
 			FileChooserDescriptorFactory.createSingleFolderDescriptor());
 
 		_jrePath.setDefaultJreSelector(DefaultJreSelector.fromModuleDependencies(modulesComboBox, true));
+
+		_userEnvironment.setEnabled(true);
+		_userEnvironment.setPassParentEnvs(false);
 
 		_userActivityListener = () -> {
 			Application application = ApplicationManager.getApplication();
@@ -114,6 +118,8 @@ public class LiferayServerConfigurable
 		configuration.setVMParameters(_vmParams.getText());
 		configuration.setGogoShellPort(_gogoShellPort.getText());
 
+		configuration.setEnvs(_userEnvironment.getEnvs());
+
 		configuration.checkConfiguration();
 	}
 
@@ -126,6 +132,10 @@ public class LiferayServerConfigurable
 	@Override
 	public JComponent getAnchor() {
 		return _anchor;
+	}
+
+	public Map<String, String> getEnv() {
+		return _userEnvironment.getEnvs();
 	}
 
 	@Override
@@ -164,6 +174,8 @@ public class LiferayServerConfigurable
 		_jrePath.setPathOrName(configuration.getAlternativeJrePath(), configuration.isAlternativeJrePathEnabled());
 		_developerMode.setSelected(configuration.getDeveloperMode());
 
+		_userEnvironment.setEnvs(configuration.getEnvs());
+
 		ModulesComboBox modulesComboBox = _modules.getComponent();
 
 		modulesComboBox.setSelectedModule(configuration.getModule());
@@ -192,6 +204,7 @@ public class LiferayServerConfigurable
 	private LabeledComponent<ModulesComboBox> _modules;
 	private UserActivityListener _userActivityListener;
 	private UserActivityWatcher _userActivityWatcher;
+	private LiferayEnvironmentVariablesTextFieldWithBrowseButton _userEnvironment;
 	private JTextField _vmParams;
 
 }

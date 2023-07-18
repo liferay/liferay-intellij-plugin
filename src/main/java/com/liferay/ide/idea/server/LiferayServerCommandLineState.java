@@ -20,6 +20,8 @@ import com.intellij.execution.configurations.JavaParameters;
 import com.intellij.execution.configurations.ParametersList;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.util.JavaParametersUtil;
+import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.util.PathsList;
 
 import com.liferay.ide.idea.server.portal.PortalBundle;
@@ -36,8 +38,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.FileUtils;
@@ -62,19 +65,40 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 
 		LiferayServerConfiguration liferayServerConfiguration = getConfiguration();
 
-		String jrePath = null;
+		String alternativeJre = null;
 
 		if (liferayServerConfiguration.isAlternativeJrePathEnabled()) {
-			jrePath = liferayServerConfiguration.getAlternativeJrePath();
+			alternativeJre = liferayServerConfiguration.getAlternativeJrePath();
 		}
 
-		Map<String, String> myEnv = new HashMap<>();
+		Path jrePath = Paths.get(alternativeJre);
 
-		myEnv.put("JAVA_HOME", jrePath);
+		if (!jrePath.isAbsolute()) {
+			Sdk[] allJdks = ProjectJdkTable.getInstance(
+			).getAllJdks();
 
-		javaParameters.setEnv(myEnv);
+			for (Sdk sdk : allJdks) {
+				if (Objects.equals(sdk.getName(), alternativeJre)) {
+					alternativeJre = sdk.getHomePath();
+				}
+			}
+		}
 
-		javaParameters.setJdk(JavaParametersUtil.createProjectJdk(liferayServerConfiguration.getProject(), jrePath));
+		Map<String, String> userEnvironmentMap = new LinkedHashMap<>();
+
+		if (liferayServerConfiguration.isPassParentEnvs()) {
+			userEnvironmentMap.putAll(System.getenv());
+		}
+
+		userEnvironmentMap.putAll(liferayServerConfiguration.getEnvs());
+
+		userEnvironmentMap.put("JAVA_HOME", alternativeJre);
+		userEnvironmentMap.put("PATH", alternativeJre + "/bin:" + System.getenv("PATH"));
+
+		javaParameters.setEnv(userEnvironmentMap);
+
+		javaParameters.setJdk(
+			JavaParametersUtil.createProjectJdk(liferayServerConfiguration.getProject(), alternativeJre));
 
 		String bundleLocation = liferayServerConfiguration.getBundleLocation();
 
@@ -113,7 +137,7 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 
 		Stream.of(
 			portalBundle.getRuntimeStartVMArgs(
-				JavaParametersUtil.createProjectJdk(liferayServerConfiguration.getProject(), jrePath))
+				JavaParametersUtil.createProjectJdk(liferayServerConfiguration.getProject(), alternativeJre))
 		).forEach(
 			vmParametersList::add
 		);
