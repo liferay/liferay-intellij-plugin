@@ -39,8 +39,6 @@ public interface ServerRunnerChecker {
 	public boolean isLiferayServerRunConfiguration(RunConfiguration runConfiguration);
 
 	public default void verifyRunningServer(@NotNull ExecutionEnvironment environment) throws ExecutionException {
-		RunContentManager runContentManager = RunContentManager.getInstance(environment.getProject());
-
 		RunManager runManager = RunManager.getInstance(environment.getProject());
 
 		List<RunConfiguration> allConfigurationsList = runManager.getAllConfigurationsList();
@@ -54,6 +52,8 @@ public interface ServerRunnerChecker {
 		}
 
 		ExecutionManager executionManager = ExecutionManager.getInstance(environment.getProject());
+
+		RunContentManager runContentManager = RunContentManager.getInstance(environment.getProject());
 
 		for (RunContentDescriptor runContentDescriptor : runContentManager.getAllDescriptors()) {
 			if (runConfigurationNames.contains(runContentDescriptor.getDisplayName())) {

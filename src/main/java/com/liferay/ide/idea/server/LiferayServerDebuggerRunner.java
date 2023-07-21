@@ -25,6 +25,7 @@ import com.intellij.execution.executors.DefaultDebugExecutor;
 import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
 import com.intellij.execution.process.ProcessHandler;
+import com.intellij.execution.process.ProcessTerminatedListener;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.ui.RunContentDescriptor;
 import com.intellij.openapi.externalSystem.service.execution.ExternalSystemProcessHandler;
@@ -94,6 +95,11 @@ public class LiferayServerDebuggerRunner extends GenericDebuggerRunner implement
 				new ProcessAdapter() {
 
 					@Override
+					public void processTerminated(@NotNull ProcessEvent event) {
+						processHandler.removeProcessListener(this);
+					}
+
+					@Override
 					public void processWillTerminate(@NotNull ProcessEvent event, boolean willBeDestroyed) {
 						ExecutionManager executionManager = ExecutionManager.getInstance(
 							executionEnvironment.getProject());
@@ -118,6 +124,9 @@ public class LiferayServerDebuggerRunner extends GenericDebuggerRunner implement
 					}
 
 				});
+
+			ProcessTerminatedListener.attach(
+				processHandler, executionEnvironment.getProject(), "Portal Bundle Stopped");
 		}
 
 		return runContentDescriptor;
