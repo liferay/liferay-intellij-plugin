@@ -25,7 +25,6 @@ import com.intellij.ui.AnActionButtonRunnable;
 import com.intellij.ui.table.JBTable;
 import com.intellij.ui.table.TableView;
 import com.intellij.util.EnvironmentUtil;
-import com.intellij.util.io.IdeUtilIoBundle;
 import com.intellij.util.ui.ListTableModel;
 
 import java.awt.AWTEvent;
@@ -33,6 +32,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 
+import java.text.MessageFormat;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +46,6 @@ import javax.swing.table.TableCellRenderer;
 
 import net.miginfocom.swing.MigLayout;
 
-import org.apache.batik.util.Messages;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -151,19 +150,19 @@ public class LiferayEnvironmentVariablesDialog extends DialogWrapper {
 			String name = variable.getName();
 			String value = variable.getValue();
 
-			if (StringUtil.isEmpty(name) && StringUtil.isEmpty(value))
-
+			if (StringUtil.isEmpty(name) && StringUtil.isEmpty(value)) {
 				continue;
+			}
 
 			if (!EnvironmentUtil.isValidName(name)) {
-				return new ValidationInfo(Messages.formatMessage("Illegal name of environment variable: {0}}",
-						new String[]{name}));
+				return new ValidationInfo(MessageFormat.format("Illegal name of environment variable: {0}",
+					name));
 
 			}
 
 			if (!EnvironmentUtil.isValidValue(value)) {
-				return new ValidationInfo(Messages.formatMessage("Illegal value of environment variable value: {0} " +
-						"{1}}", new String[]{name, value}));
+				return new ValidationInfo(MessageFormat.format("Illegal value of environment variable value: {0} " +
+					"{1}", name, value));
 			}
 		}
 
