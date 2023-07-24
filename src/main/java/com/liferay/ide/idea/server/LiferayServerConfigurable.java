@@ -100,6 +100,7 @@ public class LiferayServerConfigurable
 	public void applyEditorTo(@NotNull LiferayServerConfiguration configuration) throws ConfigurationException {
 		configuration.setAlternativeJrePath(_jrePath.getJrePathOrName());
 		configuration.setAlternativeJrePathEnabled(_jrePath.isAlternativeJreSelected());
+
 		configuration.setBundleLocation(_liferayServer.getText());
 
 		PortalBundle portalBundle = ServerUtil.getPortalBundle(Paths.get(_liferayServer.getText()));

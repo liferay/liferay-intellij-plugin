@@ -92,9 +92,6 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 
 		userEnvironmentMap.putAll(liferayServerConfiguration.getEnvs());
 
-		userEnvironmentMap.put("JAVA_HOME", alternativeJre);
-		userEnvironmentMap.put("PATH", alternativeJre + "/bin:" + System.getenv("PATH"));
-
 		javaParameters.setEnv(userEnvironmentMap);
 
 		javaParameters.setJdk(

@@ -33,6 +33,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 
 import java.text.MessageFormat;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -155,14 +156,12 @@ public class LiferayEnvironmentVariablesDialog extends DialogWrapper {
 			}
 
 			if (!EnvironmentUtil.isValidName(name)) {
-				return new ValidationInfo(MessageFormat.format("Illegal name of environment variable: {0}",
-					name));
-
+				return new ValidationInfo(MessageFormat.format("Illegal name of environment variable: {0}", name));
 			}
 
 			if (!EnvironmentUtil.isValidValue(value)) {
-				return new ValidationInfo(MessageFormat.format("Illegal value of environment variable value: {0} " +
-					"{1}", name, value));
+				return new ValidationInfo(
+					MessageFormat.format("Illegal value of environment variable value: {0} {1}", name, value));
 			}
 		}
 
