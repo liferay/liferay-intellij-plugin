@@ -26,6 +26,7 @@ import com.intellij.ui.table.JBTable;
 import com.intellij.ui.table.TableView;
 import com.intellij.util.EnvironmentUtil;
 import com.intellij.util.ui.ListTableModel;
+import com.intellij.util.ui.TableViewModel;
 
 import java.awt.AWTEvent;
 import java.awt.Component;
@@ -42,8 +43,13 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -182,6 +188,50 @@ public class LiferayEnvironmentVariablesDialog extends DialogWrapper {
 			TableView<EnvironmentVariable> tableView = getTableView();
 
 			tableView.setVisibleRowCount(JBTable.PREFERRED_SCROLLABLE_VIEWPORT_HEIGHT_IN_ROWS);
+
+			tableView.setAutoscrolls(true);
+
+			JTable table = tableView.getComponent();
+
+			TableColumnModel tableColumnModel = table.getColumnModel();
+
+			TableModel tableModel = table.getModel();
+
+			tableModel.addTableModelListener(
+				new TableModelListener() {
+
+					@Override
+					public void tableChanged(TableModelEvent event) {
+						for (int column = 0; column < (table.getColumnCount() - 1); column++) {
+							TableColumn tableColumn = tableColumnModel.getColumn(column);
+
+							int preferredWidth = tableColumn.getMinWidth();
+
+							int maxWidth = 0;
+
+							for (int row = 0; row < table.getRowCount(); row++) {
+								TableCellRenderer cellRenderer = table.getCellRenderer(row, column);
+
+								Component component = table.prepareRenderer(cellRenderer, row, column);
+
+								int width = component.getPreferredSize().width + table.getIntercellSpacing().width;
+
+								preferredWidth = Math.max(preferredWidth, width);
+
+								if (preferredWidth >= maxWidth) {
+									maxWidth = preferredWidth;
+								}
+							}
+
+							tableColumn.setMinWidth(maxWidth);
+							tableColumn.setMaxWidth(maxWidth);
+						}
+
+						tableView.revalidate();
+						tableView.repaint();
+					}
+
+				});
 
 			setValues(list);
 			setPasteActionEnabled(myUserList);
