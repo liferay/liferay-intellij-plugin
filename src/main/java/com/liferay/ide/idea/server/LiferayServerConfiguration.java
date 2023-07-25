@@ -38,7 +38,9 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.options.SettingsEditor;
 import com.intellij.openapi.options.SettingsEditorGroup;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.impl.SdkVersionUtil;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.InvalidDataException;
@@ -48,6 +50,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.util.text.Strings;
 import com.intellij.psi.search.ExecutionSearchScopes;
 import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.util.lang.JavaVersion;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
 
@@ -60,6 +63,8 @@ import com.liferay.ide.idea.util.ServerUtil;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import java.text.MessageFormat;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -71,6 +76,7 @@ import org.jdom.Namespace;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.jps.model.java.JdkVersionDetector;
 
 /**
  * @author Terry Jia
@@ -112,6 +118,52 @@ public class LiferayServerConfiguration
 			throw new RuntimeConfigurationWarning(
 				"The customized gogo-shell port is not equals defined value in portal-ext.properties, " +
 					"portal-developer.properties or portal-setup-wizard.properties");
+		}
+
+		Path jrePath = Paths.get(_alternativeJrePath);
+
+		JdkVersionDetector.JdkVersionInfo alternativeSdkVersion = null;
+
+		if (!jrePath.isAbsolute()) {
+			Sdk[] allJdks = ProjectJdkTable.getInstance(
+			).getAllJdks();
+
+			for (Sdk sdk : allJdks) {
+				if (Objects.equals(sdk.getName(), _alternativeJrePath)) {
+					alternativeSdkVersion = SdkVersionUtil.getJdkVersionInfo(sdk.getHomePath());
+				}
+			}
+		}
+		else {
+			alternativeSdkVersion = SdkVersionUtil.getJdkVersionInfo(_alternativeJrePath);
+		}
+
+		if (Objects.isNull(alternativeSdkVersion)) {
+			String jreVersionInvalidMessage = MessageFormat.format(
+				"Can not get correct jdk version for liferay server configuration {0}.", getName());
+
+			throw new RuntimeConfigurationException(jreVersionInvalidMessage);
+		}
+
+		JdkVersionDetector.JdkVersionInfo moduleSdkVersion = SdkVersionUtil.getJdkVersionInfo(_getModuleSdkPath());
+
+		if (Objects.isNull(moduleSdkVersion)) {
+			String jreVersionInvalidMessage = MessageFormat.format(
+				"Can not get correct jdk version for module {0}.", getProject().getName());
+
+			throw new RuntimeConfigurationException(jreVersionInvalidMessage);
+		}
+
+		JavaVersion moduleSdkJavaVersion = moduleSdkVersion.version;
+
+		JavaVersion alternativeSdkJavaVersion = alternativeSdkVersion.version;
+
+		if (moduleSdkJavaVersion.feature != alternativeSdkJavaVersion.feature) {
+			String jreVersionInvalidMessage = MessageFormat.format(
+				"The jdk version of Liferay Server configuration {0} should be same as module {1}.", getName(),
+				getProject().getName());
+
+			throw new RuntimeConfigurationException(jreVersionInvalidMessage);
 		}
 
 		JavaRunConfigurationExtensionManager.checkConfigurationIsValid(this);
@@ -367,6 +419,13 @@ public class LiferayServerConfiguration
 	@Override
 	public void setEnvs(@NotNull Map<String, String> newEnv) {
 		_mergeEnvMap(_userEnv, newEnv);
+
+		String moduleSdkPathString = _getModuleSdkPath();
+
+		if (Objects.nonNull(moduleSdkPathString)) {
+			_userEnv.put("JAVA_HOME", moduleSdkPathString);
+			_userEnv.put("PATH", moduleSdkPathString + "/bin:" + System.getenv("PATH"));
+		}
 	}
 
 	public void setGogoShellPort(String gogoShellPort) {
