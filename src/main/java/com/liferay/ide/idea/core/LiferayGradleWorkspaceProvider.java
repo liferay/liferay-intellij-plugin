@@ -272,18 +272,23 @@ public class LiferayGradleWorkspaceProvider extends AbstractWorkspaceProvider {
 	@Override
 	public String getWorkspaceProperty(String key, String defaultValue) {
 		File gradleProperties = new File(project.getBasePath(), "gradle.properties");
+		File gradleLocalProperties = new File(project.getBasePath(), "gradle-local.properties");
+
+		Properties properties = new Properties();
 
 		if (gradleProperties.exists()) {
-			Properties properties = PropertiesUtil.loadProperties(gradleProperties);
-
-			if (properties == null) {
-				return defaultValue;
-			}
-
-			return properties.getProperty(key, defaultValue);
+			properties.putAll(PropertiesUtil.loadProperties(gradleProperties));
 		}
 
-		return null;
+		if (gradleLocalProperties.exists()) {
+			properties.putAll(PropertiesUtil.loadProperties(gradleLocalProperties));
+		}
+
+		if (properties == null) {
+			return defaultValue;
+		}
+
+		return properties.getProperty(key, defaultValue);
 	}
 
 	@Override

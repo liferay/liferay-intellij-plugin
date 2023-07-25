@@ -26,7 +26,6 @@ import com.intellij.ui.table.JBTable;
 import com.intellij.ui.table.TableView;
 import com.intellij.util.EnvironmentUtil;
 import com.intellij.util.ui.ListTableModel;
-import com.intellij.util.ui.TableViewModel;
 
 import java.awt.AWTEvent;
 import java.awt.Component;
