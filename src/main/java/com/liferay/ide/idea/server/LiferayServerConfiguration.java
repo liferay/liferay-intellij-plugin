@@ -66,11 +66,10 @@ import java.nio.file.Paths;
 import java.text.MessageFormat;
 
 import java.util.Arrays;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -123,8 +122,6 @@ public class LiferayServerConfiguration
 
 		Path jrePath = Paths.get(_alternativeJrePath);
 
-		JdkVersionDetector.JdkVersionInfo alternativeSdkVersion = null;
-
 		if (!jrePath.isAbsolute()) {
 			Sdk[] allJdks = ProjectJdkTable.getInstance(
 			).getAllJdks();
@@ -136,13 +133,14 @@ public class LiferayServerConfiguration
 			}
 		}
 
-		if (Objects.isNull(_alternativeJrePath) || !FileUtil.exists(_alternativeJrePath)){
+		if (Objects.isNull(_alternativeJrePath) || !FileUtil.exists(_alternativeJrePath)) {
 			String jreVersionInvalidMessage = MessageFormat.format(
-					"Can not get correct alternative jdk path module {0}.", getProject().getName());
+				"Can not get correct alternative jdk path module {0}.", getProject().getName());
+
 			throw new RuntimeConfigurationException(jreVersionInvalidMessage);
 		}
 
-		alternativeSdkVersion = SdkVersionUtil.getJdkVersionInfo(_alternativeJrePath);
+		JdkVersionDetector.JdkVersionInfo alternativeSdkVersion = SdkVersionUtil.getJdkVersionInfo(_alternativeJrePath);
 
 		if (Objects.isNull(alternativeSdkVersion)) {
 			String jreVersionInvalidMessage = MessageFormat.format(
@@ -153,9 +151,10 @@ public class LiferayServerConfiguration
 
 		String moduleSdkPath = _getModuleSdkPath();
 
-		if (Objects.isNull(moduleSdkPath) || !FileUtil.exists(moduleSdkPath)){
+		if (Objects.isNull(moduleSdkPath) || !FileUtil.exists(moduleSdkPath)) {
 			String jreVersionInvalidMessage = MessageFormat.format(
-					"Can not get correct jdk path module {0}.", getProject().getName());
+				"Can not get correct jdk path module {0}.", getProject().getName());
+
 			throw new RuntimeConfigurationException(jreVersionInvalidMessage);
 		}
 
@@ -562,7 +561,7 @@ public class LiferayServerConfiguration
 	private String _gogoShellPort = "";
 	private JavaRunConfigurationModule _javaRunConfigurationModule;
 	private boolean _passParentEnvironments = true;
-	private Map<String, String> _userEnv = new ConcurrentHashMap<String, String>();
+	private Map<String, String> _userEnv = new ConcurrentHashMap<>();
 	private String _vmParameters = "";
 
 }

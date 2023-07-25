@@ -17,11 +17,9 @@ package com.liferay.ide.idea.core;
 import com.google.common.collect.ListMultimap;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.projectRoots.impl.JavaHomeFinder;
 import com.intellij.openapi.util.text.StringUtil;
 
-import com.liferay.blade.gradle.tooling.ProjectInfo;
 import com.liferay.ide.idea.util.CoreUtil;
 import com.liferay.ide.idea.util.GradleDependency;
 import com.liferay.ide.idea.util.GradleDependencyUpdater;
@@ -48,12 +46,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.regex.Pattern;
 
-import javax.swing.SwingUtilities;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.model.DomainObjectSet;
 import org.gradle.tooling.model.GradleProject;
