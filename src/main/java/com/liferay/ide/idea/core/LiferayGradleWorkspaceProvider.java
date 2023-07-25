@@ -17,9 +17,11 @@ package com.liferay.ide.idea.core;
 import com.google.common.collect.ListMultimap;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.projectRoots.impl.JavaHomeFinder;
 import com.intellij.openapi.util.text.StringUtil;
 
+import com.liferay.blade.gradle.tooling.ProjectInfo;
 import com.liferay.ide.idea.util.CoreUtil;
 import com.liferay.ide.idea.util.GradleDependency;
 import com.liferay.ide.idea.util.GradleDependencyUpdater;
@@ -46,8 +48,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
+import javax.swing.SwingUtilities;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.model.DomainObjectSet;
 import org.gradle.tooling.model.GradleProject;
@@ -272,18 +278,23 @@ public class LiferayGradleWorkspaceProvider extends AbstractWorkspaceProvider {
 	@Override
 	public String getWorkspaceProperty(String key, String defaultValue) {
 		File gradleProperties = new File(project.getBasePath(), "gradle.properties");
+		File gradleLocalProperties = new File(project.getBasePath(), "gradle-local.properties");
+
+		Properties properties = new Properties();
 
 		if (gradleProperties.exists()) {
-			Properties properties = PropertiesUtil.loadProperties(gradleProperties);
-
-			if (properties == null) {
-				return defaultValue;
-			}
-
-			return properties.getProperty(key, defaultValue);
+			properties.putAll(PropertiesUtil.loadProperties(gradleProperties));
 		}
 
-		return null;
+		if (gradleLocalProperties.exists()) {
+			properties.putAll(PropertiesUtil.loadProperties(gradleLocalProperties));
+		}
+
+		if (properties == null) {
+			return defaultValue;
+		}
+
+		return properties.getProperty(key, defaultValue);
 	}
 
 	@Override
