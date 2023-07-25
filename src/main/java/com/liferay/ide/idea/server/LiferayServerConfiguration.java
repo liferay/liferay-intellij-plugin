@@ -131,18 +131,31 @@ public class LiferayServerConfiguration
 
 			for (Sdk sdk : allJdks) {
 				if (Objects.equals(sdk.getName(), _alternativeJrePath)) {
-					alternativeSdkVersion = SdkVersionUtil.getJdkVersionInfo(sdk.getHomePath());
+					_alternativeJrePath = sdk.getHomePath();
 				}
 			}
 		}
-		else {
-			alternativeSdkVersion = SdkVersionUtil.getJdkVersionInfo(_alternativeJrePath);
+
+		if (Objects.isNull(_alternativeJrePath) || !FileUtil.exists(_alternativeJrePath)){
+			String jreVersionInvalidMessage = MessageFormat.format(
+					"Can not get correct alternative jdk path module {0}.", getProject().getName());
+			throw new RuntimeConfigurationException(jreVersionInvalidMessage);
 		}
+
+		alternativeSdkVersion = SdkVersionUtil.getJdkVersionInfo(_alternativeJrePath);
 
 		if (Objects.isNull(alternativeSdkVersion)) {
 			String jreVersionInvalidMessage = MessageFormat.format(
 				"Can not get correct jdk version for liferay server configuration {0}.", getName());
 
+			throw new RuntimeConfigurationException(jreVersionInvalidMessage);
+		}
+
+		String moduleSdkPath = _getModuleSdkPath();
+
+		if (Objects.isNull(moduleSdkPath) || !FileUtil.exists(moduleSdkPath)){
+			String jreVersionInvalidMessage = MessageFormat.format(
+					"Can not get correct jdk path module {0}.", getProject().getName());
 			throw new RuntimeConfigurationException(jreVersionInvalidMessage);
 		}
 
