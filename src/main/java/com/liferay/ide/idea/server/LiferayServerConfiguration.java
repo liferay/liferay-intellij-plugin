@@ -66,6 +66,7 @@ import java.nio.file.Paths;
 import java.text.MessageFormat;
 
 import java.util.Arrays;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -548,7 +549,7 @@ public class LiferayServerConfiguration
 	private String _gogoShellPort = "";
 	private JavaRunConfigurationModule _javaRunConfigurationModule;
 	private boolean _passParentEnvironments = true;
-	private Map<String, String> _userEnv = new HashMap<>();
+	private Map<String, String> _userEnv = new ConcurrentHashMap<String, String>();
 	private String _vmParameters = "";
 
 }
