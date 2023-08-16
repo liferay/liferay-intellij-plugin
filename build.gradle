@@ -1,6 +1,6 @@
 buildscript {
 	dependencies {
-//		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.source.formatter", version: "latest.release"
+		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.source.formatter", version: "latest.release"
 		classpath group: "de.undercouch", name: "gradle-download-task", version: "5.1.0"
 		classpath group: "nu.studer", name: "gradle-credentials-plugin", version: "2.1"
 	}
@@ -23,7 +23,7 @@ plugins {
 	id "org.jetbrains.intellij" version "1.13.3"
 }
 
-//apply plugin: "com.liferay.source.formatter"
+apply plugin: "com.liferay.source.formatter"
 apply plugin: "java"
 apply plugin: "nu.studer.credentials"
 
@@ -67,10 +67,10 @@ buildScan {
 	termsOfServiceAgree = "yes"
 }
 
-//check.dependsOn checkSourceFormatting
-//checkSourceFormatting {
-//	maxLineLength = 120
-//}
+check.dependsOn checkSourceFormatting
+checkSourceFormatting {
+	maxLineLength = 120
+}
 
 configurations.all {
 	exclude group: 'org.slf4j', module: 'slf4j-api'
@@ -231,9 +231,9 @@ downloadXsds {
 	overwrite false
 }
 
-//formatSource {
-//	maxLineLength = 120
-//}
+formatSource {
+	maxLineLength = 120
+}
 
 intellij {
 	plugins = ["java", "webComponents", "DatabaseTools", "gradle", "Groovy", "java-i18n", "JavaEE", "javascript-impl", "javaee-jsp-base-impl", "javascript-intentions", "javaee-web-impl", "junit", "maven", "javaee-persistence-impl", "properties", "sass"]
