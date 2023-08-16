@@ -201,6 +201,10 @@ public interface LiferayWorkspaceSupport {
 
 		GradleExtensionsSettings.GradleExtensionsData gradleExtensionsData = settings.getExtensionsFor(module);
 
+		if (Objects.isNull(gradleExtensionsData)) {
+			return false;
+		}
+
 		Map<String, GradleExtensionsSettings.GradleTask> tasksMap = gradleExtensionsData.tasksMap;
 
 		GradleExtensionsSettings.GradleTask value = tasksMap.get("buildExtInfo");
