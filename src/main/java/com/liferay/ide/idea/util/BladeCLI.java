@@ -14,6 +14,8 @@
 
 package com.liferay.ide.idea.util;
 
+import com.intellij.util.net.HttpConfigurable;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,6 +36,7 @@ import java.util.zip.ZipInputStream;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Java;
+import org.apache.tools.ant.types.Environment;
 
 import org.osgi.framework.Version;
 
@@ -57,6 +60,53 @@ public class BladeCLI {
 		javaTask.setJar(bladeJar);
 
 		javaTask.setArgs(args);
+
+		HttpConfigurable httpConfigurable = HttpConfigurable.getInstance();
+
+		if (httpConfigurable.USE_HTTP_PROXY) {
+			String[] proxyTypes = {"http", "https"};
+
+			for (String proxyType : proxyTypes) {
+				Environment.Variable proxyHostVariable = new Environment.Variable();
+
+				proxyHostVariable.setKey(proxyType + ".proxyHost");
+				proxyHostVariable.setValue(httpConfigurable.PROXY_HOST);
+
+				javaTask.addSysproperty(proxyHostVariable);
+
+				Environment.Variable proxyPortVariable = new Environment.Variable();
+
+				proxyPortVariable.setKey(proxyType + ".proxyPort");
+				proxyPortVariable.setValue(String.valueOf(httpConfigurable.PROXY_PORT));
+
+				javaTask.addSysproperty(proxyPortVariable);
+
+				if (!httpConfigurable.PROXY_AUTHENTICATION) {
+					continue;
+				}
+
+				String userId = httpConfigurable.getProxyLogin();
+				String userPassword = httpConfigurable.getPlainProxyPassword();
+
+				if (Objects.isNull(userId) || Objects.isNull(userPassword)) {
+					continue;
+				}
+
+				Environment.Variable proxyUserVariable = new Environment.Variable();
+
+				proxyUserVariable.setKey(proxyType + ".proxyUser");
+				proxyUserVariable.setValue(userId);
+
+				javaTask.addSysproperty(proxyUserVariable);
+
+				Environment.Variable proxyPasswordVariable = new Environment.Variable();
+
+				proxyPasswordVariable.setKey(proxyType + ".proxyPassword");
+				proxyPasswordVariable.setValue(userPassword);
+
+				javaTask.addSysproperty(proxyPasswordVariable);
+			}
+		}
 
 		DefaultLogger logger = new DefaultLogger();
 
