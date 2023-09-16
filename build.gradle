@@ -3,9 +3,14 @@ buildscript {
 		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.source.formatter", version: "latest.release"
 		classpath group: "de.undercouch", name: "gradle-download-task", version: "5.1.0"
 		classpath group: "nu.studer", name: "gradle-credentials-plugin", version: "2.1"
+		classpath group: "org.jetbrains.intellij.plugins", name: "gradle-intellij-plugin", version: "1.15.0"
 	}
 
 	repositories {
+		maven {
+			url = uri("https://plugins.gradle.org/m2/")
+		}
+
 		maven {
 			url "https://repository-cdn.liferay.com/nexus/content/groups/public"
 		}
@@ -20,14 +25,17 @@ buildscript {
 
 plugins {
 	id "de.undercouch.download" version "5.1.0"
-	id "org.jetbrains.intellij" version "1.13.3"
+	id "org.jetbrains.intellij" version "1.15.0"
 }
 
 apply plugin: "com.liferay.source.formatter"
-apply plugin: "java"
+apply plugin: "java-library"
 apply plugin: "nu.studer.credentials"
 
-tasks.withType(JavaCompile) {
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+
+tasks.withType(JavaCompile).configureEach {
 	options.compilerArgs << "-Xlint:unchecked"
 	options.deprecation = true
 }
@@ -43,18 +51,15 @@ sourceSets {
 	}
 }
 
-task dockerImageBuild(type:Exec)
-task dockerPublishRelease(type:Exec)
-task downloadBlade392(type: Download)
-task downloadBladeLatest(type: Download)
-task downloadDtds(type: Download)
-task downloadTlds(type: Download)
-task downloadXsds(type: Download)
-task verifyBlade392(type: Verify)
-task verifyBladeLatest(type: Verify)
-
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+tasks.register('dockerImageBuild', Exec)
+tasks.register('dockerPublishRelease', Exec)
+tasks.register('downloadBlade392', Download)
+tasks.register('downloadBladeLatest', Download)
+tasks.register('downloadDtds', Download)
+tasks.register('downloadTlds', Download)
+tasks.register('downloadXsds', Download)
+tasks.register('verifyBlade392', Verify)
+tasks.register('verifyBladeLatest', Verify)
 
 String userHome = System.getProperty("user.home")
 
@@ -72,19 +77,19 @@ checkSourceFormatting {
 	maxLineLength = 120
 }
 
-configurations.all {
+configurations.configureEach {
 	exclude group: 'org.slf4j', module: 'slf4j-api'
 }
 
 dependencies {
-	implementation files( "libs/gradle-tooling.jar")
-	implementation group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "6.4.0"
-	implementation group: "commons-configuration", name: "commons-configuration", version: "1.10"
-	implementation group: "commons-lang", name: "commons-lang", version: "2.6"
-	implementation group: "org.apache.ant", name: "ant", version: "1.10.13"
-	implementation group: "org.dom4j", name: "dom4j", version: "2.1.4"
-	implementation group: "org.json", name: "json", version: "20230227"
-	implementation group: "org.osgi", name: "org.osgi.core", version: "6.0.0"
+	api files( "libs/gradle-tooling.jar")
+	api group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "6.4.0"
+	api group: "commons-configuration", name: "commons-configuration", version: "1.10"
+	api group: "commons-lang", name: "commons-lang", version: "2.6"
+	api group: "org.apache.ant", name: "ant", version: "1.10.13"
+	api group: "org.dom4j", name: "dom4j", version: "2.1.4"
+	api group: "org.json", name: "json", version: "20230227"
+	api group: "org.osgi", name: "org.osgi.core", version: "6.0.0"
 
 	testImplementation group: "junit", name: "junit", version: "4.13.2"
 }
@@ -115,6 +120,10 @@ downloadBlade392 {
 	src blade392DownloadURL
 	dest file("${bladeBuildOutputDir}/blade-3.9.2.jar")
 	onlyIfModified true
+}
+
+buildPlugin{
+	finalizedBy(":checkSourceFormatting")
 }
 
 downloadBladeLatest {
@@ -303,7 +312,9 @@ tasks {
 	runPluginVerifier {
 		ideVersions = [
 			"IC-2023.1",
-			"IU-2023.1"
+			"IU-2023.1",
+			"IC-2023.2.2",
+			"IU-2023.2.2"
 		]
 	}
 }
