@@ -248,11 +248,11 @@ formatSource {
 intellij {
 	plugins = ["java", "webComponents", "DatabaseTools", "gradle", "Groovy", "java-i18n", "JavaEE", "javascript-impl", "javaee-jsp-base-impl", "javascript-intentions", "javaee-web-impl", "junit", "maven", "javaee-persistence-impl", "properties", "sass"]
 	pluginName = "liferay-intellij-plugin"
-	version = "IU-2023.1"
+	version = "IU-2023.2.1"
 }
 
 patchPluginXml {
-	sinceBuild = "231"
+	sinceBuild = "232"
 	untilBuild = ""
 }
 
@@ -312,20 +312,6 @@ verifyBladeLatest {
 tasks {
 	runPluginVerifier {
 		ideVersions = [
-			"IC-2023.1",
-			"IU-2023.1",
-			"IC-2023.1.1",
-			"IU-2023.1.1",
-			"IC-2023.1.2",
-			"IU-2023.1.2",
-			"IC-2023.1.3",
-			"IU-2023.1.3",
-			"IC-2023.1.4",
-			"IU-2023.1.4",
-			"IC-2023.1.5",
-			"IU-2023.1.5",
-			"IC-2023.2",
-			"IU-2023.2",
 			"IC-2023.2.1",
 			"IU-2023.2.1",
 			"IC-2023.2.2",
