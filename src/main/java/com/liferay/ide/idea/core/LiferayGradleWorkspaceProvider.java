@@ -251,7 +251,7 @@ public class LiferayGradleWorkspaceProvider extends AbstractWorkspaceProvider {
 			return null;
 		}
 
-		Map<String, ProductInfo> productInfos = LiferayWorkspaceSupport.getProductInfos(project);
+		Map<String, ProductInfo> productInfos = LiferayWorkspaceSupport.getProductInfos();
 
 		if (Objects.nonNull(productInfos)) {
 			return productInfos.get(workspaceProductKey);

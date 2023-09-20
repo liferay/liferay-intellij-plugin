@@ -5,6 +5,7 @@
 
 package com.liferay.ide.idea.util;
 
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.util.net.HttpConfigurable;
 
 import java.io.File;
@@ -103,38 +104,46 @@ public class BladeCLI {
 
 		project.addBuildListener(logger);
 
-		StringBufferOutputStream out = new StringBufferOutputStream();
-
-		logger.setOutputPrintStream(new PrintStream(out));
-
-		logger.setMessageOutputLevel(Project.MSG_INFO);
-
-		javaTask.executeJava();
-
 		List<String> lines = new ArrayList<>();
-		Scanner scanner = new Scanner(out.toString());
 
-		while (scanner.hasNextLine()) {
-			String nextLine = scanner.nextLine();
+		int returnCode = 0;
 
-			lines.add(nextLine.replaceAll(".*\\[null\\] ", ""));
+		try (StringBufferOutputStream out = new StringBufferOutputStream();
+			PrintStream printStream = new PrintStream(out)) {
+
+			logger.setOutputPrintStream(printStream);
+
+			logger.setMessageOutputLevel(Project.MSG_INFO);
+
+			returnCode = javaTask.executeJava();
+
+			try (Scanner scanner = new Scanner(out.toString())) {
+				while (scanner.hasNextLine()) {
+					String line = scanner.nextLine();
+
+					lines.add(line.replaceAll(".*\\[null\\] ", ""));
+				}
+			}
+
+			boolean hasErrors = false;
+
+			StringBuilder errors = new StringBuilder();
+
+			for (String line : lines) {
+				if (line.startsWith("Error")) {
+					hasErrors = true;
+				}
+				else if (hasErrors) {
+					errors.append(line);
+				}
+			}
+
+			if ((returnCode != 0) || hasErrors) {
+				_logger.error(errors.toString());
+			}
 		}
-
-		scanner.close();
-
-		boolean hasErrors = false;
-
-		StringBuilder errors = new StringBuilder();
-
-		for (String line : lines) {
-			String lineLowerCase = line.toLowerCase();
-
-			if (lineLowerCase.startsWith("error")) {
-				hasErrors = true;
-			}
-			else if (hasErrors) {
-				errors.append(line);
-			}
+		catch (IOException ioException) {
+			_logger.error(ioException);
 		}
 
 		return lines.toArray(new String[0]);
@@ -173,35 +182,39 @@ public class BladeCLI {
 			}
 		}
 		catch (IOException ioException) {
+			_logger.error(ioException);
 		}
 
 		try (InputStream inputStream = bladeClassLoader.getResourceAsStream("libs/" + jarName)) {
 			if (needToCopy) {
-				bladeJar.delete();
+				Files.delete(bladeJar.toPath());
 
 				FileUtil.writeFile(bladeJar, inputStream);
 			}
 		}
 		catch (IOException ioException) {
+			_logger.error(ioException);
 		}
 
 		return bladeJar;
 	}
 
 	public static synchronized String getBladeJarVersion(com.intellij.openapi.project.Project workspaceProject) {
+		String bladeJarName;
+
 		if (Objects.nonNull(workspaceProject)) {
 			if (LiferayWorkspaceSupport.isFlexibleLiferayWorkspace(workspaceProject)) {
-				_bladeJarName = BLADE_LATEST;
+				bladeJarName = BLADE_LATEST;
 			}
 			else {
-				_bladeJarName = BLADE_392;
+				bladeJarName = BLADE_392;
 			}
 		}
 		else {
-			_bladeJarName = BLADE_LATEST;
+			bladeJarName = BLADE_LATEST;
 		}
 
-		return _bladeJarName;
+		return bladeJarName;
 	}
 
 	public static synchronized String[] getProjectTemplates(com.intellij.openapi.project.Project liferayProject) {
@@ -212,7 +225,7 @@ public class BladeCLI {
 		for (String name : executeResult) {
 			String trimmedName = name.trim();
 
-			if (trimmedName.indexOf(" ") != -1) {
+			if (trimmedName.contains(" ")) {
 				templateNames.add(name.substring(0, name.indexOf(" ")));
 			}
 			else {
@@ -238,7 +251,7 @@ public class BladeCLI {
 		for (String result : executeResult) {
 			String category = result.trim();
 
-			if (category.indexOf(" ") == -1) {
+			if (!category.contains(" ")) {
 				workspaceProducts.add(category);
 			}
 		}
@@ -248,12 +261,12 @@ public class BladeCLI {
 
 	private static String _getBladeVersion(InputStream inputStream) {
 		try (ZipInputStream zipInput = new ZipInputStream(inputStream)) {
-			ZipEntry zipEntry = null;
+			ZipEntry zipEntry;
 
 			do {
 				zipEntry = zipInput.getNextEntry();
 
-				if (Objects.equals(zipEntry.getName(), "META-INF/MANIFEST.MF")) {
+				if (Objects.nonNull(zipEntry) && Objects.equals(zipEntry.getName(), "META-INF/MANIFEST.MF")) {
 					Manifest manifest = new Manifest(zipInput);
 
 					Attributes mainAttributes = manifest.getMainAttributes();
@@ -264,11 +277,12 @@ public class BladeCLI {
 			while (zipEntry != null);
 		}
 		catch (Exception exception) {
+			_logger.error(exception);
 		}
 
 		return null;
 	}
 
-	private static String _bladeJarName = null;
+	private static Logger _logger = Logger.getInstance(BladeCLI.class);
 
 }
