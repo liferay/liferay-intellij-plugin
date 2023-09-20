@@ -67,7 +67,7 @@ jobs:
       - name: Setup Java 17
         uses: actions/setup-java@v3
         with:
-          java-version: 17
+          java-version: 17.0.8
           distribution: 'zulu'
           cache: gradle
 
@@ -89,7 +89,5 @@ jobs:
         uses: ChrisCarini/intellij-platform-plugin-verifier-action@latest
         with:
          ide-versions: |
-          ideaIC:2023.2.1
-          ideaIU:2023.2.1
-          ideaIC:2023.2.2
-          ideaIU:2023.2.2
+          ideaIC:2023.1
+          ideaIU:2023.1
