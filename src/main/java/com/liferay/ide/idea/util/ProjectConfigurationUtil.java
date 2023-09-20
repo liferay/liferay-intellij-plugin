@@ -52,7 +52,7 @@ public class ProjectConfigurationUtil {
 			return;
 		}
 
-		if ((project == null) || project.isDisposed()) {
+		if (project.isDisposed()) {
 			return;
 		}
 
@@ -89,7 +89,7 @@ public class ProjectConfigurationUtil {
 	}
 
 	public static void handleServerConfiguration(Project project, List<RunConfigurationProducer<?>> producers) {
-		for (RunConfigurationProducer producer : producers) {
+		for (RunConfigurationProducer<?> producer : producers) {
 			ConfigurationType configurationType = producer.getConfigurationType();
 
 			if (Objects.equals(LiferayServerConfigurationType.id, configurationType.getId())) {

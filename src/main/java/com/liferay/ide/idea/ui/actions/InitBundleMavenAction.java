@@ -6,16 +6,19 @@
 package com.liferay.ide.idea.ui.actions;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 
 import com.liferay.ide.idea.core.LiferayIcons;
 import com.liferay.ide.idea.core.WorkspaceConstants;
 import com.liferay.ide.idea.server.LiferayServerConfigurationProducer;
+import com.liferay.ide.idea.util.CoreUtil;
+import com.liferay.ide.idea.util.FileUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 import com.liferay.ide.idea.util.ProjectConfigurationUtil;
 
-import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Joye Luo
@@ -26,7 +29,7 @@ public class InitBundleMavenAction extends AbstractLiferayMavenGoalAction implem
 	public InitBundleMavenAction() {
 		super("InitBundle", "Run initBundle goal", LiferayIcons.LIFERAY_ICON);
 
-		goals = Arrays.asList("bundle-support:init");
+		goals = List.of("bundle-support:init");
 	}
 
 	@Override
@@ -38,8 +41,33 @@ public class InitBundleMavenAction extends AbstractLiferayMavenGoalAction implem
 
 		ProjectConfigurationUtil.configExcludedFolder(project, homeDir);
 
-		ProjectConfigurationUtil.handleServerConfiguration(
-			project, LiferayServerConfigurationProducer.getProducers(project));
+		try {
+			if (CoreUtil.isNullOrEmpty(homeDir)) {
+				return;
+			}
+
+			VirtualFile projectDir = LiferayWorkspaceSupport.getWorkspaceVirtualFile(project);
+
+			if (projectDir == null) {
+				return;
+			}
+
+			VirtualFile liferayHomeDirVirtualFile = projectDir.findChild(homeDir);
+
+			if (liferayHomeDirVirtualFile == null) {
+				return;
+			}
+
+			if (FileUtil.notExists(liferayHomeDirVirtualFile.toNioPath())) {
+				return;
+			}
+
+			ProjectConfigurationUtil.handleServerConfiguration(
+				project, LiferayServerConfigurationProducer.getProducers(project));
+		}
+		catch (Exception exception) {
+			_logger.error(exception);
+		}
 	}
 
 	@Override
@@ -52,9 +80,13 @@ public class InitBundleMavenAction extends AbstractLiferayMavenGoalAction implem
 
 				return true;
 			}
+
+			return false;
 		}
 
 		return false;
 	}
+
+	private static final Logger _logger = Logger.getInstance(InitBundleMavenAction.class);
 
 }
