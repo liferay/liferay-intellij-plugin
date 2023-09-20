@@ -18,6 +18,8 @@ import com.intellij.openapi.roots.ModifiableRootModel;
 
 import icons.GradleIcons;
 
+import java.util.Objects;
+
 import javax.swing.Icon;
 
 import org.jetbrains.plugins.gradle.settings.DistributionType;
@@ -52,6 +54,10 @@ public class LiferayGradleWorkspaceBuilder extends LiferayWorkspaceBuilder {
 		Project project = module.getProject();
 
 		Runnable runnable = () -> {
+			if (Objects.isNull(project.getBasePath())) {
+				return;
+			}
+
 			GradleProjectSettings gradleProjectSettings = new GradleProjectSettings();
 
 			gradleProjectSettings.setExternalProjectPath(project.getBasePath());
