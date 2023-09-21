@@ -21,7 +21,8 @@ import com.intellij.util.ui.JBUI;
 
 import java.awt.BorderLayout;
 
-import java.util.Collections;
+import java.io.Serial;
+
 import java.util.List;
 
 import javax.swing.Icon;
@@ -32,6 +33,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -44,7 +46,7 @@ public class LiferayProjectTemplateList extends JPanel {
 
 		add(_mainPanel, BorderLayout.CENTER);
 
-		ListItemDescriptorAdapter<ProjectTemplate> descriptor = new ListItemDescriptorAdapter<ProjectTemplate>() {
+		ListItemDescriptorAdapter<ProjectTemplate> descriptor = new ListItemDescriptorAdapter<>() {
 
 			@Nullable
 			@Override
@@ -52,7 +54,7 @@ public class LiferayProjectTemplateList extends JPanel {
 				return value.getIcon();
 			}
 
-			@Nullable
+			@NotNull
 			@Override
 			public String getTextFor(ProjectTemplate value) {
 				return value.getName();
@@ -60,7 +62,7 @@ public class LiferayProjectTemplateList extends JPanel {
 
 		};
 
-		GroupedItemsListRenderer<ProjectTemplate> renderer = new GroupedItemsListRenderer<ProjectTemplate>(descriptor) {
+		GroupedItemsListRenderer<ProjectTemplate> renderer = new GroupedItemsListRenderer<>(descriptor) {
 
 			@Override
 			protected void customizeComponent(
@@ -75,7 +77,7 @@ public class LiferayProjectTemplateList extends JPanel {
 				}
 
 				myTextLabel.setEnabled(_templateList.isEnabled());
-				myTextLabel.setBorder(JBUI.Borders.empty(3, 3, 3, 3));
+				myTextLabel.setBorder(JBUI.Borders.empty(3));
 			}
 
 		};
@@ -84,15 +86,7 @@ public class LiferayProjectTemplateList extends JPanel {
 
 		ListSelectionModel listSelectionModel = _templateList.getSelectionModel();
 
-		listSelectionModel.addListSelectionListener(
-			new ListSelectionListener() {
-
-				@Override
-				public void valueChanged(ListSelectionEvent event) {
-					_updateSelection();
-				}
-
-			});
+		listSelectionModel.addListSelectionListener(event -> _updateSelection());
 
 		Messages.installHyperlinkSupport(_description);
 	}
@@ -160,8 +154,7 @@ public class LiferayProjectTemplateList extends JPanel {
 	}
 
 	public void setTemplates(List<ProjectTemplate> list, boolean preserveSelection) {
-		Collections.sort(
-			list,
+		list.sort(
 			(o1, o2) -> Boolean.compare(o1 instanceof ArchivedProjectTemplate, o2 instanceof ArchivedProjectTemplate));
 
 		int index = preserveSelection ? _templateList.getSelectedIndex() : -1;
@@ -195,6 +188,7 @@ public class LiferayProjectTemplateList extends JPanel {
 
 	private static final String _PROJECT_WIZARD_TEMPLATE = "project.wizard.template";
 
+	@Serial
 	private static final long serialVersionUID = 7608936525034551298L;
 
 	private JTextPane _description;
