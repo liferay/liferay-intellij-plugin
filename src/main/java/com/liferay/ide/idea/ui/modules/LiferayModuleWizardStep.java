@@ -6,9 +6,9 @@
 package com.liferay.ide.idea.ui.modules;
 
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
+import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiNameHelper;
 import com.intellij.psi.impl.file.PsiDirectoryFactory;
@@ -31,8 +31,9 @@ import org.jetbrains.annotations.Nullable;
  */
 public class LiferayModuleWizardStep extends ModuleWizardStep {
 
-	public LiferayModuleWizardStep(LiferayModuleBuilder builder) {
+	public LiferayModuleWizardStep(LiferayModuleBuilder builder, WizardContext context) {
 		_builder = builder;
+		_context = context;
 	}
 
 	public String getClassName() {
@@ -163,11 +164,13 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 			throw new ConfigurationException("Please click one of the items to select a template", validationTitle);
 		}
 
-		ProjectManager projectManager = ProjectManager.getInstance();
+		Project project = _context.getProject();
 
-		Project workspaceProject = projectManager.getOpenProjects()[0];
+		if (Objects.isNull(project)) {
+			throw new ConfigurationException("Can not find valid liferay workspace project", validationTitle);
+		}
 
-		PsiDirectoryFactory psiDirectoryFactory = PsiDirectoryFactory.getInstance(workspaceProject);
+		PsiDirectoryFactory psiDirectoryFactory = PsiDirectoryFactory.getInstance(project);
 
 		String packageNameValue = getPackageName();
 
@@ -195,7 +198,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 			throw new ConfigurationException(packageNameValue + " is not a valid package name", validationTitle);
 		}
 
-		PsiNameHelper psiNameHelper = PsiNameHelper.getInstance(workspaceProject);
+		PsiNameHelper psiNameHelper = PsiNameHelper.getInstance(project);
 
 		String classNameValue = getClassName();
 
@@ -214,6 +217,7 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 
 	private LiferayModuleBuilder _builder;
 	private JTextField _className;
+	private WizardContext _context;
 	private JTextField _contributorType;
 	private JPanel _mainPanel;
 	private JTextField _packageName;
