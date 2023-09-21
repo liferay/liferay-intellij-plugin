@@ -150,10 +150,6 @@ public class LiferayModuleBuilder extends ModuleBuilder implements LiferayWorksp
 		_contributorType = contributorType;
 	}
 
-	public void setLiferayVersion(String liferayVersion) {
-		_liferayVersion = liferayVersion;
-	}
-
 	public void setPackageName(String packageName) {
 		_packageName = packageName;
 	}
@@ -293,7 +289,6 @@ public class LiferayModuleBuilder extends ModuleBuilder implements LiferayWorksp
 
 	private String _className;
 	private String _contributorType;
-	private String _liferayVersion;
 	private String _packageName;
 	private String _serviceName;
 	private String _type;

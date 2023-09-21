@@ -11,13 +11,13 @@ import aQute.bnd.version.VersionRange;
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.ScrollPaneFactory;
 import com.intellij.ui.treeStructure.Tree;
 import com.intellij.util.ui.UIUtil;
 
-import com.liferay.ide.idea.core.WorkspaceConstants;
 import com.liferay.ide.idea.util.BladeCLI;
 import com.liferay.ide.idea.util.FileUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
@@ -36,11 +36,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Supplier;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -68,15 +66,7 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 			() -> {
 				Application application = ApplicationManager.getApplication();
 
-				application.executeOnPooledThread(
-					new Runnable() {
-
-						@Override
-						public void run() {
-							_loadSupportedVersionRanges(context.getProject());
-						}
-
-					});
+				application.executeOnPooledThread(() -> _loadSupportedVersionRanges(context.getProject()));
 			});
 	}
 
@@ -97,13 +87,6 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 		}
 
 		return null;
-	}
-
-	public void hideComponent() {
-		_liferayVersionLabel.setVisible(false);
-		_liferayVersionCombo.setVisible(false);
-		_typesPanel.setVisible(false);
-		_projectTypeLable.setVisible(false);
 	}
 
 	public void initProjectTypeComponent(
@@ -144,27 +127,9 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 
 		_liferayVersion = getLiferayVersion(_project);
 
-		if (Objects.isNull(_liferayVersion)) {
-			_liferayVersion = WorkspaceConstants.DEFAULT_LIFERAY_VERSION;
+		_projectTypeLabel.setVisible(true);
 
-			_liferayVersionCombo.removeAllItems();
-
-			for (String liferayVersionItem : WorkspaceConstants.LIFERAY_VERSIONS) {
-				_liferayVersionCombo.addItem(liferayVersionItem);
-			}
-
-			_liferayVersionCombo.setSelectedItem(_liferayVersion);
-
-			_liferayVersionCombo.addActionListener(
-				e -> _liferayVersion = (String)_liferayVersionCombo.getSelectedItem());
-		}
-		else {
-			_mainPanel.remove(_liferayVersionLabel);
-
-			_mainPanel.remove(_liferayVersionCombo);
-
-			_mainPanel.repaint();
-		}
+		_mainPanel.repaint();
 
 		SwingUtilities.invokeLater(
 			() -> {
@@ -183,14 +148,7 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 				model.nodeStructureChanged(root);
 
 				CompletableFuture<String[]> future = CompletableFuture.supplyAsync(
-					new Supplier<String[]>() {
-
-						@Override
-						public String[] get() {
-							return BladeCLI.getProjectTemplates(_project);
-						}
-
-					});
+					() -> BladeCLI.getProjectTemplates(_project));
 
 				future.thenAccept(
 					projectTemplates -> {
@@ -226,11 +184,15 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 		}
 
 		liferayModuleBuilder.setType(getSelectedType());
-		liferayModuleBuilder.setLiferayVersion(_liferayVersion);
 	}
 
 	public boolean validateComponent() throws ConfigurationException {
 		String validationTitle = "Validation Error";
+
+		if (Objects.isNull(getTargetPlatformVersion(_context.getProject()))) {
+			throw new ConfigurationException(
+				"Please set correct target platform version for liferay workspace project", validationTitle);
+		}
 
 		String type = getSelectedType();
 
@@ -361,27 +323,28 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 								}
 							}
 
-							tempFile.delete();
+							Files.delete(tempFile.toPath());
 
-							stateFile.delete();
+							Files.delete(stateFile.toPath());
 						}
 					}
 				}
 			}
 			catch (IOException ioException) {
+				_logger.error(ioException);
 			}
 		}
 	}
+
+	private static Logger _logger = Logger.getInstance(LiferayProjectTypesComponent.class);
 
 	private static Map<String, VersionRange> _projectTemplateVersionRangeMap = new HashMap<>();
 
 	private WizardContext _context;
 	private String _liferayVersion;
-	private JComboBox<String> _liferayVersionCombo;
-	private JLabel _liferayVersionLabel;
 	private JPanel _mainPanel;
 	private Project _project;
-	private JLabel _projectTypeLable;
+	private JLabel _projectTypeLabel;
 	private JPanel _typesPanel;
 	private Tree _typesTree;
 
