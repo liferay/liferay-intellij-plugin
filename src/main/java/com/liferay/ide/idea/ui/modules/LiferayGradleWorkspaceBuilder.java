@@ -68,7 +68,6 @@ public class LiferayGradleWorkspaceBuilder extends LiferayWorkspaceBuilder {
 			gradleProjectSettings.setResolveModulePerSourceSet(true);
 			gradleProjectSettings.setupNewProjectDefault();
 			gradleProjectSettings.setDirectDelegatedBuild(true);
-			//gradleProjectSettings.setUseQualifiedModuleNames(false);
 			gradleProjectSettings.setResolveExternalAnnotations(true);
 
 			GradleSettings gradleSettings = GradleSettings.getInstance(project);
@@ -92,7 +91,7 @@ public class LiferayGradleWorkspaceBuilder extends LiferayWorkspaceBuilder {
 					() -> ExternalSystemUtil.ensureToolWindowContentInitialized(project, GradleConstants.SYSTEM_ID));
 			});
 
-		ExternalSystemUtil.invokeLater(project, ModalityState.any(), runnable);
+		ExternalSystemUtil.invokeLater(project, ModalityState.defaultModalityState(), runnable);
 	}
 
 }
