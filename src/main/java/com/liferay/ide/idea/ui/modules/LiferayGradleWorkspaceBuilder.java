@@ -5,7 +5,6 @@
 
 package com.liferay.ide.idea.ui.modules;
 
-import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.externalSystem.importing.ImportSpecBuilder;
 import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode;
 import com.intellij.openapi.externalSystem.service.project.manage.ExternalProjectsManager;
@@ -89,9 +88,9 @@ public class LiferayGradleWorkspaceBuilder extends LiferayWorkspaceBuilder {
 
 				dumbService.runWhenSmart(
 					() -> ExternalSystemUtil.ensureToolWindowContentInitialized(project, GradleConstants.SYSTEM_ID));
-			});
 
-		ExternalSystemUtil.invokeLater(project, ModalityState.defaultModalityState(), runnable);
+				ExternalSystemUtil.invokeLater(project, runnable);
+			});
 	}
 
 }
