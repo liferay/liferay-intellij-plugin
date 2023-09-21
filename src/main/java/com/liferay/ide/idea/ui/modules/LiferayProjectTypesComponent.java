@@ -89,6 +89,11 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 		return null;
 	}
 
+	public void hideComponent() {
+		_typesPanel.setVisible(false);
+		_projectTypeLabel.setVisible(false);
+	}
+
 	public void initProjectTypeComponent(
 		LiferayModuleNameLocationComponent moduleNameLocationComponent, WizardContext context) {
 

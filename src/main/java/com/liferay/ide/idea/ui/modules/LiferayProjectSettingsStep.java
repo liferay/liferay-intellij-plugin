@@ -52,10 +52,18 @@ public class LiferayProjectSettingsStep extends ModuleWizardStep {
 		panel.add(field, gridBagConstraints);
 	}
 
+	public LiferayProjectSettingsStep(LiferayModuleBuilder liferayModuleBuilder, WizardContext context) {
+		_context = context;
+
+		_initProjectSettingsStep(context);
+	}
+
 	public LiferayProjectSettingsStep(WizardContext context) {
 		_context = context;
 
 		_initProjectSettingsStep(context);
+
+		_liferayProjectTypesComponent.hideComponent();
 	}
 
 	@Override
