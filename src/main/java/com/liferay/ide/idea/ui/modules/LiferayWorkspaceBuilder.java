@@ -20,6 +20,7 @@ import com.intellij.openapi.module.StdModuleTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.vfs.VirtualFile;
 
 import com.liferay.ide.idea.core.ProductInfo;
 import com.liferay.ide.idea.core.WorkspaceConstants;
@@ -106,7 +107,22 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 
 			settingsStep.addSettingsField("Target platform:", targetPlatformComboBox);
 
-			return new SdkSettingsStep(settingsStep, this, this::isSuitableSdkType);
+			return new SdkSettingsStep(settingsStep, this, this::isSuitableSdkType) {
+
+				@Override
+				public boolean validate() throws com.intellij.openapi.options.ConfigurationException {
+					if (targetPlatformComboBox.getSelectedIndex() == -1) {
+						Messages.showWarningDialog(
+							"Create liferay maven workspace project failure, target platform version can not be null.",
+							"Projects Not Created");
+
+						return false;
+					}
+
+					return super.validate();
+				}
+
+			};
 		}
 
 		JComboBox<String> productVersionComboBox = new ComboBox<>();
@@ -161,7 +177,7 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 			public boolean validate() throws com.intellij.openapi.options.ConfigurationException {
 				if (productVersionComboBox.getSelectedIndex() == -1) {
 					Messages.showWarningDialog(
-						"Create liferay workspace project failure, product version can not be null.",
+						"Create liferay gradle workspace project failure, product version can not be null.",
 						"Projects Not Created");
 
 					return false;
@@ -230,29 +246,18 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 
 					properties.setProperty(WorkspaceConstants.WORKSPACE_BOM_VERSION, _targetPlatform);
 
-					CompletableFuture<Map<String, String>> future = CompletableFuture.supplyAsync(
-						() -> {
-							try {
-								return _initMavenPortalBundleUrlMap();
-							}
-							catch (Exception exception) {
-								return null;
-							}
-						});
+					Map<String, String> targetPlatformBundleUrlMap = _initMavenPortalBundleUrlMap();
 
-					future.thenAccept(
-						targetPlatformMap -> SwingUtilities.invokeLater(
-							() -> {
-								try {
-									properties.setProperty(
-										WorkspaceConstants.BUNDLE_URL_PROPERTY, targetPlatformMap.get(_targetPlatform));
+					properties.setProperty(
+						WorkspaceConstants.BUNDLE_URL_PROPERTY, targetPlatformBundleUrlMap.get(_targetPlatform));
 
-									MavenUtil.updateMavenPom(pomModel, pomFile);
-								}
-								catch (Exception exception) {
-									_logger.error(exception);
-								}
-							}));
+					MavenUtil.updateMavenPom(pomModel, pomFile);
+
+					VirtualFile projectVirtualFile = LiferayWorkspaceSupport.getWorkspaceVirtualFile(project);
+
+					if (Objects.nonNull(projectVirtualFile)) {
+						projectVirtualFile.refresh(true, true);
+					}
 				}
 				catch (IOException | XmlPullParserException exception) {
 					_logger.error(exception);

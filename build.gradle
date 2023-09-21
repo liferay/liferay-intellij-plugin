@@ -248,11 +248,11 @@ formatSource {
 intellij {
 	plugins = ["java", "webComponents", "DatabaseTools", "gradle", "Groovy", "java-i18n", "JavaEE", "javascript-impl", "javaee-jsp-base-impl", "javascript-intentions", "javaee-web-impl", "junit", "maven", "javaee-persistence-impl", "properties", "sass"]
 	pluginName = "liferay-intellij-plugin"
-	version = "IU-2023.2"
+	version = "IU-2023.1"
 }
 
 patchPluginXml {
-	sinceBuild = "232"
+	sinceBuild = "231"
 	untilBuild = ""
 }
 
