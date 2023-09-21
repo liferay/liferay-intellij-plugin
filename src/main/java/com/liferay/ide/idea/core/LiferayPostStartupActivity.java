@@ -31,6 +31,7 @@ import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 import com.liferay.ide.idea.util.ProjectConfigurationUtil;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -44,7 +45,6 @@ import org.gradle.cli.ParsedCommandLine;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.project.MavenImportListener;
-import org.jetbrains.idea.maven.project.MavenProjectsManager;
 import org.jetbrains.plugins.gradle.util.GradleConstants;
 
 /**
@@ -108,19 +108,25 @@ public class LiferayPostStartupActivity implements DumbAware, LiferayWorkspaceSu
 					moduleProject -> moduleProject.equals(project)
 				).distinct(
 				).forEach(
-					moduleProject -> {
-						MavenProjectsManager mvnManager = MavenProjectsManager.getInstance(project);
+					new Consumer<Project>() {
 
-						mvnManager.forceUpdateAllProjectsOrFindAllAvailablePomFiles();
+						@Override
+						public void accept(Project moduleProject) {
+							application.runReadAction(
+								new Runnable() {
 
-						application.runReadAction(
-							() -> {
-								String homeDir = getMavenProperty(
-									moduleProject, WorkspaceConstants.MAVEN_HOME_DIR_PROPERTY,
-									WorkspaceConstants.HOME_DIR_DEFAULT);
+									@Override
+									public void run() {
+										String homeDir = LiferayPostStartupActivity.this.getMavenProperty(
+											moduleProject, WorkspaceConstants.MAVEN_HOME_DIR_PROPERTY,
+											WorkspaceConstants.HOME_DIR_DEFAULT);
 
-								ProjectConfigurationUtil.configExcludedFolder(moduleProject, homeDir);
-							});
+										ProjectConfigurationUtil.configExcludedFolder(moduleProject, homeDir);
+									}
+
+								});
+						}
+
 					}
 				);
 			});
