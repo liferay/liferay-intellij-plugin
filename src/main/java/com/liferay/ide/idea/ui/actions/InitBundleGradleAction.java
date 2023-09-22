@@ -31,8 +31,8 @@ public class InitBundleGradleAction extends AbstractLiferayGradleTaskAction impl
 	}
 
 	@Override
-	protected void handleProcessTerminated(Project project) {
-		super.handleProcessTerminated(project);
+	protected void handleProcessTerminated(Project project, int exitCode) {
+		super.handleProcessTerminated(project, exitCode);
 
 		ProjectConfigurationUtil.configExcludedFolder(project, getHomeDir(project));
 	}
