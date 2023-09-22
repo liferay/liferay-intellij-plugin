@@ -44,12 +44,15 @@ public abstract class AbstractLiferayMavenGoalAction extends AbstractLiferayActi
 		super(text, description, icon);
 	}
 
-	@Nullable
 	@Override
 	protected void doExecute(
 		AnActionEvent anActionEvent, RunnerAndConfigurationSettings runnerAndConfigurationSettings) {
 
 		Project project = MavenActionUtil.getProject(anActionEvent.getDataContext());
+
+		if (Objects.isNull(project)) {
+			return;
+		}
 
 		ProgramRunner<?> programRunner = DefaultJavaProgramRunner.getInstance();
 
@@ -100,13 +103,21 @@ public abstract class AbstractLiferayMavenGoalAction extends AbstractLiferayActi
 			return null;
 		}
 
-		String projectDir = mavenProject.getDirectory();
-
 		VirtualFile mavenProjectDirectoryFile = mavenProject.getDirectoryFile();
 
 		VirtualFile pomFile = mavenProjectDirectoryFile.findChild("pom.xml");
 
+		if (Objects.isNull(pomFile)) {
+			return null;
+		}
+
 		MavenProjectsManager mavenProjectsManager = MavenActionUtil.getProjectsManager(dataContext);
+
+		if (Objects.isNull(mavenProjectsManager)) {
+			return null;
+		}
+
+		String projectDir = mavenProject.getDirectory();
 
 		MavenExplicitProfiles explicitProfiles = mavenProjectsManager.getExplicitProfiles();
 

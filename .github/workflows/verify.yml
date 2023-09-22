@@ -17,10 +17,12 @@ jobs:
         with:
           java-version: 17
       - name: Cache
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/build.gradle', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
       - name: Check source formatting task
@@ -42,13 +44,14 @@ jobs:
         with:
           java-version: 17
           distribution: 'zulu'
-          cache: gradle
 
       - name: Cache
         uses: actions/cache@v3
         with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/build.gradle', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
 
@@ -67,15 +70,16 @@ jobs:
       - name: Setup Java 17
         uses: actions/setup-java@v3
         with:
-          java-version: 17
+          java-version: 17.0.8
           distribution: 'zulu'
-          cache: gradle
 
       - name: Cache
         uses: actions/cache@v3
         with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/build.gradle', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
 
@@ -89,5 +93,5 @@ jobs:
         uses: ChrisCarini/intellij-platform-plugin-verifier-action@latest
         with:
          ide-versions: |
-          ideaIC:2023.1
-          ideaIU:2023.1
+          ideaIC:2023.2.1
+          ideaIU:2023.2.1

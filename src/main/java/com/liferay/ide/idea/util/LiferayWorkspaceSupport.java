@@ -11,10 +11,7 @@ import com.google.gson.stream.JsonReader;
 
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.externalSystem.service.notification.ExternalSystemNotificationManager;
-import com.intellij.openapi.externalSystem.service.notification.NotificationCategory;
-import com.intellij.openapi.externalSystem.service.notification.NotificationData;
-import com.intellij.openapi.externalSystem.service.notification.NotificationSource;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import com.intellij.openapi.project.Project;
@@ -44,7 +41,6 @@ import org.jetbrains.idea.maven.model.MavenPlugin;
 import org.jetbrains.idea.maven.project.MavenProject;
 import org.jetbrains.idea.maven.project.MavenProjectsManager;
 import org.jetbrains.plugins.gradle.settings.GradleExtensionsSettings;
-import org.jetbrains.plugins.gradle.util.GradleConstants;
 
 /**
  * @author Terry Jia
@@ -53,26 +49,17 @@ import org.jetbrains.plugins.gradle.util.GradleConstants;
  */
 public interface LiferayWorkspaceSupport {
 
-	public static Map<String, ProductInfo> getProductInfos(Project project) {
+	public static Map<String, ProductInfo> getProductInfos() {
 		try (JsonReader jsonReader = new JsonReader(Files.newBufferedReader(_workspaceCacheFile.toPath()))) {
 			Gson gson = new Gson();
 
-			TypeToken<Map<String, ProductInfo>> typeToken = new TypeToken<Map<String, ProductInfo>>() {
+			TypeToken<Map<String, ProductInfo>> typeToken = new TypeToken<>() {
 			};
 
 			return gson.fromJson(jsonReader, typeToken.getType());
 		}
 		catch (Exception exception) {
-			NotificationData notificationData = new NotificationData(
-				"<b>Cannot Find Product Info</b>", "<i>" + project.getName() + "</i> \n" + exception.getMessage(),
-				NotificationCategory.WARNING, NotificationSource.TASK_EXECUTION);
-
-			notificationData.setBalloonNotification(true);
-
-			ExternalSystemNotificationManager externalSystemNotificationManager =
-				ExternalSystemNotificationManager.getInstance(project);
-
-			externalSystemNotificationManager.showNotification(GradleConstants.SYSTEM_ID, notificationData);
+			_logger.error(exception);
 		}
 
 		return null;
@@ -132,10 +119,6 @@ public interface LiferayWorkspaceSupport {
 	}
 
 	public static boolean isValidMavenWorkspaceProject(@NotNull Project project) {
-		if (project == null) {
-			return false;
-		}
-
 		try {
 			MavenProjectsManager mavenProjectsManager = MavenProjectsManager.getInstance(project);
 
@@ -152,14 +135,7 @@ public interface LiferayWorkspaceSupport {
 			Application application = ApplicationManager.getApplication();
 
 			MavenProject mavenWorkspaceProject = application.runReadAction(
-				new Computable<MavenProject>() {
-
-					@Override
-					public MavenProject compute() {
-						return mavenProjectsManager.findContainingProject(workspaceVirtualFile);
-					}
-
-				});
+				(Computable<MavenProject>)() -> mavenProjectsManager.findContainingProject(workspaceVirtualFile));
 
 			if (mavenWorkspaceProject == null) {
 				return false;
@@ -341,6 +317,7 @@ public interface LiferayWorkspaceSupport {
 
 	public final String SETTINGS_GRADLE_FILE_NAME = "settings.gradle";
 
+	public Logger _logger = Logger.getInstance(LiferayWorkspaceSupport.class);
 	public final File _workspaceCacheFile = new File(System.getProperty("user.home"), DEFAULT_WORKSPACE_CACHE_FILE);
 
 }

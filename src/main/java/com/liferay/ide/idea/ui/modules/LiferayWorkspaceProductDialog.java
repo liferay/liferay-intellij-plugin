@@ -170,28 +170,16 @@ public class LiferayWorkspaceProductDialog extends DialogWrapper {
 		Application application = ApplicationManager.getApplication();
 
 		application.executeOnPooledThread(
-			new Runnable() {
+			() -> {
+				List<String> allWorkspaceProducts = Arrays.asList(BladeCLI.getWorkspaceProducts(showAll));
 
-				@Override
-				public void run() {
-					List<String> allWorkspaceProducts = Arrays.asList(BladeCLI.getWorkspaceProducts(showAll));
-
-					if (ListUtil.isNotEmpty(allWorkspaceProducts)) {
-						_productVersionComboBox.removeAllItems();
-					}
-
-					allWorkspaceProducts.stream(
-					).forEach(
-						productVersion -> _productVersionComboBox.addItem(productVersion)
-					);
-
-					int defaultProductVersionIndex = allWorkspaceProducts.indexOf(
-						WorkspaceConstants.DEFAULT_PRODUCT_VERSION);
-
-					_productVersionComboBox.setSelectedIndex(
-						(defaultProductVersionIndex == -1) ? 0 : defaultProductVersionIndex);
+				if (ListUtil.isNotEmpty(allWorkspaceProducts)) {
+					_productVersionComboBox.removeAllItems();
 				}
 
+				allWorkspaceProducts.forEach(productVersion -> _productVersionComboBox.addItem(productVersion));
+
+				_productVersionComboBox.setSelectedIndex(0);
 			});
 	}
 

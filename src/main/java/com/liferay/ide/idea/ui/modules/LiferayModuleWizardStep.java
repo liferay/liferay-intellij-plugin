@@ -5,15 +5,10 @@
 
 package com.liferay.ide.idea.ui.modules;
 
-import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
-import com.intellij.ide.wizard.CommitStepException;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiNameHelper;
 import com.intellij.psi.impl.file.PsiDirectoryFactory;
@@ -83,29 +78,12 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 	}
 
 	@Override
-	public void onWizardFinished() throws CommitStepException {
-		Application application = ApplicationManager.getApplication();
-
-		application.invokeLater(
-			new Runnable() {
-
-				@Override
-				public void run() {
-					ModuleBuilder moduleBuilder = (ModuleBuilder)_context.getProjectBuilder();
-
-					moduleBuilder.commit(_context.getProject());
-				}
-
-			});
-	}
-
-	@Override
 	public void updateDataModel() {
 		_builder.setClassName(getClassName());
 		_builder.setPackageName(getPackageName());
 		_builder.setContributorType(getContributorType());
 
-		if (getSelectedType().equals("service") || getSelectedType().equals("service-wrapper")) {
+		if (Objects.equals(getSelectedType(), "service") || Objects.equals(getSelectedType(), "service-wrapper")) {
 			_builder.setServiceName(getServiceName());
 		}
 	}
@@ -186,11 +164,13 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 			throw new ConfigurationException("Please click one of the items to select a template", validationTitle);
 		}
 
-		ProjectManager projectManager = ProjectManager.getInstance();
+		Project project = _context.getProject();
 
-		Project workspaceProject = projectManager.getOpenProjects()[0];
+		if (Objects.isNull(project)) {
+			throw new ConfigurationException("Can not find valid liferay workspace project", validationTitle);
+		}
 
-		PsiDirectoryFactory psiDirectoryFactory = PsiDirectoryFactory.getInstance(workspaceProject);
+		PsiDirectoryFactory psiDirectoryFactory = PsiDirectoryFactory.getInstance(project);
 
 		String packageNameValue = getPackageName();
 
@@ -218,12 +198,18 @@ public class LiferayModuleWizardStep extends ModuleWizardStep {
 			throw new ConfigurationException(packageNameValue + " is not a valid package name", validationTitle);
 		}
 
-		PsiNameHelper psiNameHelper = PsiNameHelper.getInstance(workspaceProject);
+		PsiNameHelper psiNameHelper = PsiNameHelper.getInstance(project);
 
 		String classNameValue = getClassName();
 
 		if (!CoreUtil.isNullOrEmpty(classNameValue) && !psiNameHelper.isQualifiedName(classNameValue)) {
 			throw new ConfigurationException(classNameValue + " is not a valid java class name", validationTitle);
+		}
+
+		String serviceNameValue = getServiceName();
+
+		if ((type.equals("service") || type.equals("service-wrapper")) && CoreUtil.isNullOrEmpty(serviceNameValue)) {
+			throw new ConfigurationException("service name can not be null for " + type + " template", validationTitle);
 		}
 
 		return true;

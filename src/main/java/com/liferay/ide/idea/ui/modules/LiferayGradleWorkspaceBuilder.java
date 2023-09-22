@@ -5,7 +5,6 @@
 
 package com.liferay.ide.idea.ui.modules;
 
-import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.externalSystem.importing.ImportSpecBuilder;
 import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode;
 import com.intellij.openapi.externalSystem.service.project.manage.ExternalProjectsManager;
@@ -17,6 +16,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
 
 import icons.GradleIcons;
+
+import java.util.Objects;
 
 import javax.swing.Icon;
 
@@ -52,6 +53,10 @@ public class LiferayGradleWorkspaceBuilder extends LiferayWorkspaceBuilder {
 		Project project = module.getProject();
 
 		Runnable runnable = () -> {
+			if (Objects.isNull(project.getBasePath())) {
+				return;
+			}
+
 			GradleProjectSettings gradleProjectSettings = new GradleProjectSettings();
 
 			gradleProjectSettings.setExternalProjectPath(project.getBasePath());
@@ -62,7 +67,6 @@ public class LiferayGradleWorkspaceBuilder extends LiferayWorkspaceBuilder {
 			gradleProjectSettings.setResolveModulePerSourceSet(true);
 			gradleProjectSettings.setupNewProjectDefault();
 			gradleProjectSettings.setDirectDelegatedBuild(true);
-			gradleProjectSettings.setUseQualifiedModuleNames(false);
 			gradleProjectSettings.setResolveExternalAnnotations(true);
 
 			GradleSettings gradleSettings = GradleSettings.getInstance(project);
@@ -84,9 +88,9 @@ public class LiferayGradleWorkspaceBuilder extends LiferayWorkspaceBuilder {
 
 				dumbService.runWhenSmart(
 					() -> ExternalSystemUtil.ensureToolWindowContentInitialized(project, GradleConstants.SYSTEM_ID));
-			});
 
-		ExternalSystemUtil.invokeLater(project, ModalityState.NON_MODAL, runnable);
+				ExternalSystemUtil.invokeLater(project, runnable);
+			});
 	}
 
 }

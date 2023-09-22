@@ -12,6 +12,7 @@ import com.intellij.execution.process.ProcessHandler;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.ide.projectView.ProjectView;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
+import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -69,6 +70,12 @@ public abstract class AbstractLiferayAction extends AnAction implements LiferayW
 
 				application.invokeLater(() -> _perform(anActionEvent, project));
 			});
+	}
+
+	@NotNull
+	@Override
+	public ActionUpdateThread getActionUpdateThread() {
+		return ActionUpdateThread.BGT;
 	}
 
 	public Set<Module> getServiceBuilderModules(AnActionEvent anActionEvent) {
@@ -134,7 +141,6 @@ public abstract class AbstractLiferayAction extends AnAction implements LiferayW
 		eventPresentation.setEnabledAndVisible(isEnabledAndVisible(anActionEvent));
 	}
 
-	@Nullable
 	protected abstract void doExecute(
 		AnActionEvent anActionEvent, RunnerAndConfigurationSettings runnerAndConfigurationSettings);
 
@@ -173,7 +179,7 @@ public abstract class AbstractLiferayAction extends AnAction implements LiferayW
 		_refreshProjectView(project);
 	}
 
-	protected void handleProcessTerminated(Project project) {
+	protected void handleProcessTerminated(Project project, int exitCode) {
 		_refreshProjectView(project);
 	}
 
@@ -240,7 +246,7 @@ public abstract class AbstractLiferayAction extends AnAction implements LiferayW
 					@NotNull String executorIdLocal, @NotNull ExecutionEnvironment executionEnvironment,
 					@NotNull ProcessHandler processHandler, int exitCode) {
 
-					handleProcessTerminated(project);
+					handleProcessTerminated(project, exitCode);
 
 					messageBusConnection.disconnect();
 				}

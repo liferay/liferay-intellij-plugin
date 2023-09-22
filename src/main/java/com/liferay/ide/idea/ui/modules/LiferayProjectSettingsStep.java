@@ -28,8 +28,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.jetbrains.annotations.Nullable;
-
 /**
  * @author Terry Jia
  * @author Simon Jiang
@@ -115,10 +113,6 @@ public class LiferayProjectSettingsStep extends ModuleWizardStep {
 	}
 
 	@Override
-	public void onStepLeaving() {
-	}
-
-	@Override
 	public void updateDataModel() {
 		_context.setProjectName(_namePathComponent.getNameValue());
 		_context.setProjectFileDirectory(_namePathComponent.getPath());
@@ -133,10 +127,6 @@ public class LiferayProjectSettingsStep extends ModuleWizardStep {
 		}
 		else if (moduleBuilder instanceof LiferayModuleBuilder) {
 			_liferayProjectTypesComponent.updateDataModel();
-		}
-
-		if (_settingsStep != null) {
-			_settingsStep.updateDataModel();
 		}
 	}
 
@@ -161,10 +151,6 @@ public class LiferayProjectSettingsStep extends ModuleWizardStep {
 			!_liferayProjectTypesComponent.validateComponent()) {
 
 			return false;
-		}
-
-		if (_settingsStep != null) {
-			return _settingsStep.validate();
 		}
 
 		return true;
@@ -240,8 +226,5 @@ public class LiferayProjectSettingsStep extends ModuleWizardStep {
 	private LiferayModuleNameLocationComponent _moduleNameLocationComponent;
 	private LiferayNamePathComponent _namePathComponent;
 	private JPanel _settingsPanel;
-
-	@Nullable
-	private ModuleWizardStep _settingsStep;
 
 }

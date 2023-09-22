@@ -31,6 +31,17 @@
 	</p>
 	<p>
 		<ul>
+			<li>2.0.6</li>
+			<ul>
+				<li>INTELLIJ-273 intellij plugin need to support add JDK_JAVA_OPTIONS for portal bundle</li>
+				<li>INTELLIJ-274 plugin need to get customized portal bundle location in gradle-local.properties</li>
+				<li>INTELLIJ-275 liferay intellij plugin fix jdk 11.0.20 Invalid CEN Header issue</li>
+				<li>INTELLIJ-276 Liferay intellij plugin action null exception</li>
+				<li>INTELLIJ-277 restore source format support in liferay intellij plugin</li>
+				<li>INTELLIJ-278 the embed blade need to read and use the proxy configuration in intellij</li>
+				<li>INTELLIJ-280 Use latest Blade snapshot 5.0.1</li>
+				<li>INTELLIJ-281 fix getting product version error in UI</li>
+			</ul>
 			<li>2.0.5</li>
 			<ul>
 				<li>INTELLIJ-259 fix intellij github repo and jira issue link error in plugin.xml</li>
