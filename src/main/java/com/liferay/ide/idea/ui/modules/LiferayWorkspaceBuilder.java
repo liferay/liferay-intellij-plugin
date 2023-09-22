@@ -30,6 +30,7 @@ import com.liferay.ide.idea.util.FileUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 import com.liferay.ide.idea.util.ListUtil;
 import com.liferay.ide.idea.util.MavenUtil;
+import com.liferay.ide.idea.util.Pair;
 import com.liferay.workspace.bundle.url.codec.BundleURLCodec;
 
 import java.io.File;
@@ -57,8 +58,6 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.maven.model.Model;
 
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-
-import org.gradle.api.GradleException;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -248,15 +247,20 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 
 					Map<String, String> targetPlatformBundleUrlMap = _initMavenPortalBundleUrlMap();
 
-					properties.setProperty(
-						WorkspaceConstants.BUNDLE_URL_PROPERTY, targetPlatformBundleUrlMap.get(_targetPlatform));
+					if (Objects.nonNull(targetPlatformBundleUrlMap)) {
+						properties.setProperty(
+							WorkspaceConstants.BUNDLE_URL_PROPERTY, targetPlatformBundleUrlMap.get(_targetPlatform));
 
-					MavenUtil.updateMavenPom(pomModel, pomFile);
+						MavenUtil.updateMavenPom(pomModel, pomFile);
 
-					VirtualFile projectVirtualFile = LiferayWorkspaceSupport.getWorkspaceVirtualFile(project);
+						VirtualFile projectVirtualFile = LiferayWorkspaceSupport.getWorkspaceVirtualFile(project);
 
-					if (Objects.nonNull(projectVirtualFile)) {
-						projectVirtualFile.refresh(true, true);
+						if (Objects.nonNull(projectVirtualFile)) {
+							projectVirtualFile.refresh(true, true);
+						}
+					}
+					else {
+						_logger.error("Unable set correct target platform version for project " + project.getName());
 					}
 				}
 				catch (IOException | XmlPullParserException exception) {
@@ -271,8 +275,10 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 			return BundleURLCodec.decode(productInfo.getBundleUrl(), productInfo.getReleaseDate());
 		}
 		catch (Exception exception) {
-			throw new GradleException("Unable to determine bundle URL", exception);
+			_logger.error("Unable to determine bundle URL", exception);
 		}
+
+		return null;
 	}
 
 	@NotNull
@@ -328,7 +334,7 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 									});
 							}
 							catch (Exception exception) {
-								_logger.error(exception);
+								_logger.error("Unable to configure target platform version", exception);
 							}
 						}));
 			});
@@ -363,8 +369,25 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 			product -> product.startsWith("portal")
 		).map(
 			productInfos::get
+		).map(
+			productInfo -> {
+				try {
+					String bundleUrl = _decodeBundleUrl(productInfo);
+
+					String targetPlatformVersion = productInfo.getTargetPlatformVersion();
+
+					return new Pair<>(targetPlatformVersion, bundleUrl);
+				}
+				catch (Exception exception) {
+					_logger.error("Failed to decode bundle url", exception);
+				}
+
+				return null;
+			}
+		).filter(
+			Objects::nonNull
 		).collect(
-			Collectors.toMap(ProductInfo::getTargetPlatformVersion, this::_decodeBundleUrl)
+			Collectors.toMap(Pair::first, Pair::second)
 		);
 	}
 
