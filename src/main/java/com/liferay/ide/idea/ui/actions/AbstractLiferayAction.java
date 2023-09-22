@@ -179,7 +179,7 @@ public abstract class AbstractLiferayAction extends AnAction implements LiferayW
 		_refreshProjectView(project);
 	}
 
-	protected void handleProcessTerminated(Project project) {
+	protected void handleProcessTerminated(Project project, int exitCode) {
 		_refreshProjectView(project);
 	}
 
@@ -246,7 +246,7 @@ public abstract class AbstractLiferayAction extends AnAction implements LiferayW
 					@NotNull String executorIdLocal, @NotNull ExecutionEnvironment executionEnvironment,
 					@NotNull ProcessHandler processHandler, int exitCode) {
 
-					handleProcessTerminated(project);
+					handleProcessTerminated(project, exitCode);
 
 					messageBusConnection.disconnect();
 				}
