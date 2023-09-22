@@ -328,9 +328,9 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 								}
 							}
 
-							Files.delete(tempFile.toPath());
+							tempFile.delete();
 
-							Files.delete(stateFile.toPath());
+							stateFile.delete();
 						}
 					}
 				}

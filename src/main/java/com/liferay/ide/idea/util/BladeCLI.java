@@ -187,7 +187,7 @@ public class BladeCLI {
 
 		try (InputStream inputStream = bladeClassLoader.getResourceAsStream("libs/" + jarName)) {
 			if (needToCopy) {
-				Files.delete(bladeJar.toPath());
+				bladeJar.delete();
 
 				FileUtil.writeFile(bladeJar, inputStream);
 			}
