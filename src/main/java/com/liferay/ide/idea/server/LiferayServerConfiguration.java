@@ -315,6 +315,7 @@ public class LiferayServerConfiguration
 		return new LiferayServerCommandLineState(environment, this);
 	}
 
+	@NotNull
 	@Override
 	public String getVMParameters() {
 		return _vmParameters;
