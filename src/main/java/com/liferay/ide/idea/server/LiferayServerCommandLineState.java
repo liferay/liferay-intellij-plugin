@@ -30,11 +30,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -128,6 +130,19 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 				JavaParametersUtil.createProjectJdk(liferayServerConfiguration.getProject(), alternativeJre))
 		).forEach(
 			vmParametersList::add
+		);
+
+		List<String> vmParametersStrings = vmParametersList.getList();
+
+		String serverConfigurationVMParameterString = liferayServerConfiguration.getVMParameters();
+
+		List<String> serverConfigurationVMParameters = List.of(StringUtils.split(serverConfigurationVMParameterString));
+
+		serverConfigurationVMParameters.stream(
+		).filter(
+			parameter -> !vmParametersStrings.contains(parameter)
+		).forEach(
+			parameter -> vmParametersList.add(parameter)
 		);
 
 		setupJavaParameters(javaParameters);
