@@ -33,7 +33,8 @@
 		<ul>
 			<li>2.0.7</li>
 			<ul>
-				<li>INTELLIJ-282 set correct customized vm argument </li>
+				<li>INTELLIJ-282 set correct customized vm argument</li>
+				<li>INTELLIJ-284 use latest blade</li>
 			</ul>
 			<li>2.0.6</li>
 			<ul>
