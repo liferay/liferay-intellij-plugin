@@ -12,6 +12,8 @@ import com.intellij.util.ui.UIUtil;
 
 import javax.swing.Icon;
 import javax.swing.JComponent;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
 
 /**
  * @author Charle Wu
@@ -36,9 +38,19 @@ public class FixedSizeRefreshButton extends FixedSizeButton {
 		setMargin(JBUI.emptyInsets());
 		setSize(size);
 
-		if (UIUtil.isUnderIntelliJLaF() || UIUtil.isUnderDarcula()) {
+		if (UIUtil.isUnderIntelliJLaF() || _isDarkTheme()) {
 			putClientProperty("JButton.buttonType", "square");
 		}
+	}
+
+	private final boolean _isDarkTheme() {
+		UIDefaults lookAndFeelDefaults = UIManager.getLookAndFeelDefaults();
+
+		if ((lookAndFeelDefaults == null) || lookAndFeelDefaults.getBoolean("ui.theme.is.dark")) {
+			return true;
+		}
+
+		return false;
 	}
 
 }

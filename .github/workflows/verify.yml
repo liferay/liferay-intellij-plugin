@@ -93,5 +93,5 @@ jobs:
         uses: ChrisCarini/intellij-platform-plugin-verifier-action@latest
         with:
          ide-versions: |
-          ideaIC:2023.2.1
-          ideaIU:2023.2.1
+          ideaIC:2023.3
+          ideaIU:2023.3

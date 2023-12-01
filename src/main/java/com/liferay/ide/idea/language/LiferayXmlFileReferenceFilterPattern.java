@@ -18,6 +18,7 @@ import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jetbrains.annotations.Nullable;
@@ -101,7 +102,7 @@ public class LiferayXmlFileReferenceFilterPattern extends FilterPattern {
 	private static final Map<String, Collection<AbstractMap.SimpleImmutableEntry<String, String>>> _attributesMap =
 		new HashMap<>();
 
-	private static final Map<String, Collection<String>> _tagsMap = new HashMap<String, Collection<String>>() {
+	private static final Map<String, Collection<String>> _tagsMap = new HashMap<>() {
 		{
 			put(
 				LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_HOOK_7_0_0,
@@ -141,7 +142,7 @@ public class LiferayXmlFileReferenceFilterPattern extends FilterPattern {
 					"footer-portlet-javascript", "icon", "user-notification-definitions"));
 			_attributesMap.put(
 				LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_RESOURCE_ACTION_MAPPING_7_0_0,
-				Arrays.asList(new AbstractMap.SimpleImmutableEntry<>("resource", "file")));
+				List.of(new SimpleImmutableEntry<>("resource", "file")));
 			_attributesMap.put(
 				LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_RESOURCE_ACTION_MAPPING_7_1_0,
 				_attributesMap.get(
@@ -149,17 +150,13 @@ public class LiferayXmlFileReferenceFilterPattern extends FilterPattern {
 
 			_attributesMap.put(
 				LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_SERVICE_BUILDER_7_0_0,
-				Arrays.asList(new AbstractMap.SimpleImmutableEntry<>("service-builder-import", "file")));
+				List.of(new SimpleImmutableEntry<>("service-builder-import", "file")));
 			_attributesMap.put(
 				LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_SERVICE_BUILDER_7_1_0,
 				_attributesMap.get(LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_SERVICE_BUILDER_7_0_0));
 
-			put(
-				LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_THEME_LOADER_7_0_0,
-				Arrays.asList("themes-path"));
-			put(
-				LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_THEME_LOADER_7_1_0,
-				Arrays.asList("themes-path"));
+			put(LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_THEME_LOADER_7_0_0, List.of("themes-path"));
+			put(LiferayDefinitionsResourceProvider.XML_NAMESPACE_LIFERAY_THEME_LOADER_7_1_0, List.of("themes-path"));
 		}
 	};
 

@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -136,48 +137,73 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 
 		_mainPanel.repaint();
 
-		SwingUtilities.invokeLater(
-			() -> {
-				DefaultMutableTreeNode root = new DefaultMutableTreeNode("root", true);
+		Application application = ApplicationManager.getApplication();
 
-				DefaultTreeModel model = new DefaultTreeModel(root);
+		application.runWriteAction(
+			new Runnable() {
 
-				root.add(new DefaultMutableTreeNode());
+				@Override
+				public void run() {
+					SwingUtilities.invokeLater(
+						() -> {
+							DefaultMutableTreeNode root = new DefaultMutableTreeNode("root", true);
 
-				DefaultMutableTreeNode loadingNode = (DefaultMutableTreeNode)root.getChildAt(0);
+							DefaultTreeModel model = new DefaultTreeModel(root);
 
-				loadingNode.setUserObject("Loading Module Project Template Types......");
+							root.add(new DefaultMutableTreeNode());
 
-				_typesTree.setModel(model);
+							DefaultMutableTreeNode loadingNode = (DefaultMutableTreeNode)root.getChildAt(0);
 
-				model.nodeStructureChanged(root);
+							loadingNode.setUserObject("Loading Module Project Template Types......");
 
-				CompletableFuture<String[]> future = CompletableFuture.supplyAsync(
-					() -> BladeCLI.getProjectTemplates(_project));
+							_typesTree.setModel(model);
 
-				future.thenAccept(
-					projectTemplates -> {
-						root.removeAllChildren();
+							model.nodeStructureChanged(root);
 
-						for (String type : projectTemplates) {
-							if (Objects.equals(type, "fragment") || Objects.equals(type, "modules-ext") ||
-								Objects.equals(type, "spring-mvc-portlet") ||
-								Objects.equals(type, "client-extension")) {
+							CompletableFuture<String[]> future = CompletableFuture.supplyAsync(
+								() -> BladeCLI.getProjectTemplates(_project));
 
-								continue;
-							}
+							future.thenAccept(
+								new Consumer<>() {
 
-							DefaultMutableTreeNode node = new DefaultMutableTreeNode(type, true);
+									@Override
+									public void accept(String[] projectTemplates) {
+										SwingUtilities.invokeLater(
+											new Runnable() {
 
-							root.add(node);
-						}
+												@Override
+												public void run() {
+													root.removeAllChildren();
 
-						_typesTree.setModel(model);
+													for (String type : projectTemplates) {
+														if (Objects.equals(type, "fragment") ||
+															Objects.equals(type, "modules-ext") ||
+															Objects.equals(type, "spring-mvc-portlet") ||
+															Objects.equals(type, "client-extension")) {
 
-						model.nodeStructureChanged(root);
+															continue;
+														}
 
-						_typesTree.setSelectionRow(0);
-					});
+														DefaultMutableTreeNode node = new DefaultMutableTreeNode(
+															type, true);
+
+														root.add(node);
+													}
+
+													_typesTree.setModel(model);
+
+													model.nodeStructureChanged(root);
+
+													_typesTree.setSelectionRow(0);
+												}
+
+											});
+									}
+
+								});
+						});
+				}
+
 			});
 	}
 

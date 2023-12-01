@@ -5,7 +5,6 @@
 
 package com.liferay.ide.idea.core;
 
-import com.intellij.ProjectTopics;
 import com.intellij.facet.Facet;
 import com.intellij.facet.FacetManager;
 import com.intellij.facet.FacetType;
@@ -61,7 +60,7 @@ public class LiferayWebFacetPostStartupActivity implements DumbAware, LiferayWor
 		MessageBusConnection messageBusConnection = messageBus.connect(project);
 
 		messageBusConnection.subscribe(
-			ProjectTopics.MODULES,
+			ModuleListener.TOPIC,
 			new ModuleListener() {
 
 				@Override

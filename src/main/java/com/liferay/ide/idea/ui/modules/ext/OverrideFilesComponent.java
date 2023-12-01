@@ -183,8 +183,10 @@ public class OverrideFilesComponent implements LiferayWorkspaceSupport {
 		}
 		catch (ConfigurationException configurationException) {
 			Messages.showMessageDialog(
-				_project, configurationException.getMessage(), configurationException.getTitle(),
-				Messages.getErrorIcon());
+				_project,
+				configurationException.getCause(
+				).getMessage(),
+				configurationException.getTitle(), Messages.getErrorIcon());
 
 			return;
 		}

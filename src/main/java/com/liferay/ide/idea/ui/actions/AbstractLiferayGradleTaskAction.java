@@ -68,7 +68,6 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 		return false;
 	}
 
-	@Nullable
 	@Override
 	protected void doExecute(
 		AnActionEvent anActionEvent, RunnerAndConfigurationSettings runnerAndConfigurationSettings) {
@@ -130,6 +129,10 @@ public abstract class AbstractLiferayGradleTaskAction extends AbstractLiferayAct
 	@Override
 	protected RunnerAndConfigurationSettings processRunnerConfiguration(AnActionEvent anActionEvent) {
 		final VirtualFile projectDir = getWorkingDirectory(anActionEvent);
+
+		if (Objects.isNull(projectDir)) {
+			return null;
+		}
 
 		final String workingDirectory = projectDir.getCanonicalPath();
 

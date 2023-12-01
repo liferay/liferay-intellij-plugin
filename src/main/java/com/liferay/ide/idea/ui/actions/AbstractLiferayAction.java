@@ -22,11 +22,12 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileVisitor;
@@ -45,7 +46,6 @@ import java.util.Objects;
 import java.util.Set;
 
 import javax.swing.Icon;
-import javax.swing.SwingUtilities;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -64,12 +64,19 @@ public abstract class AbstractLiferayAction extends AnAction implements LiferayW
 	public void actionPerformed(final AnActionEvent anActionEvent) {
 		Project project = anActionEvent.getRequiredData(CommonDataKeys.PROJECT);
 
-		SwingUtilities.invokeLater(
-			() -> {
-				Application application = ApplicationManager.getApplication();
+		ProgressManager.getInstance(
+		).run(
+			new Task.Backgroundable(project, "Liferay Action tasks") {
 
-				application.invokeLater(() -> _perform(anActionEvent, project));
-			});
+				@Override
+				public void run(@NotNull ProgressIndicator progressIndicator) {
+					Application application = ApplicationManager.getApplication();
+
+					application.executeOnPooledThread(() -> _perform(anActionEvent, project));
+				}
+
+			}
+		);
 	}
 
 	@NotNull
@@ -133,7 +140,7 @@ public abstract class AbstractLiferayAction extends AnAction implements LiferayW
 	}
 
 	@Override
-	public void update(AnActionEvent anActionEvent) {
+	public void update(@NotNull AnActionEvent anActionEvent) {
 		super.update(anActionEvent);
 
 		Presentation eventPresentation = anActionEvent.getPresentation();
@@ -156,11 +163,15 @@ public abstract class AbstractLiferayAction extends AnAction implements LiferayW
 	protected VirtualFile getWorkingDirectory(AnActionEvent anActionEvent) {
 		VirtualFile virtualFile = getVirtualFile(anActionEvent);
 
-		ProjectRootManager projectRootManager = ProjectRootManager.getInstance(anActionEvent.getProject());
+		if (Objects.isNull(virtualFile) || Objects.isNull(anActionEvent.getProject())) {
+			return null;
+		}
 
-		ProjectFileIndex projectFileIndex = projectRootManager.getFileIndex();
+		Module module = ModuleUtil.findModuleForFile(virtualFile, anActionEvent.getProject());
 
-		Module module = projectFileIndex.getModuleForFile(virtualFile);
+		if (Objects.isNull(module)) {
+			return null;
+		}
 
 		ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
 
@@ -210,7 +221,13 @@ public abstract class AbstractLiferayAction extends AnAction implements LiferayW
 				return false;
 			}
 
-			Path portalBundlePath = Paths.get(project.getBasePath(), homeDir);
+			String basePath = project.getBasePath();
+
+			if (Objects.isNull(basePath)) {
+				return false;
+			}
+
+			Path portalBundlePath = Paths.get(basePath, homeDir);
 
 			if (FileUtil.notExists(portalBundlePath) || Objects.isNull(ServerUtil.getPortalBundle(portalBundlePath))) {
 				return false;

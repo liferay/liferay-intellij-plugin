@@ -5,7 +5,6 @@
 
 package com.liferay.ide.idea.language.javascript;
 
-import com.intellij.ProjectTopics;
 import com.intellij.lang.javascript.library.JSLibraryManager;
 import com.intellij.lang.javascript.library.JSPredefinedLibraryProvider;
 import com.intellij.openapi.application.Application;
@@ -61,7 +60,7 @@ public class LiferayJSPredefinedLibraryProvider extends JSPredefinedLibraryProvi
 
 			MessageBusConnection messageBusConnection = messageBus.connect(project);
 
-			messageBusConnection.subscribe(ProjectTopics.PROJECT_ROOTS, this);
+			messageBusConnection.subscribe(ModuleRootListener.TOPIC, this);
 
 			_moduleRootListenerRegistered = true;
 		}
