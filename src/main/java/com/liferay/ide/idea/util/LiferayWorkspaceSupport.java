@@ -25,15 +25,21 @@ import com.liferay.ide.idea.core.WorkspaceConstants;
 import com.liferay.ide.idea.core.WorkspaceProvider;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import java.nio.file.Files;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -50,16 +56,42 @@ import org.jetbrains.plugins.gradle.settings.GradleExtensionsSettings;
 public interface LiferayWorkspaceSupport {
 
 	public static Map<String, ProductInfo> getProductInfos() {
+		Gson gson = new Gson();
+		TypeToken<Map<String, ProductInfo>> typeToken = new TypeToken<>() {
+		};
+
 		try (JsonReader jsonReader = new JsonReader(Files.newBufferedReader(_workspaceCacheFile.toPath()))) {
-			Gson gson = new Gson();
-
-			TypeToken<Map<String, ProductInfo>> typeToken = new TypeToken<>() {
-			};
-
 			return gson.fromJson(jsonReader, typeToken.getType());
 		}
 		catch (Exception exception) {
-			_logger.error(exception);
+			File bladeJar = BladeCLI.getBladeJar(BladeCLI.getBladeJarVersion(null));
+
+			if (bladeJar != null) {
+				try (ZipFile zipFile = new ZipFile(bladeJar)) {
+					Enumeration<? extends ZipEntry> entries = zipFile.entries();
+
+					while (entries.hasMoreElements()) {
+						ZipEntry entry = entries.nextElement();
+
+						String entryName = entry.getName();
+
+						if (entryName.equals(".product_info.json")) {
+							try (InputStream resourceAsStream = zipFile.getInputStream(entry)) {
+								if (Objects.nonNull(resourceAsStream)) {
+									try (JsonReader jsonReader = new JsonReader(
+											new InputStreamReader(resourceAsStream))) {
+
+										return gson.fromJson(jsonReader, typeToken.getType());
+									}
+								}
+							}
+						}
+					}
+				}
+				catch (IOException ioException) {
+					_logger.error(ioException);
+				}
+			}
 		}
 
 		return null;
