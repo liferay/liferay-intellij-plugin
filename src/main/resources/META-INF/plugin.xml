@@ -31,6 +31,10 @@
 	</p>
 	<p>
 		<ul>
+			<li>2.0.8</li>
+			<ul>
+				<li>INTELLIJ-283 Intellij plugin compatibility issue with IntelliJ IDEA 2023.3</li>
+			</ul>
 			<li>2.0.7</li>
 			<ul>
 				<li>INTELLIJ-282 set correct customized vm argument</li>
