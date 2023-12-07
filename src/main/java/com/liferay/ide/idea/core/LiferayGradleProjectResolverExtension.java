@@ -71,11 +71,6 @@ public class LiferayGradleProjectResolverExtension extends AbstractProjectResolv
 		}
 
 		if (resolverCtx.isResolveModulePerSourceSet()) {
-			final Map<String, String> artifactsMap = ideProject.getUserData(
-				GradleProjectResolver.CONFIGURATION_ARTIFACTS);
-
-			assert artifactsMap != null;
-
 			final Map<String, Pair<DataNode<GradleSourceSetData>, ExternalSourceSet>> sourceSetMap =
 				ideProject.getUserData(GradleProjectResolver.RESOLVED_SOURCE_SETS);
 
@@ -134,7 +129,8 @@ public class LiferayGradleProjectResolverExtension extends AbstractProjectResolv
 						}
 
 						GradleProjectResolverUtil.buildDependencies(
-							resolverCtx, sourceSetMap, artifactsMap, dataNode, dependencies, ideProject);
+							resolverCtx, sourceSetMap, resolverCtx.getArtifactsMap(), dataNode, dependencies,
+							ideProject);
 					}
 
 				});

@@ -25,7 +25,7 @@ buildscript {
 
 plugins {
 	id "de.undercouch.download" version "5.1.0"
-	id "org.jetbrains.intellij" version "1.15.0"
+	id "org.jetbrains.intellij" version "1.16.1"
 }
 
 apply plugin: "com.liferay.source.formatter"
@@ -143,10 +143,12 @@ downloadDtds {
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-display_7_1_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-display_7_2_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-display_7_3_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-display_7_4_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-friendly-url-routes_7_0_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-friendly-url-routes_7_1_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-friendly-url-routes_7_2_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-friendly-url-routes_7_3_0.dtd",
+			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-friendly-url-routes_7_4_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-hook_7_0_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-hook_7_1_0.dtd",
 			"https://raw.githubusercontent.com/liferay/liferay-portal/master/definitions/liferay-hook_7_2_0.dtd",
@@ -248,11 +250,11 @@ formatSource {
 intellij {
 	plugins = ["java", "webComponents", "DatabaseTools", "gradle", "Groovy", "java-i18n", "JavaEE", "javascript-impl", "javaee-jsp-base-impl", "javascript-intentions", "javaee-web-impl", "junit", "maven", "javaee-persistence-impl", "properties", "sass"]
 	pluginName = "liferay-intellij-plugin"
-	version = "IU-2023.2.5"
+	version = "IU-2023.3"
 }
 
 patchPluginXml {
-	sinceBuild = "232"
+	sinceBuild = "233"
 	untilBuild = ""
 }
 
@@ -312,12 +314,10 @@ verifyBladeLatest {
 tasks {
 	runPluginVerifier {
 		ideVersions = [
-			"IC-2023.2.1",
-			"IU-2023.2.1",
-			"IC-2023.2.5",
-			"IU-2023.2.5"
+			"IC-2023.3",
+			"IU-2023.3"
 		]
 	}
 }
 
-version = "2.0.7"
+version = "2.0.8"

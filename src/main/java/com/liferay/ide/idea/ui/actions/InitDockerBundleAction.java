@@ -139,7 +139,6 @@ public class InitDockerBundleAction extends AbstractLiferayGradleTaskAction impl
 		}
 	}
 
-	@Nullable
 	@Override
 	protected void doExecute(
 		AnActionEvent anActionEvent, RunnerAndConfigurationSettings runnerAndConfigurationSettings) {
