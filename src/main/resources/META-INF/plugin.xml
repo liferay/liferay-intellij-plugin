@@ -1,5 +1,5 @@
 <idea-plugin>
-	<id>com.liferay.ide.intellij.plugin</id>
+	<id>com.liferay.ide.plugin</id>
 	<name>Liferay</name>
 	<vendor url="https://www.liferay.com">Liferay Inc.</vendor>
 	<description><![CDATA[<p>
