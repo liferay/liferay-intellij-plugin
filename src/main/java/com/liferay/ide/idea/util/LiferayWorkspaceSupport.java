@@ -25,7 +25,6 @@ import com.liferay.ide.idea.core.WorkspaceConstants;
 import com.liferay.ide.idea.core.WorkspaceProvider;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
@@ -63,7 +62,7 @@ public interface LiferayWorkspaceSupport {
 		try (JsonReader jsonReader = new JsonReader(Files.newBufferedReader(_workspaceCacheFile.toPath()))) {
 			return gson.fromJson(jsonReader, typeToken.getType());
 		}
-		catch (Exception exception) {
+		catch (Exception exception1) {
 			File bladeJar = BladeCLI.getBladeJar(BladeCLI.getBladeJarVersion(null));
 
 			if (bladeJar != null) {
@@ -76,20 +75,16 @@ public interface LiferayWorkspaceSupport {
 						String entryName = entry.getName();
 
 						if (entryName.equals(".product_info.json")) {
-							try (InputStream resourceAsStream = zipFile.getInputStream(entry)) {
-								if (Objects.nonNull(resourceAsStream)) {
-									try (JsonReader jsonReader = new JsonReader(
-											new InputStreamReader(resourceAsStream))) {
+							try (InputStream resourceAsStream = zipFile.getInputStream(entry);
+								JsonReader jsonReader = new JsonReader(new InputStreamReader(resourceAsStream))) {
 
-										return gson.fromJson(jsonReader, typeToken.getType());
-									}
-								}
+								return gson.fromJson(jsonReader, typeToken.getType());
 							}
 						}
 					}
 				}
-				catch (IOException ioException) {
-					_logger.error(ioException);
+				catch (Exception exception2) {
+					_logger.error(exception2);
 				}
 			}
 		}
