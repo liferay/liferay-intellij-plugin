@@ -24,9 +24,6 @@ public class SdkUtil {
 		File javaHome = new File(SystemProperties.getJavaHome());
 
 		if (JdkUtil.checkForJre(javaHome.toPath()) && !JdkUtil.checkForJdk(javaHome.toPath())) {
-
-			// handle situation like javaHome="<somewhere>/jdk1.8.0_212/jre" (see IDEA-226353)
-
 			File javaHomeParent = javaHome.getParentFile();
 
 			if ((javaHomeParent != null) && JdkUtil.checkForJre(javaHomeParent.toPath()) &&
