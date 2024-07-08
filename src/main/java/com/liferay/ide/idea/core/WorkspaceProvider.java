@@ -33,10 +33,6 @@ public interface WorkspaceProvider {
 
 	public String[] getWorkspaceModuleDirs();
 
-	public default ProductInfo getWorkspaceProductInfo() {
-		return null;
-	}
-
 	public String getWorkspaceProperty(String key, String defaultValue);
 
 	public String[] getWorkspaceWarDirs();

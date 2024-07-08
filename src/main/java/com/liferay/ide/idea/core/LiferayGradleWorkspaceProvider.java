@@ -247,23 +247,6 @@ public class LiferayGradleWorkspaceProvider extends AbstractWorkspaceProvider {
 	}
 
 	@Override
-	public ProductInfo getWorkspaceProductInfo() {
-		String workspaceProductKey = getWorkspaceProperty(WorkspaceConstants.WORKSPACE_PRODUCT_PROPERTY, null);
-
-		if (CoreUtil.isNullOrEmpty(workspaceProductKey)) {
-			return null;
-		}
-
-		Map<String, ProductInfo> productInfos = LiferayWorkspaceSupport.getProductInfos();
-
-		if (Objects.nonNull(productInfos)) {
-			return productInfos.get(workspaceProductKey);
-		}
-
-		return null;
-	}
-
-	@Override
 	public String getWorkspaceProperty(String key, String defaultValue) {
 		File gradleProperties = new File(project.getBasePath(), "gradle.properties");
 		File gradleLocalProperties = new File(project.getBasePath(), "gradle-local.properties");
