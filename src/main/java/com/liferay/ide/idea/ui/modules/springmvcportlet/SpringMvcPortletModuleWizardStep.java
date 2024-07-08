@@ -218,6 +218,10 @@ public class SpringMvcPortletModuleWizardStep extends ModuleWizardStep {
 
 			JSONObject contentObject = new JSONObject(jsonContent);
 
+			if (_liferayVersion.contains("q")) {
+				return (JSONObject)contentObject.get("quarterly");
+			}
+
 			return (JSONObject)contentObject.get(_liferayVersion);
 		}
 		catch (Exception exception) {
