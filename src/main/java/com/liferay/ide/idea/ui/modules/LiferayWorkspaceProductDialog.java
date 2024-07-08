@@ -19,9 +19,8 @@ import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.vfs.VfsUtil;
 
 import com.liferay.ide.idea.core.WorkspaceConstants;
-import com.liferay.ide.idea.util.BladeCLI;
 import com.liferay.ide.idea.util.FileUtil;
-import com.liferay.ide.idea.util.ListUtil;
+import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import java.awt.GridLayout;
 
@@ -31,8 +30,6 @@ import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 import javax.swing.JCheckBox;
@@ -171,13 +168,11 @@ public class LiferayWorkspaceProductDialog extends DialogWrapper {
 
 		application.executeOnPooledThread(
 			() -> {
-				List<String> allWorkspaceProducts = Arrays.asList(BladeCLI.getWorkspaceProducts(showAll));
+				_productVersionComboBox.removeAllItems();
 
-				if (ListUtil.isNotEmpty(allWorkspaceProducts)) {
-					_productVersionComboBox.removeAllItems();
+				for (String productVersion : LiferayWorkspaceSupport.getProductVersions(showAll)) {
+					_productVersionComboBox.addItem(productVersion);
 				}
-
-				allWorkspaceProducts.forEach(productVersion -> _productVersionComboBox.addItem(productVersion));
 
 				_productVersionComboBox.setSelectedIndex(0);
 			});
