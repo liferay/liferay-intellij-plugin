@@ -40,21 +40,21 @@ import org.json.JSONObject;
  * @author Ethan Sun
  * @author Seiphon Wang
  */
-public class SpringMvcPortletModuleWizardStep extends ModuleWizardStep implements LiferayWorkspaceSupport {
+public class SpringMvcPortletModuleWizardStep extends ModuleWizardStep {
 
 	public SpringMvcPortletModuleWizardStep(WizardContext wizardContext, SpringMVCPortletModuleBuilder builder) {
 		_builder = builder;
 
 		_project = wizardContext.getProject();
 
-		_liferayVersion = getLiferayVersion(_project);
+		_liferayVersion = LiferayWorkspaceSupport.getLiferayVersion(_project);
 
 		if (Objects.isNull(_liferayVersion)) {
 			_liferayVersion = WorkspaceConstants.DEFAULT_LIFERAY_VERSION;
 
 			_liferayVersionCombo.removeAllItems();
 
-			for (String liferayVersionItem : WorkspaceConstants.LIFERAY_VERSIONS) {
+			for (String liferayVersionItem : LiferayWorkspaceSupport.getProductGroupVersions()) {
 				_liferayVersionCombo.addItem(liferayVersionItem);
 			}
 

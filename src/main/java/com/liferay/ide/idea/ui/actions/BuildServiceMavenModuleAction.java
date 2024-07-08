@@ -8,7 +8,6 @@ package com.liferay.ide.idea.ui.actions;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 
 import com.liferay.ide.idea.core.LiferayIcons;
-import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 import com.liferay.ide.idea.util.ListUtil;
 
 import java.util.Arrays;
@@ -16,7 +15,7 @@ import java.util.Arrays;
 /**
  * @author Ethan Sun
  */
-public class BuildServiceMavenModuleAction extends AbstractLiferayMavenGoalAction implements LiferayWorkspaceSupport {
+public class BuildServiceMavenModuleAction extends AbstractLiferayMavenGoalAction {
 
 	public BuildServiceMavenModuleAction() {
 		super("BuildService", "Run buildService goal", LiferayIcons.LIFERAY_ICON);

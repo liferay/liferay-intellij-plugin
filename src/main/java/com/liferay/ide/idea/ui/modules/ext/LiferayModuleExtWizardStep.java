@@ -49,7 +49,7 @@ import org.osgi.framework.Version;
  * @author Simon Jiang
  * @author Seiphon Wang
  */
-public class LiferayModuleExtWizardStep extends ModuleWizardStep implements LiferayWorkspaceSupport {
+public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 
 	public LiferayModuleExtWizardStep(WizardContext wizardContext, LiferayModuleExtBuilder liferayModuleExtBuilder) {
 		_project = wizardContext.getProject();
@@ -138,7 +138,7 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep implements Life
 	public boolean validate() throws ConfigurationException {
 		String validationTitle = "Validation Error";
 
-		if (getTargetPlatformVersion(_project) == null) {
+		if (LiferayWorkspaceSupport.getTargetPlatformVersion(_project) == null) {
 			throw new ConfigurationException(
 				"Please set target platform version for liferay workspace project", validationTitle);
 		}
@@ -150,22 +150,23 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep implements Life
 		if (CoreUtil.isNullOrEmpty(_getOriginalModuleName())) {
 			throw new ConfigurationException("Please input original module name", validationTitle);
 		}
-		else if ((getTargetPlatformVersion(_project) == null) &&
+		else if ((LiferayWorkspaceSupport.getTargetPlatformVersion(_project) == null) &&
 				 CoreUtil.isNullOrEmpty(_originalModuleVersionField.getText())) {
 
 			throw new ConfigurationException("Please input original module version", validationTitle);
 		}
 
-		if (Objects.isNull(getLiferayVersion(_project))) {
+		if (Objects.isNull(LiferayWorkspaceSupport.getLiferayVersion(_project))) {
 			throw new ConfigurationException(
 				"The property `liferay.workspace.product` or `liferay.workspace.target.platform.version` has not " +
 					"been set. One of these properties must be set in order to continue.",
 				validationTitle);
 		}
 
-		if (CoreUtil.compareVersions(Version.parseVersion(getLiferayVersion(_project)), Version.parseVersion("7.0")) <=
-				0) {
+		int compareResult = CoreUtil.compareVersions(
+			Version.parseVersion(LiferayWorkspaceSupport.getLiferayVersion(_project)), Version.parseVersion("7.0"));
 
+		if (compareResult <= 0) {
 			throw new ConfigurationException(
 				"Module Ext Projects only work on Liferay Workspace which version is greater than 7.0",
 				validationTitle);
@@ -199,7 +200,7 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep implements Life
 	}
 
 	private void _insertOriginalModuleNames() {
-		if (Objects.isNull(getTargetPlatformVersion(_project))) {
+		if (Objects.isNull(LiferayWorkspaceSupport.getTargetPlatformVersion(_project))) {
 			return;
 		}
 

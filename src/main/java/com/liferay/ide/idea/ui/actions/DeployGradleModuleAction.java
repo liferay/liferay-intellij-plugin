@@ -8,13 +8,12 @@ package com.liferay.ide.idea.ui.actions;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 
 import com.liferay.ide.idea.core.LiferayIcons;
-import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 /**
  * @author Andy Wu
  * @author Simon Jiang
  */
-public class DeployGradleModuleAction extends AbstractLiferayGradleTaskAction implements LiferayWorkspaceSupport {
+public class DeployGradleModuleAction extends AbstractLiferayGradleTaskAction {
 
 	public DeployGradleModuleAction() {
 		super("Deploy", "Run deploy task", LiferayIcons.LIFERAY_ICON, "deploy");

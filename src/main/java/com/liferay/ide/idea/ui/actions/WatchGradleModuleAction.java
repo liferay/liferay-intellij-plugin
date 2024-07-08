@@ -49,7 +49,7 @@ import java.util.Properties;
  * @author Terry Jia
  * @author Simon Jiang
  */
-public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction implements LiferayWorkspaceSupport {
+public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
 
 	public WatchGradleModuleAction() {
 		super("Watch", "Run watch task", LiferayIcons.LIFERAY_ICON, "watch");
@@ -114,7 +114,7 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction imp
 		if (super.isEnabledAndVisible(anActionEvent)) {
 			Project project = anActionEvent.getProject();
 
-			String homeDir = getHomeDir(project);
+			String homeDir = LiferayWorkspaceSupport.getHomeDir(project);
 
 			Path bundlePath = Paths.get(homeDir);
 
@@ -138,7 +138,7 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction imp
 				return GradleUtil.isWatchableProject(module);
 			}
 
-			String moduleDirectoryName = getWorkspaceModuleDir(project);
+			String moduleDirectoryName = LiferayWorkspaceSupport.getWorkspaceModuleDir(project);
 
 			if (!Objects.isNull(moduleDirectoryName)) {
 				String virtualFileToStr = virtualFile.toString();

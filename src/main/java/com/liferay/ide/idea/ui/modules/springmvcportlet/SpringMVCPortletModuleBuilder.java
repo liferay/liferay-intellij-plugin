@@ -48,7 +48,7 @@ import org.jetbrains.plugins.gradle.util.GradleConstants;
  * @author Terry Jia
  * @author Simon Jiang
  */
-public class SpringMVCPortletModuleBuilder extends ModuleBuilder implements LiferayWorkspaceSupport {
+public class SpringMVCPortletModuleBuilder extends ModuleBuilder {
 
 	public SpringMVCPortletModuleBuilder() {
 		addListener(
@@ -198,7 +198,7 @@ public class SpringMVCPortletModuleBuilder extends ModuleBuilder implements Life
 			sb.append("-b ");
 			sb.append("maven ");
 
-			String targetPlatformVersion = getTargetPlatformVersion(project);
+			String targetPlatformVersion = LiferayWorkspaceSupport.getTargetPlatformVersion(project);
 
 			if (targetPlatformVersion != null) {
 				sb.append("-v ");

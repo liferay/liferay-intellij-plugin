@@ -57,7 +57,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Seiphon Wang
  */
-public class LiferayProjectTypesComponent extends JPanel implements LiferayWorkspaceSupport {
+public class LiferayProjectTypesComponent extends JPanel {
 
 	public LiferayProjectTypesComponent() {
 	}
@@ -131,7 +131,7 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 
 		_typesPanel.add(typesScrollPane, "archetypes");
 
-		_liferayVersion = getLiferayVersion(_project);
+		_liferayVersion = LiferayWorkspaceSupport.getLiferayVersion(_project);
 
 		_projectTypeLabel.setVisible(true);
 
@@ -220,7 +220,7 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 	public boolean validateComponent() throws ConfigurationException {
 		String validationTitle = "Validation Error";
 
-		if (Objects.isNull(getTargetPlatformVersion(_context.getProject()))) {
+		if (Objects.isNull(LiferayWorkspaceSupport.getTargetPlatformVersion(_context.getProject()))) {
 			throw new ConfigurationException(
 				"Please set correct target platform version for liferay workspace project", validationTitle);
 		}

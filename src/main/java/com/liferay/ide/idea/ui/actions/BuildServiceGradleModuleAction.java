@@ -10,7 +10,6 @@ import com.intellij.openapi.module.Module;
 
 import com.liferay.ide.idea.core.LiferayIcons;
 import com.liferay.ide.idea.util.GradleUtil;
-import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 import com.liferay.ide.idea.util.ListUtil;
 
 import java.util.List;
@@ -26,7 +25,7 @@ import org.gradle.tooling.model.GradleTask;
  * @author Ethan Sun
  * @author Simon Jiang
  */
-public class BuildServiceGradleModuleAction extends AbstractLiferayGradleTaskAction implements LiferayWorkspaceSupport {
+public class BuildServiceGradleModuleAction extends AbstractLiferayGradleTaskAction {
 
 	public BuildServiceGradleModuleAction() {
 		super("BuildService", "Run buildService task", LiferayIcons.LIFERAY_ICON, "buildService");

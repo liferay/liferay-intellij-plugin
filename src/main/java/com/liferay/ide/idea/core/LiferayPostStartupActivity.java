@@ -50,7 +50,7 @@ import org.jetbrains.plugins.gradle.util.GradleConstants;
 /**
  * @author Simon Jiang
  */
-public class LiferayPostStartupActivity implements DumbAware, LiferayWorkspaceSupport, ProjectActivity {
+public class LiferayPostStartupActivity implements DumbAware, ProjectActivity {
 
 	@Nullable
 	@Override
@@ -78,7 +78,8 @@ public class LiferayPostStartupActivity implements DumbAware, LiferayWorkspaceSu
 					application.runReadAction(
 						() -> {
 							if (projectPath.equals(project.getBasePath())) {
-								ProjectConfigurationUtil.configExcludedFolder(project, getHomeDir(project));
+								ProjectConfigurationUtil.configExcludedFolder(
+									project, LiferayWorkspaceSupport.getHomeDir(project));
 							}
 						});
 				}
@@ -92,7 +93,7 @@ public class LiferayPostStartupActivity implements DumbAware, LiferayWorkspaceSu
 
 				@Override
 				public void run() {
-					ProjectConfigurationUtil.configExcludedFolder(project, getHomeDir(project));
+					ProjectConfigurationUtil.configExcludedFolder(project, LiferayWorkspaceSupport.getHomeDir(project));
 				}
 
 			});
@@ -117,7 +118,7 @@ public class LiferayPostStartupActivity implements DumbAware, LiferayWorkspaceSu
 
 									@Override
 									public void run() {
-										String homeDir = LiferayPostStartupActivity.this.getMavenProperty(
+										String homeDir = LiferayWorkspaceSupport.getMavenProperty(
 											moduleProject, WorkspaceConstants.MAVEN_HOME_DIR_PROPERTY,
 											WorkspaceConstants.HOME_DIR_DEFAULT);
 

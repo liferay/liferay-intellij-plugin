@@ -13,16 +13,13 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
 
-import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
-
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Simon Jiang
  */
-public class LiferayServerConfigurationProducer
-	extends LazyRunConfigurationProducer<LiferayServerConfiguration> implements LiferayWorkspaceSupport {
+public class LiferayServerConfigurationProducer extends LazyRunConfigurationProducer<LiferayServerConfiguration> {
 
 	@NotNull
 	@Override
