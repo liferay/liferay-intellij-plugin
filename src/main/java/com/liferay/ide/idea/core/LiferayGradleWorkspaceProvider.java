@@ -261,7 +261,7 @@ public class LiferayGradleWorkspaceProvider extends AbstractWorkspaceProvider {
 			properties.putAll(PropertiesUtil.loadProperties(gradleLocalProperties));
 		}
 
-		if (properties == null) {
+		if (properties.isEmpty()) {
 			return defaultValue;
 		}
 
