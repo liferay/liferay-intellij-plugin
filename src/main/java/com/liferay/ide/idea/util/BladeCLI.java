@@ -236,29 +236,6 @@ public class BladeCLI {
 		return templateNames.toArray(new String[0]);
 	}
 
-	public static synchronized String[] getWorkspaceProducts(boolean showAll) {
-		List<String> workspaceProducts = new ArrayList<>();
-
-		String[] executeResult;
-
-		if (showAll) {
-			executeResult = executeWithLatestBlade("init --list --all");
-		}
-		else {
-			executeResult = executeWithLatestBlade("init --list");
-		}
-
-		for (String result : executeResult) {
-			String category = result.trim();
-
-			if (!category.contains(" ")) {
-				workspaceProducts.add(category);
-			}
-		}
-
-		return workspaceProducts.toArray(new String[0]);
-	}
-
 	private static String _getBladeVersion(InputStream inputStream) {
 		try (ZipInputStream zipInput = new ZipInputStream(inputStream)) {
 			ZipEntry zipEntry;
