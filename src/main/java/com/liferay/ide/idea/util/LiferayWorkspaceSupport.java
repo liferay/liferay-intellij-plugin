@@ -85,6 +85,15 @@ public class LiferayWorkspaceSupport {
 
 		return workspaceProvider.getLiferayProductGroupVersion();
 	}
+
+	public static Version getLiferayProductVersionObject(Project project) {
+		String liferayProductGroupVersion = getLiferayProductGroupVersion(project);
+
+		if (liferayProductGroupVersion == null) {
+			return Version.emptyVersion;
+		}
+
+		return Version.parseVersion(liferayProductGroupVersion.replace("q", ""));
 	}
 
 	@Nullable
