@@ -38,6 +38,8 @@ import org.jetbrains.idea.maven.project.MavenProject;
 import org.jetbrains.idea.maven.project.MavenProjectsManager;
 import org.jetbrains.plugins.gradle.settings.GradleExtensionsSettings;
 
+import org.osgi.framework.Version;
+
 /**
  * @author Terry Jia
  * @author Simon Jiang

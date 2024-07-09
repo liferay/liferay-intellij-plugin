@@ -5,9 +5,6 @@
 
 package com.liferay.ide.idea.ui.modules;
 
-import aQute.bnd.version.Version;
-import aQute.bnd.version.VersionRange;
-
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
@@ -53,6 +50,9 @@ import javax.swing.tree.TreeSelectionModel;
 import org.apache.commons.io.IOUtils;
 
 import org.jetbrains.annotations.Nullable;
+
+import org.osgi.framework.Version;
+import org.osgi.framework.VersionRange;
 
 /**
  * @author Seiphon Wang
