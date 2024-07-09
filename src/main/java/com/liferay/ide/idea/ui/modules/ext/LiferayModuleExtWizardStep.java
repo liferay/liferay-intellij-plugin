@@ -156,15 +156,16 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 			throw new ConfigurationException("Please input original module version", validationTitle);
 		}
 
-		if (Objects.isNull(LiferayWorkspaceSupport.getLiferayVersion(_project))) {
+		Version liferayVersion = LiferayWorkspaceSupport.getLiferayProductVersionObject(_project);
+
+		if (liferayVersion.compareTo(Version.emptyVersion) == 0) {
 			throw new ConfigurationException(
 				"The property `liferay.workspace.product` or `liferay.workspace.target.platform.version` has not " +
 					"been set. One of these properties must be set in order to continue.",
 				validationTitle);
 		}
 
-		int compareResult = CoreUtil.compareVersions(
-			Version.parseVersion(LiferayWorkspaceSupport.getLiferayVersion(_project)), Version.parseVersion("7.0"));
+		int compareResult = CoreUtil.compareVersions(liferayVersion, Version.parseVersion("7.0"));
 
 		if (compareResult <= 0) {
 			throw new ConfigurationException(
