@@ -131,7 +131,7 @@ public class LiferayProjectTypesComponent extends JPanel {
 
 		_typesPanel.add(typesScrollPane, "archetypes");
 
-		_liferayVersion = LiferayWorkspaceSupport.getLiferayVersion(_project);
+		_liferayVersion = LiferayWorkspaceSupport.getLiferayProductVersionObject(_project);
 
 		_projectTypeLabel.setVisible(true);
 
@@ -242,9 +242,9 @@ public class LiferayProjectTypesComponent extends JPanel {
 		if (LiferayWorkspaceSupport.isValidMavenWorkspaceProject(_project)) {
 			if (Objects.equals(type, "form-field")) {
 				VersionRange requiredVersionRange = new VersionRange(
-					true, new Version("7.0"), new Version("7.2"), false);
+					VersionRange.LEFT_CLOSED, new Version("7.0"), new Version("7.2"), VersionRange.RIGHT_OPEN);
 
-				if (!requiredVersionRange.includes(new Version(_liferayVersion))) {
+				if (!requiredVersionRange.includes(_liferayVersion)) {
 					throw new ConfigurationException(
 						"Form Field project is only supported for versions 7.0 and 7.1 with Maven", validationTitle);
 				}
@@ -259,9 +259,7 @@ public class LiferayProjectTypesComponent extends JPanel {
 		if (type.equals("war-core-ext")) {
 			Version notSupportFromPortalVersion = new Version("7.3");
 
-			Version currentVersion = Version.parseVersion(_liferayVersion);
-
-			if (currentVersion.compareTo(notSupportFromPortalVersion) >= 0) {
+			if (_liferayVersion.compareTo(notSupportFromPortalVersion) >= 0) {
 				throw new ConfigurationException(
 					"War Core Ext project is only supported starting from portal 7.0 to 7.2", validationTitle);
 			}
@@ -271,28 +269,31 @@ public class LiferayProjectTypesComponent extends JPanel {
 
 		VersionRange versionRange = _projectTemplateVersionRangeMap.get(projectTemplateName);
 
-		if (versionRange != null) {
-			boolean include = versionRange.includes(new Version(_liferayVersion));
-
-			if (!include) {
-				boolean npm = type.startsWith("npm");
-
-				if (npm) {
-					throw new ConfigurationException(
-						"NPM portlet project templates generated from this tool are not supported for specified " +
-							"Liferay version. See LPS-97950 for full details.",
-						validationTitle);
-				}
-
-				throw new ConfigurationException(
-					"Specified Liferay version is invalid. Must be in range " + versionRange, validationTitle);
-			}
-		}
-		else {
+		if (versionRange == null) {
 			throw new ConfigurationException("Unable to get supported Liferay version", validationTitle);
 		}
 
-		return true;
+		Version right = versionRange.getRight();
+
+		if ((right.getMajor() >= 8) && (_liferayVersion.getMajor() >= right.getMajor())) {
+			return true;
+		}
+
+		if (versionRange.includes(_liferayVersion)) {
+			return true;
+		}
+
+		boolean npm = type.startsWith("npm");
+
+		if (npm) {
+			throw new ConfigurationException(
+				"NPM portlet project templates generated from this tool are not supported for specified Liferay " +
+					"version. See LPS-97950 for full details.",
+				validationTitle);
+		}
+
+		throw new ConfigurationException(
+			"Specified Liferay version is invalid. Must be in range " + versionRange, validationTitle);
 	}
 
 	private void _loadSupportedVersionRanges(Project project) {
@@ -372,7 +373,7 @@ public class LiferayProjectTypesComponent extends JPanel {
 	private static Map<String, VersionRange> _projectTemplateVersionRangeMap = new HashMap<>();
 
 	private WizardContext _context;
-	private String _liferayVersion;
+	private Version _liferayVersion;
 	private JPanel _mainPanel;
 	private Project _project;
 	private JLabel _projectTypeLabel;
