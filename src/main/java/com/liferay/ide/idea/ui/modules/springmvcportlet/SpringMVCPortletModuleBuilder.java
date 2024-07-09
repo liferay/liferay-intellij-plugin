@@ -132,8 +132,8 @@ public class SpringMVCPortletModuleBuilder extends ModuleBuilder {
 		_frameworkDependencies = frameworkDependencies;
 	}
 
-	public void setLiferayVersion(String liferayVersion) {
-		_liferayVersion = liferayVersion;
+	public void setLiferayProductGroupVersion(String liferayProductGroupVersion) {
+		_liferayProductGroupVersion = liferayProductGroupVersion;
 	}
 
 	public void setPackageName(String packageName) {
@@ -208,7 +208,7 @@ public class SpringMVCPortletModuleBuilder extends ModuleBuilder {
 		}
 		else {
 			sb.append("-v ");
-			sb.append(_liferayVersion);
+			sb.append(_liferayProductGroupVersion);
 			sb.append(" ");
 		}
 
@@ -250,7 +250,7 @@ public class SpringMVCPortletModuleBuilder extends ModuleBuilder {
 
 	private String _framework;
 	private String _frameworkDependencies;
-	private String _liferayVersion;
+	private String _liferayProductGroupVersion;
 	private String _packageName;
 	private String _viewType;
 

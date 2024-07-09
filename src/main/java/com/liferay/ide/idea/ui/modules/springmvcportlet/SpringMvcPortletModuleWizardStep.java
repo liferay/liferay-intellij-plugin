@@ -47,18 +47,18 @@ public class SpringMvcPortletModuleWizardStep extends ModuleWizardStep {
 
 		_project = wizardContext.getProject();
 
-		_liferayVersion = LiferayWorkspaceSupport.getLiferayVersion(_project);
+		_liferayProductGroupVersion = LiferayWorkspaceSupport.getLiferayProductGroupVersion(_project);
 
-		if (Objects.isNull(_liferayVersion)) {
-			_liferayVersion = WorkspaceConstants.DEFAULT_LIFERAY_VERSION;
+		if (Objects.isNull(_liferayProductGroupVersion)) {
+			_liferayProductGroupVersion = WorkspaceConstants.DEFAULT_LIFERAY_VERSION;
 
-			_liferayVersionCombo.removeAllItems();
+			_liferayProductGroupVersionCombo.removeAllItems();
 
 			for (String liferayVersionItem : LiferayWorkspaceSupport.getProductGroupVersions()) {
-				_liferayVersionCombo.addItem(liferayVersionItem);
+				_liferayProductGroupVersionCombo.addItem(liferayVersionItem);
 			}
 
-			_liferayVersionCombo.setSelectedItem(_liferayVersion);
+			_liferayProductGroupVersionCombo.setSelectedItem(_liferayProductGroupVersion);
 
 			_initializeSpringConfigurationData();
 
@@ -69,9 +69,9 @@ public class SpringMvcPortletModuleWizardStep extends ModuleWizardStep {
 					}
 				});
 
-			_liferayVersionCombo.addActionListener(
+			_liferayProductGroupVersionCombo.addActionListener(
 				e -> {
-					_liferayVersion = (String)_liferayVersionCombo.getSelectedItem();
+					_liferayProductGroupVersion = (String)_liferayProductGroupVersionCombo.getSelectedItem();
 
 					_rendererFrameworkComboItems();
 				});
@@ -79,7 +79,7 @@ public class SpringMvcPortletModuleWizardStep extends ModuleWizardStep {
 		else {
 			_mainPanel.remove(_liferayVersionLabel);
 
-			_mainPanel.remove(_liferayVersionCombo);
+			_mainPanel.remove(_liferayProductGroupVersionCombo);
 
 			_mainPanel.repaint();
 
@@ -122,7 +122,7 @@ public class SpringMvcPortletModuleWizardStep extends ModuleWizardStep {
 		_builder.setFramework(frameworks.get((String)_frameworkCombo.getSelectedItem()));
 		_builder.setFrameworkDependencies(
 			frameworkDependeices.get((String)_frameworkDependenciesCombo.getSelectedItem()));
-		_builder.setLiferayVersion(_liferayVersion);
+		_builder.setLiferayProductGroupVersion(_liferayProductGroupVersion);
 		_builder.setViewType(viewTypes.get((String)_viewTypeCombo.getSelectedItem()));
 		_builder.setPackageName(getPackageName());
 	}
@@ -218,11 +218,11 @@ public class SpringMvcPortletModuleWizardStep extends ModuleWizardStep {
 
 			JSONObject contentObject = new JSONObject(jsonContent);
 
-			if (_liferayVersion.contains("q")) {
+			if (_liferayProductGroupVersion.contains("q")) {
 				return (JSONObject)contentObject.get("quarterly");
 			}
 
-			return (JSONObject)contentObject.get(_liferayVersion);
+			return (JSONObject)contentObject.get(_liferayProductGroupVersion);
 		}
 		catch (Exception exception) {
 		}
@@ -295,8 +295,8 @@ public class SpringMvcPortletModuleWizardStep extends ModuleWizardStep {
 	private SpringMVCPortletModuleBuilder _builder;
 	private JComboBox<String> _frameworkCombo;
 	private JComboBox<String> _frameworkDependenciesCombo;
-	private String _liferayVersion;
-	private JComboBox<String> _liferayVersionCombo;
+	private String _liferayProductGroupVersion;
+	private JComboBox<String> _liferayProductGroupVersionCombo;
 	private JLabel _liferayVersionLabel;
 	private JPanel _mainPanel;
 	private JTextField _packageName;
