@@ -76,14 +76,15 @@ public class LiferayWorkspaceSupport {
 	}
 
 	@Nullable
-	public static String getLiferayVersion(Project project) {
+	public static String getLiferayProductGroupVersion(Project project) {
 		WorkspaceProvider workspaceProvider = LiferayCore.getWorkspaceProvider(project);
 
 		if (Objects.isNull(workspaceProvider)) {
 			return null;
 		}
 
-		return workspaceProvider.getLiferayVersion();
+		return workspaceProvider.getLiferayProductGroupVersion();
+	}
 	}
 
 	@Nullable
