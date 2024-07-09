@@ -83,7 +83,22 @@ public class LiferayWorkspaceSupport {
 			return null;
 		}
 
-		return workspaceProvider.getLiferayProductGroupVersion();
+		String targetPlatformVersion = workspaceProvider.getTargetPlatformVersion();
+
+		if (CoreUtil.isNullOrEmpty(targetPlatformVersion)) {
+			return null;
+		}
+
+		Stream<ReleaseEntry> releaseEntryStream = ReleaseUtil.getReleaseEntryStream();
+
+		return releaseEntryStream.filter(
+			releaseEntry -> Objects.equals(targetPlatformVersion, releaseEntry.getTargetPlatformVersion())
+		).map(
+			ReleaseEntry::getProductGroupVersion
+		).findFirst(
+		).orElse(
+			null
+		);
 	}
 
 	public static Version getLiferayProductVersionObject(Project project) {
