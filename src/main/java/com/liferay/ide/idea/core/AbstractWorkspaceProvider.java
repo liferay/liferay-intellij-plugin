@@ -9,8 +9,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 
-import com.liferay.ide.idea.util.CoreUtil;
-
 import java.io.File;
 
 /**
@@ -23,19 +21,6 @@ public abstract class AbstractWorkspaceProvider implements WorkspaceProvider {
 
 	public AbstractWorkspaceProvider(Project project) {
 		this.project = project;
-	}
-
-	@Override
-	public String getLiferayVersion() {
-		String targetPlatformVersion = getTargetPlatformVersion();
-
-		if (!CoreUtil.isNullOrEmpty(targetPlatformVersion)) {
-			String[] version = targetPlatformVersion.split("\\.");
-
-			return version[0] + "." + version[1];
-		}
-
-		return null;
 	}
 
 	@Override

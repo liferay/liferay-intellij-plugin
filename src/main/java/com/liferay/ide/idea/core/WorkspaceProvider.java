@@ -21,8 +21,6 @@ public interface WorkspaceProvider {
 
 	public String getLiferayHome();
 
-	public String getLiferayVersion();
-
 	public VirtualFile getModuleExtDirFile();
 
 	public default List<String> getTargetPlatformDependencies() {
