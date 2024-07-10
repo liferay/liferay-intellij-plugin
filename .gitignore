@@ -7,5 +7,7 @@
 .settings/
 build/
 *.iml
+*.ipr
+*.iws
 out/
 /bin/
