@@ -31,6 +31,7 @@ import com.liferay.ide.idea.util.BladeCLI;
 import com.liferay.ide.idea.util.CoreUtil;
 import com.liferay.ide.idea.util.IntellijUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
+import com.liferay.release.util.ReleaseEntry;
 
 import java.io.File;
 
@@ -198,6 +199,13 @@ public class LiferayModuleBuilder extends ModuleBuilder {
 		if (targetPlatformVersion != null) {
 			args.add("-v");
 			args.add(targetPlatformVersion);
+		}
+
+		ReleaseEntry releaseEntry = LiferayWorkspaceSupport.getReleaseEntry("portal", targetPlatformVersion);
+
+		if (releaseEntry != null) {
+			args.add("--liferay-product");
+			args.add(releaseEntry.getProduct());
 		}
 
 		args.add("-t");

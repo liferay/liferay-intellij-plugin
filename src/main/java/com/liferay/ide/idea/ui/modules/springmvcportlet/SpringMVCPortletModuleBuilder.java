@@ -32,6 +32,7 @@ import com.liferay.ide.idea.util.BladeCLI;
 import com.liferay.ide.idea.util.CoreUtil;
 import com.liferay.ide.idea.util.IntellijUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
+import com.liferay.release.util.ReleaseEntry;
 
 import java.io.File;
 
@@ -193,11 +194,11 @@ public class SpringMVCPortletModuleBuilder extends ModuleBuilder {
 		args.add("create -d");
 		args.add(BladeCLI.quote(virtualFile.getPath()));
 
+		String targetPlatformVersion = LiferayWorkspaceSupport.getTargetPlatformVersion(project);
+
 		if (Objects.equals(typeId, LiferayProjectType.LIFERAY_MAVEN_WORKSPACE)) {
 			args.add("-b");
 			args.add("maven");
-
-			String targetPlatformVersion = LiferayWorkspaceSupport.getTargetPlatformVersion(project);
 
 			if (targetPlatformVersion != null) {
 				args.add("-v");
@@ -207,6 +208,15 @@ public class SpringMVCPortletModuleBuilder extends ModuleBuilder {
 		else {
 			args.add("-v");
 			args.add(_liferayProductGroupVersion);
+		}
+
+		if (targetPlatformVersion != null) {
+			ReleaseEntry releaseEntry = LiferayWorkspaceSupport.getReleaseEntry("portal", targetPlatformVersion);
+
+			if (releaseEntry != null) {
+				args.add("--liferay-product");
+				args.add(releaseEntry.getProduct());
+			}
 		}
 
 		args.add("--base");

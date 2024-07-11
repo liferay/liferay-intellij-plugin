@@ -195,12 +195,18 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 			args.add(_productVersion);
 		}
 
+		ReleaseEntry releaseEntry = LiferayWorkspaceSupport.getReleaseEntry("portal", _targetPlatform);
+
+		if (releaseEntry != null) {
+			args.add("--liferay-product");
+			args.add(releaseEntry.getProduct());
+		}
+
 		args.add("-f");
 
 		if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_MAVEN_WORKSPACE)) {
 			args.add("-b");
 			args.add("maven");
-		}
 		}
 
 		PropertiesComponent component = PropertiesComponent.getInstance(project);
@@ -234,8 +240,6 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 					Properties properties = pomModel.getProperties();
 
 					properties.setProperty(WorkspaceConstants.WORKSPACE_BOM_VERSION, _targetPlatform);
-
-					ReleaseEntry releaseEntry = LiferayWorkspaceSupport.getReleaseEntry("portal", _targetPlatform);
 
 					if (Objects.nonNull(releaseEntry)) {
 						properties.setProperty(WorkspaceConstants.BUNDLE_URL_PROPERTY, releaseEntry.getBundleURL());
