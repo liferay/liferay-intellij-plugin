@@ -32,6 +32,7 @@ import com.liferay.ide.idea.util.BladeCLI;
 import com.liferay.ide.idea.util.CoreUtil;
 import com.liferay.ide.idea.util.IntellijUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
+import com.liferay.release.util.ReleaseEntry;
 
 import java.io.File;
 
@@ -187,55 +188,55 @@ public class SpringMVCPortletModuleBuilder extends ModuleBuilder {
 
 	private void _createProject(VirtualFile projectRoot, Project project, String typeId) {
 		VirtualFile virtualFile = projectRoot.getParent();
-		StringBuilder sb = new StringBuilder();
 
-		sb.append("create -d \"");
-		sb.append(virtualFile.getPath());
-		sb.append("\"");
-		sb.append(" ");
+		List<String> args = new ArrayList<>();
+
+		args.add("create -d");
+		args.add(BladeCLI.quote(virtualFile.getPath()));
+
+		String targetPlatformVersion = LiferayWorkspaceSupport.getTargetPlatformVersion(project);
 
 		if (Objects.equals(typeId, LiferayProjectType.LIFERAY_MAVEN_WORKSPACE)) {
-			sb.append("-b ");
-			sb.append("maven ");
-
-			String targetPlatformVersion = LiferayWorkspaceSupport.getTargetPlatformVersion(project);
+			args.add("-b");
+			args.add("maven");
 
 			if (targetPlatformVersion != null) {
-				sb.append("-v ");
-				sb.append(targetPlatformVersion);
-				sb.append(" ");
+				args.add("-v");
+				args.add(targetPlatformVersion);
 			}
 		}
 		else {
-			sb.append("-v ");
-			sb.append(_liferayProductGroupVersion);
-			sb.append(" ");
+			args.add("-v");
+			args.add(_liferayProductGroupVersion);
 		}
 
-		sb.append("--base \"");
-		sb.append(project.getBasePath());
-		sb.append("\" -t ");
-		sb.append("spring-mvc-portlet ");
-		sb.append("\"");
-		sb.append(projectRoot.getName());
-		sb.append("\"");
-		sb.append(" ");
-		sb.append("--framework ");
-		sb.append(_framework);
-		sb.append(" ");
-		sb.append("--framework-dependencies ");
-		sb.append(_frameworkDependencies);
-		sb.append(" ");
-		sb.append("--view-type ");
-		sb.append(_viewType);
+		if (targetPlatformVersion != null) {
+			ReleaseEntry releaseEntry = LiferayWorkspaceSupport.getReleaseEntry("portal", targetPlatformVersion);
+
+			if (releaseEntry != null) {
+				args.add("--liferay-product");
+				args.add(releaseEntry.getProduct());
+			}
+		}
+
+		args.add("--base");
+		args.add(BladeCLI.quote(project.getBasePath()));
+		args.add("-t");
+		args.add("spring-mvc-portlet");
+		args.add(BladeCLI.quote(projectRoot.getName()));
+		args.add("--framework");
+		args.add(_framework);
+		args.add("--framework-dependencies");
+		args.add(_frameworkDependencies);
+		args.add("--view-type");
+		args.add(_viewType);
 
 		if (!CoreUtil.isNullOrEmpty(_packageName)) {
-			sb.append(" ");
-			sb.append("-p ");
-			sb.append(_packageName);
+			args.add("-p");
+			args.add(_packageName);
 		}
 
-		BladeCLI.execute(project, sb.toString());
+		BladeCLI.execute(project, args);
 	}
 
 	private void _refreshProject(Project project) {
