@@ -21,8 +21,6 @@ public interface WorkspaceProvider {
 
 	public String getLiferayHome();
 
-	public String getLiferayVersion();
-
 	public VirtualFile getModuleExtDirFile();
 
 	public default List<String> getTargetPlatformDependencies() {
@@ -32,10 +30,6 @@ public interface WorkspaceProvider {
 	public String getTargetPlatformVersion();
 
 	public String[] getWorkspaceModuleDirs();
-
-	public default ProductInfo getWorkspaceProductInfo() {
-		return null;
-	}
 
 	public String getWorkspaceProperty(String key, String defaultValue);
 

@@ -18,7 +18,7 @@ import com.liferay.ide.idea.util.ProjectConfigurationUtil;
  * @author Andy Wu
  * @author Simon Jiang
  */
-public class InitBundleGradleAction extends AbstractLiferayGradleTaskAction implements LiferayWorkspaceSupport {
+public class InitBundleGradleAction extends AbstractLiferayGradleTaskAction {
 
 	public InitBundleGradleAction() {
 		super("InitBundle", "Run initBundle task", LiferayIcons.LIFERAY_ICON, "initBundle");
@@ -34,7 +34,7 @@ public class InitBundleGradleAction extends AbstractLiferayGradleTaskAction impl
 	protected void handleProcessTerminated(Project project, int exitCode) {
 		super.handleProcessTerminated(project, exitCode);
 
-		ProjectConfigurationUtil.configExcludedFolder(project, getHomeDir(project));
+		ProjectConfigurationUtil.configExcludedFolder(project, LiferayWorkspaceSupport.getHomeDir(project));
 	}
 
 	@Override

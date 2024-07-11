@@ -42,7 +42,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Dominik Marks
  */
-public class LiferayWebFacetPostStartupActivity implements DumbAware, LiferayWorkspaceSupport, ProjectActivity {
+public class LiferayWebFacetPostStartupActivity implements DumbAware, ProjectActivity {
 
 	@Nullable
 	@Override

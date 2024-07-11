@@ -17,6 +17,8 @@ import com.liferay.ide.idea.util.GradleDependencyUpdater;
 import com.liferay.ide.idea.util.GradleUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 import com.liferay.ide.idea.util.PropertiesUtil;
+import com.liferay.release.util.ReleaseEntry;
+import com.liferay.release.util.ReleaseUtil;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -204,10 +206,11 @@ public class LiferayGradleWorkspaceProvider extends AbstractWorkspaceProvider {
 		String targetPlatformVersion = getWorkspaceProperty(WorkspaceConstants.TARGET_PLATFORM_VERSION_PROPERTY, null);
 
 		if (CoreUtil.isNullOrEmpty(targetPlatformVersion)) {
-			ProductInfo productInfo = getWorkspaceProductInfo();
+			String workspaceProductKey = getWorkspaceProperty(WorkspaceConstants.WORKSPACE_PRODUCT_PROPERTY, null);
 
-			if (Objects.nonNull(productInfo)) {
-				targetPlatformVersion = productInfo.getTargetPlatformVersion();
+			if (!CoreUtil.isNullOrEmpty(workspaceProductKey)) {
+				targetPlatformVersion = ReleaseUtil.getFromReleaseEntry(
+					workspaceProductKey, ReleaseEntry::getTargetPlatformVersion);
 			}
 		}
 
@@ -244,23 +247,6 @@ public class LiferayGradleWorkspaceProvider extends AbstractWorkspaceProvider {
 	}
 
 	@Override
-	public ProductInfo getWorkspaceProductInfo() {
-		String workspaceProductKey = getWorkspaceProperty(WorkspaceConstants.WORKSPACE_PRODUCT_PROPERTY, null);
-
-		if (CoreUtil.isNullOrEmpty(workspaceProductKey)) {
-			return null;
-		}
-
-		Map<String, ProductInfo> productInfos = LiferayWorkspaceSupport.getProductInfos();
-
-		if (Objects.nonNull(productInfos)) {
-			return productInfos.get(workspaceProductKey);
-		}
-
-		return null;
-	}
-
-	@Override
 	public String getWorkspaceProperty(String key, String defaultValue) {
 		File gradleProperties = new File(project.getBasePath(), "gradle.properties");
 		File gradleLocalProperties = new File(project.getBasePath(), "gradle-local.properties");
@@ -275,7 +261,7 @@ public class LiferayGradleWorkspaceProvider extends AbstractWorkspaceProvider {
 			properties.putAll(PropertiesUtil.loadProperties(gradleLocalProperties));
 		}
 
-		if (properties == null) {
+		if (properties.isEmpty()) {
 			return defaultValue;
 		}
 

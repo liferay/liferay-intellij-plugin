@@ -43,8 +43,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Terry Jia
  * @author Simon Jiang
  */
-public class LiferayServerConfigurable
-	extends SettingsEditor<LiferayServerConfiguration> implements LiferayWorkspaceSupport, PanelWithAnchor {
+public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfiguration> implements PanelWithAnchor {
 
 	public LiferayServerConfigurable(Project project) {
 		ModulesComboBox modulesComboBox = _modules.getComponent();
@@ -148,13 +147,13 @@ public class LiferayServerConfigurable
 
 			String basePath = project.getBasePath();
 
-			String bundleDir = getHomeDir(project);
+			String bundleDir = LiferayWorkspaceSupport.getHomeDir(project);
 
 			if (Objects.nonNull(bundleDir)) {
 				Path path = Paths.get(bundleDir);
 
 				if (!path.isAbsolute()) {
-					path = Paths.get(basePath, getHomeDir(project));
+					path = Paths.get(basePath, LiferayWorkspaceSupport.getHomeDir(project));
 				}
 
 				_liferayServer.setText(path.toString());

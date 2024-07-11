@@ -22,30 +22,20 @@ import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 
-import com.liferay.ide.idea.core.ProductInfo;
 import com.liferay.ide.idea.core.WorkspaceConstants;
 import com.liferay.ide.idea.util.BladeCLI;
-import com.liferay.ide.idea.util.CoreUtil;
 import com.liferay.ide.idea.util.FileUtil;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
-import com.liferay.ide.idea.util.ListUtil;
 import com.liferay.ide.idea.util.MavenUtil;
-import com.liferay.ide.idea.util.Pair;
-import com.liferay.workspace.bundle.url.codec.BundleURLCodec;
+import com.liferay.release.util.ReleaseEntry;
 
 import java.io.File;
 import java.io.IOException;
 
 import java.nio.file.Path;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.swing.JCheckBox;
@@ -92,17 +82,17 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 	@SuppressWarnings("unchecked")
 	public ModuleWizardStep modifySettingsStep(@NotNull SettingsStep settingsStep) {
 		if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_MAVEN_WORKSPACE)) {
-			JComboBox liferayVersionComboBox = new ComboBox<>();
+			JComboBox liferayProductGroupVersionComboBox = new ComboBox<>();
 
-			for (String liferayVersion : WorkspaceConstants.LIFERAY_VERSIONS) {
-				liferayVersionComboBox.addItem(liferayVersion);
+			for (String liferayProductGroupVersion : LiferayWorkspaceSupport.getProductGroupVersions()) {
+				liferayProductGroupVersionComboBox.addItem(liferayProductGroupVersion);
 			}
 
-			liferayVersionComboBox.setSelectedIndex(0);
+			liferayProductGroupVersionComboBox.setSelectedIndex(0);
 
-			JComboBox targetPlatformComboBox = _getTargetPlatformVersionComboBox(liferayVersionComboBox);
+			JComboBox targetPlatformComboBox = _getTargetPlatformVersionComboBox(liferayProductGroupVersionComboBox);
 
-			settingsStep.addSettingsField("Liferay version:", liferayVersionComboBox);
+			settingsStep.addSettingsField("Liferay version:", liferayProductGroupVersionComboBox);
 
 			settingsStep.addSettingsField("Target platform:", targetPlatformComboBox);
 
@@ -215,7 +205,7 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 
 		PropertiesComponent component = PropertiesComponent.getInstance(project);
 
-		component.setValue(WorkspaceConstants.WIZARD_LIFERAY_VERSION_FIELD, _liferayVersion);
+		component.setValue(WorkspaceConstants.WIZARD_LIFERAY_VERSION_FIELD, _liferayProductGroupVersion);
 
 		BladeCLI.executeWithLatestBlade(sb.toString());
 
@@ -245,11 +235,10 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 
 					properties.setProperty(WorkspaceConstants.WORKSPACE_BOM_VERSION, _targetPlatform);
 
-					Map<String, String> targetPlatformBundleUrlMap = _initMavenPortalBundleUrlMap();
+					ReleaseEntry releaseEntry = LiferayWorkspaceSupport.getReleaseEntry("portal", _targetPlatform);
 
-					if (Objects.nonNull(targetPlatformBundleUrlMap)) {
-						properties.setProperty(
-							WorkspaceConstants.BUNDLE_URL_PROPERTY, targetPlatformBundleUrlMap.get(_targetPlatform));
+					if (Objects.nonNull(releaseEntry)) {
+						properties.setProperty(WorkspaceConstants.BUNDLE_URL_PROPERTY, releaseEntry.getBundleURL());
 
 						MavenUtil.updateMavenPom(pomModel, pomFile);
 
@@ -270,74 +259,40 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 		}
 	}
 
-	private String _decodeBundleUrl(ProductInfo productInfo) {
-		try {
-			return BundleURLCodec.decode(productInfo.getBundleUrl(), productInfo.getReleaseDate());
-		}
-		catch (Exception exception) {
-			_logger.error("Unable to determine bundle URL", exception);
-		}
-
-		return null;
-	}
-
 	@NotNull
-	private JComboBox _getTargetPlatformVersionComboBox(JComboBox liferayVersionComboBox) {
+	private JComboBox _getTargetPlatformVersionComboBox(JComboBox liferayProductGroupVersionComboBox) {
 		JComboBox<String> targetPlatformComboBox = new ComboBox<>();
 
-		String version = (String)liferayVersionComboBox.getSelectedItem();
+		String productGroupVersion = (String)liferayProductGroupVersionComboBox.getSelectedItem();
 
 		Application application = ApplicationManager.getApplication();
 
 		application.invokeLater(
-			() -> {
-				CompletableFuture<Map<String, String[]>> future = CompletableFuture.supplyAsync(
-					() -> {
-						try {
-							return _initMavenTargetPlatform();
-						}
-						catch (Exception exception) {
-							return null;
-						}
-					});
+			() -> SwingUtilities.invokeLater(
+				() -> {
+					_getTargetPlatformVersionsStream(
+						productGroupVersion
+					).forEach(
+						targetPlatformComboBox::addItem
+					);
 
-				future.thenAccept(
-					targetPlatformMap -> SwingUtilities.invokeLater(
-						() -> {
-							try {
-								String[] targetPlatformVersions = targetPlatformMap.get(version);
+					liferayProductGroupVersionComboBox.addActionListener(
+						e -> {
+							_liferayProductGroupVersion = (String)liferayProductGroupVersionComboBox.getSelectedItem();
 
-								Stream.of(
-									targetPlatformVersions
-								).forEach(
-									targetPlatformComboBox::addItem
-								);
+							targetPlatformComboBox.removeAllItems();
 
-								liferayVersionComboBox.addActionListener(
-									e -> {
-										_liferayVersion = (String)liferayVersionComboBox.getSelectedItem();
+							_getTargetPlatformVersionsStream(
+								_liferayProductGroupVersion
+							).forEach(
+								targetPlatformComboBox::addItem
+							);
 
-										targetPlatformComboBox.removeAllItems();
+							targetPlatformComboBox.setSelectedIndex(0);
 
-										String[] selectedTargetPlatformVersions = targetPlatformMap.get(
-											_liferayVersion);
-
-										Stream.of(
-											selectedTargetPlatformVersions
-										).forEach(
-											targetPlatformComboBox::addItem
-										);
-
-										targetPlatformComboBox.setSelectedIndex(0);
-
-										_targetPlatform = (String)targetPlatformComboBox.getSelectedItem();
-									});
-							}
-							catch (Exception exception) {
-								_logger.error("Unable to configure target platform version", exception);
-							}
-						}));
-			});
+							_targetPlatform = (String)targetPlatformComboBox.getSelectedItem();
+						});
+				}));
 
 		targetPlatformComboBox.addActionListener(
 			event -> {
@@ -349,87 +304,14 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 		return targetPlatformComboBox;
 	}
 
-	private Map<String, String> _initMavenPortalBundleUrlMap() {
-		String[] workspaceProducts = BladeCLI.getWorkspaceProducts(true);
+	private Stream<String> _getTargetPlatformVersionsStream(String productGroupVersion) {
+		Stream<ReleaseEntry> releaseEntryStream = LiferayWorkspaceSupport.getReleaseEntryStream();
 
-		if (ListUtil.isEmpty(workspaceProducts)) {
-			return new HashMap<>();
-		}
-
-		Map<String, ProductInfo> productInfos = LiferayWorkspaceSupport.getProductInfos();
-
-		if (Objects.isNull(productInfos)) {
-			return new HashMap<>();
-		}
-
-		return Arrays.stream(
-			workspaceProducts
-		).unordered(
-		).filter(
-			product -> product.startsWith("portal")
+		return releaseEntryStream.filter(
+			releaseEntry -> Objects.equals(releaseEntry.getProductGroupVersion(), productGroupVersion)
 		).map(
-			productInfos::get
-		).map(
-			productInfo -> {
-				try {
-					String bundleUrl = _decodeBundleUrl(productInfo);
-
-					String targetPlatformVersion = productInfo.getTargetPlatformVersion();
-
-					return new Pair<>(targetPlatformVersion, bundleUrl);
-				}
-				catch (Exception exception) {
-					_logger.error("Failed to decode bundle url", exception);
-				}
-
-				return null;
-			}
-		).filter(
-			Objects::nonNull
-		).collect(
-			Collectors.toMap(Pair::first, Pair::second)
+			ReleaseEntry::getTargetPlatformVersion
 		);
-	}
-
-	private Map<String, String[]> _initMavenTargetPlatform() {
-		Map<String, String[]> targetPlatformVersionMap = new HashMap<>();
-
-		String[] workspaceProducts = BladeCLI.getWorkspaceProducts(true);
-
-		if (CoreUtil.isNullOrEmpty(workspaceProducts)) {
-			return targetPlatformVersionMap;
-		}
-
-		Map<String, ProductInfo> productInfos = LiferayWorkspaceSupport.getProductInfos();
-
-		if (Objects.isNull(productInfos)) {
-			return targetPlatformVersionMap;
-		}
-
-		for (String liferayVersion : WorkspaceConstants.LIFERAY_VERSIONS) {
-			String[] targetPlatformVersions = Arrays.stream(
-				workspaceProducts
-			).unordered(
-			).filter(
-				product -> product.startsWith("portal")
-			).map(
-				productInfos::get
-			).filter(
-				productInfo -> {
-					String targetPlatformVersion = productInfo.getTargetPlatformVersion();
-
-					return targetPlatformVersion.startsWith(liferayVersion);
-				}
-			).map(
-				ProductInfo::getTargetPlatformVersion
-			).toArray(
-				String[]::new
-			);
-
-			targetPlatformVersionMap.put(liferayVersion, targetPlatformVersions);
-		}
-
-		return targetPlatformVersionMap;
 	}
 
 	private void _initProductVersionComBox(JComboBox<String> productVersionComboBox, boolean showAllProductVersion) {
@@ -437,15 +319,13 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 
 		application.executeOnPooledThread(
 			() -> {
-				List<String> allWorkspaceProducts = Arrays.asList(BladeCLI.getWorkspaceProducts(showAllProductVersion));
-
 				productVersionComboBox.setDoubleBuffered(true);
 
-				if (ListUtil.isNotEmpty(allWorkspaceProducts)) {
-					productVersionComboBox.removeAllItems();
-				}
+				productVersionComboBox.removeAllItems();
 
-				allWorkspaceProducts.forEach(productVersionComboBox::addItem);
+				for (String productVersion : LiferayWorkspaceSupport.getProductVersions(showAllProductVersion)) {
+					productVersionComboBox.addItem(productVersion);
+				}
 
 				productVersionComboBox.setSelectedIndex(0);
 
@@ -456,8 +336,8 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 	private static final Logger _logger = Logger.getInstance(LiferayWorkspaceBuilder.class);
 
 	private boolean _indexSources = false;
+	private String _liferayProductGroupVersion;
 	private String _liferayProjectType;
-	private String _liferayVersion;
 	private String _productVersion;
 	private String _targetPlatform;
 

@@ -49,7 +49,7 @@ import org.jetbrains.plugins.gradle.util.GradleConstants;
  * @author Simon Jiang
  * @author Ethan Sun
  */
-public class LiferayModuleBuilder extends ModuleBuilder implements LiferayWorkspaceSupport {
+public class LiferayModuleBuilder extends ModuleBuilder {
 
 	public LiferayModuleBuilder() {
 		addListener(
@@ -193,7 +193,7 @@ public class LiferayModuleBuilder extends ModuleBuilder implements LiferayWorksp
 			sb.append("maven ");
 		}
 
-		String targetPlatformVersion = getTargetPlatformVersion(project);
+		String targetPlatformVersion = LiferayWorkspaceSupport.getTargetPlatformVersion(project);
 
 		if (targetPlatformVersion != null) {
 			sb.append("-v ");

@@ -76,8 +76,7 @@ import org.jetbrains.jps.model.java.JdkVersionDetector;
  */
 @SuppressWarnings("unchecked")
 public class LiferayServerConfiguration
-	extends LocatableConfigurationBase
-	implements CommonJavaRunConfigurationParameters, LiferayWorkspaceSupport, SearchScopeProvidingRunProfile {
+	extends LocatableConfigurationBase implements CommonJavaRunConfigurationParameters, SearchScopeProvidingRunProfile {
 
 	public LiferayServerConfiguration(Project project, ConfigurationFactory factory, String name) {
 		super(project, factory, name);
@@ -196,7 +195,7 @@ public class LiferayServerConfiguration
 		Project project = getProject();
 
 		if (Objects.nonNull(LiferayCore.getWorkspaceProvider(project))) {
-			String homeDir = getHomeDir(project);
+			String homeDir = LiferayWorkspaceSupport.getHomeDir(project);
 
 			if (Objects.isNull(homeDir)) {
 				return clone;

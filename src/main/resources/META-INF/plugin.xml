@@ -31,6 +31,10 @@
 	</p>
 	<p>
 		<ul>
+			<li>2.1.0</li>
+			<ul>
+				<li>INTELLIJ-288 Add support for Quarterly Releases in IntelliJ plugin</li>
+			</ul>
 			<li>2.0.8</li>
 			<ul>
 				<li>INTELLIJ-283 Intellij plugin compatibility issue with IntelliJ IDEA 2023.3</li>

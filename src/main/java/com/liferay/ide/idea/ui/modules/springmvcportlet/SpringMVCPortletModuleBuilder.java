@@ -48,7 +48,7 @@ import org.jetbrains.plugins.gradle.util.GradleConstants;
  * @author Terry Jia
  * @author Simon Jiang
  */
-public class SpringMVCPortletModuleBuilder extends ModuleBuilder implements LiferayWorkspaceSupport {
+public class SpringMVCPortletModuleBuilder extends ModuleBuilder {
 
 	public SpringMVCPortletModuleBuilder() {
 		addListener(
@@ -132,8 +132,8 @@ public class SpringMVCPortletModuleBuilder extends ModuleBuilder implements Life
 		_frameworkDependencies = frameworkDependencies;
 	}
 
-	public void setLiferayVersion(String liferayVersion) {
-		_liferayVersion = liferayVersion;
+	public void setLiferayProductGroupVersion(String liferayProductGroupVersion) {
+		_liferayProductGroupVersion = liferayProductGroupVersion;
 	}
 
 	public void setPackageName(String packageName) {
@@ -198,7 +198,7 @@ public class SpringMVCPortletModuleBuilder extends ModuleBuilder implements Life
 			sb.append("-b ");
 			sb.append("maven ");
 
-			String targetPlatformVersion = getTargetPlatformVersion(project);
+			String targetPlatformVersion = LiferayWorkspaceSupport.getTargetPlatformVersion(project);
 
 			if (targetPlatformVersion != null) {
 				sb.append("-v ");
@@ -208,7 +208,7 @@ public class SpringMVCPortletModuleBuilder extends ModuleBuilder implements Life
 		}
 		else {
 			sb.append("-v ");
-			sb.append(_liferayVersion);
+			sb.append(_liferayProductGroupVersion);
 			sb.append(" ");
 		}
 
@@ -250,7 +250,7 @@ public class SpringMVCPortletModuleBuilder extends ModuleBuilder implements Life
 
 	private String _framework;
 	private String _frameworkDependencies;
-	private String _liferayVersion;
+	private String _liferayProductGroupVersion;
 	private String _packageName;
 	private String _viewType;
 

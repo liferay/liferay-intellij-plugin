@@ -21,7 +21,7 @@ import java.util.List;
  * @author Joye Luo
  * @author Simon Jiang
  */
-public class InitBundleMavenAction extends AbstractLiferayMavenGoalAction implements LiferayWorkspaceSupport {
+public class InitBundleMavenAction extends AbstractLiferayMavenGoalAction {
 
 	public InitBundleMavenAction() {
 		super("InitBundle", "Run initBundle goal", LiferayIcons.LIFERAY_ICON);
@@ -37,7 +37,7 @@ public class InitBundleMavenAction extends AbstractLiferayMavenGoalAction implem
 			return;
 		}
 
-		String homeDir = getMavenProperty(
+		String homeDir = LiferayWorkspaceSupport.getMavenProperty(
 			project, WorkspaceConstants.MAVEN_HOME_DIR_PROPERTY, WorkspaceConstants.HOME_DIR_DEFAULT);
 
 		ProjectConfigurationUtil.configExcludedFolder(project, homeDir);

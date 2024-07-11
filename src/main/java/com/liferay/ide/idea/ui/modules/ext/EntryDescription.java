@@ -92,6 +92,13 @@ public class EntryDescription {
 		return _virtualFile;
 	}
 
+	@Override
+	public int hashCode() {
+		String string = _virtualFile.toString();
+
+		return string.hashCode();
+	}
+
 	public boolean isValid() {
 		return _virtualFile.isValid();
 	}

@@ -44,7 +44,7 @@ import org.jetbrains.plugins.gradle.util.GradleConstants;
  * @author Simon Jiang
  * @author Seiphon Wang
  */
-public class InitDockerBundleAction extends AbstractLiferayGradleTaskAction implements LiferayWorkspaceSupport {
+public class InitDockerBundleAction extends AbstractLiferayGradleTaskAction {
 
 	public InitDockerBundleAction() {
 		super("InitDockerBundle", "Run init docker Bundle task", LiferayIcons.LIFERAY_ICON, "createDockerContainer");
@@ -173,7 +173,7 @@ public class InitDockerBundleAction extends AbstractLiferayGradleTaskAction impl
 	@Nullable
 	@Override
 	protected RunnerAndConfigurationSettings processRunnerConfiguration(AnActionEvent anActionEvent) {
-		List<Module> warCoreExtProjects = getWarCoreExtModules(anActionEvent.getProject());
+		List<Module> warCoreExtProjects = LiferayWorkspaceSupport.getWarCoreExtModules(anActionEvent.getProject());
 
 		StringBuilder scriptParameters = new StringBuilder();
 

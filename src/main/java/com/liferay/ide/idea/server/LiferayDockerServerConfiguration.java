@@ -80,7 +80,7 @@ import org.jetbrains.plugins.gradle.util.GradleConstants;
 @SuppressWarnings("unchecked")
 public class LiferayDockerServerConfiguration
 	extends LocatableConfigurationBase
-	implements CommonProgramRunConfigurationParameters, LiferayWorkspaceSupport, SearchScopeProvidingRunProfile {
+	implements CommonProgramRunConfigurationParameters, SearchScopeProvidingRunProfile {
 
 	public LiferayDockerServerConfiguration(Project project, ConfigurationFactory factory, String name) {
 		super(project, factory, name);
@@ -256,7 +256,7 @@ public class LiferayDockerServerConfiguration
 		taskNames.add("startDockerContainer");
 		taskNames.add("logsDockerContainer");
 
-		List<Module> warCoreExtProjects = getWarCoreExtModules(_project);
+		List<Module> warCoreExtProjects = LiferayWorkspaceSupport.getWarCoreExtModules(_project);
 
 		if (ListUtil.isNotEmpty(warCoreExtProjects)) {
 			StringBuilder scriptParameters = new StringBuilder();

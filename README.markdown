@@ -1,12 +1,15 @@
 # Liferay IntelliJ Plugin
 
 ## Install from jetbrains offical link
+
 https://plugins.jetbrains.com/plugin/10739-liferay-intellij-plugin
 
 ## Confiugre plugin develop environment
+
 This project need Java JDK version 17.
 
 ## Building from source
+
 If you would like to build from source, use this following command:
 
 ```

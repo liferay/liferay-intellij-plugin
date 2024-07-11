@@ -54,7 +54,7 @@ import org.jetbrains.annotations.Nullable;
  * @author Simon Jiang
  * @author Ethan Sun
  */
-public abstract class AbstractLiferayAction extends AnAction implements LiferayWorkspaceSupport {
+public abstract class AbstractLiferayAction extends AnAction {
 
 	public AbstractLiferayAction(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
 		super(text, description, icon);
@@ -215,7 +215,7 @@ public abstract class AbstractLiferayAction extends AnAction implements LiferayW
 		if ((virtualFile != null) && ProjectRootsUtil.isModuleContentRoot(virtualFile, project) &&
 			!baseDir.equals(virtualFile)) {
 
-			String homeDir = getHomeDir(project);
+			String homeDir = LiferayWorkspaceSupport.getHomeDir(project);
 
 			if (Objects.isNull(homeDir)) {
 				return false;

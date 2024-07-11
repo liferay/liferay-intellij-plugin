@@ -51,7 +51,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author Ethan Sun
  */
-public class CompareOriginalImplementationAction extends AnAction implements LiferayWorkspaceSupport {
+public class CompareOriginalImplementationAction extends AnAction {
 
 	@Override
 	public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
@@ -81,7 +81,7 @@ public class CompareOriginalImplementationAction extends AnAction implements Lif
 
 		VirtualFile contextVirtualFile = anActionEvent.getData(CommonDataKeys.VIRTUAL_FILE);
 
-		VirtualFile moduleExtDir = getModuleExtDirFile(_project);
+		VirtualFile moduleExtDir = LiferayWorkspaceSupport.getModuleExtDirFile(_project);
 
 		if ((contextVirtualFile == null) || (moduleExtDir == null)) {
 			return;

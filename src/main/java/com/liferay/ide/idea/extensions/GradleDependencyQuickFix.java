@@ -32,8 +32,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author Charles Wu
  */
-public class GradleDependencyQuickFix
-	implements HighPriorityAction, Iconable, IntentionAction, LiferayWorkspaceSupport, LocalQuickFix {
+public class GradleDependencyQuickFix implements HighPriorityAction, Iconable, IntentionAction, LocalQuickFix {
 
 	public GradleDependencyQuickFix(Module module, Library library) {
 		_module = module;
@@ -91,7 +90,7 @@ public class GradleDependencyQuickFix
 		String result = libraryName.split(GradleDependencyQuickFixProvider.GRADLE_LIBRARY_PREFIX)[1];
 
 		try {
-			if (getTargetPlatformVersion(project) != null) {
+			if (LiferayWorkspaceSupport.getTargetPlatformVersion(project) != null) {
 				result = result.substring(0, result.lastIndexOf(":"));
 			}
 		}

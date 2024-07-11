@@ -62,7 +62,7 @@ import org.jetbrains.plugins.gradle.util.GradleConstants;
  * @author Charles Wu
  * @author Simon Jiang
  */
-public class OverrideFilesComponent implements LiferayWorkspaceSupport {
+public class OverrideFilesComponent {
 
 	public OverrideFilesComponent() {
 		listModel = new DefaultListModel<>();
@@ -126,7 +126,7 @@ public class OverrideFilesComponent implements LiferayWorkspaceSupport {
 			event -> {
 				refreshButton.setEnabled(false);
 
-				if ((getTargetPlatformVersion(_project) == null) && !selectingFiles) {
+				if ((LiferayWorkspaceSupport.getTargetPlatformVersion(_project) == null) && !selectingFiles) {
 					Messages.showMessageDialog(
 						_project, MessagesBundle.message("modules.ext.targetPlatform.mention"), "Warning",
 						Messages.getWarningIcon());

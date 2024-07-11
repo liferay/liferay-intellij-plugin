@@ -42,7 +42,7 @@ import javax.swing.JTextField;
 /**
  * @author Charles Wu
  */
-public class NewModuleExtFilesAction extends AnAction implements DumbAware, LiferayWorkspaceSupport {
+public class NewModuleExtFilesAction extends AnAction implements DumbAware {
 
 	public NewModuleExtFilesAction() {
 		super(LiferayIcons.LIFERAY_ICON);
@@ -69,7 +69,7 @@ public class NewModuleExtFilesAction extends AnAction implements DumbAware, Life
 
 		VirtualFile contextVirtualFile = anActionEvent.getData(CommonDataKeys.VIRTUAL_FILE);
 
-		VirtualFile moduleExtDir = getModuleExtDirFile(project);
+		VirtualFile moduleExtDir = LiferayWorkspaceSupport.getModuleExtDirFile(project);
 
 		if ((contextVirtualFile == null) || (moduleExtDir == null)) {
 			return;

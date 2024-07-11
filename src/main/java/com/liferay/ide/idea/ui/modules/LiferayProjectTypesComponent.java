@@ -5,9 +5,6 @@
 
 package com.liferay.ide.idea.ui.modules;
 
-import aQute.bnd.version.Version;
-import aQute.bnd.version.VersionRange;
-
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
@@ -54,10 +51,13 @@ import org.apache.commons.io.IOUtils;
 
 import org.jetbrains.annotations.Nullable;
 
+import org.osgi.framework.Version;
+import org.osgi.framework.VersionRange;
+
 /**
  * @author Seiphon Wang
  */
-public class LiferayProjectTypesComponent extends JPanel implements LiferayWorkspaceSupport {
+public class LiferayProjectTypesComponent extends JPanel {
 
 	public LiferayProjectTypesComponent() {
 	}
@@ -131,7 +131,7 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 
 		_typesPanel.add(typesScrollPane, "archetypes");
 
-		_liferayVersion = getLiferayVersion(_project);
+		_liferayVersion = LiferayWorkspaceSupport.getLiferayProductVersionObject(_project);
 
 		_projectTypeLabel.setVisible(true);
 
@@ -220,7 +220,7 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 	public boolean validateComponent() throws ConfigurationException {
 		String validationTitle = "Validation Error";
 
-		if (Objects.isNull(getTargetPlatformVersion(_context.getProject()))) {
+		if (Objects.isNull(LiferayWorkspaceSupport.getTargetPlatformVersion(_context.getProject()))) {
 			throw new ConfigurationException(
 				"Please set correct target platform version for liferay workspace project", validationTitle);
 		}
@@ -242,9 +242,9 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 		if (LiferayWorkspaceSupport.isValidMavenWorkspaceProject(_project)) {
 			if (Objects.equals(type, "form-field")) {
 				VersionRange requiredVersionRange = new VersionRange(
-					true, new Version("7.0"), new Version("7.2"), false);
+					VersionRange.LEFT_CLOSED, new Version("7.0"), new Version("7.2"), VersionRange.RIGHT_OPEN);
 
-				if (!requiredVersionRange.includes(new Version(_liferayVersion))) {
+				if (!requiredVersionRange.includes(_liferayVersion)) {
 					throw new ConfigurationException(
 						"Form Field project is only supported for versions 7.0 and 7.1 with Maven", validationTitle);
 				}
@@ -259,9 +259,7 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 		if (type.equals("war-core-ext")) {
 			Version notSupportFromPortalVersion = new Version("7.3");
 
-			Version currentVersion = Version.parseVersion(_liferayVersion);
-
-			if (currentVersion.compareTo(notSupportFromPortalVersion) >= 0) {
+			if (_liferayVersion.compareTo(notSupportFromPortalVersion) >= 0) {
 				throw new ConfigurationException(
 					"War Core Ext project is only supported starting from portal 7.0 to 7.2", validationTitle);
 			}
@@ -271,28 +269,31 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 
 		VersionRange versionRange = _projectTemplateVersionRangeMap.get(projectTemplateName);
 
-		if (versionRange != null) {
-			boolean include = versionRange.includes(new Version(_liferayVersion));
-
-			if (!include) {
-				boolean npm = type.startsWith("npm");
-
-				if (npm) {
-					throw new ConfigurationException(
-						"NPM portlet project templates generated from this tool are not supported for specified " +
-							"Liferay version. See LPS-97950 for full details.",
-						validationTitle);
-				}
-
-				throw new ConfigurationException(
-					"Specified Liferay version is invalid. Must be in range " + versionRange, validationTitle);
-			}
-		}
-		else {
+		if (versionRange == null) {
 			throw new ConfigurationException("Unable to get supported Liferay version", validationTitle);
 		}
 
-		return true;
+		Version right = versionRange.getRight();
+
+		if ((right.getMajor() >= 8) && (_liferayVersion.getMajor() >= right.getMajor())) {
+			return true;
+		}
+
+		if (versionRange.includes(_liferayVersion)) {
+			return true;
+		}
+
+		boolean npm = type.startsWith("npm");
+
+		if (npm) {
+			throw new ConfigurationException(
+				"NPM portlet project templates generated from this tool are not supported for specified Liferay " +
+					"version. See LPS-97950 for full details.",
+				validationTitle);
+		}
+
+		throw new ConfigurationException(
+			"Specified Liferay version is invalid. Must be in range " + versionRange, validationTitle);
 	}
 
 	private void _loadSupportedVersionRanges(Project project) {
@@ -372,7 +373,7 @@ public class LiferayProjectTypesComponent extends JPanel implements LiferayWorks
 	private static Map<String, VersionRange> _projectTemplateVersionRangeMap = new HashMap<>();
 
 	private WizardContext _context;
-	private String _liferayVersion;
+	private Version _liferayVersion;
 	private JPanel _mainPanel;
 	private Project _project;
 	private JLabel _projectTypeLabel;

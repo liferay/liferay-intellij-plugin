@@ -5,8 +5,6 @@
 
 package com.liferay.ide.idea.util;
 
-import aQute.bnd.version.Version;
-
 import com.google.common.collect.ListMultimap;
 
 import com.intellij.execution.process.ProcessHandler;
@@ -68,6 +66,8 @@ import org.jetbrains.plugins.groovy.lang.psi.api.statements.blocks.GrClosableBlo
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrCall;
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrExpression;
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrMethodCall;
+
+import org.osgi.framework.Version;
 
 /**
  * @author Terry Jia

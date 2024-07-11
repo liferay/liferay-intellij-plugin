@@ -41,5 +41,14 @@
     "portletmvc4spring": {
       "embedded": ["jsp", "thymeleaf"]
     }
+  },
+
+  "quarterly": {
+    "springportletmvc": {
+      "embedded": ["jsp", "thymeleaf"]
+    },
+    "portletmvc4spring": {
+      "embedded": ["jsp", "thymeleaf"]
+    }
   }
 }

@@ -8,14 +8,13 @@ package com.liferay.ide.idea.ui.actions;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 
 import com.liferay.ide.idea.core.LiferayIcons;
-import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 
 import java.util.Arrays;
 
 /**
  * @author Joye Luo
  */
-public class DeployMavenModuleAction extends AbstractLiferayMavenGoalAction implements LiferayWorkspaceSupport {
+public class DeployMavenModuleAction extends AbstractLiferayMavenGoalAction {
 
 	public DeployMavenModuleAction() {
 		super("Deploy", "Run deploy goal", LiferayIcons.LIFERAY_ICON);

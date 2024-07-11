@@ -22,7 +22,7 @@ import java.util.Objects;
 /**
  * @author Seiphon Wang
  */
-public class DeployDockerModuleAction extends AbstractLiferayGradleTaskAction implements LiferayWorkspaceSupport {
+public class DeployDockerModuleAction extends AbstractLiferayGradleTaskAction {
 
 	public DeployDockerModuleAction() {
 		super("DockerDeploy", "Run docker deploy task", LiferayIcons.LIFERAY_ICON, "dockerDeploy");
@@ -43,10 +43,12 @@ public class DeployDockerModuleAction extends AbstractLiferayGradleTaskAction im
 
 			Module module = ModuleUtil.findModuleForFile(virtualFile, project);
 
-			List<Module> unSupportModules = getWarCoreExtModules(project);
+			List<Module> unSupportModules = LiferayWorkspaceSupport.getWarCoreExtModules(project);
 
-			if (Objects.nonNull(getModuleExtDirFile(project))) {
-				unSupportModules.add(ModuleUtil.findModuleForFile(getModuleExtDirFile(project), project));
+			VirtualFile moduleExtDirFile = LiferayWorkspaceSupport.getModuleExtDirFile(project);
+
+			if (Objects.nonNull(moduleExtDirFile)) {
+				unSupportModules.add(ModuleUtil.findModuleForFile(moduleExtDirFile, project));
 			}
 
 			if ((virtualFile != null) && ProjectRootsUtil.isModuleContentRoot(virtualFile, project) &&
