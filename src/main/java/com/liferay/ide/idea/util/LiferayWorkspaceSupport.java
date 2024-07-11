@@ -21,12 +21,12 @@ import com.liferay.release.util.ReleaseEntry;
 import com.liferay.release.util.ReleaseUtil;
 
 import java.io.File;
-import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -175,13 +175,31 @@ public class LiferayWorkspaceSupport {
 	}
 
 	@Nullable
-	public static ReleaseEntry getReleaseEntry(String product, String targetPlatform) throws IOException {
-		Stream<ReleaseEntry> releaseEntryStream = getReleaseEntryStream();
+	public static ReleaseEntry getReleaseEntry(String version) {
+		return getReleaseEntry(null, version);
+	}
 
-		return releaseEntryStream.filter(
-			releaseEntry -> Objects.equals(releaseEntry.getProduct(), product)
+	@Nullable
+	public static ReleaseEntry getReleaseEntry(String product, String version) {
+		Predicate<ReleaseEntry> productGroupVersionPredicate = releaseEntry -> Objects.equals(
+			releaseEntry.getProductGroupVersion(), version);
+		Predicate<ReleaseEntry> productPredicate = releaseEntry -> Objects.equals(releaseEntry.getProduct(), product);
+		Predicate<ReleaseEntry> releaseKeyPredicate = releaseEntry -> Objects.equals(
+			releaseEntry.getReleaseKey(), version);
+		Predicate<ReleaseEntry> targetPlatformVersionPredicate = releaseEntry -> Objects.equals(
+			releaseEntry.getTargetPlatformVersion(), version);
+
+		return ReleaseUtil.getReleaseEntryStream(
 		).filter(
-			releaseEntry -> Objects.equals(releaseEntry.getTargetPlatformVersion(), targetPlatform)
+			releaseKeyPredicate.or(
+				productPredicate.and(targetPlatformVersionPredicate)
+			).or(
+				productPredicate.and(productGroupVersionPredicate)
+			).or(
+				targetPlatformVersionPredicate
+			).or(
+				productGroupVersionPredicate
+			)
 		).findFirst(
 		).orElse(
 			null
