@@ -163,29 +163,26 @@ public class LiferayModuleExtBuilder extends ModuleBuilder {
 
 	private void _createProject(VirtualFile projectRoot, Project project) {
 		VirtualFile virtualFile = projectRoot.getParent();
-		StringBuilder sb = new StringBuilder();
 
-		sb.append("create -d \"");
-		sb.append(virtualFile.getPath());
-		sb.append("\" ");
-		sb.append("--base \"");
-		sb.append(project.getBasePath());
-		sb.append("\" -t ");
-		sb.append("modules-ext ");
-		sb.append("-m ");
-		sb.append(_originalModuleName);
+		List<String> args = new ArrayList<>();
+
+		args.add("create -d");
+		args.add(BladeCLI.quote(virtualFile.getPath()));
+		args.add("--base");
+		args.add(BladeCLI.quote(project.getBasePath()));
+		args.add("-t");
+		args.add("modules-ext");
+		args.add("-m");
+		args.add(_originalModuleName);
 
 		if (Objects.nonNull(project) && !LiferayWorkspaceSupport.isFlexibleLiferayWorkspace(project)) {
-			sb.append(" -M ");
-			sb.append(_originalModuleVersion);
+			args.add("-M");
+			args.add(_originalModuleVersion);
 		}
 
-		sb.append(" ");
-		sb.append("\"");
-		sb.append(projectRoot.getName());
-		sb.append("\"");
+		args.add(BladeCLI.quote(projectRoot.getName()));
 
-		BladeCLI.execute(project, sb.toString());
+		BladeCLI.execute(project, args);
 	}
 
 	private void _refreshProject(Project project) {

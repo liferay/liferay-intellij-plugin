@@ -176,71 +176,62 @@ public class LiferayModuleBuilder extends ModuleBuilder {
 
 		VirtualFile moduleParentDir = moduleDir.getParent();
 
-		StringBuilder sb = new StringBuilder();
+		List<String> args = new ArrayList<>();
 
-		sb.append("create ");
-		sb.append("-d \"");
-		sb.append(moduleParentDir.getPath());
-		sb.append("\" ");
-		sb.append("--base \"");
-		sb.append(project.getProjectFilePath());
-		sb.append("\" ");
+		args.add("create");
+
+		args.add("-d");
+		args.add(BladeCLI.quote(moduleParentDir.getPath()));
+
+		args.add("--base");
+		args.add(BladeCLI.quote(project.getProjectFilePath()));
 
 		String typeId = liferayProjectType.getId();
 
 		if (Objects.equals(typeId, LiferayProjectType.LIFERAY_MAVEN_WORKSPACE)) {
-			sb.append("-b ");
-			sb.append("maven ");
+			args.add("-b");
+			args.add("maven");
 		}
 
 		String targetPlatformVersion = LiferayWorkspaceSupport.getTargetPlatformVersion(project);
 
 		if (targetPlatformVersion != null) {
-			sb.append("-v ");
-			sb.append(targetPlatformVersion);
+			args.add("-v");
+			args.add(targetPlatformVersion);
 		}
 
-		sb.append(" ");
-		sb.append("-t ");
-		sb.append(_type);
-		sb.append(" ");
+		args.add("-t");
+		args.add(_type);
 
 		if (!CoreUtil.isNullOrEmpty(_className)) {
-			sb.append("-c ");
-			sb.append(_className);
-			sb.append(" ");
+			args.add("-c");
+			args.add(_className);
 		}
 
 		if (!CoreUtil.isNullOrEmpty(_packageName)) {
-			sb.append("-p ");
-			sb.append(_packageName);
-			sb.append(" ");
+			args.add("-p");
+			args.add(_packageName);
 		}
 
 		if (_type.equals("theme-contributor")) {
-			sb.append("-C ");
+			args.add("-C");
 
 			if (!CoreUtil.isNullOrEmpty(_contributorType)) {
-				sb.append(_contributorType);
+				args.add(_contributorType);
 			}
 			else {
-				sb.append(moduleDir.getName());
+				args.add(moduleDir.getName());
 			}
-
-			sb.append(" ");
 		}
 
 		if ((_type.equals("service") || _type.equals("service-wrapper")) && !CoreUtil.isNullOrEmpty(_serviceName)) {
-			sb.append("-s ");
-			sb.append(_serviceName);
-			sb.append(" ");
+			args.add("-s");
+			args.add(_serviceName);
 		}
 
-		sb.append("\"");
-		sb.append(moduleDir.getName());
-		sb.append("\" ");
+		args.add(BladeCLI.quote(moduleDir.getName()));
 
-		BladeCLI.execute(project, sb.toString());
+		BladeCLI.execute(project, args);
 
 		modifiableRootModel.addContentEntry(moduleDir);
 

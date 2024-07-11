@@ -34,6 +34,8 @@ import java.io.IOException;
 
 import java.nio.file.Path;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.stream.Stream;
@@ -179,35 +181,33 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 	}
 
 	protected void initWorkspace(Project project) {
-		StringBuilder sb = new StringBuilder();
+		List<String> args = new ArrayList<>();
 
-		sb.append("--base ");
-		sb.append("\"");
-		sb.append(project.getBasePath());
-		sb.append("\" ");
-		sb.append("init ");
-		sb.append("-v ");
+		args.add("--base");
+		args.add(BladeCLI.quote(project.getBasePath()));
+		args.add("init");
+		args.add("-v");
 
 		if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_MAVEN_WORKSPACE)) {
-			sb.append(_targetPlatform);
+			args.add(_targetPlatform);
 		}
 		else if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_GRADLE_WORKSPACE)) {
-			sb.append(_productVersion);
+			args.add(_productVersion);
 		}
 
-		sb.append(" ");
-		sb.append("-f ");
+		args.add("-f");
 
 		if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_MAVEN_WORKSPACE)) {
-			sb.append("-b ");
-			sb.append("maven");
+			args.add("-b");
+			args.add("maven");
+		}
 		}
 
 		PropertiesComponent component = PropertiesComponent.getInstance(project);
 
 		component.setValue(WorkspaceConstants.WIZARD_LIFERAY_VERSION_FIELD, _liferayProductGroupVersion);
 
-		BladeCLI.executeWithLatestBlade(sb.toString());
+		BladeCLI.executeWithLatestBlade(args);
 
 		if (_liferayProjectType.equals(LiferayProjectType.LIFERAY_GRADLE_WORKSPACE)) {
 			try {
