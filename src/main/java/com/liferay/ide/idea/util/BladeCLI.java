@@ -16,6 +16,8 @@ import java.io.PrintStream;
 import java.nio.file.Files;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
@@ -40,6 +42,10 @@ public class BladeCLI {
 	public static final String BLADE_392 = "blade-3.9.2.jar";
 
 	public static final String BLADE_LATEST = "blade-latest.jar";
+
+	public static String[] execute(File bladeJar, Collection<String> args) {
+		return execute(bladeJar, String.join(" ", args));
+	}
 
 	public static String[] execute(File bladeJar, String args) {
 		Project project = new Project();
@@ -149,11 +155,11 @@ public class BladeCLI {
 		return lines.toArray(new String[0]);
 	}
 
-	public static String[] execute(com.intellij.openapi.project.Project liferayProject, String args) {
+	public static String[] execute(com.intellij.openapi.project.Project liferayProject, Collection<String> args) {
 		return execute(getBladeJar(getBladeJarVersion(liferayProject)), args);
 	}
 
-	public static String[] executeWithLatestBlade(String args) {
+	public static String[] executeWithLatestBlade(Collection<String> args) {
 		return execute(getBladeJar(BLADE_LATEST), args);
 	}
 
@@ -220,7 +226,7 @@ public class BladeCLI {
 	public static synchronized String[] getProjectTemplates(com.intellij.openapi.project.Project liferayProject) {
 		List<String> templateNames = new ArrayList<>();
 
-		String[] executeResult = execute(liferayProject, "create -l");
+		String[] executeResult = execute(liferayProject, Arrays.asList("create", "-l"));
 
 		for (String name : executeResult) {
 			String trimmedName = name.trim();
@@ -234,6 +240,10 @@ public class BladeCLI {
 		}
 
 		return templateNames.toArray(new String[0]);
+	}
+
+	public static String quote(String s) {
+		return "\"" + s + "\"";
 	}
 
 	private static String _getBladeVersion(InputStream inputStream) {
