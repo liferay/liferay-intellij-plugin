@@ -313,6 +313,8 @@ verifyBladeLatest {
 
 tasks {
 	runPluginVerifier {
+		freeArgs = ["-mute", "TemplateWordInPluginId"]
+
 		ideVersions = [
 			"IC-2023.3",
 			"IU-2023.3"
