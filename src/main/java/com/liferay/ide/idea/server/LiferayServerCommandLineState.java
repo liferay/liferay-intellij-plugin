@@ -11,6 +11,8 @@ import com.intellij.execution.configurations.JavaParameters;
 import com.intellij.execution.configurations.ParametersList;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.util.JavaParametersUtil;
+import com.intellij.openapi.projectRoots.JavaSdkVersion;
+import com.intellij.openapi.projectRoots.JavaSdkVersionUtil;
 import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.util.PathsList;
@@ -29,6 +31,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,8 +90,13 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 
 		javaParameters.setEnv(userEnvironmentMap);
 
-		javaParameters.setJdk(
-			JavaParametersUtil.createProjectJdk(liferayServerConfiguration.getProject(), alternativeJre));
+		Sdk projectJdk = JavaParametersUtil.createProjectJdk(liferayServerConfiguration.getProject(), alternativeJre);
+
+		if (JavaSdkVersionUtil.isAtLeast(projectJdk, JavaSdkVersion.JDK_11)) {
+			javaParameters.addEnv("JDK_JAVA_OPTIONS", _getJdkJavaOptionsString(javaParameters));
+		}
+
+		javaParameters.setJdk(projectJdk);
 
 		String bundleLocation = liferayServerConfiguration.getBundleLocation();
 
@@ -126,8 +134,7 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 		ParametersList vmParametersList = javaParameters.getVMParametersList();
 
 		Stream.of(
-			portalBundle.getRuntimeStartVMArgs(
-				JavaParametersUtil.createProjectJdk(liferayServerConfiguration.getProject(), alternativeJre))
+			portalBundle.getRuntimeStartVMArgs(projectJdk)
 		).forEach(
 			vmParametersList::add
 		);
@@ -202,6 +209,35 @@ public class LiferayServerCommandLineState extends BaseJavaApplicationCommandLin
 				portalExtPropertiesFile, contents.replace("include-and-override=portal-developer.properties", ""),
 				Charset.defaultCharset());
 		}
+	}
+
+	@NotNull
+	private String _getJdkJavaOptionsString(JavaParameters javaParameters) {
+		List<String> opens = new ArrayList<>();
+
+		Map<String, String> env = javaParameters.getEnv();
+
+		if (env.containsKey("JDK_JAVA_OPTIONS")) {
+			opens.add(env.get("JDK_JAVA_OPTIONS"));
+		}
+
+		opens.add("--add-opens=java.base/java.io=ALL-UNNAMED");
+		opens.add("--add-opens=java.base/java.lang.invoke=ALL-UNNAMED");
+		opens.add("--add-opens=java.base/java.lang.ref=ALL-UNNAMED");
+		opens.add("--add-opens=java.base/java.lang.reflect=ALL-UNNAMED");
+		opens.add("--add-opens=java.base/java.lang=ALL-UNNAMED");
+		opens.add("--add-opens=java.base/java.net=ALL-UNNAMED");
+		opens.add("--add-opens=java.base/java.nio.charset=ALL-UNNAMED");
+		opens.add("--add-opens=java.base/java.nio=ALL-UNNAMED");
+		opens.add("--add-opens=java.base/java.text=ALL-UNNAMED");
+		opens.add("--add-opens=java.base/java.util.concurrent.locks=ALL-UNNAMED");
+		opens.add("--add-opens=java.base/java.util.concurrent=ALL-UNNAMED");
+		opens.add("--add-opens=java.base/java.util=ALL-UNNAMED");
+		opens.add("--add-opens=java.base/sun.nio.ch=ALL-UNNAMED");
+		opens.add("--add-opens=java.base/sun.nio.cs=ALL-UNNAMED");
+		opens.add("--add-opens=java.xml/com.sun.org.apache.xerces.internal.util=ALL-UNNAMED");
+
+		return String.join(" ", opens);
 	}
 
 }
