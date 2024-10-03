@@ -31,6 +31,10 @@
 	</p>
 	<p>
 		<ul>
+			<li>2.1.1</li>
+			<ul>
+				<li>LPD-36530 Failure launching DXP 7.4 2024 Q3 in Intellij using JDK 21</li>
+			</ul>
 			<li>2.1.0</li>
 			<ul>
 				<li>INTELLIJ-288 Add support for Quarterly Releases in IntelliJ plugin</li>
