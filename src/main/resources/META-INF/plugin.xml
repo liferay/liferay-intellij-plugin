@@ -35,6 +35,7 @@
 			<ul>
 				<li>LPD-36530 Failure launching DXP 7.4 2024 Q3 in Intellij using JDK 21</li>
 				<li>LPD-41755 Update Blade in Liferay IntelliJ Plugin</li>
+				<li>LPD-41756 Improve product version selection logic in Liferay IntelliJ Plugin</li>
 			</ul>
 			<li>2.1.0</li>
 			<ul>
