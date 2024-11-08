@@ -90,7 +90,7 @@ jobs:
 
       - name: Verify compatibility
         id: verify
-        uses: drewbrokke/intellij-platform-plugin-verifier-action@1fa536f8ae8b9d1987f3609bbc764fe36783c717
+        uses: ChrisCarini/intellij-platform-plugin-verifier-action@latest
 
         with:
          ide-versions: |
