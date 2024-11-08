@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -184,26 +185,34 @@ public class LiferayWorkspaceSupport {
 		Predicate<ReleaseEntry> productGroupVersionPredicate = releaseEntry -> Objects.equals(
 			releaseEntry.getProductGroupVersion(), version);
 		Predicate<ReleaseEntry> productPredicate = releaseEntry -> Objects.equals(releaseEntry.getProduct(), product);
-		Predicate<ReleaseEntry> releaseKeyPredicate = releaseEntry -> Objects.equals(
-			releaseEntry.getReleaseKey(), version);
 		Predicate<ReleaseEntry> targetPlatformVersionPredicate = releaseEntry -> Objects.equals(
 			releaseEntry.getTargetPlatformVersion(), version);
 
-		return ReleaseUtil.getReleaseEntryStream(
-		).filter(
-			releaseKeyPredicate.or(
-				productPredicate.and(targetPlatformVersionPredicate)
-			).or(
-				productPredicate.and(productGroupVersionPredicate)
-			).or(
-				targetPlatformVersionPredicate
-			).or(
-				productGroupVersionPredicate
-			)
-		).findFirst(
-		).orElse(
-			null
-		);
+		List<Predicate<ReleaseEntry>> predicates = new ArrayList<>();
+
+		predicates.add(releaseEntry -> Objects.equals(releaseEntry.getReleaseKey(), version));
+
+		predicates.add(productPredicate.and(targetPlatformVersionPredicate));
+
+		predicates.add(productPredicate.and(productGroupVersionPredicate));
+
+		predicates.add(targetPlatformVersionPredicate);
+
+		predicates.add(productGroupVersionPredicate);
+
+		for (Predicate<ReleaseEntry> predicate : predicates) {
+			Stream<ReleaseEntry> releaseEntryStream = getReleaseEntryStream();
+
+			Optional<ReleaseEntry> first = releaseEntryStream.filter(
+				predicate
+			).findFirst();
+
+			if (first.isPresent()) {
+				return first.get();
+			}
+		}
+
+		return null;
 	}
 
 	public static Stream<ReleaseEntry> getReleaseEntryStream() {
