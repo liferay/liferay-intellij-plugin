@@ -9,6 +9,7 @@ import com.intellij.openapi.externalSystem.model.ExternalSystemException;
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId;
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener;
 import com.intellij.openapi.externalSystem.util.OutputWrapper;
+import com.intellij.openapi.project.Project;
 import com.intellij.util.execution.ParametersListUtil;
 
 import java.nio.file.Path;
@@ -43,7 +44,19 @@ public class LiferayGradleTaskManager implements GradleTaskManagerExtension {
 			@NotNull ExternalSystemTaskId id, @NotNull ExternalSystemTaskNotificationListener listener)
 		throws ExternalSystemException {
 
-		listener.onCancel(id);
+		Project project = id.findProject();
+
+		if (project == null) {
+			return false;
+		}
+
+		String projectPath = project.getProjectFilePath();
+
+		if (projectPath == null) {
+			return false;
+		}
+
+		listener.onCancel(projectPath, id);
 
 		final CancellationTokenSource cancellationTokenSource = _cancellationMap.get(id);
 
