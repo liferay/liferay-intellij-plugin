@@ -96,6 +96,8 @@ dependencies {
 	testImplementation group: "junit", name: "junit", version: "4.13.2"
 
 	intellijPlatform {
+		intellijIdeaUltimate '2025.1'
+
 		// Community
 		bundledPlugin "com.intellij.java-i18n"
 		bundledPlugin "com.intellij.properties"
@@ -274,8 +276,6 @@ intellijPlatform {
 	pluginConfiguration {
 		name = "liferay-intellij-plugin"
 	}
-
-	version = "IU-2023.3"
 }
 
 patchPluginXml {
@@ -345,8 +345,8 @@ tasks {
 		freeArgs = ["-mute", "TemplateWordInPluginId"]
 
 		ideVersions = [
-			"IC-2023.3",
-			"IU-2023.3"
+			"IC-2025.1",
+			"IU-2025.1"
 		]
 	}
 }
