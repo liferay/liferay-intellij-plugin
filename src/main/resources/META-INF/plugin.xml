@@ -343,15 +343,28 @@
 	</p>]]>
 	</change-notes>
 
+	<!-- Community -->
 	<depends>com.intellij.modules.java</depends>
 	<depends>com.intellij.gradle</depends>
 	<depends>org.jetbrains.idea.maven</depends>
-	<depends optional="true" config-file="javaee-web.xml">com.intellij.javaee.web</depends>
-	<depends optional="true" config-file="javaee.xml">com.intellij.javaee</depends>
-	<depends optional="true" config-file="css.xml">com.intellij.css</depends>
-	<depends optional="true" config-file="javascript.xml">JavaScript</depends>
-	<depends optional="true" config-file="jsp.xml">com.intellij.jsp</depends>
-	<depends optional="true" config-file="properties.xml">com.intellij.properties</depends>
+	<depends optional="true" config-file="com.liferay.ide.intellij.plugin-css.xml">com.intellij.css</depends>
+	<depends optional="true" config-file="com.liferay.ide.intellij.plugin-properties.xml">com.intellij.properties</depends>
+	<depends>com.intellij.java-i18n</depends>
+	<depends>JUnit</depends>
+	<depends>org.intellij.groovy</depends>
+	<depends>org.jetbrains.plugins.gradle</depends>
+	<depends>com.intellij.java </depends>
+
+	<!-- Ultimate -->
+	<depends>com.intellij.database</depends>
+	<depends optional="true" config-file="com.liferay.ide.intellij.plugin-javaee.xml">com.intellij.javaee</depends>
+	<depends optional="true" config-file="com.liferay.ide.intellij.plugin-javaee-web.xml">com.intellij.javaee.web</depends>
+	<depends optional="true" config-file="com.liferay.ide.intellij.plugin-jsp.xml">com.intellij.jsp</depends>
+	<depends optional="true" config-file="com.liferay.ide.intellij.plugin-persistence.xml">com.intellij.persistence</depends>
+	<depends optional="true" config-file="com.liferay.ide.intellij.plugin-webcomponents.xml">com.intellij.plugins.webcomponents</depends>
+	<depends optional="true" config-file="com.liferay.ide.intellij.plugin-javascript.xml">JavaScript</depends>
+	<depends optional="true" config-file="com.liferay.ide.intellij.plugin-JSIntentionPowerPack.xml">JSIntentionPowerPack</depends>
+	<depends optional="true" config-file="com.liferay.ide.intellij.plugin-sass.xml">org.jetbrains.plugins.sass</depends>
 
 	<actions>
 		<action id="NewModuleExtFiles" class="com.liferay.ide.idea.ui.modules.ext.NewModuleExtFilesAction"
