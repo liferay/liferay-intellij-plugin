@@ -143,7 +143,11 @@ public class InitDockerBundleAction extends AbstractLiferayGradleTaskAction {
 	protected void doExecute(
 		AnActionEvent anActionEvent, RunnerAndConfigurationSettings runnerAndConfigurationSettings) {
 
-		Project project = anActionEvent.getRequiredData(CommonDataKeys.PROJECT);
+		Project project = anActionEvent.getData(CommonDataKeys.PROJECT);
+
+		if (project == null) {
+			return;
+		}
 
 		beforeTask(project);
 	}

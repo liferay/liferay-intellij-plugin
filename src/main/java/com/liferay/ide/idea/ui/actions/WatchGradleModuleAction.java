@@ -164,7 +164,11 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
 			return null;
 		}
 
-		Project project = anActionEvent.getRequiredData(CommonDataKeys.PROJECT);
+		Project project = anActionEvent.getData(CommonDataKeys.PROJECT);
+
+		if (project == null) {
+			return null;
+		}
 
 		RunContentManager runContentManager = RunContentManager.getInstance(project);
 
