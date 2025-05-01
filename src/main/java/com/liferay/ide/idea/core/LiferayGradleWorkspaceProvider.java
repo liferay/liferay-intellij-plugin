@@ -81,7 +81,7 @@ public class LiferayGradleWorkspaceProvider extends AbstractWorkspaceProvider {
 			return targetPlatformDependencyList;
 		}
 
-		List<String> javaHomePaths = JavaHomeFinder.suggestHomePaths();
+		List<String> javaHomePaths = JavaHomeFinder.suggestHomePaths(false);
 
 		File javaHomeFile = null;
 
