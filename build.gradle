@@ -274,13 +274,13 @@ formatSource {
 
 intellijPlatform {
 	pluginConfiguration {
+		ideaVersion {
+			sinceBuild = "233"
+			untilBuild = ""
+		}
+
 		name = "liferay-intellij-plugin"
 	}
-}
-
-patchPluginXml {
-	sinceBuild = "233"
-	untilBuild = ""
 }
 
 processResources {
