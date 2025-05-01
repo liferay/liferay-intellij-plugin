@@ -29,7 +29,6 @@ import org.gradle.tooling.ProjectConnection;
 import org.gradle.tooling.ResultHandler;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.gradle.service.execution.GradleProgressListener;
 import org.jetbrains.plugins.gradle.service.task.GradleTaskManagerExtension;
 import org.jetbrains.plugins.gradle.settings.GradleExecutionSettings;
@@ -60,12 +59,12 @@ public class LiferayGradleTaskManager implements GradleTaskManagerExtension {
 
 	@Override
 	public boolean executeTasks(
-			@NotNull ExternalSystemTaskId id, @NotNull List<String> taskNames, @NotNull String projectPath,
-			@Nullable GradleExecutionSettings settings, @Nullable String jvmParametersSetup,
+			@NotNull String projectPath, @NotNull ExternalSystemTaskId id, @NotNull GradleExecutionSettings settings,
 			@NotNull ExternalSystemTaskNotificationListener listener)
 		throws ExternalSystemException {
 
-		final List<String> tasks = taskNames.stream(
+		final List<String> tasks = settings.getTasks(
+		).stream(
 		).flatMap(
 			s -> ParametersListUtil.parse(
 				s, false, true
@@ -96,8 +95,7 @@ public class LiferayGradleTaskManager implements GradleTaskManagerExtension {
 			return true;
 		}
 
-		return GradleTaskManagerExtension.super.executeTasks(
-			id, taskNames, projectPath, settings, jvmParametersSetup, listener);
+		return GradleTaskManagerExtension.super.executeTasks(projectPath, id, settings, listener);
 	}
 
 	private BuildLauncher _gerBuilderLauncher(

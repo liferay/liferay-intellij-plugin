@@ -12,7 +12,7 @@ import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskId;
-import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListenerAdapter;
+import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener;
 import com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskType;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
@@ -39,6 +39,7 @@ import javax.swing.plaf.basic.BasicComboBoxEditor;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.gradle.service.task.GradleTaskManager;
+import org.jetbrains.plugins.gradle.settings.GradleExecutionSettings;
 import org.jetbrains.plugins.gradle.util.GradleConstants;
 
 import org.osgi.framework.Version;
@@ -209,10 +210,15 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 
 		final boolean[] dependencyStringStart = {false};
 
+		GradleExecutionSettings settings = new GradleExecutionSettings();
+
+		settings.setTasks(Lists.newArrayList("dependencyManagement"));
+
 		gradleTaskManager.executeTasks(
+			Objects.requireNonNull(_project.getProjectFilePath()),
 			ExternalSystemTaskId.create(GradleConstants.SYSTEM_ID, ExternalSystemTaskType.EXECUTE_TASK, _project),
-			Lists.newArrayList("dependencyManagement"), _project.getBasePath(), null, null,
-			new ExternalSystemTaskNotificationListenerAdapter() {
+			settings,
+			new ExternalSystemTaskNotificationListener() {
 
 				@Override
 				public void onTaskOutput(@NotNull ExternalSystemTaskId id, @NotNull String text, boolean stdOut) {
