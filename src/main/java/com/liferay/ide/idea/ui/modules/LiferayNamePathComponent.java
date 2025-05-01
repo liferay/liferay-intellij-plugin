@@ -14,6 +14,7 @@ import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
@@ -128,13 +129,16 @@ public class LiferayNamePathComponent extends JPanel {
 
 		add(_name, gridBagConstraints);
 
-		FileChooserDescriptor chooserDescriptor =
-			(FileChooserDescriptor)BrowseFilesListener.SINGLE_DIRECTORY_DESCRIPTOR.clone();
+		FileChooserDescriptor chooserDescriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor(
+		).withHideIgnored(
+			hideIgnored
+		).withTitle(
+			pathChooserTitle
+		).withDescription(
+			pathChooserDescription
+		);
 
-		chooserDescriptor.setHideIgnored(hideIgnored);
-
-		BrowseFilesListener browseButtonActionListener = new BrowseFilesListener(
-			_path, pathChooserTitle, pathChooserDescription, chooserDescriptor) {
+		BrowseFilesListener browseButtonActionListener = new BrowseFilesListener(_path, chooserDescriptor) {
 
 			public void actionPerformed(ActionEvent event) {
 				super.actionPerformed(event);
