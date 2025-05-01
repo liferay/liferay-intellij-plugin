@@ -94,6 +94,28 @@ dependencies {
 	api group: "org.osgi", name: "org.osgi.core", version: "6.0.0"
 
 	testImplementation group: "junit", name: "junit", version: "4.13.2"
+
+	intellijPlatform {
+		// Community
+		bundledPlugin "com.intellij.java-i18n"
+		bundledPlugin "com.intellij.properties"
+		bundledPlugin "JUnit"
+		bundledPlugin "org.intellij.groovy"
+		bundledPlugin "org.jetbrains.idea.maven"
+		bundledPlugin "org.jetbrains.plugins.gradle"
+		bundledPlugin 'com.intellij.java'
+
+		// Ultimate
+		bundledPlugin "com.intellij.database"
+		bundledPlugin "com.intellij.javaee"
+		bundledPlugin "com.intellij.javaee.web"
+		bundledPlugin "com.intellij.jsp"
+		bundledPlugin "com.intellij.persistence"
+		bundledPlugin "com.intellij.plugins.webcomponents"
+		bundledPlugin "JavaScript"
+		bundledPlugin "JSIntentionPowerPack"
+		bundledPlugin "org.jetbrains.plugins.sass"
+	}
 }
 
 dockerImageBuild {
@@ -253,7 +275,6 @@ intellijPlatform {
 		name = "liferay-intellij-plugin"
 	}
 
-	plugins = ["java", "webComponents", "DatabaseTools", "gradle", "Groovy", "java-i18n", "JavaEE", "javascript-impl", "javaee-jsp-base-impl", "javascript-intentions", "javaee-web-impl", "junit", "maven", "javaee-persistence-impl", "properties", "sass"]
 	version = "IU-2023.3"
 }
 
@@ -287,6 +308,10 @@ repositories {
 		url "https://repository-cdn.liferay.com/nexus/content/groups/public"
 	}
 	mavenCentral()
+
+	intellijPlatform {
+		defaultRepositories()
+	}
 }
 
 runIde {
