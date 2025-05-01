@@ -30,8 +30,8 @@ import com.liferay.ide.idea.server.LiferayDockerServerConfigurationType;
 import com.liferay.ide.idea.util.LiferayWorkspaceSupport;
 import com.liferay.ide.idea.util.ProjectConfigurationUtil;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -45,6 +45,7 @@ import org.gradle.cli.ParsedCommandLine;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.idea.maven.project.MavenImportListener;
+import org.jetbrains.idea.maven.project.MavenProject;
 import org.jetbrains.plugins.gradle.util.GradleConstants;
 
 /**
@@ -100,36 +101,31 @@ public class LiferayPostStartupActivity implements DumbAware, ProjectActivity {
 
 		messageBusConnection.subscribe(
 			MavenImportListener.TOPIC,
-			(MavenImportListener)(projects, list) -> {
-				Stream<Module> modulesStream = list.stream();
+			new MavenImportListener() {
 
-				modulesStream.map(
-					module -> module.getProject()
-				).filter(
-					moduleProject -> moduleProject.equals(project)
-				).distinct(
-				).forEach(
-					new Consumer<Project>() {
+				@Override
+				public void importFinished(
+					@NotNull Collection<MavenProject> projects, @NotNull List<@NotNull Module> list) {
 
-						@Override
-						public void accept(Project moduleProject) {
-							application.runReadAction(
-								new Runnable() {
+					Stream<Module> modulesStream = list.stream();
 
-									@Override
-									public void run() {
-										String homeDir = LiferayWorkspaceSupport.getMavenProperty(
-											moduleProject, WorkspaceConstants.MAVEN_HOME_DIR_PROPERTY,
-											WorkspaceConstants.HOME_DIR_DEFAULT);
+					modulesStream.map(
+						Module::getProject
+					).filter(
+						moduleProject -> moduleProject.equals(project)
+					).distinct(
+					).forEach(
+						moduleProject -> application.runReadAction(
+							() -> {
+								String homeDir = LiferayWorkspaceSupport.getMavenProperty(
+									moduleProject, WorkspaceConstants.MAVEN_HOME_DIR_PROPERTY,
+									WorkspaceConstants.HOME_DIR_DEFAULT);
 
-										ProjectConfigurationUtil.configExcludedFolder(moduleProject, homeDir);
-									}
+								ProjectConfigurationUtil.configExcludedFolder(moduleProject, homeDir);
+							})
+					);
+				}
 
-								});
-						}
-
-					}
-				);
 			});
 
 		messageBusConnection.subscribe(
