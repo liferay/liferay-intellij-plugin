@@ -3,6 +3,7 @@
 /gradle/
 /gradle/wrapper
 .idea/
+.intellijPlatform
 .project
 .settings/
 build/
