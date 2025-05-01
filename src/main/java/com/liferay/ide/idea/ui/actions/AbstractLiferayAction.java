@@ -62,7 +62,11 @@ public abstract class AbstractLiferayAction extends AnAction {
 
 	@Override
 	public void actionPerformed(final AnActionEvent anActionEvent) {
-		Project project = anActionEvent.getRequiredData(CommonDataKeys.PROJECT);
+		Project project = anActionEvent.getData(CommonDataKeys.PROJECT);
+
+		if (project == null) {
+			return;
+		}
 
 		ProgressManager.getInstance(
 		).run(
