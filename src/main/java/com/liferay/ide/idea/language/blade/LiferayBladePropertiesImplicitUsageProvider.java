@@ -5,7 +5,7 @@
 
 package com.liferay.ide.idea.language.blade;
 
-import com.intellij.codeInspection.unused.ImplicitPropertyUsageProvider;
+import com.intellij.lang.properties.codeInspection.unused.ImplicitPropertyUsageProvider;
 import com.intellij.lang.properties.psi.Property;
 import com.intellij.psi.PsiFile;
 
@@ -14,8 +14,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author Dominik Marks
  */
-public class LiferayBladePropertiesImplicitUsageProvider
-	implements com.intellij.lang.properties.codeInspection.unused.ImplicitPropertyUsageProvider {
+public class LiferayBladePropertiesImplicitUsageProvider implements ImplicitPropertyUsageProvider {
 
 	@Override
 	public boolean isUsed(@NotNull Property property) {

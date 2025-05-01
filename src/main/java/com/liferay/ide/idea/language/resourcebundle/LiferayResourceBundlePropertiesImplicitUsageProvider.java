@@ -5,7 +5,7 @@
 
 package com.liferay.ide.idea.language.resourcebundle;
 
-import com.intellij.codeInspection.unused.ImplicitPropertyUsageProvider;
+import com.intellij.lang.properties.codeInspection.unused.ImplicitPropertyUsageProvider;
 import com.intellij.lang.properties.psi.Property;
 import com.intellij.psi.PsiFile;
 
@@ -14,8 +14,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author Dominik Marks
  */
-public class LiferayResourceBundlePropertiesImplicitUsageProvider
-	implements com.intellij.lang.properties.codeInspection.unused.ImplicitPropertyUsageProvider {
+public class LiferayResourceBundlePropertiesImplicitUsageProvider implements ImplicitPropertyUsageProvider {
 
 	@Override
 	public boolean isUsed(@NotNull Property property) {
