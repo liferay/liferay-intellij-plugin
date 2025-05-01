@@ -234,7 +234,7 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 						return;
 					}
 
-					if (dependencyStringStart[0] == true) {
+					if (dependencyStringStart[0]) {
 						String dependencyStringRemoveT = text.replace("\t", "");
 
 						String dependencyString = dependencyStringRemoveT.replace("\n", "");
@@ -242,15 +242,7 @@ public class LiferayModuleExtWizardStep extends ModuleWizardStep {
 						String[] dependencyValues = dependencyString.split(":");
 
 						if (dependencyValues[0].equals("com.liferay")) {
-							SwingUtilities.invokeLater(
-								new Runnable() {
-
-									@Override
-									public void run() {
-										_originalModuleNameComboBox.addItem(dependencyString);
-									}
-
-								});
+							SwingUtilities.invokeLater(() -> _originalModuleNameComboBox.addItem(dependencyString));
 						}
 					}
 				}
