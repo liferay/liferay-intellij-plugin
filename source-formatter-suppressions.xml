@@ -3,5 +3,6 @@
 <suppressions>
 	<source-check>
 		<suppress checks="JavaStaticImportsCheck" files=".*" />
+		<suppress checks="MarkdownFileExtensionCheck" files=".*" />
 	</source-check>
 </suppressions>
