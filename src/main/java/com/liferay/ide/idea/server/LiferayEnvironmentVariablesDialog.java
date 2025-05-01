@@ -11,7 +11,6 @@ import com.intellij.execution.util.EnvironmentVariable;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.AnActionButton;
 import com.intellij.ui.AnActionButtonRunnable;
 import com.intellij.ui.table.JBTable;
 import com.intellij.ui.table.TableView;
@@ -234,13 +233,8 @@ public class LiferayEnvironmentVariablesDialog extends DialogWrapper {
 		}
 
 		@Override
-		protected AnActionButton[] createExtraActions() {
-			return super.createExtraActions();
-		}
-
-		@Override
-		protected ListTableModel createListModel() {
-			return new ListTableModel(
+		protected ListTableModel<EnvironmentVariable> createListModel() {
+			return new ListTableModel<>(
 				new LiferayEnvironmentVariablesDialog.MyEnvVariablesTable.MyNameColumnInfo(),
 				new LiferayEnvironmentVariablesDialog.MyEnvVariablesTable.MyValueColumnInfo());
 		}
