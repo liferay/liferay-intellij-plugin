@@ -272,6 +272,8 @@ formatSource {
 	maxLineLength = 120
 }
 
+def marketplaceKey = credentials.marketplaceKey ?: ""
+
 intellijPlatform {
 	pluginConfiguration {
 		ideaVersion {
@@ -280,6 +282,10 @@ intellijPlatform {
 		}
 
 		name = "liferay-intellij-plugin"
+	}
+
+	publishing {
+		token = marketplaceKey
 	}
 }
 
@@ -295,12 +301,6 @@ processResources {
 		include '**/init.gradle'
 	}
 	into("resources/libs/")
-}
-
-def marketplaceKey = credentials.marketplaceKey ?: ""
-
-publishPlugin {
-	token = marketplaceKey
 }
 
 repositories {
