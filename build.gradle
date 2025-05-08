@@ -277,8 +277,7 @@ def marketplaceKey = credentials.marketplaceKey ?: ""
 intellijPlatform {
 	pluginConfiguration {
 		ideaVersion {
-			sinceBuild = "233"
-			untilBuild = ""
+			sinceBuild = "251"
 		}
 
 		name = "liferay-intellij-plugin"
