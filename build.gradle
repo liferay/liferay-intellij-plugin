@@ -3,7 +3,7 @@ buildscript {
 		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.source.formatter", version: "latest.release"
 		classpath group: "de.undercouch", name: "gradle-download-task", version: "5.1.0"
 		classpath group: "nu.studer", name: "gradle-credentials-plugin", version: "2.1"
-		classpath group: "org.jetbrains.intellij.plugins", name: "gradle-intellij-plugin", version: "1.15.0"
+		classpath group: "org.jetbrains.intellij.platform", name: "intellij-platform-gradle-plugin", version: "2.5.0"
 	}
 
 	repositories {
