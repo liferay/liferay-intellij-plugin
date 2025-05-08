@@ -31,9 +31,12 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.externalSystem.service.execution.ExternalSystemRunnableState;
 import com.intellij.openapi.externalSystem.service.execution.ExternalSystemTaskDebugRunner;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.net.NetUtils;
 
 import com.liferay.ide.idea.util.IntellijUtil;
+
+import java.io.IOException;
+
+import java.net.Socket;
 
 import java.util.Collection;
 
@@ -129,6 +132,19 @@ public class LiferayDockerServerDebuggerRunner extends ExternalSystemTaskDebugRu
 		return runContentDescriptor;
 	}
 
+	private boolean _canConnectToRemoteSocket(String host, int port) {
+		try {
+			Socket socket = new Socket(host, port);
+
+			socket.close();
+
+			return true;
+		}
+		catch (IOException ioException) {
+			return false;
+		}
+	}
+
 	@Nullable
 	private RunContentDescriptor _getRunContentDescriptor(
 			@NotNull ExternalSystemRunnableState state, @NotNull ExecutionEnvironment environment, int port)
@@ -151,7 +167,7 @@ public class LiferayDockerServerDebuggerRunner extends ExternalSystemTaskDebugRu
 					String host = "127.0.0.1";
 
 					do {
-						boolean canConnect = NetUtils.canConnectToRemoteSocket(host, port);
+						boolean canConnect = _canConnectToRemoteSocket(host, port);
 
 						try {
 							if (canConnect) {
