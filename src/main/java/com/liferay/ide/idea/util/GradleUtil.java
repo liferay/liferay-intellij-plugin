@@ -373,16 +373,13 @@ public class GradleUtil {
 			return false;
 		}
 
-		return gradleExtensionsData.tasksMap.entrySet(
+		return gradleExtensionsData.tasksMap.values(
 		).stream(
-		).map(
-			entry -> entry.getValue()
 		).filter(
-			task -> Objects.equals(task.name, "watch")
-		).filter(
-			task -> Objects.deepEquals("com.liferay.gradle.plugins.task.WatchTask", task.typeFqn)
-		).findAny(
-		).isPresent();
+			task -> Objects.equals(task.getName(), "watch")
+		).anyMatch(
+			task -> Objects.deepEquals("com.liferay.gradle.plugins.task.WatchTask", task.getTypeFqn())
+		);
 	}
 
 	private static void _extractJar(File depsDir, String jarName) throws IOException {
