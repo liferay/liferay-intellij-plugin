@@ -64,7 +64,7 @@ public class LiferayEnvironmentVariablesDialog extends DialogWrapper {
 
 	@Override
 	public Dimension getInitialSize() {
-		var size = super.getInitialSize();
+		Dimension size = super.getInitialSize();
 
 		if (size != null) {
 			return size;
