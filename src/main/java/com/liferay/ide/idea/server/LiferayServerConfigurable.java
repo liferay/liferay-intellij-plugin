@@ -10,7 +10,6 @@ import com.intellij.execution.ui.DefaultJreSelector;
 import com.intellij.execution.ui.JrePathEditor;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SettingsEditor;
@@ -56,14 +55,14 @@ public class LiferayServerConfigurable extends SettingsEditor<LiferayServerConfi
 		_liferayServer.setEnabled(true);
 		_gogoShellPort.setEnabled(true);
 
-		FileChooserDescriptor singleFolderDescriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor(
-		).withDescription(
-			"Choose the folder where Liferay is installed (e.g. bundles)"
-		).withTitle(
-			"Liferay Installation Folder"
-		);
-
-		_liferayServer.addBrowseFolderListener(project, singleFolderDescriptor);
+		_liferayServer.addBrowseFolderListener(
+			project,
+			FileChooserDescriptorFactory.createSingleFolderDescriptor(
+			).withDescription(
+				"Choose the folder where Liferay is installed (e.g. bundles)"
+			).withTitle(
+				"Liferay Installation Folder"
+			));
 
 		_jrePath.setDefaultJreSelector(DefaultJreSelector.fromModuleDependencies(modulesComboBox, true));
 
