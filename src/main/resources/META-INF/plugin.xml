@@ -31,6 +31,10 @@
 	</p>
 	<p>
 		<ul>
+			<li>3.0.0</li>
+			<ul>
+				<li>IntelliJ Plugin shows no Project files with IntelliJ 2025.1</li>
+			</ul>
 			<li>2.1.1</li>
 			<ul>
 				<li>LPD-36530 Failure launching DXP 7.4 2024 Q3 in Intellij using JDK 21</li>
