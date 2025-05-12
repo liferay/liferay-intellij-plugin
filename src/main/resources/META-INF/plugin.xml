@@ -356,7 +356,7 @@
 	<depends>com.intellij.java </depends>
 
 	<!-- Ultimate -->
-	<depends>com.intellij.database</depends>
+	<depends optional="true" config-file="com.liferay.ide.intellij.plugin-database.xml">com.intellij.database</depends>
 	<depends optional="true" config-file="com.liferay.ide.intellij.plugin-javaee.xml">com.intellij.javaee</depends>
 	<depends optional="true" config-file="com.liferay.ide.intellij.plugin-javaee-web.xml">com.intellij.javaee.web</depends>
 	<depends optional="true" config-file="com.liferay.ide.intellij.plugin-jsp.xml">com.intellij.jsp</depends>
