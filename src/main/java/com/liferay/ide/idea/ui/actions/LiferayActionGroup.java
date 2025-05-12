@@ -9,10 +9,12 @@ import com.intellij.ide.actions.NonTrivialActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.Presentation;
-import com.intellij.openapi.project.DumbService;
 
-import java.util.function.Supplier;
+import java.util.List;
 import java.util.stream.Stream;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 
 /**
  * @author Andy Wu
@@ -24,44 +26,26 @@ public class LiferayActionGroup extends NonTrivialActionGroup {
 		return false;
 	}
 
-	public void update(AnActionEvent event) {
+	@NotNull
+	@Override
+	@Unmodifiable
+	public List<? extends AnAction> postProcessVisibleChildren(
+		AnActionEvent event, List<? extends AnAction> visibleChildren) {
+
 		Presentation presentation = event.getPresentation();
 
-		DumbService dumbService = DumbService.getInstance(event.getProject());
+		Stream<? extends AnAction> stream = visibleChildren.stream();
 
-		if (dumbService.isDumb()) {
-			presentation.setEnabled(false);
-
-			return;
-		}
-
-		AnAction[] actions = getChildren(event);
-
-		Supplier<Stream<AnAction>> streamSupplier = () -> Stream.of(actions);
-
-		Stream<AnAction> stream = streamSupplier.get();
-
-		long count = stream.filter(
-			action -> action instanceof AbstractLiferayGradleTaskAction
-		).map(
-			action -> (AbstractLiferayGradleTaskAction)action
-		).filter(
-			action -> action.isEnabledAndVisible(event)
-		).count();
-
-		if (count <= 0) {
-			stream = streamSupplier.get();
-
-			count = stream.filter(
-				action -> action instanceof AbstractLiferayMavenGoalAction
+		presentation.setEnabled(
+			stream.filter(
+				action -> action instanceof AbstractLiferayAction
 			).map(
-				action -> (AbstractLiferayMavenGoalAction)action
-			).filter(
+				action -> (AbstractLiferayAction)action
+			).anyMatch(
 				action -> action.isEnabledAndVisible(event)
-			).count();
-		}
+			));
 
-		presentation.setEnabledAndVisible(count > 0);
+		return super.postProcessVisibleChildren(event, visibleChildren);
 	}
 
 }
