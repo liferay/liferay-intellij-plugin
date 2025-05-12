@@ -94,6 +94,6 @@ jobs:
 
         with:
          ide-versions: |
-          ideaIC:2023.3
-          ideaIU:2023.3
+          ideaIC:2025.1
+          ideaIU:2025.1
          mute-plugin-problems: TemplateWordInPluginId
