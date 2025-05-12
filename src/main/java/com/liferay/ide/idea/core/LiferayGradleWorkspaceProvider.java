@@ -42,6 +42,7 @@ import java.util.Properties;
 import java.util.regex.Pattern;
 
 import org.gradle.tooling.GradleConnector;
+import org.gradle.tooling.ProjectConnection;
 import org.gradle.tooling.model.DomainObjectSet;
 import org.gradle.tooling.model.GradleProject;
 import org.gradle.tooling.model.GradleTask;
@@ -81,11 +82,15 @@ public class LiferayGradleWorkspaceProvider extends AbstractWorkspaceProvider {
 			return targetPlatformDependencyList;
 		}
 
-		List<String> javaHomePaths = JavaHomeFinder.suggestHomePaths(false);
-
 		File javaHomeFile = null;
 
-		if (javaHomePaths.isEmpty()) {
+		List<String> javaHomePaths = JavaHomeFinder.suggestHomePaths(project);
+
+		if (!javaHomePaths.isEmpty()) {
+			javaHomeFile = new File(javaHomePaths.get(0));
+		}
+
+		if (javaHomeFile == null) {
 			String pathEnv = System.getenv("PATH");
 
 			String[] paths = pathEnv.split(Pattern.quote(File.pathSeparator));
@@ -95,23 +100,22 @@ public class LiferayGradleWorkspaceProvider extends AbstractWorkspaceProvider {
 
 				Path javaPath = path.resolve("java");
 
-				if (Files.exists(javaPath)) {
-					javaHomeFile = javaPath.toFile();
-
-					javaHomeFile = javaHomeFile.getParentFile();
-
-					javaHomeFile = javaHomeFile.getParentFile();
-
-					break;
+				if (!Files.exists(javaPath)) {
+					continue;
 				}
-			}
 
-			if (javaHomeFile == null) {
-				javaHomeFile = new File(System.getProperty("java.home"));
+				javaHomeFile = javaPath.toFile();
+
+				javaHomeFile = javaHomeFile.getParentFile();
+
+				javaHomeFile = javaHomeFile.getParentFile();
+
+				break;
 			}
 		}
-		else {
-			javaHomeFile = new File(javaHomePaths.get(0));
+
+		if (javaHomeFile == null) {
+			javaHomeFile = new File(System.getProperty("java.home"));
 		}
 
 		if (!javaHomeFile.exists()) {
@@ -138,20 +142,22 @@ public class LiferayGradleWorkspaceProvider extends AbstractWorkspaceProvider {
 
 			OutputStream outputStream = new ByteArrayOutputStream();
 
-			GradleConnector.newConnector(
-			).forProjectDirectory(
-				file
-			).connect(
-			).newBuild(
-			).setJavaHome(
-				javaHomeFile
-			).addArguments(
-				"--rerun-tasks"
-			).forTasks(
-				"dependencyManagement"
-			).setStandardOutput(
-				outputStream
-			).run();
+			GradleConnector gradleConnector = GradleConnector.newConnector();
+
+			gradleConnector = gradleConnector.forProjectDirectory(file);
+
+			try (ProjectConnection connect = gradleConnector.connect()) {
+				connect.newBuild(
+				).setJavaHome(
+					javaHomeFile
+				).addArguments(
+					"--rerun-tasks"
+				).forTasks(
+					"dependencyManagement"
+				).setStandardOutput(
+					outputStream
+				).run();
+			}
 
 			String output = outputStream.toString();
 
