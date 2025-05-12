@@ -5,8 +5,11 @@
 
 package com.liferay.ide.idea.util;
 
+import com.intellij.credentialStore.Credentials;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.util.net.HttpConfigurable;
+import com.intellij.util.net.ProxyConfiguration;
+import com.intellij.util.net.ProxyCredentialStore;
+import com.intellij.util.net.ProxySettings;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,32 +62,41 @@ public class BladeCLI {
 
 		javaTask.setArgs(args);
 
-		HttpConfigurable httpConfigurable = HttpConfigurable.getInstance();
+		ProxySettings proxySettings = ProxySettings.getInstance();
 
-		if (httpConfigurable.USE_HTTP_PROXY) {
+		ProxyConfiguration proxyConfiguration = proxySettings.getProxyConfiguration();
+
+		if (proxyConfiguration instanceof ProxyConfiguration.StaticProxyConfiguration staticProxyConfiguration) {
 			String[] proxyTypes = {"http", "https"};
+
+			String host = staticProxyConfiguration.getHost();
+			int port = staticProxyConfiguration.getPort();
 
 			for (String proxyType : proxyTypes) {
 				Environment.Variable proxyHostVariable = new Environment.Variable();
 
 				proxyHostVariable.setKey(proxyType + ".proxyHost");
-				proxyHostVariable.setValue(httpConfigurable.PROXY_HOST);
+				proxyHostVariable.setValue(host);
 
 				javaTask.addSysproperty(proxyHostVariable);
 
 				Environment.Variable proxyPortVariable = new Environment.Variable();
 
 				proxyPortVariable.setKey(proxyType + ".proxyPort");
-				proxyPortVariable.setValue(String.valueOf(httpConfigurable.PROXY_PORT));
+				proxyPortVariable.setValue(String.valueOf(port));
 
 				javaTask.addSysproperty(proxyPortVariable);
 
-				if (!httpConfigurable.PROXY_AUTHENTICATION) {
+				ProxyCredentialStore proxyCredentialStore = ProxyCredentialStore.getInstance();
+
+				Credentials credentials = proxyCredentialStore.getCredentials(host, port);
+
+				if (credentials == null) {
 					continue;
 				}
 
-				String userId = httpConfigurable.getProxyLogin();
-				String userPassword = httpConfigurable.getPlainProxyPassword();
+				String userId = credentials.getUserName();
+				String userPassword = credentials.getPasswordAsString();
 
 				if (Objects.isNull(userId) || Objects.isNull(userPassword)) {
 					continue;
