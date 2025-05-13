@@ -100,8 +100,6 @@ dependencies {
 	testImplementation group: "junit", name: "junit", version: "4.13.2"
 
 	intellijPlatform {
-		intellijIdeaUltimate '2025.1'
-
 		// Community
 		bundledPlugin "com.intellij.java-i18n"
 		bundledPlugin "com.intellij.properties"
@@ -121,6 +119,8 @@ dependencies {
 		bundledPlugin "JavaScript"
 		bundledPlugin "JSIntentionPowerPack"
 		bundledPlugin "org.jetbrains.plugins.sass"
+
+		intellijIdeaUltimate '2025.1'
 
 		testFramework TestFrameworkType.Bundled.INSTANCE
 	}
