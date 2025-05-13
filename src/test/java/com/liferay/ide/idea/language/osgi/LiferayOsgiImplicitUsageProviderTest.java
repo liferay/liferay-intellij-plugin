@@ -5,7 +5,7 @@
 
 package com.liferay.ide.idea.language.osgi;
 
-import com.intellij.lang.properties.codeInspection.deadCode.UnusedDeclarationInspection;
+import com.intellij.codeInspection.deadCode.UnusedDeclarationInspection;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
