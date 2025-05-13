@@ -1,4 +1,5 @@
 import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
+import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import org.jetbrains.intellij.platform.gradle.models.ProductRelease
 
 buildscript {
@@ -120,6 +121,8 @@ dependencies {
 		bundledPlugin "JavaScript"
 		bundledPlugin "JSIntentionPowerPack"
 		bundledPlugin "org.jetbrains.plugins.sass"
+
+		testFramework TestFrameworkType.Bundled.INSTANCE
 	}
 }
 
