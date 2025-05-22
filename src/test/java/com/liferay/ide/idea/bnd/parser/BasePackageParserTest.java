@@ -114,16 +114,16 @@ public class BasePackageParserTest extends LightJavaCodeInsightFixtureTestCase {
 			@NotNull Module module, @NotNull ModifiableRootModel modifiableRootModel,
 			@NotNull ContentEntry contentEntry) {
 
-			Sdk testJdk = SdkUtil.getTestJdk();
-
-			SdkUtil.maybeAddSdk(testJdk);
-
 			LanguageLevelModuleExtension extension = modifiableRootModel.getModuleExtension(
 				LanguageLevelModuleExtension.class);
 
 			if (extension != null) {
 				extension.setLanguageLevel(LanguageLevel.JDK_1_8);
 			}
+
+			Sdk testJdk = SdkUtil.getTestJdk();
+
+			SdkUtil.maybeAddSdk(testJdk);
 
 			modifiableRootModel.setSdk(testJdk);
 

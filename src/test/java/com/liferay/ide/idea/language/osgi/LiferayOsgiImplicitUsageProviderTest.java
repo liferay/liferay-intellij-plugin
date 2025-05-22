@@ -73,16 +73,16 @@ public class LiferayOsgiImplicitUsageProviderTest extends LightJavaCodeInsightFi
 			@NotNull Module module, @NotNull ModifiableRootModel modifiableRootModel,
 			@NotNull ContentEntry contentEntry) {
 
-			Sdk testJdk = SdkUtil.getTestJdk();
-
-			SdkUtil.maybeAddSdk(testJdk);
-
 			LanguageLevelModuleExtension languageLevelModuleExtension = modifiableRootModel.getModuleExtension(
 				LanguageLevelModuleExtension.class);
 
 			if (languageLevelModuleExtension != null) {
 				languageLevelModuleExtension.setLanguageLevel(LanguageLevel.JDK_1_8);
 			}
+
+			Sdk testJdk = SdkUtil.getTestJdk();
+
+			SdkUtil.maybeAddSdk(testJdk);
 
 			modifiableRootModel.setSdk(testJdk);
 
