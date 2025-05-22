@@ -7,7 +7,6 @@ package com.liferay.ide.idea.language.tag;
 
 import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.LanguageLevelModuleExtension;
@@ -60,10 +59,9 @@ public class LiferayTaglibSearchContainerJavaBeanReferenceContributorTest extend
 			@NotNull Module module, @NotNull ModifiableRootModel modifiableRootModel,
 			@NotNull ContentEntry contentEntry) {
 
-			ProjectJdkTable.getInstance(
-			).addJdk(
-				SdkUtil.getTestJdk()
-			);
+			Sdk testJdk = SdkUtil.getTestJdk();
+
+			SdkUtil.maybeAddSdk(testJdk);
 
 			LanguageLevelModuleExtension languageLevelModuleExtension = modifiableRootModel.getModuleExtension(
 				LanguageLevelModuleExtension.class);
@@ -72,7 +70,7 @@ public class LiferayTaglibSearchContainerJavaBeanReferenceContributorTest extend
 				languageLevelModuleExtension.setLanguageLevel(LanguageLevel.JDK_1_8);
 			}
 
-			modifiableRootModel.setSdk(SdkUtil.getTestJdk());
+			modifiableRootModel.setSdk(testJdk);
 		}
 
 		@Override

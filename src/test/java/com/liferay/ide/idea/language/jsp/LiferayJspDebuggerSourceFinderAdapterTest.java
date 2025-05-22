@@ -10,7 +10,7 @@ import com.intellij.javaee.facet.JavaeeFacet;
 import com.intellij.openapi.externalSystem.model.project.LibraryData;
 import com.intellij.openapi.externalSystem.model.project.LibraryPathType;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.LanguageLevelModuleExtension;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -110,10 +110,9 @@ public class LiferayJspDebuggerSourceFinderAdapterTest extends LightJavaCodeInsi
 			@NotNull Module module, @NotNull ModifiableRootModel modifiableRootModel,
 			@NotNull ContentEntry contentEntry) {
 
-			ProjectJdkTable.getInstance(
-			).addJdk(
-				SdkUtil.getTestJdk()
-			);
+			Sdk testJdk = SdkUtil.getTestJdk();
+
+			SdkUtil.maybeAddSdk(testJdk);
 
 			LanguageLevelModuleExtension extension = modifiableRootModel.getModuleExtension(
 				LanguageLevelModuleExtension.class);
@@ -122,7 +121,7 @@ public class LiferayJspDebuggerSourceFinderAdapterTest extends LightJavaCodeInsi
 				extension.setLanguageLevel(LanguageLevel.JDK_1_8);
 			}
 
-			modifiableRootModel.setSdk(SdkUtil.getTestJdk());
+			modifiableRootModel.setSdk(testJdk);
 
 			File testDataDir = new File(_TEST_DATA_PATH);
 

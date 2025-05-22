@@ -84,7 +84,11 @@ public class LiferayTaglibStringConcatInspectionTest extends LightJavaCodeInsigh
 				languageLevelModuleExtension.setLanguageLevel(LanguageLevel.JDK_1_8);
 			}
 
-			modifiableRootModel.setSdk(SdkUtil.getTestJdk());
+			Sdk testJdk = SdkUtil.getTestJdk();
+
+			SdkUtil.maybeAddSdk(testJdk);
+
+			modifiableRootModel.setSdk(testJdk);
 		}
 
 		@Override

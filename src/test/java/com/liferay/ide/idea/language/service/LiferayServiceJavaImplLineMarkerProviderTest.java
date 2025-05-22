@@ -10,7 +10,6 @@ import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
 import com.intellij.navigation.GotoRelatedItem;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.LanguageLevelModuleExtension;
@@ -99,10 +98,9 @@ public class LiferayServiceJavaImplLineMarkerProviderTest extends LightJavaCodeI
 			@NotNull Module module, @NotNull ModifiableRootModel modifiableRootModel,
 			@NotNull ContentEntry contentEntry) {
 
-			ProjectJdkTable.getInstance(
-			).addJdk(
-				SdkUtil.getTestJdk()
-			);
+			Sdk testJdk = SdkUtil.getTestJdk();
+
+			SdkUtil.maybeAddSdk(testJdk);
 
 			LanguageLevelModuleExtension languageLevelModuleExtension = modifiableRootModel.getModuleExtension(
 				LanguageLevelModuleExtension.class);
@@ -111,7 +109,7 @@ public class LiferayServiceJavaImplLineMarkerProviderTest extends LightJavaCodeI
 				languageLevelModuleExtension.setLanguageLevel(LanguageLevel.JDK_1_8);
 			}
 
-			modifiableRootModel.setSdk(SdkUtil.getTestJdk());
+			modifiableRootModel.setSdk(testJdk);
 		}
 
 		@Override
