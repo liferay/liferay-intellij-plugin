@@ -7,7 +7,9 @@ package com.liferay.ide.idea.util;
 
 import com.intellij.openapi.projectRoots.JavaSdk;
 import com.intellij.openapi.projectRoots.JdkUtil;
+import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkTypeId;
 import com.intellij.util.SystemProperties;
 import com.intellij.util.lang.JavaVersion;
 
@@ -38,6 +40,20 @@ public class SdkUtil {
 		JavaSdk javaSdk = JavaSdk.getInstance();
 
 		return javaSdk.createJdk(versionName, javaHome.getAbsolutePath(), !JdkUtil.checkForJdk(javaHome.toPath()));
+	}
+
+	public static void maybeAddSdk(Sdk sdk) {
+		ProjectJdkTable projectJdkTable = ProjectJdkTable.getInstance();
+
+		SdkTypeId sdkType = sdk.getSdkType();
+
+		Sdk jdk = projectJdkTable.findJdk(sdk.getName(), sdkType.getName());
+
+		if (jdk != null) {
+			return;
+		}
+
+		projectJdkTable.addJdk(sdk);
 	}
 
 }
