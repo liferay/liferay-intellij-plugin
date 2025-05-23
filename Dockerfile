@@ -1,8 +1,7 @@
 FROM azul/zulu-openjdk-alpine:21
 
 RUN apk update && apk add git
-
-CMD ["mkdir", "-p", "/root/.gradle/"]
+RUN ["mkdir", "-p", "/root/.gradle/"]
 
 COPY . /liferay-intellij-plugin
 
