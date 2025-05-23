@@ -71,6 +71,10 @@ String gradleHome = System.getProperty("gradle.user.home") ?: System.getenv("GRA
 
 File gradleCredentialsProperties = new File(gradleHome, "gradle.credentials.properties")
 
+assemble {
+	dependsOn buildPlugin
+}
+
 buildScan {
 	termsOfServiceUrl = "https://gradle.com/terms-of-service"
 	termsOfServiceAgree = "yes"
