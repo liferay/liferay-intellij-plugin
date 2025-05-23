@@ -1,4 +1,4 @@
-FROM openjdk:17-alpine
+FROM azul/zulu-openjdk-alpine:21
 
 RUN apk update && apk add git
 
