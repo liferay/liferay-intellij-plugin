@@ -261,7 +261,7 @@ public class LiferayWorkspaceSupport {
 
 		String[] workspaceModuleDirs = workspaceProvider.getWorkspaceModuleDirs();
 
-		if (!Objects.isNull(workspaceModuleDirs)) {
+		if (Objects.nonNull(workspaceModuleDirs)) {
 			return workspaceModuleDirs[0];
 		}
 
