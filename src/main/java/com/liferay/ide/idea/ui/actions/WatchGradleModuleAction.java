@@ -140,7 +140,7 @@ public class WatchGradleModuleAction extends AbstractLiferayGradleTaskAction {
 
 			String moduleDirectoryName = LiferayWorkspaceSupport.getWorkspaceModuleDir(project);
 
-			if (!Objects.isNull(moduleDirectoryName)) {
+			if (Objects.nonNull(moduleDirectoryName)) {
 				String virtualFileToStr = virtualFile.toString();
 
 				if (virtualFileToStr.contains("/" + moduleDirectoryName)) {
