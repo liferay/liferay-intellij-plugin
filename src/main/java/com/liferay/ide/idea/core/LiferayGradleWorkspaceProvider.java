@@ -8,7 +8,6 @@ package com.liferay.ide.idea.core;
 import com.google.common.collect.ListMultimap;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.impl.JavaHomeFinder;
 import com.intellij.openapi.util.text.StringUtil;
 
 import com.liferay.ide.idea.util.CoreUtil;
@@ -84,34 +83,26 @@ public class LiferayGradleWorkspaceProvider extends AbstractWorkspaceProvider {
 
 		File javaHomeFile = null;
 
-		List<String> javaHomePaths = JavaHomeFinder.suggestHomePaths(project);
+		String pathEnv = System.getenv("PATH");
 
-		if (!javaHomePaths.isEmpty()) {
-			javaHomeFile = new File(javaHomePaths.get(0));
-		}
+		String[] paths = pathEnv.split(Pattern.quote(File.pathSeparator));
 
-		if (javaHomeFile == null) {
-			String pathEnv = System.getenv("PATH");
+		for (String pathValue : paths) {
+			Path path = Paths.get(pathValue);
 
-			String[] paths = pathEnv.split(Pattern.quote(File.pathSeparator));
+			Path javaPath = path.resolve("java");
 
-			for (String pathValue : paths) {
-				Path path = Paths.get(pathValue);
-
-				Path javaPath = path.resolve("java");
-
-				if (!Files.exists(javaPath)) {
-					continue;
-				}
-
-				javaHomeFile = javaPath.toFile();
-
-				javaHomeFile = javaHomeFile.getParentFile();
-
-				javaHomeFile = javaHomeFile.getParentFile();
-
-				break;
+			if (!Files.exists(javaPath)) {
+				continue;
 			}
+
+			javaHomeFile = javaPath.toFile();
+
+			javaHomeFile = javaHomeFile.getParentFile();
+
+			javaHomeFile = javaHomeFile.getParentFile();
+
+			break;
 		}
 
 		if (javaHomeFile == null) {
