@@ -35,6 +35,7 @@
 			<ul>
 				<li>LPD-58106 add more JVM arguments to match with bundles</li>
 				<li>LPD-52270 Update Blade to version 7.0.5</li>
+				<li>LPD-52270 Removes internal API usage</li>
 			</ul>
 			<li>3.0.0</li>
 			<ul>
