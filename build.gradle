@@ -116,7 +116,7 @@ dependencies {
 		bundledPlugin "JSIntentionPowerPack"
 		bundledPlugin "org.jetbrains.plugins.sass"
 
-		intellijIdeaUltimate '2025.1'
+		intellijIdeaUltimate '2025.2'
 
 		testFramework TestFrameworkType.Bundled.INSTANCE
 	}
@@ -293,7 +293,7 @@ intellijPlatform {
 				it.types = [IntelliJPlatformType.IntellijIdeaCommunity, IntelliJPlatformType.IntellijIdeaUltimate]
 				it.channels = [ProductRelease.Channel.RELEASE]
 				it.sinceBuild = "251"
-				it.untilBuild = "251.*"
+				it.untilBuild = "252.*"
 			}
 		}
 
