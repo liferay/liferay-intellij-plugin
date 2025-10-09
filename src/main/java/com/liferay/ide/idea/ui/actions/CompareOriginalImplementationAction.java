@@ -9,6 +9,7 @@ import com.intellij.diff.DiffManager;
 import com.intellij.diff.DiffRequestFactory;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.diff.util.DiffUserDataKeys;
+import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -64,6 +65,12 @@ public class CompareOriginalImplementationAction extends AnAction {
 		DiffManager diffManager = DiffManager.getInstance();
 
 		diffManager.showDiff(_project, request);
+	}
+
+	@NotNull
+	@Override
+	public ActionUpdateThread getActionUpdateThread() {
+		return ActionUpdateThread.BGT;
 	}
 
 	@Override
