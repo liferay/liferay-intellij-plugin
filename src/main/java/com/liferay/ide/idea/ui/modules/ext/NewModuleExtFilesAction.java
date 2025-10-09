@@ -5,6 +5,7 @@
 
 package com.liferay.ide.idea.ui.modules.ext;
 
+import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
@@ -39,6 +40,8 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * @author Charles Wu
  */
@@ -53,6 +56,12 @@ public class NewModuleExtFilesAction extends AnAction implements DumbAware {
 		OverrideFilesDialog overrideFilesDialog = new OverrideFilesDialog(anActionEvent.getProject());
 
 		overrideFilesDialog.show();
+	}
+
+	@NotNull
+	@Override
+	public ActionUpdateThread getActionUpdateThread() {
+		return ActionUpdateThread.BGT;
 	}
 
 	@Override
