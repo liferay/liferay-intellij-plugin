@@ -43,6 +43,7 @@ public class LiferayXmlFileReferenceContributor extends PsiReferenceContributor 
 	@Override
 	public void registerReferenceProviders(@NotNull PsiReferenceRegistrar registrar) {
 		PsiElementPattern.Capture<PsiElement> capture = PlatformPatterns.psiElement(PsiElement.class);
+
 		capture = capture.and(new LiferayXmlFileReferenceFilterPattern());
 
 		registrar.registerReferenceProvider(
