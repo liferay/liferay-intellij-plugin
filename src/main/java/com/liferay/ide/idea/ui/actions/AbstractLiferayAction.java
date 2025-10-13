@@ -19,6 +19,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
@@ -216,8 +217,10 @@ public abstract class AbstractLiferayAction extends AnAction {
 
 		VirtualFile virtualFile = getVirtualFile(anActionEvent);
 
-		if ((virtualFile != null) && ProjectRootsUtil.isModuleContentRoot(virtualFile, project) &&
-			!baseDir.equals(virtualFile)) {
+		if (ReadAction.compute(
+				() ->
+					(virtualFile != null) && ProjectRootsUtil.isModuleContentRoot(virtualFile, project) &&
+					!baseDir.equals(virtualFile))) {
 
 			String homeDir = LiferayWorkspaceSupport.getHomeDir(project);
 
