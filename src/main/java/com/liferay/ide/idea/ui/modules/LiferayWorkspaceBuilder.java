@@ -14,6 +14,7 @@ import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.module.StdModuleTypes;
@@ -98,22 +99,24 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 
 			settingsStep.addSettingsField("Target platform:", targetPlatformComboBox);
 
-			return new SdkSettingsStep(settingsStep, this, this::isSuitableSdkType) {
+			return ReadAction.compute(
+				() -> new SdkSettingsStep(settingsStep, this, this::isSuitableSdkType) {
 
-				@Override
-				public boolean validate() throws com.intellij.openapi.options.ConfigurationException {
-					if (targetPlatformComboBox.getSelectedIndex() == -1) {
-						Messages.showWarningDialog(
-							"Create liferay maven workspace project failure, target platform version can not be null.",
-							"Projects Not Created");
+					@Override
+					public boolean validate() throws com.intellij.openapi.options.ConfigurationException {
+						if (targetPlatformComboBox.getSelectedIndex() == -1) {
+							Messages.showWarningDialog(
+								"Create liferay maven workspace project failure, target platform version can not be " +
+									"null.",
+								"Projects Not Created");
 
-						return false;
+							return false;
+						}
+
+						return super.validate();
 					}
 
-					return super.validate();
-				}
-
-			};
+				});
 		}
 
 		JComboBox<String> productVersionComboBox = new ComboBox<>();
@@ -162,22 +165,23 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 
 		settingsStep.addSettingsField("", customLabel);
 
-		return new SdkSettingsStep(settingsStep, this, this::isSuitableSdkType) {
+		return ReadAction.compute(
+			() -> new SdkSettingsStep(settingsStep, this, this::isSuitableSdkType) {
 
-			@Override
-			public boolean validate() throws com.intellij.openapi.options.ConfigurationException {
-				if (productVersionComboBox.getSelectedIndex() == -1) {
-					Messages.showWarningDialog(
-						"Create liferay gradle workspace project failure, product version can not be null.",
-						"Projects Not Created");
+				@Override
+				public boolean validate() throws com.intellij.openapi.options.ConfigurationException {
+					if (productVersionComboBox.getSelectedIndex() == -1) {
+						Messages.showWarningDialog(
+							"Create liferay gradle workspace project failure, product version can not be null.",
+							"Projects Not Created");
 
-					return false;
+						return false;
+					}
+
+					return super.validate();
 				}
 
-				return super.validate();
-			}
-
-		};
+			});
 	}
 
 	protected void initWorkspace(Project project) {
