@@ -31,6 +31,10 @@
 	</p>
 	<p>
 		<ul>
+			<li>3.0.2</li>
+			<ul>
+				<li>LPD-65824 IntelliJ plugin no longer generates the workspace correctly with the latest version of IntelliJ</li>
+			</ul>
 			<li>3.0.1</li>
 			<ul>
 				<li>LPD-58106 add more JVM arguments to match with bundles</li>
