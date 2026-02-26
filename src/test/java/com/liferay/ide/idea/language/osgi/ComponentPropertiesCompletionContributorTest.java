@@ -7,6 +7,7 @@ package com.liferay.ide.idea.language.osgi;
 
 import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.openapi.module.Module;
+import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.roots.ContentEntry;
 import com.intellij.openapi.roots.LanguageLevelModuleExtension;
 import com.intellij.openapi.roots.ModifiableRootModel;
@@ -102,7 +103,11 @@ public class ComponentPropertiesCompletionContributorTest extends LightJavaCodeI
 				extension.setLanguageLevel(LanguageLevel.JDK_1_8);
 			}
 
-			modifiableRootModel.setSdk(SdkUtil.getTestJdk());
+			Sdk testJdk = SdkUtil.getTestJdk();
+
+			SdkUtil.maybeAddSdk(testJdk);
+
+			modifiableRootModel.setSdk(testJdk);
 
 			File testDataDir = new File(_TEST_DATA_PATH);
 
