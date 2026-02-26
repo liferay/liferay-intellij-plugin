@@ -419,7 +419,7 @@
 		<runConfigurationProducer id="LiferayDockerConfigurationProducer" implementation="com.liferay.ide.idea.server.LiferayDockerServerConfigurationProducer"/>
 		<runConfigurationProducer id="LiferayServerConfigurationProducer" implementation="com.liferay.ide.idea.server.LiferayServerConfigurationProducer"/>
 		<projectService serviceImplementation="com.liferay.ide.idea.core.LiferayProjectTypeService"/>
-		<fileType name="bnd file" implementationClass="com.liferay.ide.idea.bnd.BndFileType" fieldName="INSTANCE" language="bnd" extensions="bnd"/>
+		<fileType name="bnd file" implementationClass="com.liferay.ide.idea.bnd.BndFileType" fieldName="INSTANCE" language="liferay-bnd" extensions="bnd" />
 		<codeInsight.lineMarkerProvider language="XML" implementationClass="com.liferay.ide.idea.language.service.LiferayServiceXMLLineMarkerProvider"/>
 		<codeInsight.lineMarkerProvider language="JAVA" implementationClass="com.liferay.ide.idea.language.service.LiferayServiceJavaImplLineMarkerProvider"/>
 		<standardResourceProvider implementation="com.liferay.ide.idea.language.LiferayDefinitionsResourceProvider"/>
@@ -430,18 +430,18 @@
 		<psi.referenceContributor implementation="com.liferay.ide.idea.language.tag.LiferayTaglibModelContextJavaBeanReferenceContributor"/>
 		<completion.contributor order="first" language="JAVA" implementationClass="com.liferay.ide.idea.language.osgi.ComponentPropertiesCompletionContributor"/>
 		<completion.contributor order="first" language="XML" implementationClass="com.liferay.ide.idea.language.tag.AuiTagAttributeValueCompletionContributor"/>
-		<completion.contributor language="bnd" implementationClass="com.liferay.ide.idea.bnd.completion.BndCompletionContributor"/>
+		<completion.contributor language="liferay-bnd" implementationClass="com.liferay.ide.idea.bnd.completion.BndCompletionContributor"/>
 		<projectViewNodeDecorator implementation="com.liferay.ide.idea.ui.decorator.ProjectViewWatchDecorator"/>
 		<implicitUsageProvider order="last" implementation="com.liferay.ide.idea.language.osgi.LiferayOsgiImplicitUsageProvider" />
-		<annotator language="bnd" implementationClass="com.liferay.ide.idea.bnd.BndHighlightingAnnotator"/>
+		<annotator language="liferay-bnd" implementationClass="com.liferay.ide.idea.bnd.BndHighlightingAnnotator"/>
 		<codeInsight.unresolvedReferenceQuickFixProvider implementation="com.liferay.ide.idea.extensions.GradleDependencyQuickFixProvider"/>
 		<inspectionToolProvider implementation="com.liferay.ide.idea.language.service.LiferayServiceXMLInspectionToolProvider"/>
-		<lang.parserDefinition language="bnd" implementationClass="com.liferay.ide.idea.bnd.parser.BndParserDefinition"/>
+		<lang.parserDefinition language="liferay-bnd" implementationClass="com.liferay.ide.idea.bnd.parser.BndParserDefinition"/>
 		<lang.elementManipulator forClass="com.liferay.ide.idea.bnd.psi.BndHeaderValuePart" implementationClass="com.liferay.ide.idea.bnd.psi.impl.BndHeaderValuePartManipulator"/>
-		<lang.syntaxHighlighterFactory language="bnd" implementationClass="com.liferay.ide.idea.bnd.highlighting.BndSyntaxHighlighterFactory"/>
+		<lang.syntaxHighlighterFactory language="liferay-bnd" implementationClass="com.liferay.ide.idea.bnd.highlighting.BndSyntaxHighlighterFactory"/>
 		<enterHandlerDelegate implementation="com.liferay.ide.idea.bnd.actions.EnterInBndFileHandler"/>
-		<lang.formatter language="bnd" implementationClass="com.liferay.ide.idea.bnd.formatting.BndFormattingModelBuilder"/>
-		<lang.commenter language="bnd" implementationClass="com.liferay.ide.idea.bnd.commenter.BndCommenter" />
+		<lang.formatter language="liferay-bnd" implementationClass="com.liferay.ide.idea.bnd.formatting.BndFormattingModelBuilder"/>
+		<lang.commenter language="liferay-bnd" implementationClass="com.liferay.ide.idea.bnd.commenter.BndCommenter" />
 	</extensions>
 
 	<extensions defaultExtensionNs="org.jetbrains.plugins.gradle">
