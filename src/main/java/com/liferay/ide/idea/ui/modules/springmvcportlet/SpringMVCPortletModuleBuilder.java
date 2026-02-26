@@ -11,6 +11,7 @@ import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.ide.util.projectWizard.ModuleBuilderListener;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
+import com.intellij.openapi.externalSystem.importing.ImportSpecBuilder;
 import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import com.intellij.openapi.module.Module;
@@ -63,8 +64,12 @@ public class SpringMVCPortletModuleBuilder extends ModuleBuilder {
 
 					if (Objects.equals(projectType.getId(), LiferayProjectType.LIFERAY_GRADLE_WORKSPACE)) {
 						ExternalSystemUtil.refreshProject(
-							project, GradleConstants.SYSTEM_ID, project.getBasePath(), false,
-							ProgressExecutionMode.IN_BACKGROUND_ASYNC);
+							project.getBasePath(),
+							new ImportSpecBuilder(
+								project, GradleConstants.SYSTEM_ID
+							).use(
+								ProgressExecutionMode.IN_BACKGROUND_ASYNC
+							));
 					}
 
 					removeListener(this);
