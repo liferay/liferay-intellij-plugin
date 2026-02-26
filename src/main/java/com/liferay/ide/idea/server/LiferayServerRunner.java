@@ -12,9 +12,9 @@ import com.intellij.execution.configurations.RunProfile;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.executors.DefaultRunExecutor;
 import com.intellij.execution.impl.DefaultJavaProgramRunner;
-import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
 import com.intellij.execution.process.ProcessHandler;
+import com.intellij.execution.process.ProcessListener;
 import com.intellij.execution.process.ProcessTerminatedListener;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.execution.ui.RunContentDescriptor;
@@ -68,7 +68,7 @@ public class LiferayServerRunner extends DefaultJavaProgramRunner implements Ser
 			}
 
 			processHandler.addProcessListener(
-				new ProcessAdapter() {
+				new ProcessListener() {
 
 					@Override
 					public void processTerminated(@NotNull ProcessEvent event) {

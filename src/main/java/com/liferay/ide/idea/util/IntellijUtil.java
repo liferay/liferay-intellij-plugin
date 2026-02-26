@@ -9,9 +9,9 @@ import com.intellij.debugger.DebuggerManager;
 import com.intellij.debugger.engine.DebugProcess;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.executors.DefaultRunExecutor;
-import com.intellij.execution.process.ProcessAdapter;
 import com.intellij.execution.process.ProcessEvent;
 import com.intellij.execution.process.ProcessHandler;
+import com.intellij.execution.process.ProcessListener;
 import com.intellij.execution.runners.ExecutionEnvironment;
 import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
@@ -240,7 +240,7 @@ public class IntellijUtil {
 						ExternalSystemProcessHandler exProcessHandler = (ExternalSystemProcessHandler)processHandler;
 
 						exProcessHandler.addProcessListener(
-							new ProcessAdapter() {
+							new ProcessListener() {
 
 								@Override
 								public void processTerminated(@NotNull ProcessEvent event) {
@@ -295,7 +295,7 @@ public class IntellijUtil {
 			});
 
 		processHandler.addProcessListener(
-			new ProcessAdapter() {
+			new ProcessListener() {
 
 				@Override
 				public void processWillTerminate(@NotNull ProcessEvent event, boolean willBeDestroyed) {
