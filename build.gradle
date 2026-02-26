@@ -9,13 +9,13 @@ buildscript {
 		}
 
 		maven {
-			url "https://repository-cdn.liferay.com/nexus/content/groups/public"
+			url = "https://repository-cdn.liferay.com/nexus/content/groups/public"
 		}
 		maven {
-			url "https://www.jetbrains.com/intellij-repository/snapshots"
+			url = "https://www.jetbrains.com/intellij-repository/snapshots"
 		}
 		maven {
-			url "https://oss.sonatype.org/content/repositories/snapshots/"
+			url = "https://oss.sonatype.org/content/repositories/snapshots/"
 		}
 	}
 }
@@ -28,8 +28,10 @@ plugins {
 	id("org.jetbrains.intellij.platform") version "2.9.0"
 }
 
-sourceCompatibility = JavaVersion.VERSION_21
-targetCompatibility = JavaVersion.VERSION_21
+java {
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
+}
 
 tasks.withType(JavaCompile).configureEach {
 	options.compilerArgs << "-Xlint:unchecked"
@@ -321,7 +323,7 @@ processResources {
 
 repositories {
 	maven {
-		url "https://repository-cdn.liferay.com/nexus/content/groups/public"
+		url = "https://repository-cdn.liferay.com/nexus/content/groups/public"
 	}
 	mavenCentral()
 
@@ -338,7 +340,7 @@ test {
 	testLogging {
 		exceptionFormat = "full"
 	}
-	scanForTestClasses false
+	scanForTestClasses = false
 	include "**/*Test.class"
 }
 
