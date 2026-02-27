@@ -419,7 +419,7 @@
 		<runConfigurationProducer id="LiferayDockerConfigurationProducer" implementation="com.liferay.ide.idea.server.LiferayDockerServerConfigurationProducer"/>
 		<runConfigurationProducer id="LiferayServerConfigurationProducer" implementation="com.liferay.ide.idea.server.LiferayServerConfigurationProducer"/>
 		<projectService serviceImplementation="com.liferay.ide.idea.core.LiferayProjectTypeService"/>
-		<fileType name="bnd file" implementationClass="com.liferay.ide.idea.bnd.BndFileType" fieldName="INSTANCE" language="liferay-bnd" extensions="bnd" />
+		<fileType name="bnd file (Liferay)" implementationClass="com.liferay.ide.idea.bnd.BndFileType" fieldName="INSTANCE" language="liferay-bnd" extensions="bnd" />
 		<codeInsight.lineMarkerProvider language="XML" implementationClass="com.liferay.ide.idea.language.service.LiferayServiceXMLLineMarkerProvider"/>
 		<codeInsight.lineMarkerProvider language="JAVA" implementationClass="com.liferay.ide.idea.language.service.LiferayServiceJavaImplLineMarkerProvider"/>
 		<standardResourceProvider implementation="com.liferay.ide.idea.language.LiferayDefinitionsResourceProvider"/>

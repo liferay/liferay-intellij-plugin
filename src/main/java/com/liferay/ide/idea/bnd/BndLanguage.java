@@ -6,6 +6,9 @@
 package com.liferay.ide.idea.bnd;
 
 import com.intellij.lang.Language;
+import com.intellij.openapi.util.NlsSafe;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Dominik Marks
@@ -16,6 +19,13 @@ public class BndLanguage extends Language {
 
 	public BndLanguage() {
 		super("liferay-bnd");
+	}
+
+	@NlsSafe
+	@NotNull
+	@Override
+	public String getDisplayName() {
+		return "bnd (Liferay)";
 	}
 
 }
