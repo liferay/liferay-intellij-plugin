@@ -42,7 +42,7 @@ public class BndFileType extends LanguageFileType {
 	@NotNull
 	@Override
 	public String getDescription() {
-		return "bnd file";
+		return "bnd file (Liferay)";
 	}
 
 	@Nullable
@@ -54,7 +54,7 @@ public class BndFileType extends LanguageFileType {
 	@NotNull
 	@Override
 	public String getName() {
-		return "bnd file";
+		return "bnd file (Liferay)";
 	}
 
 	@Override
