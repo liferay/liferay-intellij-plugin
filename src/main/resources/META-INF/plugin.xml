@@ -31,6 +31,14 @@
 	</p>
 	<p>
 		<ul>
+			<li>3.1.0</li>
+			<ul>
+				<li>LPD-80783 IntelliJ Plugin error when OSGi plugin is also installed in IntelliJ</li>
+				<li>LPD-80790 IntelliJ Plugin always generates workspaces with the latest product version</li>
+				<li>LPD-80792 IntelliJ Plugin prep next version</li>
+				<li>LPD-80795 IntelliJ deprecation warnings are present</li>
+				<li>LPD-80798 IntelliJ update embedded Blade to version 8.0.0</li>
+			</ul>
 			<li>3.0.2</li>
 			<ul>
 				<li>LPD-65824 IntelliJ plugin no longer generates the workspace correctly with the latest version of IntelliJ</li>
