@@ -347,7 +347,7 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 
 	private static final Logger _logger = Logger.getInstance(LiferayWorkspaceBuilder.class);
 
-	private boolean _comboBoxInitialized;
+	private boolean _comboBoxInitialized = false;
 	private boolean _indexSources = false;
 	private String _liferayProductGroupVersion;
 	private String _liferayProjectType;
