@@ -132,7 +132,9 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 				_initProductVersionComBox(productVersionComboBox, showAllProductVersion);
 			});
 
-		_initProductVersionComBox(productVersionComboBox, false);
+		if (!_comboBoxInitialized) {
+			_initProductVersionComBox(productVersionComboBox, false);
+		}
 
 		productVersionComboBox.setEditable(false);
 
@@ -338,11 +340,14 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 				productVersionComboBox.setSelectedIndex(0);
 
 				_productVersion = (String)productVersionComboBox.getSelectedItem();
+
+				_comboBoxInitialized = true;
 			});
 	}
 
 	private static final Logger _logger = Logger.getInstance(LiferayWorkspaceBuilder.class);
 
+	private boolean _comboBoxInitialized;
 	private boolean _indexSources = false;
 	private String _liferayProductGroupVersion;
 	private String _liferayProjectType;
