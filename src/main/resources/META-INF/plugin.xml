@@ -32,6 +32,7 @@
 	<h3>3.1.1</h3>
 	<ul>
 		<li>LPD-80819 IntelliJ Plugin startup error for LiferayWebFacetPostStartupActivity</li>
+		<li>LPD-83433 SymbolicIdAlreadyExistsException when creating a new Liferay Gradle Workspace</li>
 	</ul>
 
 	<h3>3.1.0</h3>
