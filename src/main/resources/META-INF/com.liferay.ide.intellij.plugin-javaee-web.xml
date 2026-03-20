@@ -1,4 +1,5 @@
 <idea-plugin>
 	<extensions defaultExtensionNs="com.intellij">
+		<backgroundPostStartupActivity implementation="com.liferay.ide.idea.core.LiferayWebFacetPostStartupActivity"/>
 	</extensions>
 </idea-plugin>
