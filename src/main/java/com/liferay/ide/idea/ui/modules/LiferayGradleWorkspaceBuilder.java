@@ -9,11 +9,10 @@ import com.intellij.openapi.externalSystem.importing.ImportSpecBuilder;
 import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMode;
 import com.intellij.openapi.externalSystem.service.project.manage.ExternalProjectsManager;
 import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
+import com.intellij.openapi.module.ModifiableModuleModel;
 import com.intellij.openapi.module.Module;
-import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModifiableRootModel;
 
 import icons.GradleIcons;
 
@@ -21,6 +20,8 @@ import java.util.Objects;
 
 import javax.swing.Icon;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.gradle.settings.DistributionType;
 import org.jetbrains.plugins.gradle.settings.GradleProjectSettings;
 import org.jetbrains.plugins.gradle.settings.GradleSettings;
@@ -36,21 +37,10 @@ public class LiferayGradleWorkspaceBuilder extends LiferayWorkspaceBuilder {
 		super(LiferayProjectType.LIFERAY_GRADLE_WORKSPACE);
 	}
 
+	@Nullable
 	@Override
-	public Icon getNodeIcon() {
-		return GradleIcons.Gradle;
-	}
-
-	@Override
-	public void setupRootModel(ModifiableRootModel modifiableRootModel) {
-		initWorkspace(modifiableRootModel.getProject());
-	}
-
-	@Override
-	protected void setupModule(Module module) throws ConfigurationException {
-		super.setupModule(module);
-
-		Project project = module.getProject();
+	public Module commitModule(@NotNull Project project, @Nullable ModifiableModuleModel model) {
+		initWorkspace(project);
 
 		Runnable runnable = () -> {
 			if (Objects.isNull(project.getBasePath())) {
@@ -91,6 +81,13 @@ public class LiferayGradleWorkspaceBuilder extends LiferayWorkspaceBuilder {
 
 				ExternalSystemUtil.invokeLater(project, runnable);
 			});
+
+		return null;
+	}
+
+	@Override
+	public Icon getNodeIcon() {
+		return GradleIcons.Gradle;
 	}
 
 }
