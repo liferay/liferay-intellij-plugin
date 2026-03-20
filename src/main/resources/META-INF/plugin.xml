@@ -26,347 +26,386 @@
 		</ul>
 	</p>]]></description>
 	<change-notes>
-	<![CDATA[<p>
-		See for all changes: https://github.com/liferay/liferay-intellij-plugin/commits/
-	</p>
-	<p>
-		<ul>
-			<li>3.1.1</li>
-			<ul>
-				<li>LPD-80819 IntelliJ Plugin startup error for LiferayWebFacetPostStartupActivity</li>
-			</ul>
-			<li>3.1.0</li>
-			<ul>
-				<li>LPD-80783 IntelliJ Plugin error when OSGi plugin is also installed in IntelliJ</li>
-				<li>LPD-80790 IntelliJ Plugin always generates workspaces with the latest product version</li>
-				<li>LPD-80792 IntelliJ Plugin prep next version</li>
-				<li>LPD-80795 IntelliJ deprecation warnings are present</li>
-				<li>LPD-80798 IntelliJ update embedded Blade to version 8.0.0</li>
-			</ul>
-			<li>3.0.2</li>
-			<ul>
-				<li>LPD-65824 IntelliJ plugin no longer generates the workspace correctly with the latest version of IntelliJ</li>
-			</ul>
-			<li>3.0.1</li>
-			<ul>
-				<li>LPD-58106 add more JVM arguments to match with bundles</li>
-				<li>LPD-52270 Update Blade to version 7.0.5</li>
-				<li>LPD-52270 Removes internal API usage</li>
-			</ul>
-			<li>3.0.0</li>
-			<ul>
-				<li>IntelliJ Plugin shows no Project files with IntelliJ 2025.1</li>
-			</ul>
-			<li>2.1.1</li>
-			<ul>
-				<li>LPD-36530 Failure launching DXP 7.4 2024 Q3 in Intellij using JDK 21</li>
-				<li>LPD-41755 Update Blade in Liferay IntelliJ Plugin</li>
-				<li>LPD-41756 Improve product version selection logic in Liferay IntelliJ Plugin</li>
-			</ul>
-			<li>2.1.0</li>
-			<ul>
-				<li>INTELLIJ-288 Add support for Quarterly Releases in IntelliJ plugin</li>
-			</ul>
-			<li>2.0.8</li>
-			<ul>
-				<li>INTELLIJ-283 Intellij plugin compatibility issue with IntelliJ IDEA 2023.3</li>
-			</ul>
-			<li>2.0.7</li>
-			<ul>
-				<li>INTELLIJ-282 set correct customized vm argument</li>
-				<li>INTELLIJ-284 use latest blade</li>
-			</ul>
-			<li>2.0.6</li>
-			<ul>
-				<li>INTELLIJ-273 intellij plugin need to support add JDK_JAVA_OPTIONS for portal bundle</li>
-				<li>INTELLIJ-274 plugin need to get customized portal bundle location in gradle-local.properties</li>
-				<li>INTELLIJ-275 liferay intellij plugin fix jdk 11.0.20 Invalid CEN Header issue</li>
-				<li>INTELLIJ-276 Liferay intellij plugin action null exception</li>
-				<li>INTELLIJ-277 restore source format support in liferay intellij plugin</li>
-				<li>INTELLIJ-278 the embed blade need to read and use the proxy configuration in intellij</li>
-				<li>INTELLIJ-280 Use latest Blade snapshot 5.0.1</li>
-				<li>INTELLIJ-281 fix getting product version error in UI</li>
-			</ul>
-			<li>2.0.5</li>
-			<ul>
-				<li>INTELLIJ-259 fix intellij github repo and jira issue link error in plugin.xml</li>
-				<li>INTELLIJ-260 LiferayServerConfiguration did not support an absolute liferay home path</li>
-				<li>INTELLIJ-261 Update Readme</li>
-				<li>INTELLIJ-262 Elasticsearch Sidecar cannot start on Liferay DXP 7.3 when using IntelliJ plugin</li>
-				<li>INTELLIJ-263 use latest version blade</li>
-				<li>INTELLIJ-264 System.getenv() returns a HashMap with a single variable</li>
-				<li>INTELLIJ-266 Fix compatibility problem on 2023.1</li>
-				<li>INTELLIJ-267 update target maven support for latest release portal</li>
-				<li>INTELLIJ-268 watch action did not correctly show</li>
-				<li>INTELLIJ-269 Failed to create simulation panel entry project</li>
-				<li>INTELLIJ-270 Read access is allowed from inside read-action issue</li>
-				<li>INTELLIJ-272 avoid using Intellij internal method</li>
-			</ul>
-			<li>2.0.4</li>
-			<ul>
-				<li>INTELLIJ-256 Liferay intellij support Intellij 2022.3</li>
-				<li>INTELLIJ-257 support latest liferay portal target platform version and bundle url</li>
-				<li>INTELLIJ-258 fix frozen UI issue while create a liferay module</li>
-			</ul>
-			<li>2.0.3</li>
-			<ul>
-				<li>INTELLIJ-238 Liferay intellij has 2 usage of deprecated API for 2022.2.3</li>
-				<li>INTELLIJ-251 Add Hyperlink to Language Property files</li>
-				<li>INTELLIJ-253 Rename parameter '--product' as '--liferay-product'</li>
-				<li>INTELLIJ-254 use latest blade version</li>
-				<li>INTELLIJ-255 update target platform version form intellij maven workspace</li>
-			</ul>
-			<li>2.0.2</li>
-			<ul>
-				<li>INTELLIJ-226 improve comments display in bnd.bnd file(community contribution)</li>
-				<li>INTELLIJ-235 fix compatibility problems for 2022.1</li>
-				<li>INTELLIJ-236 better OSGi component support for constructors(community contribution)</li>
-				<li>INTELLIJ-240 fix compatibility problem on 2022.1.3</li>
-				<li>INTELLIJ-242 use latest blade 4.1.0-snapshot</li>
-				<li>INTELLIJ-243 disable client-extension in project template list when creating a module project</li>
-				<li>INTELLIJ-246 bug fix for index target platform source on WSL2 distrbution</li>
-				<li>INTELLIJ-248 update target platform version to latest u32 for Maven workspace</li>
-				<li>INTELLIJ-249 add -XX:MaxMetaspaceSize as default vm parameters for portal server</li>
-			</ul>
-			<li>2.0.1</li>
-			<ul>
-				<li>INTELLIJ-223 bug fix for starting tomcat using java 1.8</li>
-				<li>INTELLIJ-225 update to latest blade 4.0.12 release</li>
-				<li>INTELLIJ-227 better support for cssName in jsp editor(community contribution)</li>
-				<li>INTELLIJ-230 improve deployment on multiple intellij windows</li>
-				<li>INTELLIJ-231 add support for more jboss wildfly servers</li>
-				<li>INTELLIJ-232 add support for more jboss eap servers</li>
-				<li>INTELLIJ-234 Fix compatibility problems for IC-221.5080.93</li>
-			</ul>
-			<li>2.0.0</li>
-			<ul>
-				<li>INTELLIJ-214 add validation when starting another server</li>
-				<li>INTELLIJ-215 update default version to 74 on new maven workspace wizard</li>
-				<li>INTELLIJ-217 update to blade 4.0.10 release</li>
-				<li>INTELLIJ-219 add validation when creating war core ext project</li>
-				<li>INTELLIJ-220 upgrade sinceBuild to 213</li>
-			</ul>
-			<li>1.9.4</li>
-			<ul>
-				<li>INTELLIJ-203 improvements on new liferay module wizards</li>
-				<li>INTELLIJ-206 upgrade sinceBuild to 212 and fix compatibility problems</li>
-				<li>INTELLIJ-208 create maven workspace using specific target platform version</li>
-				<li>INTELLIJ-209 add validation on only support one docker server per workspace</li>
-				<li>INTELLIJ-210 bug fix for rerun server button inside of a maven workspace</li>
-				<li>INTELLIJ-211 improvements on removing a docker server</li>
-				<li>INTELLIJ-212 bug fix for add and debug to start a docker server</li>
-			</ul>
-			<li>1.9.3</li>
-			<ul>
-				<li>INTELLIJ-189 improve validation for package name in new spring mvc wizard</li>
-				<li>INTELLIJ-190 bug fix for rerun a docker server</li>
-				<li>INTELLIJ-192 improvements on creating liferay spring mvc portlet project</li>
-				<li>INTELLIJ-200 support creating a liferay server outside of liferay workspace</li>
-				<li>INTELLIJ-201 add validtion to only support new docker server in liferay workspae</li>
-			</ul>
-			<li>1.9.2</li>
-			<ul>
-				<li>INTELLIJ-89 enable docker suppport</li>
-				<li>INTELLIJ-93 restructure new liferay module wizards</li>
-				<li>INTELLIJ-170 improve validation on project name in new liferay module wizard</li>
-				<li>INTELLIJ-173 display gogo shell port in liferay server configuration</li>
-				<li>INTELLIJ-176 update embedded blade cli to latest 4.0.9 SNAPSHOT</li>
-				<li>INTELLIJ-179 support deploy projects to a docker server</li>
-				<li>INTELLIJ-183 improve build service action on a service-builder project</li>
-				<li>INTELLIJ-184 add OSGi component code completion for single properties(community contribution)</li>
-			</ul>
-			<li>1.9.1</li>
-			<ul>
-				<li>INTELLIJ-169 add more support for OSGi component properties(community contribution)</li>
-				<li>INTELLIJ-171 updated embedded blade cli to 4.0.7</li>
-				<li>INTELLIJ-172 upgrade sinceBuild to 211 and fix compatibility problems</li>
-			</ul>
-			<li>1.9.0</li>
-			<ul>
-				<li>INTELLIJ-154 add build service action on liferay service builder project</li>
-				<li>INTELLIJ-158 fix compatibility problems on Intellij IDEA 2020.3</li>
-				<li>INTELLIJ-159 updated embedded blade cli to 4.0.6</li>
-				<li>INTELLIJ-162 remove deploy action on non liferay maven projects</li>
-				<li>INTELLIJ-163 bug fix for creating maven spring mvc portlet project</li>
-				<li>INTELLIJ-165 add validation for project name in new liferay module wizard</li>
-			</ul>
-			<li>1.8.1</li>
-			<ul>
-				<li>INTELLIJ-155 bug fix for creating a liferay maven workspace project</li>
-			</ul>
-			<li>1.8.0</li>
-			<ul>
-				<li>INTELLIJ-110 resolve relative paths in xml files(community contribution)</li>
-				<li>INTELLIJ-126 fix plugin exception on Intellij IDEA Community versions</li>
-				<li>INTELLIJ-128 support creating gradle workspace project using liferay.workspace.product</li>
-				<li>INTELLIJ-129 add target platform support for liferay maven workspace</li>
-				<li>INTELLIJ-130 improve project location to be same with creating in blade cli</li>
-				<li>INTELLIJ-131 add validation on not able to create project in maven workspace</li>
-				<li>INTELLIJ-132 support creating ext module in gradle workspace</li>
-				<li>INTELLIJ-133 updated embedded blade cli to 4.0.5</li>
-				<li>INTELLIJ-135 add validation on not able to create js-theme and js-widget projects</li>
-				<li>INTELLIJ-136 Add a new wizard to prompt users to select liferay.workspace.product</li>
-				<li>INTELLIJ-138 support both blade 3.9.2 and latest 4.0.5</li>
-				<li>INTELLIJ-140 add compare with original implementation in ext project</li>
-				<li>INTELLIJ-142 add validation on creating form-field project</li>
-				<li>INTELLIJ-143 bug fix for updating bundle url when creating a liferay maven workspace project</li>
-				<li>INTELLIJ-144 support install to Intellij IDEA Community 2020.2.2</li>
-				<li>INTELLIJ-145 update dtd version to liferay 7.3</li>
-				<li>INTELLIJ-150 fix compatibility problems</li>
-			</ul>
-			<li>1.7.4</li>
-			<ul>
-				<li>INTELLIJ-124 bug fix for project dependencies</li>
-			</ul>
-			<li>1.7.3</li>
-			<ul>
-				<li>INTELLIJ-119 change plugin name and add an icon</li>
-				<li>INTELLIJ-120 upgrade sinceBuild to 201 and fix compatibility problems</li>
-			</ul>
-			<li>1.7.2</li>
-			<ul>
-				<li>INTELLIJ-53 better support on bnd.bnd(community contribution)</li>
-				<li>INTELLIJ-90 fix target platform handling problem on Intellij IDEA 2019.3 and greater</li>
-				<li>INTELLIJ-106 upgrade sinceBuild to 193</li>
-				<li>INTELLIJ-107 bug fix for watch task</li>
-				<li>INTELLIJ-113 add support on creating project on Intellij IDEA 2020.1</li>
-				<li>INTELLIJ-114 updated embedded blade cli to 3.9.2</li>
-			</ul>
-			<li>1.7.1</li>
-			<ul>
-				<li>INTELLIJ-105 upgrade sinceBuild to 192</li>
-				<li>Enable auto import by default</li>
-			</ul>
-			<li>1.7.0</li>
-			<ul>
-				<li>INTELLIJ-21 add deploy task on gradle projects</li>
-				<li>INTELLIJ-75 Add validation on not able to create modules ext on 70 workspace</li>
-				<li>INTELLIJ-76 Remove watch on modules ext project</li>
-				<li>INTELLIJ-80 new liferay spring mvc portlet project wizard</li>
-				<li>INTELLIJ-87 compatible and adapt to JetBrains default Java 11 runtime</li>
-				<li>INTELLIJ-91 bug fix for config server on portal-ext.properties</li>
-				<li>INTELLIJ-92 bug fix on watch task</li>
-				<li>INTELLIJ-97 RunnerAndConfigurationSettings should not be null</li>
-				<li>INTELLIJ-99 add support for wildfly 16</li>
-				<li>INTELLIJ-100 upgrade blade to latest 3.9.1 snapshot and portal 7.3 support</li>
-				<li>INTELLIJ-101 fix getTargetPlatformArtifacts of LiferayWorkspaceProject base on new dependencyManagement task</li>
-				<li>INTELLIJ-102 fix spring wizard issue of supporting portal bundle 7.3</li>
-				<li>Upgraded to gradle 5</li>
-			</ul>
-			<li>1.6.0</li>
-			<ul>
-				<li>INTELLIJ-78 update xml schemas and portlet 3.0 specification</li>
-				<li>INTELLIJ-79 add project template support version validation</li>
-				<li>INTELLIJ-81 remove requirement for index.source when creating modules ext project</li>
-				<li>INTELLIJ-82 update taglib code completions for Liferay 7.1/7.2(community contribution)</li>
-				<li>Updated embedded blade cli to 3.8.0</li>
-			</ul>
-			<li>1.5.1</li>
-			<ul>
-				<li>INTELLIJ-72 add option of enable target platform on new Liferay Workspace wizard</li>
-				<li>INTELLIJ-63 bug fix for project dependencies</li>
-				<li>INTELLIJ-66 bug fix for watch feature</li>
-				<li>INTELLIJ-63 bug fix for INTELLIJ-70(community contribution)</li>
-				<li>Updated embedded blade cli to 3.7.3</li>
-			</ul>
-			<li>1.5.0</li>
-			<ul>
-				<li>INTELLIJ-69 add support for Liferay Portal CE and DXP 7.2</li>
-				<li>INTELLIJ-71 add option of index sources on new Liferay Workspace wizard</li>
-				<li>INTELLIJ-68 better support for service builder xml editor(community contribution)</li>
-				<li>INTELLIJ-70 better support for jsp editor(community contribution)</li>
-				<li>Updated embedded blade cli to 3.7.0</li>
-			</ul>
-			<li>1.4.0</li>
-			<ul>
-				<li>INTELLIJ-55 add support for debugging jsps from Liferay modules(Ultimate Only)(community contribution)</li>
-				<li>INTELLIJ-61 inject Javascript into <aui:validator name="required"> tag(community contribution)</li>
-				<li>INTELLIJ-34 fix frozen when indexing target platform jars in version 2018 3.3(fix on Intellij IDEA 2019.1)</li>
-				<li>INTELLIJ-65 bug fix</li>
-				<li>Updated embedded blade cli to 3.6.0</li>
-			</ul>
-			<li>1.3.2</li>
-			<ul>
-				<li>INTELLIJ-58 bug fix for creating module ext project error</li>
-			</ul>
-			<li>1.3.1</li>
-			<ul>
-				<li>update embed blade to 3.5</li>
-			</ul>
-			<li>1.3.0</li>
-			<ul>
-				<li>INTELLIJ-1 add Liferay frontend development support(Ultimate Only)(community contribution)</li>
-			</ul>
-			<li>1.2.2</li>
-			<ul>
-				<li>INTELLIJ-47 fix display error of liferay icon on 2018.3.4</li>
-			</ul>
-			<li>1.2.1</li>
-			<ul>
-				<li>INTELLIJ-33 quick fix for missing Liferay dependencies</li>
-				<li>INTELLIJ-35 bug fix for starting 7.1.x server in debug mode</li>
-				<li>INTELLIJ-41 bug fix for starting server with java 11</li>
-			</ul>
-			<li>1.2.0</li>
-			<ul>
-				<li>update embed blade to 3.4</li>
-				<li>INTELLIJ-2 add support for Liferay Target Platform in new Liferay Workspace wizard</li>
-				<li>INTELLIJ-19 add new module ext wizard</li>
-				<li>INTELLIJ-29 better bnd file type support</li>
-				<li>INTELLIJ-23 more OSGi component properties support(community contribution)</li>
-				<li>INTELLIJ-26 more support for model-hints xml files(community contribution)</li>
-				<li>INTELLIJ-27 code completion for java bean for Liferay Taglib(community contribution)</li>
-				<li>bug fixes</li>
-			</ul>
-			<li>1.1.1</li>
-			<ul>
-				<li>fix issue with release of 1.1.0 to plugin portal</li>
-			</ul>
-			<li>1.1.0</li>
-			<ul>
-				<li>code completion for AUI taglib</li>
-				<li>watch task decorator</li>
-				<li>add support for Liferay Portal CE and DXP 7.1 GA1</li>
-				<li>add support for Liferay WildFly bundle DXP and CE 7.0 or 7.1</li>
-				<li>add support for Liferay Target Platform</li>
-				<li>better integration for Liferay workspace</li>
-				<li>code completion for resource bundle keys for Liferay Taglib(community contribution)</li>
-				<li>code completion, syntax highlighting etc. for Javascript in Liferay Taglibs(community contribution)</li>
-				<li>better java editor with osgi annotations(community contribution)</li>
-				<li>bug fixes</li>
-			</ul>
-			<li>1.0.0</li>
-			<ul>
-				<li>support to use custom portal path</li>
-				<li>uninstall bundles after watch task done</li>
-				<li>code completion for OSGi Component properties block(community contribution)</li>
-				<li>file References for some Liferay XML files(community contribution)</li>
-				<li>add support for Liferay Portal CE 7.1 RC1</li>
-				<li>add developer mode</li>
-				<li>bug fixes</li>
-			</ul>
-			<li>0.1.2</li>
-			<ul>
-				<li>add new watch way for module deployment</li>
-				<li>add support for starting or debugging Liferay Portal CE 7.1</li>
-				<li>better editor for portlet-model-hints.xml(community contribution)</li>
-				<li>better editor for Custom SQL default.xml(community contribution)</li>
-				<li>bug fixes</li>
-			</ul>
-			<li>0.1.1</li>
-			<ul>
-				<li>add support for starting or debugging Liferay Portal CE 7.0</li>
-				<li>add support for starting or debugging Liferay Portal DXP</li>
-				<li>add support for creating Liferay Workspace - Gradle</li>
-				<li>add support for creating Liferay Workspace - Maven</li>
-				<li>add support for creating Liferay Module</li>
-				<li>deployment</li>
-				<li>highlighting and code completions for bnd.bnd</li>
-				<li>better editor for service.xml</li>
-				<li>add support for Liferay Taglib(Ultimate Only)(community contribution)</li>
-			</ul>
-		</ul>
-	</p>]]>
+	<![CDATA[
+	<p>See all changes: https://github.com/liferay/liferay-intellij-plugin/commits/</p>
+
+	<h3>3.1.1</h3>
+	<ul>
+		<li>LPD-80819 IntelliJ Plugin startup error for LiferayWebFacetPostStartupActivity</li>
+	</ul>
+
+	<h3>3.1.0</h3>
+	<ul>
+		<li>LPD-80783 IntelliJ Plugin error when OSGi plugin is also installed in IntelliJ</li>
+		<li>LPD-80790 IntelliJ Plugin always generates workspaces with the latest product version</li>
+		<li>LPD-80792 IntelliJ Plugin prep next version</li>
+		<li>LPD-80795 IntelliJ deprecation warnings are present</li>
+		<li>LPD-80798 IntelliJ update embedded Blade to version 8.0.0</li>
+	</ul>
+
+	<h3>3.0.2</h3>
+	<ul>
+		<li>LPD-65824 IntelliJ plugin no longer generates the workspace correctly with the latest version of IntelliJ</li>
+	</ul>
+
+	<h3>3.0.1</h3>
+	<ul>
+		<li>LPD-58106 add more JVM arguments to match with bundles</li>
+		<li>LPD-52270 Update Blade to version 7.0.5</li>
+		<li>LPD-52270 Removes internal API usage</li>
+	</ul>
+
+	<h3>3.0.0</h3>
+	<ul>
+		<li>IntelliJ Plugin shows no Project files with IntelliJ 2025.1</li>
+	</ul>
+
+	<h3>2.1.1</h3>
+	<ul>
+		<li>LPD-36530 Failure launching DXP 7.4 2024 Q3 in Intellij using JDK 21</li>
+		<li>LPD-41755 Update Blade in Liferay IntelliJ Plugin</li>
+		<li>LPD-41756 Improve product version selection logic in Liferay IntelliJ Plugin</li>
+	</ul>
+
+	<h3>2.1.0</h3>
+	<ul>
+		<li>INTELLIJ-288 Add support for Quarterly Releases in IntelliJ plugin</li>
+	</ul>
+
+	<h3>2.0.8</h3>
+	<ul>
+		<li>INTELLIJ-283 Intellij plugin compatibility issue with IntelliJ IDEA 2023.3</li>
+	</ul>
+
+	<h3>2.0.7</h3>
+	<ul>
+		<li>INTELLIJ-282 set correct customized vm argument</li>
+		<li>INTELLIJ-284 use latest blade</li>
+	</ul>
+
+	<h3>2.0.6</h3>
+	<ul>
+		<li>INTELLIJ-273 intellij plugin need to support add JDK_JAVA_OPTIONS for portal bundle</li>
+		<li>INTELLIJ-274 plugin need to get customized portal bundle location in gradle-local.properties</li>
+		<li>INTELLIJ-275 liferay intellij plugin fix jdk 11.0.20 Invalid CEN Header issue</li>
+		<li>INTELLIJ-276 Liferay intellij plugin action null exception</li>
+		<li>INTELLIJ-277 restore source format support in liferay intellij plugin</li>
+		<li>INTELLIJ-278 the embed blade need to read and use the proxy configuration in intellij</li>
+		<li>INTELLIJ-280 Use latest Blade snapshot 5.0.1</li>
+		<li>INTELLIJ-281 fix getting product version error in UI</li>
+	</ul>
+
+	<h3>2.0.5</h3>
+	<ul>
+		<li>INTELLIJ-259 fix intellij github repo and jira issue link error in plugin.xml</li>
+		<li>INTELLIJ-260 LiferayServerConfiguration did not support an absolute liferay home path</li>
+		<li>INTELLIJ-261 Update Readme</li>
+		<li>INTELLIJ-262 Elasticsearch Sidecar cannot start on Liferay DXP 7.3 when using IntelliJ plugin</li>
+		<li>INTELLIJ-263 use latest version blade</li>
+		<li>INTELLIJ-264 System.getenv() returns a HashMap with a single variable</li>
+		<li>INTELLIJ-266 Fix compatibility problem on 2023.1</li>
+		<li>INTELLIJ-267 update target maven support for latest release portal</li>
+		<li>INTELLIJ-268 watch action did not correctly show</li>
+		<li>INTELLIJ-269 Failed to create simulation panel entry project</li>
+		<li>INTELLIJ-270 Read access is allowed from inside read-action issue</li>
+		<li>INTELLIJ-272 avoid using Intellij internal method</li>
+	</ul>
+
+	<h3>2.0.4</h3>
+	<ul>
+		<li>INTELLIJ-256 Liferay intellij support Intellij 2022.3</li>
+		<li>INTELLIJ-257 support latest liferay portal target platform version and bundle url</li>
+		<li>INTELLIJ-258 fix frozen UI issue while create a liferay module</li>
+	</ul>
+
+	<h3>2.0.3</h3>
+	<ul>
+		<li>INTELLIJ-238 Liferay intellij has 2 usage of deprecated API for 2022.2.3</li>
+		<li>INTELLIJ-251 Add Hyperlink to Language Property files</li>
+		<li>INTELLIJ-253 Rename parameter '--product' as '--liferay-product'</li>
+		<li>INTELLIJ-254 use latest blade version</li>
+		<li>INTELLIJ-255 update target platform version form intellij maven workspace</li>
+	</ul>
+
+	<h3>2.0.2</h3>
+	<ul>
+		<li>INTELLIJ-226 improve comments display in bnd.bnd file(community contribution)</li>
+		<li>INTELLIJ-235 fix compatibility problems for 2022.1</li>
+		<li>INTELLIJ-236 better OSGi component support for constructors(community contribution)</li>
+		<li>INTELLIJ-240 fix compatibility problem on 2022.1.3</li>
+		<li>INTELLIJ-242 use latest blade 4.1.0-snapshot</li>
+		<li>INTELLIJ-243 disable client-extension in project template list when creating a module project</li>
+		<li>INTELLIJ-246 bug fix for index target platform source on WSL2 distrbution</li>
+		<li>INTELLIJ-248 update target platform version to latest u32 for Maven workspace</li>
+		<li>INTELLIJ-249 add -XX:MaxMetaspaceSize as default vm parameters for portal server</li>
+	</ul>
+
+	<h3>2.0.1</h3>
+	<ul>
+		<li>INTELLIJ-223 bug fix for starting tomcat using java 1.8</li>
+		<li>INTELLIJ-225 update to latest blade 4.0.12 release</li>
+		<li>INTELLIJ-227 better support for cssName in jsp editor(community contribution)</li>
+		<li>INTELLIJ-230 improve deployment on multiple intellij windows</li>
+		<li>INTELLIJ-231 add support for more jboss wildfly servers</li>
+		<li>INTELLIJ-232 add support for more jboss eap servers</li>
+		<li>INTELLIJ-234 Fix compatibility problems for IC-221.5080.93</li>
+	</ul>
+
+	<h3>2.0.0</h3>
+	<ul>
+		<li>INTELLIJ-214 add validation when starting another server</li>
+		<li>INTELLIJ-215 update default version to 74 on new maven workspace wizard</li>
+		<li>INTELLIJ-217 update to blade 4.0.10 release</li>
+		<li>INTELLIJ-219 add validation when creating war core ext project</li>
+		<li>INTELLIJ-220 upgrade sinceBuild to 213</li>
+	</ul>
+
+	<h3>1.9.4</h3>
+	<ul>
+		<li>INTELLIJ-203 improvements on new liferay module wizards</li>
+		<li>INTELLIJ-206 upgrade sinceBuild to 212 and fix compatibility problems</li>
+		<li>INTELLIJ-208 create maven workspace using specific target platform version</li>
+		<li>INTELLIJ-209 add validation on only support one docker server per workspace</li>
+		<li>INTELLIJ-210 bug fix for rerun server button inside of a maven workspace</li>
+		<li>INTELLIJ-211 improvements on removing a docker server</li>
+		<li>INTELLIJ-212 bug fix for add and debug to start a docker server</li>
+	</ul>
+
+	<h3>1.9.3</h3>
+	<ul>
+		<li>INTELLIJ-189 improve validation for package name in new spring mvc wizard</li>
+		<li>INTELLIJ-190 bug fix for rerun a docker server</li>
+		<li>INTELLIJ-192 improvements on creating liferay spring mvc portlet project</li>
+		<li>INTELLIJ-200 support creating a liferay server outside of liferay workspace</li>
+		<li>INTELLIJ-201 add validtion to only support new docker server in liferay workspae</li>
+	</ul>
+
+	<h3>1.9.2</h3>
+	<ul>
+		<li>INTELLIJ-89 enable docker suppport</li>
+		<li>INTELLIJ-93 restructure new liferay module wizards</li>
+		<li>INTELLIJ-170 improve validation on project name in new liferay module wizard</li>
+		<li>INTELLIJ-173 display gogo shell port in liferay server configuration</li>
+		<li>INTELLIJ-176 update embedded blade cli to latest 4.0.9 SNAPSHOT</li>
+		<li>INTELLIJ-179 support deploy projects to a docker server</li>
+		<li>INTELLIJ-183 improve build service action on a service-builder project</li>
+		<li>INTELLIJ-184 add OSGi component code completion for single properties(community contribution)</li>
+	</ul>
+
+	<h3>1.9.1</h3>
+	<ul>
+		<li>INTELLIJ-169 add more support for OSGi component properties(community contribution)</li>
+		<li>INTELLIJ-171 updated embedded blade cli to 4.0.7</li>
+		<li>INTELLIJ-172 upgrade sinceBuild to 211 and fix compatibility problems</li>
+	</ul>
+
+	<h3>1.9.0</h3>
+	<ul>
+		<li>INTELLIJ-154 add build service action on liferay service builder project</li>
+		<li>INTELLIJ-158 fix compatibility problems on Intellij IDEA 2020.3</li>
+		<li>INTELLIJ-159 updated embedded blade cli to 4.0.6</li>
+		<li>INTELLIJ-162 remove deploy action on non liferay maven projects</li>
+		<li>INTELLIJ-163 bug fix for creating maven spring mvc portlet project</li>
+		<li>INTELLIJ-165 add validation for project name in new liferay module wizard</li>
+	</ul>
+
+	<h3>1.8.1</h3>
+	<ul>
+		<li>INTELLIJ-155 bug fix for creating a liferay maven workspace project</li>
+	</ul>
+
+	<h3>1.8.0</h3>
+	<ul>
+		<li>INTELLIJ-110 resolve relative paths in xml files(community contribution)</li>
+		<li>INTELLIJ-126 fix plugin exception on Intellij IDEA Community versions</li>
+		<li>INTELLIJ-128 support creating gradle workspace project using liferay.workspace.product</li>
+		<li>INTELLIJ-129 add target platform support for liferay maven workspace</li>
+		<li>INTELLIJ-130 improve project location to be same with creating in blade cli</li>
+		<li>INTELLIJ-131 add validation on not able to create project in maven workspace</li>
+		<li>INTELLIJ-132 support creating ext module in gradle workspace</li>
+		<li>INTELLIJ-133 updated embedded blade cli to 4.0.5</li>
+		<li>INTELLIJ-135 add validation on not able to create js-theme and js-widget projects</li>
+		<li>INTELLIJ-136 Add a new wizard to prompt users to select liferay.workspace.product</li>
+		<li>INTELLIJ-138 support both blade 3.9.2 and latest 4.0.5</li>
+		<li>INTELLIJ-140 add compare with original implementation in ext project</li>
+		<li>INTELLIJ-142 add validation on creating form-field project</li>
+		<li>INTELLIJ-143 bug fix for updating bundle url when creating a liferay maven workspace project</li>
+		<li>INTELLIJ-144 support install to Intellij IDEA Community 2020.2.2</li>
+		<li>INTELLIJ-145 update dtd version to liferay 7.3</li>
+		<li>INTELLIJ-150 fix compatibility problems</li>
+	</ul>
+
+	<h3>1.7.4</h3>
+	<ul>
+		<li>INTELLIJ-124 bug fix for project dependencies</li>
+	</ul>
+
+	<h3>1.7.3</h3>
+	<ul>
+		<li>INTELLIJ-119 change plugin name and add an icon</li>
+		<li>INTELLIJ-120 upgrade sinceBuild to 201 and fix compatibility problems</li>
+	</ul>
+
+	<h3>1.7.2</h3>
+	<ul>
+		<li>INTELLIJ-53 better support on bnd.bnd(community contribution)</li>
+		<li>INTELLIJ-90 fix target platform handling problem on Intellij IDEA 2019.3 and greater</li>
+		<li>INTELLIJ-106 upgrade sinceBuild to 193</li>
+		<li>INTELLIJ-107 bug fix for watch task</li>
+		<li>INTELLIJ-113 add support on creating project on Intellij IDEA 2020.1</li>
+		<li>INTELLIJ-114 updated embedded blade cli to 3.9.2</li>
+	</ul>
+
+	<h3>1.7.1</h3>
+	<ul>
+		<li>INTELLIJ-105 upgrade sinceBuild to 192</li>
+		<li>Enable auto import by default</li>
+	</ul>
+
+	<h3>1.7.0</h3>
+	<ul>
+		<li>INTELLIJ-21 add deploy task on gradle projects</li>
+		<li>INTELLIJ-75 Add validation on not able to create modules ext on 70 workspace</li>
+		<li>INTELLIJ-76 Remove watch on modules ext project</li>
+		<li>INTELLIJ-80 new liferay spring mvc portlet project wizard</li>
+		<li>INTELLIJ-87 compatible and adapt to JetBrains default Java 11 runtime</li>
+		<li>INTELLIJ-91 bug fix for config server on portal-ext.properties</li>
+		<li>INTELLIJ-92 bug fix on watch task</li>
+		<li>INTELLIJ-97 RunnerAndConfigurationSettings should not be null</li>
+		<li>INTELLIJ-99 add support for wildfly 16</li>
+		<li>INTELLIJ-100 upgrade blade to latest 3.9.1 snapshot and portal 7.3 support</li>
+		<li>INTELLIJ-101 fix getTargetPlatformArtifacts of LiferayWorkspaceProject base on new dependencyManagement task</li>
+		<li>INTELLIJ-102 fix spring wizard issue of supporting portal bundle 7.3</li>
+		<li>Upgraded to gradle 5</li>
+	</ul>
+
+	<h3>1.6.0</h3>
+	<ul>
+		<li>INTELLIJ-78 update xml schemas and portlet 3.0 specification</li>
+		<li>INTELLIJ-79 add project template support version validation</li>
+		<li>INTELLIJ-81 remove requirement for index.source when creating modules ext project</li>
+		<li>INTELLIJ-82 update taglib code completions for Liferay 7.1/7.2(community contribution)</li>
+		<li>Updated embedded blade cli to 3.8.0</li>
+	</ul>
+
+	<h3>1.5.1</h3>
+	<ul>
+		<li>INTELLIJ-72 add option of enable target platform on new Liferay Workspace wizard</li>
+		<li>INTELLIJ-63 bug fix for project dependencies</li>
+		<li>INTELLIJ-66 bug fix for watch feature</li>
+		<li>INTELLIJ-63 bug fix for INTELLIJ-70(community contribution)</li>
+		<li>Updated embedded blade cli to 3.7.3</li>
+	</ul>
+
+	<h3>1.5.0</h3>
+	<ul>
+		<li>INTELLIJ-69 add support for Liferay Portal CE and DXP 7.2</li>
+		<li>INTELLIJ-71 add option of index sources on new Liferay Workspace wizard</li>
+		<li>INTELLIJ-68 better support for service builder xml editor(community contribution)</li>
+		<li>INTELLIJ-70 better support for jsp editor(community contribution)</li>
+		<li>Updated embedded blade cli to 3.7.0</li>
+	</ul>
+
+	<h3>1.4.0</h3>
+	<ul>
+		<li>INTELLIJ-55 add support for debugging jsps from Liferay modules(Ultimate Only)(community contribution)</li>
+		<li>INTELLIJ-61 inject Javascript into <aui:validator name="required"> tag(community contribution)</li>
+		<li>INTELLIJ-34 fix frozen when indexing target platform jars in version 2018 3.3(fix on Intellij IDEA 2019.1)</li>
+		<li>INTELLIJ-65 bug fix</li>
+		<li>Updated embedded blade cli to 3.6.0</li>
+	</ul>
+
+	<h3>1.3.2</h3>
+	<ul>
+		<li>INTELLIJ-58 bug fix for creating module ext project error</li>
+	</ul>
+
+	<h3>1.3.1</h3>
+	<ul>
+		<li>update embed blade to 3.5</li>
+	</ul>
+
+	<h3>1.3.0</h3>
+	<ul>
+		<li>INTELLIJ-1 add Liferay frontend development support(Ultimate Only)(community contribution)</li>
+	</ul>
+
+	<h3>1.2.2</h3>
+	<ul>
+		<li>INTELLIJ-47 fix display error of liferay icon on 2018.3.4</li>
+	</ul>
+
+	<h3>1.2.1</h3>
+	<ul>
+		<li>INTELLIJ-33 quick fix for missing Liferay dependencies</li>
+		<li>INTELLIJ-35 bug fix for starting 7.1.x server in debug mode</li>
+		<li>INTELLIJ-41 bug fix for starting server with java 11</li>
+	</ul>
+
+	<h3>1.2.0</h3>
+	<ul>
+		<li>update embed blade to 3.4</li>
+		<li>INTELLIJ-2 add support for Liferay Target Platform in new Liferay Workspace wizard</li>
+		<li>INTELLIJ-19 add new module ext wizard</li>
+		<li>INTELLIJ-29 better bnd file type support</li>
+		<li>INTELLIJ-23 more OSGi component properties support(community contribution)</li>
+		<li>INTELLIJ-26 more support for model-hints xml files(community contribution)</li>
+		<li>INTELLIJ-27 code completion for java bean for Liferay Taglib(community contribution)</li>
+		<li>bug fixes</li>
+	</ul>
+
+	<h3>1.1.1</h3>
+	<ul>
+		<li>fix issue with release of 1.1.0 to plugin portal</li>
+	</ul>
+
+	<h3>1.1.0</h3>
+	<ul>
+		<li>code completion for AUI taglib</li>
+		<li>watch task decorator</li>
+		<li>add support for Liferay Portal CE and DXP 7.1 GA1</li>
+		<li>add support for Liferay WildFly bundle DXP and CE 7.0 or 7.1</li>
+		<li>add support for Liferay Target Platform</li>
+		<li>better integration for Liferay workspace</li>
+		<li>code completion for resource bundle keys for Liferay Taglib(community contribution)</li>
+		<li>code completion, syntax highlighting etc. for Javascript in Liferay Taglibs(community contribution)</li>
+		<li>better java editor with osgi annotations(community contribution)</li>
+		<li>bug fixes</li>
+	</ul>
+
+	<h3>1.0.0</h3>
+	<ul>
+		<li>support to use custom portal path</li>
+		<li>uninstall bundles after watch task done</li>
+		<li>code completion for OSGi Component properties block(community contribution)</li>
+		<li>file References for some Liferay XML files(community contribution)</li>
+		<li>add support for Liferay Portal CE 7.1 RC1</li>
+		<li>add developer mode</li>
+		<li>bug fixes</li>
+	</ul>
+
+	<h3>0.1.2</h3>
+	<ul>
+		<li>add new watch way for module deployment</li>
+		<li>add support for starting or debugging Liferay Portal CE 7.1</li>
+		<li>better editor for portlet-model-hints.xml(community contribution)</li>
+		<li>better editor for Custom SQL default.xml(community contribution)</li>
+		<li>bug fixes</li>
+	</ul>
+
+	<h3>0.1.1</h3>
+	<ul>
+		<li>add support for starting or debugging Liferay Portal CE 7.0</li>
+		<li>add support for starting or debugging Liferay Portal DXP</li>
+		<li>add support for creating Liferay Workspace - Gradle</li>
+		<li>add support for creating Liferay Workspace - Maven</li>
+		<li>add support for creating Liferay Module</li>
+		<li>deployment</li>
+		<li>highlighting and code completions for bnd.bnd</li>
+		<li>better editor for service.xml</li>
+		<li>add support for Liferay Taglib(Ultimate Only)(community contribution)</li>
+	</ul>
+	]]>
 	</change-notes>
 
 	<!-- Community -->
