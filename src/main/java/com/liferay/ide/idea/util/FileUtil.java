@@ -36,7 +36,9 @@ public class FileUtil {
 
 		byte[] buf = new byte[4096];
 
-		try (FileInputStream in = new FileInputStream(src); OutputStream out = new FileOutputStream(dest)) {
+		try (FileInputStream in = new FileInputStream(src);
+			OutputStream out = new FileOutputStream(dest)) {
+
 			int avail = in.read(buf);
 
 			while (avail > 0) {

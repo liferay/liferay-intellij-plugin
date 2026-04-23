@@ -115,7 +115,9 @@ public class ZipUtil {
 
 		_mkdir(dir);
 
-		try (InputStream in = zip.getInputStream(entry); FileOutputStream out = new FileOutputStream(file)) {
+		try (InputStream in = zip.getInputStream(entry);
+			FileOutputStream out = new FileOutputStream(file)) {
+
 			byte[] bytes = new byte[1024];
 
 			int count = in.read(bytes);

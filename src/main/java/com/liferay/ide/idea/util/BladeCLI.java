@@ -127,6 +127,7 @@ public class BladeCLI {
 		int returnCode = 0;
 
 		try (StringBufferOutputStream out = new StringBufferOutputStream();
+
 			PrintStream printStream = new PrintStream(out)) {
 
 			logger.setOutputPrintStream(printStream);
