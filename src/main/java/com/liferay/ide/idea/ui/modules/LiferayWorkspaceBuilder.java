@@ -21,7 +21,9 @@ import com.intellij.openapi.module.StdModuleTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.platform.workspace.storage.impl.exceptions.SymbolicIdAlreadyExistsException;
 
 import com.liferay.ide.idea.core.WorkspaceConstants;
 import com.liferay.ide.idea.util.BladeCLI;
@@ -113,7 +115,7 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 							return false;
 						}
 
-						return super.validate();
+						return _handleSdkSettingsStepValidation(super::validate);
 					}
 
 				});
@@ -180,7 +182,7 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 						return false;
 					}
 
-					return super.validate();
+					return _handleSdkSettingsStepValidation(super::validate);
 				}
 
 			});
@@ -322,6 +324,22 @@ public abstract class LiferayWorkspaceBuilder extends ModuleBuilder {
 		).map(
 			ReleaseEntry::getTargetPlatformVersion
 		);
+	}
+
+	private boolean _handleSdkSettingsStepValidation(
+			ThrowableComputable<Boolean, com.intellij.openapi.options.ConfigurationException> throwableComputable)
+		throws com.intellij.openapi.options.ConfigurationException {
+
+		try {
+			return throwableComputable.compute();
+		}
+		catch (SymbolicIdAlreadyExistsException symbolicIdAlreadyExistsException) {
+			_logger.warn(
+				"SDK already exists in project JDK table, continuing with existing SDK",
+				symbolicIdAlreadyExistsException);
+
+			return true;
+		}
 	}
 
 	private void _initProductVersionComBox(JComboBox<String> productVersionComboBox, boolean showAllProductVersion) {
