@@ -284,7 +284,7 @@ intellijPlatform {
 			sinceBuild = "251"
 		}
 
-		name = "liferay-intellij-plugin"
+		name = "Liferay"
 	}
 
 	pluginVerification {
