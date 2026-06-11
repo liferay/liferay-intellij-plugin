@@ -288,7 +288,7 @@ intellijPlatform {
 	}
 
 	pluginVerification {
-		freeArgs = ["-mute", "TemplateWordInPluginId", "-mute", "TemplateWordInPluginName"]
+		freeArgs = ["-mute", "TemplateWordInPluginId"]
 
 		ides {
 			select {
