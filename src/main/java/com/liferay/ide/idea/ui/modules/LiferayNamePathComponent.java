@@ -5,7 +5,6 @@
 
 package com.liferay.ide.idea.ui.modules;
 
-import com.intellij.ide.IdeBundle;
 import com.intellij.ide.highlighter.ProjectFileType;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.ide.util.BrowseFilesListener;
@@ -53,9 +52,9 @@ import javax.swing.text.PlainDocument;
 public class LiferayNamePathComponent extends JPanel {
 
 	public static LiferayNamePathComponent initNamePathComponent(WizardContext context) {
-		String nameLabel = IdeBundle.message("label.project.name");
-		String filesLocationLabel = IdeBundle.message("label.project.files.location");
-		String fileDirectoryTitle = IdeBundle.message("title.select.project.file.directory", "project");
+		String nameLabel = MessagesBundle.message("label.project.name");
+		String filesLocationLabel = MessagesBundle.message("label.project.files.location");
+		String fileDirectoryTitle = MessagesBundle.message("title.select.project.file.directory", "project");
 		String fileDirectoryDescription = MessagesBundle.message(
 			"description.select.project.file.directory", StringUtil.capitalize("project"));
 
@@ -301,7 +300,7 @@ public class LiferayNamePathComponent extends JPanel {
 				"prompt.overwrite.project.file", projectFile.getAbsolutePath(), context.getPresentationName());
 
 			int answer = Messages.showYesNoDialog(
-				message, IdeBundle.message("title.file.already.exists"), Messages.getQuestionIcon());
+				message, MessagesBundle.message("title.file.already.exists"), Messages.getQuestionIcon());
 
 			shouldContinue = answer == Messages.YES;
 		}

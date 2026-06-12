@@ -5,7 +5,6 @@
 
 package com.liferay.ide.idea.ui.modules;
 
-import com.intellij.ide.IdeBundle;
 import com.intellij.ide.highlighter.ModuleFileType;
 import com.intellij.ide.util.projectWizard.AbstractModuleBuilder;
 import com.intellij.ide.util.projectWizard.ProjectWizardUtil;
@@ -21,6 +20,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.DocumentAdapter;
 
 import com.liferay.ide.idea.core.LiferayCore;
+import com.liferay.ide.idea.core.MessagesBundle;
 import com.liferay.ide.idea.core.WorkspaceConstants;
 import com.liferay.ide.idea.core.WorkspaceProvider;
 import com.liferay.ide.idea.ui.modules.ext.LiferayModuleExtBuilder;
@@ -432,7 +432,7 @@ public class LiferayModuleNameLocationComponent {
 		File moduleFile = new File(moduleFileDirectory, moduleName + ModuleFileType.DOT_DEFAULT_EXTENSION);
 
 		if (moduleFile.exists()) {
-			String existsTitle = IdeBundle.message("title.file.already.exists");
+			String existsTitle = MessagesBundle.message("title.file.already.exists");
 
 			String filePrompt = "The {1} file \\n''{0}''\\nalready exists.\\nWould you like to overwrite it?";
 
