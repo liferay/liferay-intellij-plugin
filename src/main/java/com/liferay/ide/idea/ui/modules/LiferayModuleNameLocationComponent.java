@@ -434,7 +434,8 @@ public class LiferayModuleNameLocationComponent {
 		if (moduleFile.exists()) {
 			String existsTitle = MessagesBundle.message("title.file.already.exists");
 
-			String filePrompt = "The {1} file \\n''{0}''\\nalready exists.\\nWould you like to overwrite it?";
+			String filePrompt = MessagesBundle.message(
+				"prompt.overwrite.project.file", moduleFile.getAbsolutePath(), "module");
 
 			int answer = Messages.showYesNoDialog(filePrompt, existsTitle, Messages.getQuestionIcon());
 
