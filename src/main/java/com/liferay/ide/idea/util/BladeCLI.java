@@ -27,6 +27,8 @@ import java.util.Properties;
 import java.util.Scanner;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -237,26 +239,33 @@ public class BladeCLI {
 	}
 
 	public static synchronized String[] getProjectTemplates(com.intellij.openapi.project.Project liferayProject) {
+		return getProjectTemplates(execute(liferayProject, Arrays.asList("create", "-l")));
+	}
+
+	public static String quote(String s) {
+		return "\"" + s + "\"";
+	}
+
+	protected static String[] getProjectTemplates(String[] executeResult) {
 		List<String> templateNames = new ArrayList<>();
 
-		String[] executeResult = execute(liferayProject, Arrays.asList("create", "-l"));
+		for (String line : executeResult) {
+			String name = line.trim();
 
-		for (String name : executeResult) {
-			String trimmedName = name.trim();
+			int index = name.indexOf(" ");
 
-			if (trimmedName.contains(" ")) {
-				templateNames.add(name.substring(0, name.indexOf(" ")));
+			if (index != -1) {
+				name = name.substring(0, index);
 			}
-			else {
+
+			Matcher matcher = _projectTemplateNamePattern.matcher(name);
+
+			if (matcher.matches()) {
 				templateNames.add(name);
 			}
 		}
 
 		return templateNames.toArray(new String[0]);
-	}
-
-	public static String quote(String s) {
-		return "\"" + s + "\"";
 	}
 
 	private static String _getBladeVersion(InputStream inputStream) {
@@ -284,5 +293,7 @@ public class BladeCLI {
 	}
 
 	private static Logger _logger = Logger.getInstance(BladeCLI.class);
+
+	private static final Pattern _projectTemplateNamePattern = Pattern.compile("[a-z][a-z0-9-]*");
 
 }
